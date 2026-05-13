@@ -1,0 +1,350 @@
+type Yatra = 
+ record {
+   accommodation: text;
+   bestTime: text;
+   description: text;
+   howToReach: text;
+   id: nat;
+   image: text;
+   images: vec text;
+   isActive: bool;
+   name: text;
+   price: nat;
+   significance: text;
+   slug: text;
+   state: text;
+ };
+type WeatherCache = 
+ record {
+   data: text;
+   fetchedAt: nat;
+   location: text;
+   ttl: nat;
+ };
+type UserProfile = 
+ record {
+   bloodGroup: text;
+   createdAt: Timestamp;
+   email: text;
+   experience: text;
+   joinedAt: int;
+   medicalConditions: text;
+   name: text;
+   phone: text;
+   "principal": principal;
+   referralCode: text;
+   referredBy: opt text;
+   walletBalance: nat;
+ };
+type UgcPhotoInput = 
+ record {
+   photoData: text;
+   trekDate: text;
+   trekSlug: text;
+   trekkerName: text;
+ };
+type UgcPhoto = 
+ record {
+   id: text;
+   photoData: text;
+   status: variant {
+             approved;
+             pending;
+             rejected;
+           };
+   trekDate: text;
+   trekSlug: text;
+   trekkerName: text;
+   uploadedAt: int;
+ };
+type TrekInput = 
+ record {
+   altitude: nat;
+   bestSeason: text;
+   category: text;
+   description: text;
+   difficulty: text;
+   distance: nat;
+   duration: nat;
+   endPoint: text;
+   image: text;
+   images: vec text;
+   isActive: bool;
+   isFeatured: bool;
+   name: text;
+   price: nat;
+   rating: float64;
+   reviewCount: nat;
+   slug: text;
+   startPoint: text;
+   state: text;
+   trekType: text;
+ };
+type TrekBatchPublic = 
+ record {
+   availableSlots: nat;
+   batchDate: Timestamp;
+   id: nat;
+   isActive: bool;
+   priceOverride: opt nat;
+   totalSlots: nat;
+   trekId: nat;
+ };
+type Trek = 
+ record {
+   altitude: nat;
+   bestSeason: text;
+   category: text;
+   description: text;
+   difficulty: text;
+   distance: nat;
+   duration: nat;
+   endPoint: text;
+   id: nat;
+   image: text;
+   images: vec text;
+   isActive: bool;
+   isFeatured: bool;
+   name: text;
+   price: nat;
+   rating: float64;
+   reviewCount: nat;
+   slug: text;
+   startPoint: text;
+   state: text;
+   trekType: text;
+ };
+type TrailCondition = 
+ record {
+   condition: variant {
+                closed;
+                difficult;
+                good;
+                moderate;
+              };
+   notes: text;
+   trekSlug: text;
+   updatedAt: int;
+   validUntil: int;
+ };
+type Timestamp = int;
+type Result_9 = 
+ variant {
+   err: text;
+   ok: vec Booking;
+ };
+type Result_8 = 
+ variant {
+   err: text;
+   ok: vec LeadQuery;
+ };
+type Result_7 = 
+ variant {
+   err: text;
+   ok: text;
+ };
+type Result_6 = 
+ variant {
+   err: text;
+   ok;
+ };
+type Result_5 = 
+ variant {
+   err: text;
+   ok: TrailCondition;
+ };
+type Result_4 = 
+ variant {
+   err: text;
+   ok: UgcPhoto;
+ };
+type Result_3 = 
+ variant {
+   err: text;
+   ok: TrekBatchPublic;
+ };
+type Result_2 = 
+ variant {
+   err: text;
+   ok: bool;
+ };
+type Result_10 = 
+ variant {
+   err: text;
+   ok: UserProfile;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: nat;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: Booking;
+ };
+type QueryInput = 
+ record {
+   budget: text;
+   email: text;
+   groupSize: nat;
+   message: text;
+   name: text;
+   phone: text;
+   preferredDates: text;
+   preferredTrek: text;
+ };
+type PromoInput = 
+ record {
+   code: text;
+   discountPercent: nat;
+   expiresAt: Timestamp;
+   maxUses: nat;
+ };
+type ProfileInput = 
+ record {
+   bloodGroup: text;
+   email: text;
+   experience: text;
+   medicalConditions: text;
+   name: text;
+   phone: text;
+ };
+type LeadQuery = 
+ record {
+   budget: text;
+   createdAt: Timestamp;
+   email: text;
+   groupSize: nat;
+   id: nat;
+   message: text;
+   name: text;
+   phone: text;
+   preferredDates: text;
+   preferredTrek: text;
+   status: text;
+ };
+type BookingInput = 
+ record {
+   advanceAmount: nat;
+   batchDate: Timestamp;
+   email: text;
+   groupSize: nat;
+   itemId: nat;
+   itemName: text;
+   itemType: text;
+   phone: text;
+   totalAmount: nat;
+   travelerName: text;
+ };
+type Booking = 
+ record {
+   advanceAmount: nat;
+   batchDate: Timestamp;
+   bookingRef: text;
+   createdAt: Timestamp;
+   email: text;
+   groupSize: nat;
+   id: nat;
+   itemId: nat;
+   itemName: text;
+   itemType: text;
+   paymentProvider: text;
+   paymentStatus: text;
+   paymentTimestamp: opt nat;
+   phone: text;
+   razorpayOrderId: opt text;
+   razorpayPaymentId: opt text;
+   razorpaySignature: opt text;
+   status: text;
+   totalAmount: nat;
+   travelerName: text;
+   userId: principal;
+ };
+type BlogPost = 
+ record {
+   author: text;
+   category: text;
+   content: text;
+   excerpt: text;
+   heroImage: text;
+   id: nat;
+   isPublished: bool;
+   publishedAt: Timestamp;
+   readTime: nat;
+   slug: text;
+   tags: vec text;
+   title: text;
+ };
+type BlogInput = 
+ record {
+   author: text;
+   category: text;
+   content: text;
+   excerpt: text;
+   heroImage: text;
+   isPublished: bool;
+   readTime: nat;
+   slug: text;
+   tags: vec text;
+   title: text;
+ };
+service : {
+  addWalletBalance: (p: principal, amount: nat) -> (Result_10);
+  approveUgcPhoto: (id: text) -> (Result_4);
+  cancelBooking: (id: nat) -> (Result_2);
+  createBatch: (trekId: nat, batchDate: Timestamp, totalSlots: nat,
+   priceOverride: opt nat) -> (Result_3);
+  createBlog: (input: BlogInput) -> (Result_1);
+  createBooking: (input: BookingInput) -> (Result_1);
+  createPromoCode: (input: PromoInput) -> (Result_2);
+  createTrek: (input: TrekInput) -> (Result_1);
+  deleteBatch: (id: nat) -> (Result_6);
+  deleteBlog: (id: nat) -> (Result_2);
+  deleteTrek: (id: nat) -> (Result_2);
+  getAllBatches: () -> (vec TrekBatchPublic) query;
+  getAllBookings: () -> (Result_9);
+  getAllQueries: () -> (Result_8);
+  getAllTrailConditions: () -> (vec TrailCondition) query;
+  getBatchById: (id: nat) -> (opt TrekBatchPublic) query;
+  getBlogBySlug: (slug: text) -> (opt BlogPost) query;
+  getBlogs: () -> (vec BlogPost) query;
+  getFeaturedTreks: () -> (vec Trek) query;
+  getPendingUgcPhotos: () -> (vec UgcPhoto) query;
+  getProfile: () -> (opt UserProfile) query;
+  getStats: () ->
+   (record {
+      totalBookings: nat;
+      totalQueries: nat;
+      totalTreks: nat;
+      totalUsers: nat;
+    }) query;
+  getTrailCondition: (trekSlug: text) -> (opt TrailCondition) query;
+  getTrekBatches: (trekId: nat) -> (vec TrekBatchPublic) query;
+  getTrekBySlug: (slug: text) -> (opt Trek) query;
+  getTreks: () -> (vec Trek) query;
+  getTreksByState: (state: text) -> (vec Trek) query;
+  getUgcPhotosByTrek: (trekSlug: text) -> (vec UgcPhoto) query;
+  getUserBookings: () -> (vec Booking) query;
+  getUserByReferralCode: (code: text) -> (opt UserProfile) query;
+  getWeatherCache: (location: text) -> (opt WeatherCache) query;
+  getYatraBySlug: (slug: text) -> (opt Yatra) query;
+  getYatras: () -> (vec Yatra) query;
+  initPayment: (bookingId: nat, amount: nat, currency: text) -> (Result_7);
+  processReferral: (referralCode: text) -> (Result_6);
+  rejectUgcPhoto: (id: text) -> (Result_4);
+  saveProfile: (input: ProfileInput) -> (Result_2);
+  setTrailCondition: (input: TrailCondition) -> (Result_5);
+  setWeatherCache: (location: text, data: text) -> ();
+  submitQuery: (input: QueryInput) -> (Result_1);
+  submitUgcPhoto: (input: UgcPhotoInput) -> (Result_4);
+  updateBatch: (id: nat, availableSlots: opt nat, isActive: opt bool) ->
+   (Result_3);
+  updateBlog: (id: nat, input: BlogInput) -> (Result_2);
+  updateBookingStatus: (id: nat, status: text) -> (Result_2);
+  updateQueryStatus: (id: nat, status: text) -> (Result_2);
+  updateTrek: (id: nat, input: TrekInput) -> (Result_2);
+  validatePromoCode: (code: text) -> (Result_1) query;
+  verifyPayment: (bookingId: nat, paymentId: text, signature: text) ->
+   (Result);
+}
