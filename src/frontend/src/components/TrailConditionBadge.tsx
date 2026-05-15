@@ -1,5 +1,6 @@
 import type { TrailCondition } from "@/backend.d.ts";
 import { useTrailConditions } from "@/hooks/useTrailConditions";
+import { icpTimestampNsToMs } from "@/lib/icpTimestamp";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
@@ -41,18 +42,18 @@ const CONDITION_CONFIG: Record<
 };
 
 function isStale(updatedAt: bigint): boolean {
-  const updatedAtMs = Number(updatedAt) / 1_000_000;
+  const updatedAtMs = icpTimestampNsToMs(updatedAt);
   const fourteenDaysMs = 14 * 24 * 60 * 60 * 1000;
   return Date.now() - updatedAtMs > fourteenDaysMs;
 }
 
 function daysSince(updatedAt: bigint): number {
-  const updatedAtMs = Number(updatedAt) / 1_000_000;
+  const updatedAtMs = icpTimestampNsToMs(updatedAt);
   return Math.floor((Date.now() - updatedAtMs) / (24 * 60 * 60 * 1000));
 }
 
 function formatDate(ts: bigint): string {
-  return new Date(Number(ts) / 1_000_000).toLocaleDateString("en-IN", {
+  return new Date(icpTimestampNsToMs(ts)).toLocaleDateString("en-IN", {
     day: "numeric",
     month: "short",
     year: "numeric",

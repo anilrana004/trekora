@@ -1,4 +1,4 @@
-import { useActor } from "@caffeineai/core-infrastructure";
+import { useActor } from "@trekora/icp";
 import { useEffect, useState } from "react";
 import { createActor } from "../backend";
 import type { TrekBatchPublic } from "../backend.d.ts";
@@ -65,17 +65,22 @@ export default function TrustSignals({ trekSlug, trekId }: TrustSignalsProps) {
           (b) => b.itemId === BigInt(trekId) && b.status === "confirmed",
         );
 
-        const now = Date.now();
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const todayStartNs = BigInt(startOfToday.getTime()) * 1_000_000n;
+
         const upcomingBatches = (batches as TrekBatchPublic[]).filter(
           (batch) =>
             batch.isActive &&
-            Number(batch.batchDate) > now &&
+            batch.batchDate >= todayStartNs &&
             Number(batch.availableSlots) > 0,
         );
 
-        upcomingBatches.sort(
-          (a, b) => Number(a.batchDate) - Number(b.batchDate),
-        );
+        upcomingBatches.sort((a, b) => {
+          if (a.batchDate < b.batchDate) return -1;
+          if (a.batchDate > b.batchDate) return 1;
+          return 0;
+        });
 
         const nextBatch = upcomingBatches[0] ?? null;
         const spotsLeft = nextBatch ? Number(nextBatch.availableSlots) : null;

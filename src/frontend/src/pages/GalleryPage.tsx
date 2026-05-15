@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SEOHead } from "../components/SEOHead";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { GALLERY_CATEGORIES, GALLERY_ITEMS } from "../data/gallery";
 import type { GalleryItem } from "../data/gallery";
 
@@ -127,11 +128,15 @@ function Lightbox({
         className="max-w-5xl w-full px-16 md:px-20"
         onClick={(e) => e.stopPropagation()}
       >
-        <img
-          src={item.src.replace("w=800", "w=1200")}
+        <OptimizedImage
+          src={item.src}
           alt={item.title}
+          variant="gallery-full"
+          priority
+          width={1600}
+          height={1200}
           className="w-full max-h-[72vh] object-contain rounded-xl"
-          loading="eager"
+          sizes="(max-width: 1920px) 90vw, 1728px"
         />
         {/* Caption row */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
@@ -262,10 +267,14 @@ function UploadSection() {
         aria-label="Upload photo"
       >
         {preview ? (
-          <img
+          <OptimizedImage
             src={preview}
             alt="Preview"
-            className="max-h-40 rounded-lg object-contain mb-2"
+            variant="gallery-full"
+            sizes="280px"
+            width={320}
+            height={160}
+            className="max-h-40 rounded-lg object-contain mb-2 w-auto h-auto max-w-full"
           />
         ) : (
           <>
@@ -408,7 +417,7 @@ export default function GalleryPage() {
       <SEOHead
         title="Trek Photo Gallery — Himalayan Trekking & Yatra Photos | EternaWings"
         description="Browse stunning photos from Himalayan treks and yatras — Roopkund, Valley of Flowers, Kedarnath, Spiti Valley. Submit your own trek photos."
-        canonical="https://www.eternawings.com/gallery"
+        canonical="https://www.trekora.com/gallery"
       />
 
       <div
@@ -502,10 +511,12 @@ export default function GalleryPage() {
                   data-ocid={`gallery.item.${i + 1}`}
                   aria-label={`View ${item.title}`}
                 >
-                  <img
+                  <OptimizedImage
                     src={item.src}
                     alt={item.title}
-                    loading="lazy"
+                    variant="gallery-thumb"
+                    width={1200}
+                    height={900}
                     className="w-full h-auto group-hover:scale-[1.06] transition-transform duration-500"
                   />
                   {/* Hover overlay */}

@@ -3,6 +3,7 @@ import { BookOpen, Loader2, MapPin, Mountain, Search } from "lucide-react";
 import { useEffect, useRef } from "react";
 import type { SearchFilter } from "../hooks/useSearch";
 import { useSearch } from "../hooks/useSearch";
+import OptimizedImage from "./media/OptimizedImage";
 
 const FILTERS: { key: SearchFilter; label: string }[] = [
   { key: "all", label: "All" },
@@ -185,11 +186,13 @@ export default function SearchDropdown({
                       style={{ textDecoration: "none" }}
                       data-ocid={`search.trek_result.${i + 1}`}
                     >
-                      <img
+                      <OptimizedImage
                         src={trek.image}
                         alt={trek.name}
+                        width={48}
+                        height={40}
+                        variant="thumbnail"
                         className="w-12 h-10 rounded object-cover shrink-0"
-                        loading="lazy"
                       />
                       <div className="flex-1 min-w-0">
                         <p

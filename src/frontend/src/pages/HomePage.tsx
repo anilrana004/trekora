@@ -1,3 +1,4 @@
+import { SITE_EMAIL, SITE_PHONE_TEL } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -12,19 +13,178 @@ import {
   Zap,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import GoogleReviewsSection from "../components/GoogleReviewsSection";
 import HomepageReviews from "../components/HomepageReviews";
 import InstagramSection from "../components/InstagramSection";
 import { SEOHead } from "../components/SEOHead";
 import SocialProofTicker from "../components/SocialProofTicker";
 import TrekCard from "../components/TrekCard";
-import TrekRecommenderQuiz from "../components/TrekRecommenderQuiz";
 import UpcomingBatchesSection from "../components/UpcomingBatchesSection";
+import YatraCard from "../components/YatraCard";
 import YouTubeSection from "../components/YouTubeSection";
+import OptimizedImage from "../components/media/OptimizedImage";
+import { EnquiryButton } from "../components/ui/EnquiryButton";
+import TrustBadgesStrip from "../components/ui/TrustBadgesStrip";
 import { BLOGS } from "../data/blogs";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
+
+const CHAR_DHAM_YATRA = YATRAS.find((y) => y.slug === "char-dham-yatra");
+const PANCH_KEDAR_YATRA = YATRAS.find((y) => y.slug === "panch-kedar-yatra");
+const PANCH_BADRI_YATRA = YATRAS.find((y) => y.slug === "panch-badri-yatra");
+const HEMKUND_SAHIB_YATRA = YATRAS.find(
+  (y) => y.slug === "hemkund-sahib-yatra",
+);
+const CHAR_DHAM_COVER =
+  CHAR_DHAM_YATRA?.image ??
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778773622/hdcqmlampuxdxcd3ixmu.png";
+
+const CHAR_DHAM_GALLERY_ALTS = [
+  "Yamunotri temple in the Garhwal Himalayas",
+  "Gangotri temple with white domes against forested peaks",
+  "Kedarnath stone temple with pilgrims and snow-capped mountains",
+  "Badrinath temple ornate colourful facade",
+  "Badrinath temple and Neelkanth peak at dusk",
+] as const;
+
+/** Panch Badri Yatra — five-shrine collage (`hero/home` + yatras section). */
+const PANCH_BADRI_YATRA_COLLAGE_WEBP =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824340/i9c2rqglhap9kt57irxm.webp";
+
+/** Panch Badri — individual shrine / route photos (home strip + catalog gallery). */
+const PANCH_BADRI_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824303/alkvjnkapfjh5fywqzqf.jpg",
+    alt: "Badrinath temple (Vishal Badri) with pilgrims at the entrance and misty Garhwal peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824252/osxg6q6dria3uvp5awfj.webp",
+    alt: "Ancient grey stone Nagara-style shrines with tiered shikharas on the Panch Badri circuit",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824242/y3zhv11abvtf0hdevura.webp",
+    alt: "Traditional white-washed Himalayan temple with slate roof along the Panch Badri yatra",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824228/y85a9ad2kdgxwob0pa0r.webp",
+    alt: "Bhavishya Badri shrine with forested approach and festive garlands at the Panch Badri site",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824216/oxdyace9mdiq0stpd70q.jpg",
+    alt: "Twin stone temples with shikharas and prayer flags in a green Himalayan valley on the Panch Badri route",
+  },
+];
+
+/** Kedarnath temple at night — Panch Kedar home hero tile + gallery. */
+const PANCH_KEDAR_KEDARNATH_NIGHT_JPG =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778823571/ug5o1hpvj2pnvnuv9ufe.jpg";
+
+/** Panch Kedar strip — thumbnail grid below collage (matches yatra `images` extras). */
+const PANCH_KEDAR_WEBP_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778823087/yd1hiyz4xzbuqdwnixjf.webp",
+    alt: "Colourful hill shrine with prayer flags built into a rock cliff along the Garhwal Panch Kedar pilgrimage",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778823073/s580fofsicknmvmxya2h.webp",
+    alt: "Ancient stone Panch Kedar temple on a green Himalayan slope under a bright sky",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778823087/yd1hiyz4xzbuqdwnixjf.webp",
+    alt: "Sacred shrine entrance with orange banners on the Panch Kedar trail",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778823101/he972npqm84metx7sy8v.webp",
+    alt: "Snow-covered high-altitude Shiva temple with trishul and prayer flags in winter light",
+  },
+  {
+    src: PANCH_KEDAR_KEDARNATH_NIGHT_JPG,
+    alt: "Kedarnath temple lit at night against snow-capped Himalayan peaks on the Panch Kedar pilgrimage",
+  },
+];
+
+/** Hemkund Sahib Yatra — Gurudwara & lake (home strip + hero; order left-to-right in grid). */
+const HEMKUND_SAHIB_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825202/xz51u9hwvb0cmevjsi0j.jpg",
+    alt: "Gurudwara Shri Hemkund Sahib with star-shaped roof beside glacial lake and snow peaks at 4,633m",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825192/ql0l3zrxgo8glvaepkb1.jpg",
+    alt: "Hemkund Sahib gurudwara decorated with marigold garlands and pilgrims on the snow-lined approach path",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825180/ggkd5s4qisa6zgo7w5h1.jpg",
+    alt: "Hemkund Sahib reflected in still waters of Lokpal Lake with Himalayan ridges under blue sky",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825167/mkbkazqiw7p2blcycwxu.jpg",
+    alt: "Wide view of Hemkund Sahib gurudwara on the lake shore with pilgrims and cloud-wrapped peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825155/sye2fsmrm6fzl28pnzup.jpg",
+    alt: "Hemkund Sahib white marble gurudwara and Nishan Sahib with snow-covered mountains behind the glacial lake",
+  },
+];
+
+/** Bali Pass Trek — high pass & meadows (Uttarakhand strip + hero; order left-to-right in grid). */
+const BALI_PASS_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825895/jpepjhvoxlffr2eqiscq.webp",
+    alt: "Trekkers on a narrow snow-fringed ridge crossing Bali Pass in the Garhwal Himalayas",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825906/ezrkskp13r2xadjinh0n.webp",
+    alt: "Line of trekkers ascending a boulder-strewn high-altitude slope on the Bali Pass route",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825923/tqyoaz9kyssq0dfysg1a.webp",
+    alt: "Single-file team crossing a wide snowfield below jagged peaks on the Bali Pass trek",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825937/utedsdmp5m4ytzthxozw.webp",
+    alt: "Alpine meadow with wildflowers and forested ridges — Bali Pass trail below cloud-wrapped summits",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778825948/awnqlxcx0vvosog4jb3w.webp",
+    alt: "Group trekking a winding dirt path through lush green hills toward distant glaciated peaks",
+  },
+];
+
+const BALI_PASS_TREK = TREKS.find((t) => t.slug === "bali-pass");
+
+/** Beas Kund Trek — Kullu meadows & glacial lake (Himachal strip + hero; order left-to-right in grid). */
+const BEAS_KUND_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778826426/wr34i0d3nx4vasb1lqft.jpg",
+    alt: "Trekkers and pack mules on a green hillside trail with snow peaks in the Beas Kund valley",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778826435/ifrqqxwkxmygpyoll02y.jpg",
+    alt: "Massive glacier and jagged snow-covered peaks on the Beas Kund high-altitude route",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778826444/b8us3jinddzv8k8uilh9.jpg",
+    alt: "Lush green valley leading to a sharp snow-capped summit on the Beas Kund trek near Manali",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778826456/rniso9ncq78zkljxwubg.jpg",
+    alt: "Rocky riverbed and pine-forested slopes below cloud-wrapped Himalayan ridges on the Beas Kund trail",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778826466/wsx3rz6e8q8lhzhcf6ba.jpg",
+    alt: "Misty high valley with snow patches and trekkers crossing meadows toward Beas Kund glacial lake",
+  },
+];
+
+const BEAS_KUND_TREK = TREKS.find((t) => t.slug === "beas-kund");
 
 // ─── Hero Banner Sets ────────────────────────────────────────────────────────
 
@@ -41,11 +201,77 @@ interface HeroSet {
   right: HeroBanner[];
 }
 
+/** Roopkund main hero — Cloudinary uploaded asset (portrait source; `object-cover` in layout). */
+const HOME_HERO_ROOPKUND_MAIN_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778697592/h1vliuxnes32vhhovzao.jpg";
+
+/** Valley of Flowers main hero — Cloudinary `hero/home` asset. */
+const HOME_HERO_VALLEY_OF_FLOWERS_MAIN_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778700231/pkew3vrpnvqbwbdxltff.jpg";
+
+/** Brahmatal winter trek — hero slide + UK destinations (`hero/home`). */
+const HOME_HERO_BRAHMATAL_WINTER_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778700831/cqkhz2o0jehuskfikrih.jpg";
+
+/** Triund trek — hero strip + HP destinations (`hero/home`). */
+const HOME_HERO_TRIUND_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778701115/zm174z1j9ooi3tjjenhe.jpg";
+
+/** Hampta Pass trek — hero strip + HP destinations (`hero/home`). */
+const HOME_HERO_HAMPTA_PASS_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763372/d6igt6vhmcv8w70xog9n.jpg";
+
+/** Sar Pass trek — HP destinations (`hero/home`). */
+const HOME_HERO_SAR_PASS_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771073/qhvb9wlwzl6x3pslktln.jpg";
+
+/** Kedarnath Dham — hero strip + UK destinations (`hero/home`). */
+const HOME_HERO_KEDARNATH_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778727122/glpponn0t6itj3cwhxo3.jpg";
+
+/** Spiti Valley Trek — Cloudinary set (order: valley → Key → road → lake → gorge). */
+const SPITI_VALLEY_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771717/afydimlzdw4hotiqs02b.jpg",
+    alt: "Spiti high-altitude valley with braided riverbed and layered Himalayan peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771783/ksr51qxjcquemjpkxwsm.jpg",
+    alt: "Key Monastery (Kee Gompa) on a hill above the cold-desert Spiti valley",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771728/hkoq0b9gzn96atdtr1nt.jpg",
+    alt: "Winding high mountain road and switchbacks through barren Spiti terrain",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771854/hre8klhgn9j41l48iscu.jpg",
+    alt: "Chandratal high-altitude lake with turquoise glacial water",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771874/cqo8fnd8aousfju8eyog.jpg",
+    alt: "Deep river gorge and glacial blue water in the Spiti–Lahaul region",
+  },
+] as const;
+
+/** Himachal destination card — second image for variety vs hero tile. */
+const HOME_HP_SPITI_VALLEY_IMAGE = SPITI_VALLEY_TREK_IMAGES[1].src;
+
+/** Chandratal Lake — hero strip + HP destinations (`hero/home`). */
+const HOME_HERO_CHANDRATAL_LAKE_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763958/e0wqfec93qgb2510weua.jpg";
+
+/** Kinnaur Kailash Yatra — hero strip (`hero/home`). */
+const HOME_HERO_KINNAUR_KAILASH_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778728123/pfdxq1pqmnxmfgt1faxf.jpg";
+
+/** Panch Kedar Yatra — five-shrine collage (yatras section banner). */
+const HOME_HERO_PANCH_KEDAR_YATRA_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778822747/idvfsvrybj0q9crjdl3n.png";
+
 const HERO_SETS: HeroSet[] = [
   {
     left: {
-      image:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80",
+      image: HOME_HERO_ROOPKUND_MAIN_IMAGE,
       title: "Roopkund Trek",
       subtitle: "The Skeleton Lake Awaits",
       cta: "Explore Now",
@@ -53,35 +279,31 @@ const HERO_SETS: HeroSet[] = [
     },
     right: [
       {
-        image:
-          "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=700&q=80",
+        image: CHAR_DHAM_COVER,
         title: "Char Dham Yatra 2025",
         subtitle: "Sacred Journey · Limited Spots",
         cta: "Book Yatra",
         ctaLink: "/yatras/char-dham-yatra",
       },
       {
-        image:
-          "https://images.unsplash.com/photo-1556296240-b6b6e89c0f9f?w=700&q=80",
-        title: "Triund Weekend Trek",
-        subtitle: "2 Days from ₹3,500",
+        image: BALI_PASS_PHOTO_GALLERY[0].src,
+        title: "Bali Pass Trek",
+        subtitle: "Har Ki Dun to Yamunotri · 9 Days",
         cta: "View Package",
-        ctaLink: "/treks/triund-trek",
+        ctaLink: "/treks/bali-pass",
       },
       {
-        image:
-          "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=700&q=80",
-        title: "Hampta Pass",
-        subtitle: "Two Worlds in 5 Days",
-        cta: "Book Now",
-        ctaLink: "/treks/hampta-pass",
+        image: BEAS_KUND_PHOTO_GALLERY[0].src,
+        title: "Beas Kund Trek",
+        subtitle: "Source of the Beas · 3 Days",
+        cta: "View Package",
+        ctaLink: "/treks/beas-kund",
       },
     ],
   },
   {
     left: {
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80",
+      image: HOME_HERO_VALLEY_OF_FLOWERS_MAIN_IMAGE,
       title: "Valley of Flowers",
       subtitle: "A Bloom Like No Other",
       cta: "Explore",
@@ -89,35 +311,31 @@ const HERO_SETS: HeroSet[] = [
     },
     right: [
       {
-        image:
-          "https://images.unsplash.com/photo-1473445730015-841f29a9490b?w=700&q=80",
+        image: HOME_HERO_KEDARNATH_IMAGE,
         title: "Kedarnath Dham",
         subtitle: "Divine Journey · Book Early",
         cta: "Book Now",
         ctaLink: "/yatras/char-dham-yatra",
       },
       {
-        image:
-          "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=700&q=80",
-        title: "Spiti Valley",
-        subtitle: "The Last Horizon",
-        cta: "Explore",
-        ctaLink: "/treks/spiti-valley-trek",
+        image: HOME_HERO_KINNAUR_KAILASH_IMAGE,
+        title: "Kinnaur Kailash Yatra",
+        subtitle: "Sacred Parikrama · Himachal",
+        cta: "Book Yatra",
+        ctaLink: "/yatras/kinnaur-kailash-yatra",
       },
       {
-        image:
-          "https://images.unsplash.com/photo-1609766418204-94aaeaf0f4b7?w=700&q=80",
-        title: "Mani Mahesh Yatra",
-        subtitle: "Sacred Circuit · 9 Days",
-        cta: "View Details",
-        ctaLink: "/yatras/mani-mahesh-yatra",
+        image: PANCH_KEDAR_KEDARNATH_NIGHT_JPG,
+        title: "Panch Kedar Yatra",
+        subtitle: "Five Shiva shrines · 14 Days",
+        cta: "Book Yatra",
+        ctaLink: "/yatras/panch-kedar-yatra",
       },
     ],
   },
   {
     left: {
-      image:
-        "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=900&q=80",
+      image: HOME_HERO_BRAHMATAL_WINTER_IMAGE,
       title: "Brahmatal Winter Trek",
       subtitle: "Frozen Wonderland Awaits",
       cta: "Book Winter Trek",
@@ -125,28 +343,25 @@ const HERO_SETS: HeroSet[] = [
     },
     right: [
       {
-        image:
-          "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=700&q=80",
+        image: HOME_HERO_CHANDRATAL_LAKE_IMAGE,
         title: "Chandratal Lake",
         subtitle: "The Moon Lake · 5 Days",
         cta: "View Package",
         ctaLink: "/treks/chandratal-lake-trek",
       },
       {
-        image:
-          "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=700&q=80",
-        title: "Pin Parvati Pass",
-        subtitle: "India's Most Challenging Crossing",
-        cta: "Explore",
-        ctaLink: "/treks/pin-parvati-pass",
+        image: PANCH_BADRI_PHOTO_GALLERY[0].src,
+        title: "Panch Badri Yatra",
+        subtitle: "Five Vishnu shrines · 8 Days",
+        cta: "Book Yatra",
+        ctaLink: "/yatras/panch-badri-yatra",
       },
       {
-        image:
-          "https://images.unsplash.com/photo-1551632811-561732d1e306?w=700&q=80",
-        title: "Kinnaur Kailash Yatra",
-        subtitle: "Parikrama of the Gods",
+        image: HEMKUND_SAHIB_PHOTO_GALLERY[0].src,
+        title: "Hemkund Sahib Yatra",
+        subtitle: "World's highest Gurudwara · 3 Days",
         cta: "Book Yatra",
-        ctaLink: "/yatras/kinnaur-kailash-yatra",
+        ctaLink: "/yatras/hemkund-sahib-yatra",
       },
     ],
   },
@@ -157,29 +372,25 @@ const HERO_SETS: HeroSet[] = [
 const UK_DESTINATIONS = [
   {
     name: "Roopkund",
-    image:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80",
+    image: HOME_HERO_ROOPKUND_MAIN_IMAGE,
     price: "₹12,000",
     slug: "roopkund-trek",
   },
   {
     name: "Valley of Flowers",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
+    image: HOME_HERO_VALLEY_OF_FLOWERS_MAIN_IMAGE,
     price: "₹8,500",
     slug: "valley-of-flowers",
   },
   {
     name: "Kedarnath",
-    image:
-      "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400&q=80",
+    image: HOME_HERO_KEDARNATH_IMAGE,
     price: "₹9,999",
     slug: "kedarnath-trek",
   },
   {
     name: "Brahmatal",
-    image:
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400&q=80",
+    image: HOME_HERO_BRAHMATAL_WINTER_IMAGE,
     price: "₹7,500",
     slug: "brahmatal-trek",
   },
@@ -202,29 +413,25 @@ const UK_DESTINATIONS = [
 const HP_DESTINATIONS = [
   {
     name: "Triund",
-    image:
-      "https://images.unsplash.com/photo-1556296240-b6b6e89c0f9f?w=400&q=80",
+    image: HOME_HERO_TRIUND_IMAGE,
     price: "₹3,500",
     slug: "triund-trek",
   },
   {
     name: "Hampta Pass",
-    image:
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=400&q=80",
+    image: HOME_HERO_HAMPTA_PASS_IMAGE,
     price: "₹9,500",
     slug: "hampta-pass",
   },
   {
     name: "Chandratal Lake",
-    image:
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=400&q=80",
+    image: HOME_HERO_CHANDRATAL_LAKE_IMAGE,
     price: "₹10,000",
     slug: "chandratal-lake-trek",
   },
   {
     name: "Sar Pass",
-    image:
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80",
+    image: HOME_HERO_SAR_PASS_IMAGE,
     price: "₹8,000",
     slug: "sar-pass-trek",
   },
@@ -237,95 +444,9 @@ const HP_DESTINATIONS = [
   },
   {
     name: "Spiti Valley",
-    image:
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=400&q=80",
+    image: HOME_HP_SPITI_VALLEY_IMAGE,
     price: "₹14,000",
     slug: "spiti-valley-trek",
-  },
-];
-
-// ─── Testimonials ────────────────────────────────────────────────────────────
-
-const TESTIMONIALS = [
-  {
-    name: "Priya Sharma",
-    city: "Delhi",
-    trek: "Kedarkantha Trek",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&q=80",
-    review:
-      "Absolutely magical winter experience! The guides were extremely knowledgeable and safety-conscious. Waking up to a snow-covered tent was surreal. Trekora made every moment count.",
-  },
-  {
-    name: "Rahul Verma",
-    city: "Mumbai",
-    trek: "Roopkund Trek",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80",
-    review:
-      "The Roopkund trek was the most challenging yet rewarding experience of my life. The team handled everything perfectly — from food to tents to safety. The skeleton lake view was worth every step!",
-  },
-  {
-    name: "Ananya Krishnan",
-    city: "Bangalore",
-    trek: "Valley of Flowers",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&q=80",
-    review:
-      "Heaven on earth! 500 species of flowers in full bloom. I had zero trekking experience and the guides were incredibly patient. Already planning Hampta Pass next season.",
-  },
-  {
-    name: "Amit Patel",
-    city: "Ahmedabad",
-    trek: "Hampta Pass",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&q=80",
-    review:
-      "Two completely different landscapes in one trek is mind-blowing. Lush Kullu valley to barren Spiti — the contrast is unreal. Excellent guide, excellent food, excellent memories!",
-  },
-  {
-    name: "Sneha Reddy",
-    city: "Hyderabad",
-    trek: "Triund Trek",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&q=80",
-    review:
-      "Perfect first trek! The Dhauladhar range at sunset is something I will never forget. Small group made it very comfortable. Will definitely book a longer trek with Trekora.",
-  },
-  {
-    name: "Vikram Singh",
-    city: "Jaipur",
-    trek: "Char Dham Yatra",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80",
-    review:
-      "Spiritual journey of a lifetime. The team arranged everything perfectly — from permits to darshan at each dham. Highly recommended for anyone seeking divine blessings.",
-  },
-  {
-    name: "Meera Nair",
-    city: "Kochi",
-    trek: "Brahmatal Trek",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&q=80",
-    review:
-      "Brahmatal in winter is surreal. Frozen lake, snow-capped peaks, cozy camps. The team's professionalism gave me full confidence throughout. Will definitely come back!",
-  },
-  {
-    name: "Arun Kapoor",
-    city: "Pune",
-    trek: "Kedarnath Trek",
-    rating: 5,
-    image:
-      "https://images.unsplash.com/photo-1521119989659-a83eee488004?w=80&q=80",
-    review:
-      "Trekora transformed my Kedarnath trip into an adventure. The trail guidance, local knowledge, and hospitality were second to none. Spiritual and thrilling at once.",
   },
 ];
 
@@ -441,59 +562,6 @@ const _INSTAGRAM_GRID = [
     src: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80",
     likes: 1987,
     caption: "Rupin Pass snow wall! 🏔️",
-  },
-];
-
-// ─── Upcoming Batches ────────────────────────────────────────────────────────
-
-const BATCHES = [
-  {
-    trek: "Roopkund Trek",
-    dates: "15–23 May 2025",
-    duration: "8D/7N",
-    slots: 4,
-    price: 12000,
-    full: false,
-  },
-  {
-    trek: "Valley of Flowers",
-    dates: "1–7 Aug 2025",
-    duration: "6D/5N",
-    slots: 0,
-    price: 8500,
-    full: true,
-  },
-  {
-    trek: "Triund Trek",
-    dates: "20–22 Apr 2025",
-    duration: "2D/1N",
-    slots: 8,
-    price: 3500,
-    full: false,
-  },
-  {
-    trek: "Hampta Pass",
-    dates: "10–15 Jun 2025",
-    duration: "5D/4N",
-    slots: 3,
-    price: 9500,
-    full: false,
-  },
-  {
-    trek: "Kedarkantha Trek",
-    dates: "5–11 Jan 2026",
-    duration: "6D/5N",
-    slots: 6,
-    price: 7500,
-    full: false,
-  },
-  {
-    trek: "Brahmatal Trek",
-    dates: "8–14 Feb 2026",
-    duration: "6D/5N",
-    slots: 0,
-    price: 7500,
-    full: true,
   },
 ];
 
@@ -631,6 +699,54 @@ function AnimatedCounter({
 
 // ─── Hero Banner Grid ────────────────────────────────────────────────────────
 
+function HeroRightPromoCta({
+  ctaLink,
+  className,
+  style,
+  children,
+  "data-ocid": dataOcid,
+}: {
+  ctaLink: string;
+  className?: string;
+  style?: CSSProperties;
+  children: ReactNode;
+  "data-ocid"?: string;
+}) {
+  const yatraSlug = /^\/yatras\/([^/]+)$/.exec(ctaLink)?.[1];
+  if (yatraSlug) {
+    return (
+      <Link
+        to="/yatras/$slug"
+        params={{ slug: yatraSlug }}
+        className={className}
+        style={style}
+        data-ocid={dataOcid}
+      >
+        {children}
+      </Link>
+    );
+  }
+  const trekSlug = /^\/treks\/([^/]+)$/.exec(ctaLink)?.[1];
+  if (trekSlug) {
+    return (
+      <Link
+        to="/treks/$slug"
+        params={{ slug: trekSlug }}
+        className={className}
+        style={style}
+        data-ocid={dataOcid}
+      >
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <Link to="/treks" className={className} style={style} data-ocid={dataOcid}>
+      {children}
+    </Link>
+  );
+}
+
 function HeroBannerGrid() {
   const [setIdx, setSetIdx] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -677,10 +793,15 @@ function HeroBannerGrid() {
             className="relative rounded-lg overflow-hidden"
             style={{ minHeight: 280, height: "clamp(280px, 50vw, 420px)" }}
           >
-            <img
+            <OptimizedImage
+              key={`hero-left-${setIdx}`}
               src={set.left.image}
               alt={set.left.title}
-              className="w-full h-full object-cover absolute inset-0"
+              fill
+              variant="hero"
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="min-h-[420px]"
               style={{ minHeight: 420 }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -714,10 +835,12 @@ function HeroBannerGrid() {
                 className="relative rounded-lg overflow-hidden flex-1"
                 style={{ minHeight: 128 }}
               >
-                <img
+                <OptimizedImage
                   src={b.image}
                   alt={b.title}
-                  className="w-full h-full object-cover absolute inset-0"
+                  fill
+                  variant="hero"
+                  sizes="(max-width: 1024px) 33vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
                 <div className="absolute inset-0 flex flex-col justify-center px-4">
@@ -727,14 +850,14 @@ function HeroBannerGrid() {
                   <p className="text-white/85 text-xs mb-2 text-shadow">
                     {b.subtitle}
                   </p>
-                  <Link
-                    to="/treks"
+                  <HeroRightPromoCta
+                    ctaLink={b.ctaLink}
                     className="btn-primary text-xs py-1 px-3"
                     style={{ width: "fit-content" }}
                     data-ocid={`hero.right_cta.${i + 1}`}
                   >
                     {b.cta}
-                  </Link>
+                  </HeroRightPromoCta>
                 </div>
               </div>
             ))}
@@ -875,7 +998,7 @@ function TrekCarousel({ treks, id }: { treks: typeof TREKS; id: string }) {
   const scroll = (dir: "left" | "right") => {
     if (scrollRef.current)
       scrollRef.current.scrollBy({
-        left: dir === "left" ? -300 : 300,
+        left: dir === "left" ? -280 : 280,
         behavior: "smooth",
       });
   };
@@ -886,14 +1009,14 @@ function TrekCarousel({ treks, id }: { treks: typeof TREKS; id: string }) {
         onClick={() => scroll("left")}
         aria-label="Scroll left"
         data-ocid={`${id}.carousel_prev`}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -ml-4 w-9 h-9 rounded-full flex items-center justify-center shadow-elevated transition-all hover:scale-110"
-        style={{ background: "var(--ew-orange)", color: "#fff" }}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -ml-4 w-9 h-9 rounded-full bg-white shadow-elevated flex items-center justify-center transition-all hover:scale-110 border"
+        style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <ChevronLeft size={18} />
+        <ChevronLeft size={16} style={{ color: "var(--ew-red)" }} />
       </button>
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-1"
+        className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2 px-1"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {treks.map((trek, i) => (
@@ -903,7 +1026,7 @@ function TrekCarousel({ treks, id }: { treks: typeof TREKS; id: string }) {
             style={{ scrollSnapAlign: "start" }}
             data-ocid={`${id}.card.${i + 1}`}
           >
-            <TrekCard trek={trek} index={i} />
+            <TrekCard trek={trek} index={i} compactCta />
           </div>
         ))}
       </div>
@@ -912,10 +1035,10 @@ function TrekCarousel({ treks, id }: { treks: typeof TREKS; id: string }) {
         onClick={() => scroll("right")}
         aria-label="Scroll right"
         data-ocid={`${id}.carousel_next`}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 -mr-4 w-9 h-9 rounded-full flex items-center justify-center shadow-elevated transition-all hover:scale-110"
-        style={{ background: "var(--ew-orange)", color: "#fff" }}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 -mr-4 w-9 h-9 rounded-full bg-white shadow-elevated flex items-center justify-center transition-all hover:scale-110 border"
+        style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <ChevronRight size={18} />
+        <ChevronRight size={16} style={{ color: "var(--ew-red)" }} />
       </button>
     </div>
   );
@@ -938,10 +1061,12 @@ function DestGrid({
           style={{ aspectRatio: "4/3" }}
           data-ocid={`${prefix}.dest.${i + 1}`}
         >
-          <img
+          <OptimizedImage
             src={d.image}
             alt={d.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            variant="destination"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-2">
@@ -958,54 +1083,6 @@ function DestGrid({
         </Link>
       ))}
     </div>
-  );
-}
-
-// ─── Yatra Card ──────────────────────────────────────────────────────────────
-
-const YATRA_ICONS = ["🕉️", "⛰️", "🙏", "🏔️", "🌿", "✨"];
-
-function YatraCard({ yatra, idx }: { yatra: (typeof YATRAS)[0]; idx: number }) {
-  return (
-    <Link
-      to="/yatras/$slug"
-      params={{ slug: yatra.slug }}
-      className="flex-none w-52 bg-white rounded-lg overflow-hidden shadow-card flex flex-col"
-      data-ocid={`yatras.card.${idx + 1}`}
-      style={{ scrollSnapAlign: "start", textDecoration: "none" }}
-    >
-      <div className="relative h-28">
-        <img
-          src={yatra.image}
-          alt={yatra.name}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-      </div>
-      <div className="p-3 flex flex-col flex-1">
-        <div className="text-xl mb-1">
-          {YATRA_ICONS[idx % YATRA_ICONS.length]}
-        </div>
-        <h3
-          className="font-bold text-[14px] leading-snug mb-1"
-          style={{ color: "var(--ew-red)" }}
-        >
-          {yatra.name}
-        </h3>
-        <p
-          className="text-[11px] mb-1"
-          style={{ color: "var(--ew-gray-dark)" }}
-        >
-          {yatra.duration} Days · {yatra.startPoint}
-        </p>
-        <p
-          className="font-bold text-[14px] mt-auto"
-          style={{ color: "var(--ew-orange)" }}
-        >
-          from ₹{yatra.price.toLocaleString("en-IN")}
-        </p>
-      </div>
-    </Link>
   );
 }
 
@@ -1140,7 +1217,7 @@ function RecommendedSection() {
           </button>
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 px-1"
+            className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2 px-1"
             style={{ scrollSnapType: "x mandatory" }}
           >
             {filtered.map((trek, i) => (
@@ -1150,7 +1227,7 @@ function RecommendedSection() {
                 style={{ scrollSnapAlign: "start" }}
                 data-ocid={`recommended.card.${i + 1}`}
               >
-                <TrekCard trek={trek} index={i} />
+                <TrekCard trek={trek} index={i} compactCta />
               </div>
             ))}
           </div>
@@ -1175,7 +1252,6 @@ function RecommendedSection() {
 export default function HomePage() {
   const [season, setSeason] = useState<Season>("Summer");
   const seasonMeta = SEASON_META[season];
-  const [batchTab, setBatchTab] = useState<string>("This Month");
   const yatrasScrollRef = useRef<HTMLDivElement>(null);
   const [newsEmail, setNewsEmail] = useState("");
   const [newsSubmitted, setNewsSubmitted] = useState(false);
@@ -1188,10 +1264,6 @@ export default function HomePage() {
   // Featured carousel treks (first 12)
   // Featured carousel treks (first 12)
   const _featuredTreks = TREKS.filter((t) => t.isFeatured).slice(0, 12);
-
-  // Upcoming batches by tab
-  const batchTabs = ["This Month", "Next 3 Months", "Summer 2025", "All"];
-  const visibleBatches = BATCHES.slice(0, 6);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1208,6 +1280,46 @@ export default function HomePage() {
         schema={[
           {
             "@context": "https://schema.org",
+            "@type": "TouristInformationCenter",
+            name: "Trekora",
+            description:
+              "Himalayan treks and yatras with certified mountain guides in Uttarakhand and Himachal Pradesh",
+            url: "https://www.trekora.com",
+            telephone: SITE_PHONE_TEL,
+            email: SITE_EMAIL,
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Dehradun",
+              addressRegion: "Uttarakhand",
+              addressCountry: "IN",
+            },
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: 30.3165,
+              longitude: 78.0322,
+            },
+            openingHoursSpecification: {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ],
+              opens: "08:00",
+              closes: "20:00",
+            },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.9",
+              reviewCount: "127",
+            },
+          },
+          {
+            "@context": "https://schema.org",
             "@type": "Organization",
             name: "Trekora",
             url: "https://www.trekora.com",
@@ -1216,7 +1328,7 @@ export default function HomePage() {
               "India's premier Himalayan trekking and yatra company. 40+ treks, 11 yatras across Uttarakhand and Himachal Pradesh.",
             contactPoint: {
               "@type": "ContactPoint",
-              telephone: "+91-1800-000-0000",
+              telephone: SITE_PHONE_TEL,
               contactType: "customer service",
               availableLanguage: ["English", "Hindi"],
             },
@@ -1241,6 +1353,8 @@ export default function HomePage() {
       />
       {/* ── SECTION 1: HERO BANNER GRID ── */}
       <HeroBannerGrid />
+
+      <TrustBadgesStrip />
 
       {/* ── SOCIAL PROOF TICKER (below hero) ── */}
       <SocialProofTicker />
@@ -1461,6 +1575,57 @@ export default function HomePage() {
                   converge.
                 </p>
               </div>
+              {BALI_PASS_TREK ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.bali_pass_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Bali Pass Trek — 4,950m crossing Har Ki Dun to Yamunotri
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "bali-pass" }}
+                    className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.bali_pass_feature"
+                  >
+                    <OptimizedImage
+                      src={BALI_PASS_PHOTO_GALLERY[0].src}
+                      alt={BALI_PASS_PHOTO_GALLERY[0].alt}
+                      fill
+                      variant="yatra-card"
+                      className="object-cover"
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {BALI_PASS_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "bali-pass" }}
+                        className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.bali_pass_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="yatra-card"
+                          className="object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
               <div className="flex gap-3 mt-6">
                 <Link
                   to="/treks"
@@ -1540,6 +1705,81 @@ export default function HomePage() {
                   backdrop for treks that are equal parts adventure and cultural
                   immersion.
                 </p>
+              </div>
+              {BEAS_KUND_TREK ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="himachal.beas_kund_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Beas Kund Trek — glacial source of the Beas at 3,690m near
+                    Manali
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "beas-kund" }}
+                    className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="himachal.beas_kund_feature"
+                  >
+                    <OptimizedImage
+                      src={BEAS_KUND_PHOTO_GALLERY[0].src}
+                      alt={BEAS_KUND_PHOTO_GALLERY[0].alt}
+                      fill
+                      variant="yatra-card"
+                      className="object-cover"
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {BEAS_KUND_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "beas-kund" }}
+                        className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`himachal.beas_kund_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="yatra-card"
+                          className="object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              <div
+                className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
+                data-ocid="himachal.spiti_gallery"
+              >
+                {SPITI_VALLEY_TREK_IMAGES.map((img) => (
+                  <Link
+                    key={img.src}
+                    to="/treks/$slug"
+                    params={{ slug: "spiti-valley-trek" }}
+                    className="relative aspect-[4/3] rounded-lg overflow-hidden ring-1 ring-black/5 hover:opacity-95 transition-opacity"
+                    data-ocid="himachal.spiti_gallery_thumb"
+                  >
+                    <OptimizedImage
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      variant="gallery-thumb"
+                      sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 20vw"
+                      className="object-cover"
+                    />
+                  </Link>
+                ))}
               </div>
               <div className="flex gap-3 mt-6">
                 <Link
@@ -1699,16 +1939,217 @@ export default function HomePage() {
               Journey Beyond the Ordinary
             </p>
           </motion.div>
-          {/* Scroll carousel */}
-          <div
+          {CHAR_DHAM_YATRA?.images && CHAR_DHAM_YATRA.images.length > 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.char_dham_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Char Dham Yatra — The four sacred shrines
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 px-1">
+                {CHAR_DHAM_YATRA.images.map((src, idx) => (
+                  <Link
+                    key={src}
+                    to="/yatras/$slug"
+                    params={{ slug: "char-dham-yatra" }}
+                    className="relative aspect-[4/3] rounded-lg overflow-hidden ring-2 ring-white/15 hover:ring-white/45 transition-shadow"
+                    data-ocid={`yatras.char_dham_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={src}
+                      alt={
+                        CHAR_DHAM_GALLERY_ALTS[idx] ??
+                        `Char Dham Yatra — photo ${idx + 1}`
+                      }
+                      fill
+                      variant="yatra-card"
+                      className="object-cover"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {PANCH_KEDAR_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.panch_kedar_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Panch Kedar Yatra — Kedarnath, Tungnath, Rudranath,
+                Madhyamaheshwar and Kalpeshwar
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "panch-kedar-yatra" }}
+                className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.panch_kedar_feature"
+              >
+                <OptimizedImage
+                  src={HOME_HERO_PANCH_KEDAR_YATRA_IMAGE}
+                  alt="Panch Kedar Yatra — collage of the five sacred Shiva temples in Garhwal: Kedarnath, Kalpeshwar, Rudranath, Tungnath, and Madhyamaheshwar"
+                  fill
+                  variant="yatra-card"
+                  className="object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {PANCH_KEDAR_WEBP_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "panch-kedar-yatra" }}
+                    className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.panch_kedar_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="yatra-card"
+                      className="object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {PANCH_BADRI_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.panch_badri_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Panch Badri Yatra — Badrinath (Vishal Badri), Yogdhyan Badri,
+                Bhavishya Badri, Vridha Badri, and Adi Badri
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "panch-badri-yatra" }}
+                className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.panch_badri_feature"
+              >
+                <OptimizedImage
+                  src={PANCH_BADRI_YATRA_COLLAGE_WEBP}
+                  alt="Panch Badri Yatra — collage of the five Vishnu shrines: Vishal (Badrinath), Yogdhyan, Bhavishya, Vridha, and Adi Badri in Uttarakhand"
+                  fill
+                  variant="yatra-card"
+                  className="object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {PANCH_BADRI_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "panch-badri-yatra" }}
+                    className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.panch_badri_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="yatra-card"
+                      className="object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {HEMKUND_SAHIB_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.hemkund_sahib_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Hemkund Sahib Yatra — Lokpal Lake at 4,633m · Valley of Flowers
+                gateway
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "hemkund-sahib-yatra" }}
+                className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.hemkund_sahib_feature"
+              >
+                <OptimizedImage
+                  src={HEMKUND_SAHIB_PHOTO_GALLERY[0].src}
+                  alt={HEMKUND_SAHIB_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="yatra-card"
+                  className="object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {HEMKUND_SAHIB_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "hemkund-sahib-yatra" }}
+                    className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.hemkund_sahib_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="yatra-card"
+                      className="object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {/* Scroll carousel — same card layout as recommended treks */}
+          <motion.div
             ref={yatrasScrollRef}
-            className="flex gap-4 overflow-x-auto overflow-hidden scrollbar-hide pb-3 px-1"
+            className="flex gap-4 overflow-x-auto scrollbar-hide pb-3 px-1"
             style={{ scrollSnapType: "x mandatory" }}
           >
             {YATRAS.slice(0, 6).map((y, i) => (
-              <YatraCard key={y.id} yatra={y} idx={i} />
+              <motion.div
+                key={y.id}
+                className="flex-none w-[85vw] sm:w-64 md:w-56 card bg-white rounded-xl overflow-hidden"
+                style={{ scrollSnapAlign: "start" }}
+                data-ocid={`yatras.card.${i + 1}`}
+              >
+                <YatraCard yatra={y} index={i} variant="listing" compactCta />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
           <div className="text-center mt-6">
             <Link
               to="/yatras"
@@ -1731,9 +2172,11 @@ export default function HomePage() {
               style={{ background: "var(--ew-orange)" }}
               data-ocid="offers.bogo_banner"
             >
-              <img
+              <OptimizedImage
                 src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80"
                 alt="Trek offer"
+                fill
+                variant="banner-strip"
                 className="absolute right-0 top-0 h-full w-1/3 object-cover opacity-30"
               />
               <div className="relative z-10">
@@ -1761,9 +2204,11 @@ export default function HomePage() {
               style={{ background: "var(--ew-red)" }}
               data-ocid="offers.chardham_banner"
             >
-              <img
-                src="https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400&q=80"
+              <OptimizedImage
+                src={CHAR_DHAM_COVER}
                 alt="Char Dham"
+                fill
+                variant="banner-strip"
                 className="absolute right-0 top-0 h-full w-1/3 object-cover opacity-30"
               />
               <div className="relative z-10">
@@ -1776,13 +2221,14 @@ export default function HomePage() {
                 <p className="text-white/90 text-sm mb-3">
                   Sacred journey packages from ₹18,999 — seats filling fast
                 </p>
-                <button
+                <EnquiryButton
                   type="button"
                   className="btn-white text-sm py-2 px-5"
+                  trekName="Char Dham Yatra"
                   data-ocid="offers.chardham_button"
                 >
                   Book Now
-                </button>
+                </EnquiryButton>
               </div>
             </div>
           </div>
@@ -1887,254 +2333,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SECTION 12: TESTIMONIALS ── */}
-      <section className="py-12 bg-white" data-ocid="testimonials.section">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-8"
-          >
-            <SectionTitle>What Our Trekkers Say</SectionTitle>
-          </motion.div>
-          <div className="relative">
-            <div className="flex gap-4 overflow-x-auto overflow-hidden scrollbar-hide pb-3">
-              {TESTIMONIALS.map((t, i) => (
-                <div
-                  key={t.name}
-                  className="flex-none w-72 bg-white rounded-lg p-5 shadow-card border"
-                  style={{ borderColor: "var(--ew-gray-mid)" }}
-                  data-ocid={`testimonial.card.${i + 1}`}
-                >
-                  {/* Stars */}
-                  <div className="flex gap-0.5 mb-2">
-                    {[1, 2, 3, 4, 5]
-                      .filter((n) => n <= t.rating)
-                      .map((n) => (
-                        <span
-                          key={n}
-                          style={{ color: "var(--ew-gold)", fontSize: 13 }}
-                        >
-                          ★
-                        </span>
-                      ))}
-                  </div>
-                  {/* Trek badge */}
-                  <span
-                    className="text-[11px] font-semibold px-2 py-0.5 rounded mb-2 inline-block"
-                    style={{
-                      background: "var(--ew-red-lt)",
-                      color: "var(--ew-red)",
-                    }}
-                  >
-                    {t.trek}
-                  </span>
-                  <p
-                    className="text-[13px] leading-relaxed mb-4"
-                    style={{ color: "var(--ew-text-lt)" }}
-                  >
-                    "{t.review}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={t.image}
-                      alt={t.name}
-                      className="w-9 h-9 rounded-full object-cover"
-                    />
-                    <div>
-                      <p
-                        className="font-semibold text-[13px]"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        {t.name}
-                      </p>
-                      <p
-                        className="text-[11px]"
-                        style={{ color: "var(--ew-gray-dark)" }}
-                      >
-                        {t.city}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-2 mt-5">
-            <div className="flex gap-0.5">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <span key={n} style={{ color: "var(--ew-gold)", fontSize: 15 }}>
-                  ★
-                </span>
-              ))}
-            </div>
-            <span
-              className="text-sm font-bold"
-              style={{ color: "var(--ew-text)" }}
-            >
-              4.8/5
-            </span>
-            <span className="text-sm" style={{ color: "var(--ew-gray-dark)" }}>
-              Google Reviews · 2,400+ ratings
-            </span>
-          </div>
-        </div>
-      </section>
-
       {/* ── GOOGLE REVIEWS ── */}
       <GoogleReviewsSection />
       {/* ── SECTION 11.5: SCROLLING REVIEWS ── */}
       <HomepageReviews />
-
-      {/* ── SECTION 13: UPCOMING BATCHES ── */}
-      <section className="py-12 section-alt" data-ocid="batches.section">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex items-end justify-between mb-6"
-          >
-            <SectionTitle>Upcoming Trek Batches</SectionTitle>
-          </motion.div>
-          {/* Tab filters */}
-          <div
-            className="flex gap-0 border-b mb-5"
-            style={{ borderColor: "var(--ew-gray-mid)" }}
-          >
-            {batchTabs.map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setBatchTab(tab)}
-                className={`px-5 py-2.5 text-[13px] font-medium transition-colors ${batchTab === tab ? "tab-active" : ""}`}
-                style={batchTab !== tab ? { color: "var(--ew-gray-dark)" } : {}}
-                data-ocid={`batches.tab.${tab.toLowerCase().replace(/\s+/g, "_")}`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm min-w-[600px]">
-              <thead>
-                <tr
-                  style={{
-                    borderBottom: "2px solid var(--ew-gray-mid)",
-                    background: "var(--ew-gray-lt)",
-                  }}
-                >
-                  <th
-                    className="text-left py-3 px-3 font-semibold text-[12px] uppercase tracking-wide"
-                    style={{ color: "var(--ew-text-lt)" }}
-                  >
-                    Trek
-                  </th>
-                  <th
-                    className="text-left py-3 px-3 font-semibold text-[12px] uppercase tracking-wide"
-                    style={{ color: "var(--ew-text-lt)" }}
-                  >
-                    Dates
-                  </th>
-                  <th
-                    className="text-left py-3 px-3 font-semibold text-[12px] uppercase tracking-wide"
-                    style={{ color: "var(--ew-text-lt)" }}
-                  >
-                    Duration
-                  </th>
-                  <th
-                    className="text-left py-3 px-3 font-semibold text-[12px] uppercase tracking-wide"
-                    style={{ color: "var(--ew-text-lt)" }}
-                  >
-                    Slots
-                  </th>
-                  <th
-                    className="text-left py-3 px-3 font-semibold text-[12px] uppercase tracking-wide"
-                    style={{ color: "var(--ew-text-lt)" }}
-                  >
-                    Price
-                  </th>
-                  <th className="py-3 px-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {visibleBatches.map((b, i) => (
-                  <tr
-                    key={b.trek}
-                    style={{ borderBottom: "1px solid var(--ew-gray-mid)" }}
-                    data-ocid={`batches.row.${i + 1}`}
-                  >
-                    <td
-                      className="py-3 px-3 font-semibold"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      {b.trek}
-                    </td>
-                    <td
-                      className="py-3 px-3"
-                      style={{ color: "var(--ew-text-lt)" }}
-                    >
-                      {b.dates}
-                    </td>
-                    <td
-                      className="py-3 px-3"
-                      style={{ color: "var(--ew-text-lt)" }}
-                    >
-                      {b.duration}
-                    </td>
-                    <td className="py-3 px-3">
-                      {b.full ? (
-                        <span
-                          className="text-[11px] font-bold line-through"
-                          style={{ color: "var(--ew-gray-dark)" }}
-                        >
-                          FULL
-                        </span>
-                      ) : b.slots <= 3 ? (
-                        <span className="badge-red text-[10px]">
-                          Only {b.slots} left!
-                        </span>
-                      ) : (
-                        <span className="badge-green text-[10px]">
-                          {b.slots} Available
-                        </span>
-                      )}
-                    </td>
-                    <td
-                      className="py-3 px-3 font-bold"
-                      style={{ color: "var(--ew-orange)" }}
-                    >
-                      ₹{b.price.toLocaleString("en-IN")}
-                    </td>
-                    <td className="py-3 px-3">
-                      {!b.full && (
-                        <Link
-                          to="/book"
-                          className="btn-primary text-[12px] py-1.5 px-4"
-                          data-ocid={`batches.book_button.${i + 1}`}
-                        >
-                          Book Now
-                        </Link>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-4 text-right">
-            <Link
-              to="/treks"
-              className="text-sm font-semibold flex items-center gap-1 justify-end"
-              style={{ color: "var(--ew-red)" }}
-              data-ocid="batches.view_all_link"
-            >
-              View All Batches <ArrowRight size={14} />
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* ── SECTION 13b: UPCOMING BATCHES ENHANCED ── */}
       <UpcomingBatchesSection />
@@ -2165,12 +2367,13 @@ export default function HomePage() {
                 className="flex-none w-64 bg-white rounded-lg overflow-hidden shadow-card group block"
                 data-ocid={`blog.card.${i + 1}`}
               >
-                <div className="h-40 overflow-hidden">
-                  <img
+                <div className="relative h-40 overflow-hidden">
+                  <OptimizedImage
                     src={blog.heroImage}
                     alt={blog.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    variant="blog-card"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
                 <div className="p-4">
@@ -2329,7 +2532,6 @@ export default function HomePage() {
       </section>
 
       {/* Trek Recommender Quiz */}
-      <TrekRecommenderQuiz />
     </div>
   );
 }

@@ -10,6 +10,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { useWeather } from "../hooks/useWeather";
 
+import OptimizedImage from "./media/OptimizedImage";
+
 export interface WeatherWidgetProps {
   trekName: string;
   /** Location string passed to OpenWeatherMap — e.g. "Lohajung, Uttarakhand" */
@@ -90,7 +92,10 @@ const CONDITION_EMOJI: Record<string, string> = {
   "Partly Cloudy": "⛅",
 };
 
-const HAS_API_KEY = !!import.meta.env.VITE_OPENWEATHERMAP_KEY;
+const HAS_API_KEY = !!(
+  import.meta.env.VITE_OPENWEATHER_API_KEY ??
+  import.meta.env.VITE_OPENWEATHERMAP_KEY
+);
 
 function WeatherIcon({
   icon,
@@ -111,11 +116,13 @@ function WeatherIcon({
     );
   }
   return (
-    <img
+    <OptimizedImage
       src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
       alt={condition}
+      variant="thumbnail"
       width={size}
       height={size}
+      sizes={`${size}px`}
       className="object-contain"
       onError={() => setImgFailed(true)}
     />

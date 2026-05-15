@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
+
 import { motion } from "motion/react";
+import OptimizedImage from "../components/media/OptimizedImage";
 
 const TEAM = [
   {
@@ -56,7 +58,7 @@ const TIMELINE = [
   {
     year: "2009",
     title: "Founded in Rishikesh",
-    desc: "EternaWings started with a single Kedarnath trek with 6 friends, driven by a passion for the mountains.",
+    desc: "Trekora started with a single Kedarnath trek with 6 friends, driven by a passion for the mountains.",
   },
   {
     year: "2012",
@@ -76,12 +78,12 @@ const TIMELINE = [
   {
     year: "2024",
     title: "10,000+ Trekkers",
-    desc: "A major milestone — 10,000 trekkers have explored the Himalayas with EternaWings safely and joyfully.",
+    desc: "A major milestone — 10,000 trekkers have explored the Himalayas with Trekora safely and joyfully.",
   },
   {
     year: "2025",
-    title: "EternaWings Relaunch",
-    desc: "Rebranded as EternaWings — Where Every Peak Tells a Story. New routes, new experiences, same trusted team.",
+    title: "Trekora Relaunch",
+    desc: "Rebranded as Trekora — Where Every Peak Tells a Story. New routes, new experiences, same trusted team.",
   },
 ];
 
@@ -145,10 +147,12 @@ export default function AboutPage() {
     <div className="pt-16 min-h-screen">
       {/* Hero */}
       <div className="relative h-96">
-        <img
+        <OptimizedImage
           src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80"
-          alt="EternaWings team in the mountains"
-          className="w-full h-full object-cover"
+          alt="Trekora team in the mountains"
+          fill
+          variant="hero"
+          priority
         />
         <div
           className="absolute inset-0"
@@ -163,7 +167,7 @@ export default function AboutPage() {
               Our Story
             </span>
             <h1 className="text-5xl font-bold mt-2 mb-3 text-shadow">
-              About EternaWings
+              About Trekora
             </h1>
             <p className="text-lg max-w-2xl opacity-80">
               Founded in 2009 with a single Kedarnath trek, we now lead 150+
@@ -201,8 +205,8 @@ export default function AboutPage() {
               className="leading-relaxed mb-4"
               style={{ color: "var(--ew-text-lt)" }}
             >
-              EternaWings was born from a simple belief: every person deserves
-              to experience the raw, soul-stirring beauty of the Himalayas. What
+              Trekora was born from a simple belief: every person deserves to
+              experience the raw, soul-stirring beauty of the Himalayas. What
               started as a weekend trek with 6 friends in 2009 has grown into
               India's most trusted mountain adventure company.
             </p>
@@ -300,9 +304,12 @@ export default function AboutPage() {
                 data-ocid={`team.card.${i + 1}`}
               >
                 <div className="pt-6 pb-2 flex justify-center">
-                  <img
+                  <OptimizedImage
                     src={member.image}
                     alt={member.name}
+                    variant="avatar"
+                    width={96}
+                    height={96}
                     className="w-24 h-24 rounded-full object-cover"
                     style={{ border: "3px solid var(--ew-red)" }}
                   />

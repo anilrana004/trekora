@@ -1,5 +1,5 @@
 import { createActor } from "@/backend";
-import { useActor } from "@caffeineai/core-infrastructure";
+import { useActor } from "@trekora/icp";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "ih_ref";

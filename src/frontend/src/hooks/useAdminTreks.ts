@@ -1,5 +1,5 @@
-import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useActor } from "@trekora/icp";
 import { createActor } from "../backend";
 import type { TrekInput } from "../backend.d.ts";
 

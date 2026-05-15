@@ -71,14 +71,11 @@ export function SEOHead({
     // OpenGraph
     setOGMeta("og:title", title);
     setOGMeta("og:description", description);
-    setOGMeta(
-      "og:image",
-      ogImage || "https://www.eternawings.com/og-default.jpg",
-    );
+    setOGMeta("og:image", ogImage || "https://www.trekora.com/og-default.jpg");
     setOGMeta("og:url", canonicalUrl);
     setOGMeta("og:type", ogType);
     setOGMeta("og:locale", "en_IN");
-    setOGMeta("og:site_name", "EternaWings");
+    setOGMeta("og:site_name", "Trekora");
 
     // Twitter Card
     setMeta("twitter:card", "summary_large_image");
@@ -86,7 +83,7 @@ export function SEOHead({
     setMeta("twitter:description", description);
     setMeta(
       "twitter:image",
-      ogImage || "https://www.eternawings.com/og-default.jpg",
+      ogImage || "https://www.trekora.com/og-default.jpg",
     );
 
     // JSON-LD

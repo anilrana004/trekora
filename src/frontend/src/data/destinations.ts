@@ -11,6 +11,8 @@ export interface Destination {
   trekCount: number;
   yatraCount?: number;
   image: string;
+  /** Use `contain` for infographic / map artwork so labels stay readable in cards. */
+  imageFit?: "cover" | "contain";
   category: string;
   nearestAirport?: string;
   nearestRailway?: string;
@@ -70,7 +72,8 @@ export const DESTINATIONS: Destination[] = [
     trekCount: 4,
     category: "base-camp",
     image:
-      "https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778828561/k2ihvlghosh6nzdhp16b.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant Airport (25 km)",
     nearestRailway: "Dehradun Railway Station",
   },
@@ -230,13 +233,14 @@ export const DESTINATIONS: Destination[] = [
     stateBadge: "UK",
     tagline: "Gateway to Gangotri & Har Ki Dun",
     description:
-      "Town on Bhagirathi river. Gateway to Gangotri, Dodital, Dayara Bugyal, Har Ki Dun and Kedartal.",
+      "Town on Bhagirathi river. Gateway to Gangotri, Kedarkantha, Har Ki Dun, Dayara Bugyal and Kedartal.",
     altitude: "1,158m",
     bestSeason: "May-Jun, Sep-Oct",
-    trekCount: 5,
+    trekCount: 4,
     category: "base-camp",
     image:
-      "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778832935/zprbell5jyiefshvcxye.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (155 km)",
     nearestRailway: "Rishikesh (155 km)",
   },
@@ -467,3 +471,42 @@ export const UTTARAKHAND_DESTINATIONS = DESTINATIONS.filter(
 export const HIMACHAL_DESTINATIONS = DESTINATIONS.filter(
   (d) => d.state === "Himachal Pradesh",
 );
+
+export const DESTINATION_STATE_SLUGS = {
+  Uttarakhand: "uttarakhand",
+  "Himachal Pradesh": "himachal-pradesh",
+} as const satisfies Record<Destination["state"], string>;
+
+/** Legacy URL segment: `/destinations/states/dehradun` */
+export const DESTINATION_LEGACY_STATE_SLUG = "states";
+
+/** Legacy district URLs (`/destinations/districts/dehradun`) redirect to treks. */
+export const DESTINATION_DISTRICTS_PATH_SLUG = "districts";
+
+export function getDestinationStateSlug(state: Destination["state"]): string {
+  return DESTINATION_STATE_SLUGS[state];
+}
+
+export function isDestinationDetailPathStateSlug(stateSlug: string): boolean {
+  return (
+    stateSlug === DESTINATION_LEGACY_STATE_SLUG ||
+    stateSlug === DESTINATION_DISTRICTS_PATH_SLUG ||
+    Object.values(DESTINATION_STATE_SLUGS).includes(
+      stateSlug as (typeof DESTINATION_STATE_SLUGS)[Destination["state"]],
+    )
+  );
+}
+
+export function getDestinationsForStateSlug(
+  stateSlug: string,
+): Destination[] | null {
+  const match = Object.entries(DESTINATION_STATE_SLUGS).find(
+    ([, slug]) => slug === stateSlug,
+  );
+  if (!match) return null;
+  return DESTINATIONS.filter((d) => d.state === match[0]);
+}
+
+export function getDestinationBySlug(slug: string): Destination | undefined {
+  return DESTINATIONS.find((d) => d.slug === slug);
+}

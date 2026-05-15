@@ -46,6 +46,10 @@ const StateHubPage = lazy(() => import("./pages/StateHubPage"));
 const TrekkerProfilePage = lazy(() => import("./pages/TrekkerProfilePage"));
 const PressPage = lazy(() => import("./pages/PressPage"));
 const ComparePage = lazy(() => import("./pages/ComparePage"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const TermsAndConditionsPage = lazy(
+  () => import("./pages/TermsAndConditionsPage"),
+);
 const AdminPage = lazy(() => import("./pages/admin/AdminPage"));
 const AdminTreksPage = lazy(() => import("./pages/admin/AdminTreksPage"));
 const AdminBookingsPage = lazy(() => import("./pages/admin/AdminBookingsPage"));
@@ -238,6 +242,12 @@ const galleryRoute = createRoute({
 const bookRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/book",
+  validateSearch: (raw: Record<string, unknown>) => ({
+    trek:
+      typeof raw.trek === "string" && raw.trek.length > 0
+        ? raw.trek
+        : undefined,
+  }),
   component: () => (
     <Suspense fallback={<PageLoader />}>
       <BookingPage />
@@ -301,6 +311,26 @@ const upcomingBatchesRoute = createRoute({
   component: () => (
     <Suspense fallback={<PageLoader />}>
       <UpcomingBatchesPage />
+    </Suspense>
+  ),
+});
+
+const privacyPolicyRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "/privacy-policy",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <PrivacyPolicyPage />
+    </Suspense>
+  ),
+});
+
+const termsAndConditionsRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "/terms-and-conditions",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <TermsAndConditionsPage />
     </Suspense>
   ),
 });
@@ -465,6 +495,8 @@ const routeTree = rootRoute.addChildren([
     corporateRoute,
     packagesRoute,
     upcomingBatchesRoute,
+    privacyPolicyRoute,
+    termsAndConditionsRoute,
   ]),
   adminLayoutRoute.addChildren([
     adminIndexRoute,
@@ -482,8 +514,11 @@ export const router = createRouter({
   routeTree,
   // Disable automatic scroll restoration so the browser does not jump to the
   // top when React state updates (e.g. the hero banner carousel) trigger a
-  // re-render. Scroll position is preserved naturally while the user scrolls.
+  // re-render. `AnimatedOutlet` scrolls smoothly on real pathname changes.
   scrollRestoration: false,
+  // Preload lazy route chunks on hover/focus — trek & yatra detail pages open faster.
+  defaultPreload: "intent",
+  defaultPreloadDelay: 60,
 });
 
 declare module "@tanstack/react-router" {

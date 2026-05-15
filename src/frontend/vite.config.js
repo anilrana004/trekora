@@ -9,11 +9,14 @@ const ii_url =
     : `https://identity.internetcomputer.org/`;
 
 process.env.II_URL = process.env.II_URL || ii_url;
-process.env.STORAGE_GATEWAY_URL =
-  process.env.STORAGE_GATEWAY_URL || "https://blob.caffeine.ai";
+if (process.env.STORAGE_GATEWAY_URL === undefined) {
+  process.env.STORAGE_GATEWAY_URL = "";
+}
 
 export default defineConfig({
-  logLevel: "error",
+  logLevel: "info",
+  envDir: "..",
+  envPrefix: ["VITE_", "NEXT_PUBLIC_"],
   build: {
     emptyOutDir: true,
     sourcemap: false,
@@ -42,6 +45,12 @@ export default defineConfig({
     },
   },
   server: {
+    // Prefer IPv4 so "localhost" matches what many Windows setups expect.
+    host: "127.0.0.1",
+    // If 5173 is busy (old Vite tabs), Vite tries the next port — `--open` uses the real URL.
+    port: 5173,
+    strictPort: false,
+    open: true,
     proxy: {
       "/api": {
         target: "http://127.0.0.1:4943",
@@ -58,6 +67,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: [
+      {
+        find: "@trekora/icp",
+        replacement: fileURLToPath(
+          new URL("./node_modules/@caffeineai/core-infrastructure", import.meta.url),
+        ),
+      },
       {
         find: "declarations",
         replacement: fileURLToPath(new URL("../declarations", import.meta.url)),

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { BLOGS } from "../data/blogs";
 
 export default function BlogDetailPage() {
@@ -63,10 +64,13 @@ export default function BlogDetailPage() {
     >
       {/* Hero */}
       <div className="relative h-80 md:h-[420px] overflow-hidden">
-        <img
+        <OptimizedImage
           src={blog.heroImage}
           alt={blog.title}
-          className="w-full h-full object-cover"
+          fill
+          priority
+          variant="hero"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute bottom-6 left-0 right-0 container mx-auto px-4">
@@ -264,10 +268,12 @@ export default function BlogDetailPage() {
                   data-ocid={`blog.related.${i + 1}`}
                 >
                   <div className="relative h-36 overflow-hidden">
-                    <img
+                    <OptimizedImage
                       src={b.heroImage}
                       alt={b.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      fill
+                      variant="blog-card"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <span
                       className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded"

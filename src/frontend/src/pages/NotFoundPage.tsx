@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Home, MapPin, Mountain } from "lucide-react";
 import { motion } from "motion/react";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { TREKS } from "../data/treks";
 
 const featuredTreks = TREKS.filter((t) => t.isFeatured).slice(0, 4);
@@ -98,12 +99,13 @@ export default function NotFoundPage() {
                 className="trek-card block group"
                 data-ocid={`not-found.suggested.item.${idx + 1}`}
               >
-                <div className="trek-card-img" style={{ height: 160 }}>
-                  <img
+                <div className="trek-card-img relative" style={{ height: 160 }}>
+                  <OptimizedImage
                     src={trek.image}
                     alt={trek.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105"
+                    fill
+                    variant="trek-card"
+                    className="transition-transform duration-400 group-hover:scale-105"
                   />
                 </div>
                 <div className="p-4">

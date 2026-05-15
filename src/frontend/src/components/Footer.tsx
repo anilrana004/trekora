@@ -1,18 +1,45 @@
-import { Link } from "@tanstack/react-router";
+import { SITE_LOGO_URL } from "@/lib/site-brand";
 import {
+  SITE_ADDRESS_LINE,
+  SITE_EMAIL,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_TEL,
+  WHATSAPP_CHAT_URL,
+} from "@/lib/site-contact";
+import { Link } from "@tanstack/react-router";
+import type { LucideIcon } from "lucide-react";
+import {
+  Award,
+  BadgePercent,
+  CalendarX,
   ChevronDown,
+  ChevronRight,
+  Clock,
+  Compass,
+  Cookie,
   Facebook,
+  Heart,
+  HeartHandshake,
   Instagram,
   Linkedin,
   Mail,
+  Map as MapIcon,
   MapPin,
   Phone,
+  RotateCcw,
+  Scale,
+  Shield,
   Twitter,
   Youtube,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
+import OptimizedImage from "./media/OptimizedImage";
+
+const FOOTER_TAGLINE =
+  "Trekora is your trusted travel partner for unforgettable Himalayan treks, spiritual yatras, and adventure experiences.";
 
 const POPULAR_TREKS = [
   { name: "Roopkund Trek", slug: "roopkund-trek" },
@@ -29,10 +56,10 @@ const POPULAR_TREKS = [
 
 const POPULAR_YATRAS = [
   { name: "Char Dham Yatra", slug: "char-dham-yatra" },
-  { name: "Panch Kedar", slug: "panch-kedar" },
+  { name: "Panch Kedar", slug: "panch-kedar-yatra" },
   { name: "Mani Mahesh Yatra", slug: "mani-mahesh-yatra" },
   { name: "Kinnaur Kailash", slug: "kinnaur-kailash" },
-  { name: "Hemkund Sahib", slug: "hemkund-sahib" },
+  { name: "Hemkund Sahib", slug: "hemkund-sahib-yatra" },
   { name: "Shrikhand Mahadev", slug: "shrikhand-mahadev" },
   { name: "Adi Kailash", slug: "adi-kailash" },
 ];
@@ -47,6 +74,7 @@ const QUICK_LINKS = [
   { name: "Blog", to: "/blog" },
   { name: "Contact Us", to: "/contact" },
   { name: "Partner With Us", to: "/contact" },
+  { name: "Sitemap", to: "/" },
 ];
 
 const SOCIAL_LINKS = [
@@ -55,428 +83,449 @@ const SOCIAL_LINKS = [
   { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
   { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
   { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+] as const;
+
+const TRUST_ITEMS: {
+  title: string;
+  subtitle: string;
+  Icon: LucideIcon;
+}[] = [
+  {
+    Icon: Shield,
+    title: "Trusted by Thousands",
+    subtitle: "2,400+ Happy Travelers",
+  },
+  {
+    Icon: BadgePercent,
+    title: "Best Price Guaranteed",
+    subtitle: "No Hidden Charges",
+  },
+  {
+    Icon: Award,
+    title: "Expert Guides & Support",
+    subtitle: "Experienced & Certified",
+  },
+  {
+    Icon: HeartHandshake,
+    title: "Responsible Tourism",
+    subtitle: "Travel with Impact",
+  },
 ];
 
-const LEGAL_LINKS = [
-  { name: "Privacy Policy", to: "/contact" },
-  { name: "Terms & Conditions", to: "/contact" },
-  { name: "Refund Policy", to: "/contact" },
-  { name: "Cookie Policy", to: "/contact" },
-  { name: "Sitemap", to: "/" },
+const LEGAL_STRIP: {
+  name: string;
+  to: string;
+  Icon: LucideIcon;
+}[] = [
+  { name: "Privacy Policy", to: "/privacy-policy", Icon: Shield },
+  { name: "Terms & Conditions", to: "/terms-and-conditions", Icon: Scale },
+  { name: "Refund Policy", to: "/contact", Icon: RotateCcw },
+  {
+    name: "Cancellation Policy",
+    to: "/terms-and-conditions",
+    Icon: CalendarX,
+  },
+  { name: "Cookie Policy", to: "/privacy-policy", Icon: Cookie },
+  { name: "Sitemap", to: "/", Icon: MapIcon },
 ];
 
 const ACCORDION_SECTIONS = [
-  {
-    key: "quick-links",
-    title: "Quick Links",
-    content: "quick-links",
-  },
+  { key: "quick-links", title: "Quick Links", content: "quick-links" as const },
   {
     key: "popular-treks",
     title: "Popular Treks",
-    content: "popular-treks",
+    content: "popular-treks" as const,
   },
   {
     key: "popular-yatras",
     title: "Popular Yatras",
-    content: "popular-yatras",
+    content: "popular-yatras" as const,
   },
-  {
-    key: "contact",
-    title: "Contact Us",
-    content: "contact",
-  },
+  { key: "contact", title: "Contact Us", content: "contact" as const },
 ] as const;
 
 type AccordionKey = (typeof ACCORDION_SECTIONS)[number]["key"];
+
+function openPlanMyTrekModal() {
+  window.dispatchEvent(new CustomEvent("open-query-modal"));
+}
+
+function openFindMyTrekQuiz() {
+  window.dispatchEvent(new CustomEvent("open-trek-quiz"));
+}
+
+function FooterHeroBackdrop() {
+  return (
+    <div className="pointer-events-none absolute inset-0" aria-hidden>
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(165deg, #0a0203 0%, #1a0608 28%, #2a0a0c 52%, #1c0506 78%, #100303 100%)",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 85% 70% at 88% 22%, rgba(255,70,50,0.18), transparent 52%)",
+        }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 90% 55% at 50% 100%, rgba(192,0,28,0.2), transparent 58%)",
+        }}
+      />
+    </div>
+  );
+}
+
+function FooterMountainRidge() {
+  return (
+    <svg
+      className="footer-ridge-svg relative z-[1] -mt-px block w-full"
+      viewBox="0 0 1440 72"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <title>Mountain ridge divider</title>
+      <path
+        fill="var(--footer-ridge-fill, #100303)"
+        d="M0,72 L0,38 L45,28 L88,40 L132,22 L176,36 L220,18 L268,34 L312,20 L358,38 L402,24 L448,40 L492,26 L538,42 L582,28 L628,44 L672,30 L718,46 L762,32 L808,48 L852,34 L898,50 L942,36 L988,52 L1032,38 L1078,54 L1122,40 L1168,56 L1212,42 L1258,58 L1302,44 L1348,60 L1392,46 L1440,52 L1440,72 Z"
+      />
+    </svg>
+  );
+}
+
+function FooterNavLink({
+  to,
+  children,
+  params,
+  dataOcid,
+}: {
+  to: string;
+  children: ReactNode;
+  params?: Record<string, string>;
+  dataOcid?: string;
+}) {
+  const inner = (
+    <>
+      <ChevronRight
+        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-white/80"
+        aria-hidden
+      />
+      <span className="leading-snug">{children}</span>
+    </>
+  );
+  const className =
+    "group flex items-start gap-1.5 py-1.5 text-[0.875rem] transition-colors";
+  const style = {
+    color: "rgba(255,255,255,0.78)",
+    textDecoration: "none" as const,
+  };
+
+  if (params) {
+    return (
+      <li>
+        <Link
+          to={to as "/treks/$slug" | "/yatras/$slug"}
+          params={params as never}
+          resetScroll
+          className={className}
+          style={style}
+          data-ocid={dataOcid}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.color = "#fff";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.color =
+              "rgba(255,255,255,0.78)";
+          }}
+        >
+          {inner}
+        </Link>
+      </li>
+    );
+  }
+
+  return (
+    <li>
+      <Link
+        to={to}
+        resetScroll
+        className={className}
+        style={style}
+        data-ocid={dataOcid}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.color = "#fff";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.color =
+            "rgba(255,255,255,0.78)";
+        }}
+      >
+        {inner}
+      </Link>
+    </li>
+  );
+}
+
+function WhatsAppGlyph({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
+      <title>WhatsApp</title>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+  );
+}
+
+function ContactColumnBody({
+  isMobile,
+  denseCtas,
+}: {
+  isMobile: boolean;
+  denseCtas?: boolean;
+}) {
+  const outlineBtn =
+    "inline-flex flex-1 min-w-0 items-center justify-center gap-2 rounded-full border border-white/35 bg-transparent px-3 py-2.5 text-xs font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/5";
+  const iconRow = "flex gap-2";
+
+  return (
+    <ul className="space-y-3 pb-2 text-sm">
+      <li className="flex gap-2" style={{ color: "rgba(255,255,255,0.72)" }}>
+        <MapPin size={16} className="mt-0.5 shrink-0 text-white/75" />
+        <span>{SITE_ADDRESS_LINE}</span>
+      </li>
+      <li>
+        <a
+          href={`tel:${SITE_PHONE_TEL}`}
+          className="flex gap-2 transition-colors hover:text-white"
+          style={{ color: "rgba(255,255,255,0.72)", textDecoration: "none" }}
+        >
+          <Phone size={16} className="shrink-0 text-white/75" />
+          <span>{SITE_PHONE_DISPLAY}</span>
+        </a>
+      </li>
+      <li>
+        <a
+          href={WHATSAPP_CHAT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex gap-2 transition-colors hover:text-white"
+          style={{ color: "rgba(255,255,255,0.72)", textDecoration: "none" }}
+        >
+          <span className="mt-0.5 shrink-0 text-[#25D366]">
+            <WhatsAppGlyph />
+          </span>
+          <span>{SITE_PHONE_DISPLAY}</span>
+        </a>
+      </li>
+      <li>
+        <a
+          href={`mailto:${SITE_EMAIL}`}
+          className="flex gap-2 transition-colors hover:text-white"
+          style={{ color: "rgba(255,255,255,0.72)", textDecoration: "none" }}
+        >
+          <Mail size={16} className="shrink-0 text-white/75" />
+          {SITE_EMAIL}
+        </a>
+      </li>
+      <li
+        className="flex gap-2"
+        style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}
+      >
+        <Clock size={16} className="mt-0.5 shrink-0 text-white/75" />
+        Mon–Sat 9AM–9PM IST
+      </li>
+
+      {isMobile ? (
+        <li className="space-y-2.5 pt-1">
+          <div className={iconRow}>
+            <a
+              href={WHATSAPP_CHAT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${outlineBtn} text-[#b8f5cf] border-[#2a8f4a]/80 hover:bg-[#25D366]/10`}
+              data-ocid="footer.whatsapp_button"
+            >
+              <WhatsAppGlyph />
+              WhatsApp Chat
+            </a>
+            <a
+              href={`tel:${SITE_PHONE_TEL}`}
+              className={outlineBtn}
+              data-ocid="footer.call_button"
+            >
+              <Phone size={15} />
+              Call Now
+            </a>
+          </div>
+          <button
+            type="button"
+            onClick={openFindMyTrekQuiz}
+            className="flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white shadow-lg transition-[filter] hover:brightness-110"
+            style={{ backgroundColor: "var(--ew-red)" }}
+            data-ocid="footer.find_my_trek"
+          >
+            <Compass size={17} strokeWidth={2.2} />
+            Find My Trek
+          </button>
+          <button
+            type="button"
+            onClick={openPlanMyTrekModal}
+            className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-dashed border-[var(--ew-red)]/90 bg-transparent py-3 text-sm font-semibold text-white transition-colors hover:border-[var(--ew-red)] hover:bg-[var(--ew-red)]/10"
+            data-ocid="footer.plan_my_trek"
+          >
+            <MapIcon size={17} strokeWidth={2.2} />
+            Plan My Trek
+          </button>
+        </li>
+      ) : (
+        <li className="space-y-2.5 pt-1">
+          <div
+            className={
+              denseCtas ? "flex flex-col gap-2" : `${iconRow} flex-wrap`
+            }
+          >
+            <a
+              href={WHATSAPP_CHAT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${outlineBtn} ${denseCtas ? "w-full" : ""} text-[#c8ffe0] border-[#2f9b52]/75 hover:bg-[#25D366]/10`}
+              data-ocid="footer.whatsapp_button"
+            >
+              <WhatsAppGlyph />
+              WhatsApp Chat
+            </a>
+            <a
+              href={`tel:${SITE_PHONE_TEL}`}
+              className={`${outlineBtn} ${denseCtas ? "w-full" : ""}`}
+              data-ocid="footer.call_button"
+            >
+              <Phone size={15} />
+              Call Now
+            </a>
+          </div>
+          <button
+            type="button"
+            onClick={openFindMyTrekQuiz}
+            className="flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold text-white shadow-md transition-[filter] hover:brightness-110"
+            style={{ backgroundColor: "var(--ew-red)" }}
+            data-ocid="footer.find_my_trek"
+          >
+            <Compass size={17} strokeWidth={2.2} />
+            Find My Trek
+          </button>
+          <button
+            type="button"
+            onClick={openPlanMyTrekModal}
+            className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-dashed border-[var(--ew-red)]/90 bg-transparent py-2.5 text-sm font-semibold text-white transition-colors hover:border-[var(--ew-red)] hover:bg-[var(--ew-red)]/10"
+            data-ocid="footer.plan_my_trek"
+          >
+            <MapIcon size={17} strokeWidth={2.2} />
+            Plan My Trek
+          </button>
+        </li>
+      )}
+    </ul>
+  );
+}
+
+function ColumnHeading({ children }: { children: ReactNode }) {
+  return (
+    <h4
+      className="mb-4 text-[0.72rem] font-bold uppercase tracking-[0.14em]"
+      style={{ color: "rgba(255,255,255,0.92)" }}
+    >
+      {children}
+    </h4>
+  );
+}
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const isMobile = useIsMobile();
   const [openAccordion, setOpenAccordion] = useState<AccordionKey | null>(null);
-  const hostname =
-    typeof window !== "undefined" ? window.location.hostname : "trekora.com";
 
-  function toggleAccordion(key: AccordionKey) {
+  const toggleAccordion = useCallback((key: AccordionKey) => {
     setOpenAccordion((prev) => (prev === key ? null : key));
-  }
+  }, []);
 
   return (
-    <footer className="footer" data-ocid="footer">
-      <div className="container mx-auto px-4 pt-14 pb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
-          {/* Col 1: Brand */}
-          <div className="lg:col-span-1">
-            {/* Logo — white version */}
-            <div className="flex items-center gap-2 mb-3">
-              <svg
-                width="34"
-                height="34"
-                viewBox="0 0 36 36"
-                fill="none"
-                aria-hidden="true"
+    <footer
+      className="footer footer--immersive relative text-white"
+      data-ocid="footer"
+      style={
+        {
+          "--footer-ridge-fill": "#100303",
+          background: "transparent",
+        } as CSSProperties
+      }
+    >
+      {/* ── Hero: reference artwork + brand ── */}
+      <div
+        className="relative min-h-[260px] overflow-hidden pb-0 md:min-h-[300px]"
+        style={{
+          clipPath:
+            "polygon(0 18px, 6% 5px, 14% 20px, 22% 4px, 32% 17px, 42% 2px, 52% 16px, 62% 6px, 72% 19px, 82% 3px, 92% 14px, 100% 8px, 100% 100%, 0 100%)",
+        }}
+      >
+        <FooterHeroBackdrop />
+        <div className="container relative z-[2] mx-auto max-w-6xl px-4 pb-10 pt-12 md:pb-12 md:pt-16">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+            <div className="flex max-w-xl flex-col gap-4">
+              <Link
+                to="/"
+                className="inline-block max-w-[220px]"
+                data-ocid="footer.logo"
               >
-                <path
-                  d="M18 6 C10 10, 4 18, 6 28 C10 24, 14 20, 18 22 C22 20, 26 24, 30 28 C32 18, 26 10, 18 6Z"
-                  fill="rgba(255,255,255,0.12)"
+                <OptimizedImage
+                  src={SITE_LOGO_URL}
+                  alt="Trekora — Where Every Peak Tells a Story"
+                  width={220}
+                  height={52}
+                  variant="blog-card"
+                  sizes="220px"
+                  className="h-11 w-auto max-w-full object-contain object-left drop-shadow-md md:h-12"
                 />
-                <path
-                  d="M6 28 C10 24, 14 20, 18 22 L18 30 L6 28Z"
-                  fill="#fff"
-                />
-                <path
-                  d="M30 28 C26 24, 22 20, 18 22 L18 30 L30 28Z"
-                  fill="var(--ew-orange)"
-                />
-                <polygon points="18,10 14,26 18,23 22,26" fill="#fff" />
-              </svg>
-              <div>
-                <p
-                  className="font-bold text-white text-base leading-tight"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  Trekora
-                </p>
-                <p className="text-white/50 text-[9px] uppercase tracking-widest">
-                  Where Every Peak Tells a Story
-                </p>
+              </Link>
+              <p
+                className="text-[0.9375rem] leading-relaxed md:text-base"
+                style={{ color: "rgba(255,255,255,0.82)" }}
+              >
+                {FOOTER_TAGLINE}
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="flex">
+                  {["s1", "s2", "s3", "s4", "s5"].map((id) => (
+                    <svg
+                      key={id}
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      className="mr-0.5"
+                      fill="#ffffff"
+                      aria-hidden
+                    >
+                      <title>Star rating</title>
+                      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+                    </svg>
+                  ))}
+                </span>
+                <span className="text-sm text-white/70">
+                  4.8/5 based on 2,400 reviews
+                </span>
               </div>
-            </div>
-
-            {/* Star rating */}
-            <div className="flex items-center gap-1.5 mb-4">
-              <span className="flex">
-                {["s1", "s2", "s3", "s4", "s5"].map((id) => (
-                  <svg
-                    key={id}
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="var(--ew-gold)"
-                    aria-hidden="true"
-                  >
-                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-                  </svg>
-                ))}
-              </span>
-              <span className="text-white/70 text-xs">
-                4.8/5 based on 2,400 reviews
-              </span>
-            </div>
-
-            {/* Social icons */}
-            <div className="flex gap-2">
-              {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                  style={{ background: "rgba(255,255,255,0.1)" }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background =
-                      "var(--ew-orange)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background =
-                      "rgba(255,255,255,0.1)";
-                  }}
-                >
-                  <Icon size={14} color="#fff" />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop: 4 columns | Mobile: accordions */}
-          {ACCORDION_SECTIONS.map((section) => (
-            <div key={section.key} className="lg:block">
-              {/* Mobile accordion header */}
-              {isMobile ? (
-                <button
-                  type="button"
-                  onClick={() => toggleAccordion(section.key)}
-                  className="w-full flex items-center justify-between py-3"
-                  style={{
-                    borderBottom:
-                      openAccordion === section.key
-                        ? "none"
-                        : "1px solid rgba(255,255,255,0.1)",
-                    background: "transparent",
-                    touchAction: "manipulation",
-                  }}
-                  data-ocid={`footer.${section.key}.toggle`}
-                >
-                  <span
-                    className="text-sm font-bold uppercase tracking-wider"
-                    style={{ color: "rgba(255,255,255,0.9)" }}
-                  >
-                    {section.title}
-                  </span>
-                  <ChevronDown
-                    size={16}
-                    style={{
-                      color: "var(--ew-orange)",
-                      transform:
-                        openAccordion === section.key
-                          ? "rotate(180deg)"
-                          : "rotate(0deg)",
-                      transition: "transform 0.22s",
-                    }}
-                  />
-                </button>
-              ) : (
-                <h4 className="footer-heading">{section.title}</h4>
-              )}
-
-              {/* Content — always visible on desktop, accordion on mobile */}
-              <AnimatePresence initial={false}>
-                {(!isMobile || openAccordion === section.key) && (
-                  <motion.div
-                    initial={isMobile ? { height: 0, opacity: 0 } : false}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={isMobile ? { height: 0, opacity: 0 } : undefined}
-                    transition={{ duration: 0.22 }}
-                    className="overflow-hidden"
-                    style={{
-                      borderBottom:
-                        isMobile && openAccordion === section.key
-                          ? "1px solid rgba(255,255,255,0.1)"
-                          : "none",
-                    }}
-                  >
-                    {section.key === "quick-links" && (
-                      <ul className="pb-2">
-                        {QUICK_LINKS.map((link) => (
-                          <li key={link.name}>
-                            <Link
-                              to={link.to}
-                              resetScroll
-                              className="footer-link"
-                              style={{ textDecoration: "none" }}
-                            >
-                              {link.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {section.key === "popular-treks" && (
-                      <ul className="pb-2">
-                        {POPULAR_TREKS.map((trek) => (
-                          <li key={trek.slug}>
-                            <Link
-                              to="/treks/$slug"
-                              params={{ slug: trek.slug }}
-                              resetScroll
-                              className="footer-link"
-                              style={{ textDecoration: "none" }}
-                            >
-                              {trek.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {section.key === "popular-yatras" && (
-                      <ul className="pb-2">
-                        {POPULAR_YATRAS.map((yatra) => (
-                          <li key={yatra.slug}>
-                            <Link
-                              to="/yatras/$slug"
-                              params={{ slug: yatra.slug }}
-                              resetScroll
-                              className="footer-link"
-                              style={{ textDecoration: "none" }}
-                            >
-                              {yatra.name}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {section.key === "contact" && (
-                      <ul className="space-y-3 text-sm pb-2">
-                        <li
-                          className="flex gap-2"
-                          style={{ color: "rgba(255,255,255,0.65)" }}
-                        >
-                          <MapPin
-                            size={15}
-                            style={{
-                              color: "var(--ew-orange)",
-                              flexShrink: 0,
-                              marginTop: 2,
-                            }}
-                          />
-                          <span>
-                            15 Rajpur Road, Dehradun, Uttarakhand 248001
-                          </span>
-                        </li>
-                        <li>
-                          <a
-                            href="tel:+911800123456"
-                            className="flex gap-2 transition-colors"
-                            style={{
-                              color: "rgba(255,255,255,0.65)",
-                              textDecoration: "none",
-                            }}
-                          >
-                            <Phone
-                              size={15}
-                              style={{
-                                color: "var(--ew-orange)",
-                                flexShrink: 0,
-                              }}
-                            />
-                            Toll Free: 1800-123-4567
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="https://wa.me/919876543210"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex gap-2 transition-colors"
-                            style={{
-                              color: "rgba(255,255,255,0.65)",
-                              textDecoration: "none",
-                            }}
-                          >
-                            <svg
-                              width="15"
-                              height="15"
-                              fill="#25D366"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              style={{ flexShrink: 0 }}
-                            >
-                              <title>WhatsApp</title>
-                              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                            </svg>
-                            +91 98765 43210
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="mailto:hello@trekora.com"
-                            className="flex gap-2 transition-colors"
-                            style={{
-                              color: "rgba(255,255,255,0.65)",
-                              textDecoration: "none",
-                            }}
-                          >
-                            <Mail
-                              size={15}
-                              style={{
-                                color: "var(--ew-orange)",
-                                flexShrink: 0,
-                              }}
-                            />
-                            hello@trekora.com
-                          </a>
-                        </li>
-                        <li
-                          style={{
-                            color: "rgba(255,255,255,0.5)",
-                            fontSize: 12,
-                          }}
-                        >
-                          Mon–Sat 9AM–9PM IST
-                        </li>
-                        {/* Mobile: large tap-to-call + tap-to-WhatsApp buttons */}
-                        {isMobile ? (
-                          <li className="space-y-2 pt-2">
-                            <a
-                              href="tel:+911800123456"
-                              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-sm text-white"
-                              style={{
-                                background: "var(--ew-orange)",
-                                textDecoration: "none",
-                                touchAction: "manipulation",
-                              }}
-                              data-ocid="footer.call_button"
-                            >
-                              <Phone size={16} /> Call Now: 1800-123-4567
-                            </a>
-                            <a
-                              href="https://wa.me/919876543210?text=Hi%20Trekora%2C%20I%27d%20like%20to%20plan%20a%20trek"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-semibold text-sm text-white"
-                              style={{
-                                background: "#25D366",
-                                textDecoration: "none",
-                                touchAction: "manipulation",
-                              }}
-                              data-ocid="footer.whatsapp_button"
-                            >
-                              <svg
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                              >
-                                <title>WA</title>
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                              </svg>
-                              WhatsApp Chat
-                            </a>
-                          </li>
-                        ) : (
-                          <li className="flex gap-2 pt-2">
-                            <a
-                              href="https://wa.me/919876543210?text=Hi%20Trekora%2C%20I%27d%20like%20to%20plan%20a%20trek"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold text-white transition-colors"
-                              style={{
-                                background: "#25D366",
-                                textDecoration: "none",
-                              }}
-                              data-ocid="footer.whatsapp_button"
-                            >
-                              <svg
-                                width="13"
-                                height="13"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                                aria-hidden="true"
-                              >
-                                <title>WA</title>
-                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                              </svg>
-                              WhatsApp Chat
-                            </a>
-                            <a
-                              href="tel:+911800123456"
-                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold text-white transition-colors"
-                              style={{
-                                background: "var(--ew-orange)",
-                                textDecoration: "none",
-                              }}
-                              data-ocid="footer.call_button"
-                            >
-                              <Phone size={12} />
-                              Call Now
-                            </a>
-                          </li>
-                        )}
-                      </ul>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
-
-          {/* Mobile social icons: 2-row grid */}
-          {isMobile && (
-            <div className="lg:hidden col-span-full">
-              <div className="grid grid-cols-5 gap-2 mt-2" style={{}}>
+              <div className="flex flex-wrap gap-2">
                 {SOCIAL_LINKS.map(({ icon: Icon, href, label }) => (
                   <a
                     key={label}
@@ -484,65 +533,262 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="w-12 h-12 rounded-full flex items-center justify-center"
-                    style={{
-                      background: "rgba(255,255,255,0.1)",
-                      touchAction: "manipulation",
-                    }}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/5 transition-colors hover:border-white/55 hover:bg-white/12"
                   >
-                    <Icon size={18} color="#fff" />
+                    <Icon size={16} color="#fff" />
                   </a>
                 ))}
               </div>
             </div>
-          )}
+          </div>
+        </div>
+        <FooterMountainRidge />
+      </div>
+
+      {/* ── Main links slab ── */}
+      <div
+        className="footer-main-panel relative z-[2] -mt-1"
+        style={{
+          background:
+            "linear-gradient(180deg, #100303 0%, #0a0202 42%, #060101 100%)",
+        }}
+      >
+        <div className="container mx-auto max-w-6xl px-4 pb-12 pt-2 md:pb-14">
+          {/* Desktop grid */}
+          <div className="hidden gap-10 lg:grid lg:grid-cols-12">
+            <div className="col-span-3">
+              <ColumnHeading>Quick Links</ColumnHeading>
+              <ul>
+                {QUICK_LINKS.map((link) => (
+                  <FooterNavLink
+                    key={link.name}
+                    to={link.to}
+                    dataOcid={`footer.quick.${link.name.toLowerCase().replace(/\s+/g, "_")}`}
+                  >
+                    {link.name}
+                  </FooterNavLink>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-3">
+              <ColumnHeading>Popular Treks</ColumnHeading>
+              <ul>
+                {POPULAR_TREKS.map((trek) => (
+                  <FooterNavLink
+                    key={trek.slug}
+                    to="/treks/$slug"
+                    params={{ slug: trek.slug }}
+                    dataOcid={`footer.trek.${trek.slug}`}
+                  >
+                    {trek.name}
+                  </FooterNavLink>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-3">
+              <ColumnHeading>Popular Yatras</ColumnHeading>
+              <ul>
+                {POPULAR_YATRAS.map((yatra) => (
+                  <FooterNavLink
+                    key={yatra.slug}
+                    to="/yatras/$slug"
+                    params={{ slug: yatra.slug }}
+                    dataOcid={`footer.yatra.${yatra.slug}`}
+                  >
+                    {yatra.name}
+                  </FooterNavLink>
+                ))}
+              </ul>
+            </div>
+            <div className="col-span-3">
+              <ColumnHeading>Contact Us</ColumnHeading>
+              <ContactColumnBody isMobile={false} denseCtas />
+            </div>
+          </div>
+
+          {/* Mobile accordions */}
+          <div className="lg:hidden">
+            {ACCORDION_SECTIONS.map((section) => (
+              <div key={section.key}>
+                <button
+                  type="button"
+                  onClick={() => toggleAccordion(section.key)}
+                  className="flex w-full touch-manipulation items-center justify-between border-b border-white/10 py-3.5 text-left"
+                  style={{
+                    borderBottomColor:
+                      openAccordion === section.key
+                        ? "transparent"
+                        : "rgba(255,255,255,0.1)",
+                  }}
+                  data-ocid={`footer.${section.key}.toggle`}
+                >
+                  <span className="text-[0.8rem] font-bold uppercase tracking-[0.12em] text-white/90">
+                    {section.title}
+                  </span>
+                  <ChevronDown
+                    size={17}
+                    style={{
+                      color: "var(--ew-red)",
+                      transform:
+                        openAccordion === section.key
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
+                      transition: "transform 0.22s ease",
+                    }}
+                  />
+                </button>
+                <AnimatePresence initial={false}>
+                  {(!isMobile || openAccordion === section.key) && (
+                    <motion.div
+                      initial={isMobile ? { height: 0, opacity: 0 } : false}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={isMobile ? { height: 0, opacity: 0 } : undefined}
+                      transition={{ duration: 0.22 }}
+                      className="overflow-hidden"
+                      style={{
+                        borderBottom:
+                          isMobile && openAccordion === section.key
+                            ? "1px solid rgba(255,255,255,0.1)"
+                            : "none",
+                      }}
+                    >
+                      {section.key === "quick-links" && (
+                        <ul className="pb-3 pt-1">
+                          {QUICK_LINKS.map((link) => (
+                            <FooterNavLink key={link.name} to={link.to}>
+                              {link.name}
+                            </FooterNavLink>
+                          ))}
+                        </ul>
+                      )}
+                      {section.key === "popular-treks" && (
+                        <ul className="pb-3 pt-1">
+                          {POPULAR_TREKS.map((trek) => (
+                            <FooterNavLink
+                              key={trek.slug}
+                              to="/treks/$slug"
+                              params={{ slug: trek.slug }}
+                            >
+                              {trek.name}
+                            </FooterNavLink>
+                          ))}
+                        </ul>
+                      )}
+                      {section.key === "popular-yatras" && (
+                        <ul className="pb-3 pt-1">
+                          {POPULAR_YATRAS.map((yatra) => (
+                            <FooterNavLink
+                              key={yatra.slug}
+                              to="/yatras/$slug"
+                              params={{ slug: yatra.slug }}
+                            >
+                              {yatra.name}
+                            </FooterNavLink>
+                          ))}
+                        </ul>
+                      )}
+                      {section.key === "contact" && (
+                        <div className="pb-4 pt-1">
+                          <ContactColumnBody isMobile />
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Trust bar ── */}
+        <div
+          className="border-t border-white/[0.08]"
+          style={{
+            background:
+              "linear-gradient(90deg, #2a0808 0%, #1a0404 35%, #120303 100%)",
+          }}
+        >
+          <div className="container mx-auto max-w-6xl px-4 py-8">
+            <div className="grid grid-cols-1 divide-y divide-white/[0.08] border-y border-white/[0.08] md:divide-x md:divide-y-0 lg:grid-cols-4">
+              {TRUST_ITEMS.map(({ Icon, title, subtitle }) => (
+                <div key={title} className="flex gap-4 px-4 py-5 md:px-5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/20 text-white/90">
+                    <Icon size={22} strokeWidth={1.75} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm leading-snug text-white">
+                      <span className="font-semibold">{title}</span>
+                      <span className="text-white/35"> | </span>
+                      <span className="text-white/70">{subtitle}</span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="footer-bottom">
-        <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)" }}>
-            © {year} Trekora. All Rights Reserved. &nbsp;|&nbsp; GST:
-            05AAACE0000A1Z5 &nbsp;|&nbsp; Built with{" "}
-            <a
-              href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(hostname)}`}
-              style={{ color: "var(--ew-orange)", textDecoration: "none" }}
-              target="_blank"
-              rel="noopener noreferrer"
+      {/* ── Bottom strip ── */}
+      <div
+        className="footer-bottomStrip border-t border-white/[0.07]"
+        style={{ background: "#040101" }}
+      >
+        <div className="container mx-auto max-w-6xl px-4 py-5">
+          <div className="flex flex-col items-center gap-5 lg:flex-row lg:justify-between lg:gap-6">
+            <p
+              className="order-2 text-center text-xs leading-relaxed lg:order-1 lg:text-left"
+              style={{ color: "rgba(255,255,255,0.48)" }}
             >
-              caffeine.ai
-            </a>
-          </p>
-          <div className="flex flex-wrap items-center gap-3 justify-center">
-            {LEGAL_LINKS.map((l) => (
-              <Link
-                key={l.name}
-                to={l.to}
-                className="text-xs transition-colors"
-                style={{
-                  color: "rgba(255,255,255,0.45)",
-                  textDecoration: "none",
-                }}
-                data-ocid={`footer.${l.name.toLowerCase().replace(/\s+/g, "_")}.link`}
-              >
-                {l.name}
-              </Link>
-            ))}
-          </div>
-          <div className="flex items-center gap-1.5">
-            {["Razorpay", "UPI", "Visa", "MC", "RuPay"].map((p) => (
-              <span
-                key={p}
-                className="text-[10px] font-semibold px-2 py-1 rounded"
-                style={{
-                  background: "rgba(255,255,255,0.12)",
-                  color: "rgba(255,255,255,0.7)",
-                }}
-              >
-                {p}
+              © {year} Trekora. All rights reserved.
+              <span className="whitespace-nowrap">
+                {" "}
+                &nbsp;|&nbsp; GST: 05AAACE0000A1Z5
               </span>
-            ))}
+            </p>
+
+            <nav
+              className="order-1 flex w-full max-w-4xl flex-wrap items-center justify-center gap-y-2 lg:order-2"
+              aria-label="Legal"
+            >
+              {LEGAL_STRIP.map(({ name, to, Icon }, index) => (
+                <Fragment key={name}>
+                  {index > 0 ? (
+                    <span
+                      className="mx-2 select-none text-white/35"
+                      aria-hidden
+                    >
+                      |
+                    </span>
+                  ) : null}
+                  <Link
+                    to={to}
+                    className="inline-flex items-center gap-1.5 text-[11px] transition-colors hover:text-white"
+                    style={{
+                      color: "rgba(255,255,255,0.48)",
+                      textDecoration: "none",
+                    }}
+                    data-ocid={`footer.legal.${name.toLowerCase().replace(/\s+/g, "_")}`}
+                  >
+                    <Icon size={13} className="shrink-0 opacity-80" />
+                    {name}
+                  </Link>
+                </Fragment>
+              ))}
+            </nav>
+
+            <p
+              className="order-3 flex items-center gap-1.5 text-xs font-medium"
+              style={{ color: "rgba(255,255,255,0.55)" }}
+            >
+              Made with
+              <Heart
+                size={14}
+                className="fill-[var(--ew-red)] text-[var(--ew-red)]"
+                aria-hidden
+              />
+              for Travelers
+            </p>
           </div>
         </div>
       </div>

@@ -10,7 +10,8 @@ const NAV_ITEMS = [
   { label: "Contact", icon: User, to: "/contact" },
 ] as const;
 
-const HIDDEN_ROUTES = ["/booking", "/admin"];
+/** Hide nav on flows where fixed chrome blocks taps (e.g. booking calendar on `/book`). */
+const HIDDEN_ROUTES = ["/booking", "/book", "/admin"];
 
 export default function MobileBottomNav() {
   const isMobile = useIsMobile();

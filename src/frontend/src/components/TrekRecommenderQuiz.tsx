@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { TREKS } from "../data/treks";
 import type { Trek } from "../data/treks";
+import OptimizedImage from "./media/OptimizedImage";
+import { EnquiryButton } from "./ui/EnquiryButton";
 
 /* ── Types ────────────────────────────────────────────────── */
 type Fitness = "beginner" | "moderate" | "fit" | "veryfit";
@@ -212,11 +214,13 @@ function ResultCard({ trek, index }: { trek: Trek; index: number }) {
       className="flex gap-3 rounded-xl overflow-hidden"
       style={{ border: "1px solid var(--ew-gray-mid)" }}
     >
-      <img
-        src={trek.image.replace("w=1200", "w=200")}
+      <OptimizedImage
+        src={trek.image}
         alt={trek.name}
-        className="w-20 h-20 object-cover flex-shrink-0"
-        loading="lazy"
+        variant="thumbnail"
+        width={80}
+        height={80}
+        className="w-20 h-20 flex-shrink-0"
       />
       <div className="flex-1 min-w-0 py-2 pr-2">
         <p
@@ -234,9 +238,9 @@ function ResultCard({ trek, index }: { trek: Trek; index: number }) {
         >
           ₹{trek.price.toLocaleString("en-IN")}
         </p>
-        <Link
-          to="/treks/$slug"
-          params={{ slug: trek.slug }}
+        <EnquiryButton
+          type="button"
+          trekName={trek.name}
           className="text-xs font-semibold px-3 py-1 rounded-full inline-block"
           style={{
             backgroundColor: "var(--ew-orange)",
@@ -245,7 +249,7 @@ function ResultCard({ trek, index }: { trek: Trek; index: number }) {
           data-ocid={`quiz.result_book_button.${index + 1}`}
         >
           Book Now
-        </Link>
+        </EnquiryButton>
       </div>
     </motion.div>
   );
@@ -314,6 +318,12 @@ export default function TrekRecommenderQuiz() {
     }, 300);
   }
 
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener("open-trek-quiz", onOpen);
+    return () => window.removeEventListener("open-trek-quiz", onOpen);
+  }, []);
+
   // Keyboard close
   useEffect(() => {
     if (!open) return;
@@ -341,8 +351,8 @@ export default function TrekRecommenderQuiz() {
         onClick={() => setOpen(true)}
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.96 }}
-        className="fixed bottom-[7.5rem] right-5 z-50 flex items-center gap-2 text-white text-sm font-semibold px-5 py-3 rounded-full shadow-elevated"
-        style={{ backgroundColor: "var(--ew-orange)" }}
+        className="fixed bottom-[7.5rem] right-5 z-50 flex items-center gap-2 text-white text-sm font-semibold px-5 py-3 rounded-full shadow-elevated transition-[filter] hover:brightness-95"
+        style={{ backgroundColor: "var(--ew-red)" }}
         aria-label="Open trek recommender quiz"
         data-ocid="quiz.open_button"
       >

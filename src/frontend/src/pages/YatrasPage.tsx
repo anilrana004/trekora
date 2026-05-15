@@ -1,23 +1,9 @@
-import { Link } from "@tanstack/react-router";
-import { AlertCircle, ChevronRight, Clock, MapPin } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { SEOHead } from "../components/SEOHead";
+import YatraCard from "../components/YatraCard";
 import { HIMACHAL_YATRAS, UTTARAKHAND_YATRAS, YATRAS } from "../data/yatras";
-
-const SIGNIFICANCE_LABELS: Record<string, string> = {
-  "char-dham-yatra": "Moksha Pilgrimage",
-  "panch-kedar-yatra": "Shiva Circuit",
-  "panch-badri-yatra": "Vishnu Circuit",
-  "hemkund-sahib-yatra": "Sikh Pilgrimage",
-  "adi-kailash-om-parvat": "Indian Kailash",
-  "kartik-swami-temple": "Kartikeya Shrine",
-  "triyuginarayan-temple": "Divine Wedding Site",
-  "mani-mahesh-yatra": "Shiva's Throne",
-  "kinnaur-kailash-yatra": "Sacred Parikrama",
-  "shrikhand-mahadev-yatra": "Shiva Lingam",
-  "churdhar-yatra": "Shirgul Maharaj",
-};
 
 export default function YatrasPage() {
   const [tab, setTab] = useState<"all" | "uttarakhand" | "himachal">("all");
@@ -45,10 +31,10 @@ export default function YatrasPage() {
   return (
     <div className="pt-16 min-h-screen">
       <SEOHead
-        title="Himalayan Yatras 2025 — Sacred Pilgrimage Packages | EternaWings"
-        description="Book Char Dham, Panch Kedar, Panch Badri, Mani Mahesh and other sacred Himalayan yatras. Expert spiritual guides, all-inclusive packages with EternaWings."
-        keywords="Char Dham yatra, Panch Kedar, Himalayan pilgrimage, sacred yatra India, EternaWings yatra"
-        canonical="https://www.eternawings.com/yatras"
+        title="Himalayan Yatras 2025 — Sacred Pilgrimage Packages | Trekora"
+        description="Book Char Dham, Panch Kedar, Panch Badri, Mani Mahesh and other sacred Himalayan yatras. Expert spiritual guides, all-inclusive packages with Trekora."
+        keywords="Char Dham yatra, Panch Kedar, Himalayan pilgrimage, sacred yatra India, Trekora yatra"
+        canonical="https://www.trekora.com/yatras"
       />
       {/* ── Hero Banner ── */}
       <div
@@ -207,88 +193,7 @@ export default function YatrasPage() {
                 className="card"
                 data-ocid={`yatra.card.${i + 1}`}
               >
-                <div className="relative h-52 overflow-hidden trek-card-img">
-                  <img
-                    src={yatra.image}
-                    alt={yatra.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
-                  {/* Significance badge */}
-                  <span
-                    className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full text-white"
-                    style={{ backgroundColor: "var(--ew-red)" }}
-                  >
-                    {SIGNIFICANCE_LABELS[yatra.slug] ??
-                      (yatra.state === "uttarakhand"
-                        ? "Uttarakhand"
-                        : "Himachal Pradesh")}
-                  </span>
-                  <span
-                    className="absolute top-3 right-3 text-xs font-medium px-2 py-0.5 rounded-full"
-                    style={{
-                      backgroundColor: "var(--ew-red-lt)",
-                      color: "var(--ew-red)",
-                    }}
-                  >
-                    {yatra.state === "uttarakhand"
-                      ? "Uttarakhand"
-                      : "Himachal Pradesh"}
-                  </span>
-                </div>
-
-                <div className="p-5">
-                  <h3
-                    className="font-bold text-lg mb-1"
-                    style={{ color: "var(--ew-text)" }}
-                  >
-                    {yatra.name}
-                  </h3>
-                  <p
-                    className="text-sm line-clamp-2 mb-3"
-                    style={{ color: "var(--ew-text-lt)" }}
-                  >
-                    {yatra.significance}
-                  </p>
-                  <div
-                    className="flex items-center gap-4 text-xs mb-3"
-                    style={{ color: "var(--ew-gray-dark)" }}
-                  >
-                    <span className="flex items-center gap-1">
-                      <Clock size={12} /> {yatra.duration} Days
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MapPin size={12} /> {yatra.startPoint}
-                    </span>
-                  </div>
-                  <div
-                    className="flex items-center justify-between pt-3 border-t"
-                    style={{ borderColor: "var(--ew-gray-mid)" }}
-                  >
-                    <div>
-                      <span
-                        className="text-xs"
-                        style={{ color: "var(--ew-gray-dark)" }}
-                      >
-                        Starting from
-                      </span>
-                      <div
-                        className="font-bold text-lg"
-                        style={{ color: "var(--ew-orange)" }}
-                      >
-                        ₹{yatra.price.toLocaleString("en-IN")}
-                      </div>
-                    </div>
-                    <Link
-                      to="/yatras/$slug"
-                      params={{ slug: yatra.slug }}
-                      className="btn-secondary text-sm"
-                      data-ocid={`yatra.view_button.${i + 1}`}
-                    >
-                      View Yatra <ChevronRight size={14} />
-                    </Link>
-                  </div>
-                </div>
+                <YatraCard yatra={yatra} index={i} variant="listing" />
               </motion.div>
             ))}
           </div>
@@ -316,9 +221,9 @@ export default function YatrasPage() {
               routes traverse ancient trade paths, dense forests, glacial
               meadows, and high mountain passes, leading pilgrims to temples,
               shrines, and sacred lakes that have been revered for thousands of
-              years. EternaWings guides you through these transformative
-              journeys with expert support, ensuring your safety and comfort
-              while preserving the sanctity of each sacred destination.
+              years. Trekora guides you through these transformative journeys
+              with expert support, ensuring your safety and comfort while
+              preserving the sanctity of each sacred destination.
             </p>
           </motion.div>
         </div>

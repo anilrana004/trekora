@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import type { TrekInput } from "../../backend.d.ts";
 import type { BackendTrek } from "../../hooks/useTreks";
+import ImageUploadField from "./ImageUploadField";
 
 interface TrekFormModalProps {
   open: boolean;
@@ -179,6 +180,21 @@ export default function TrekFormModal({
       reviewCount: BigInt(0),
     };
     onSubmit(input);
+  }
+
+  function handleMainImageUploaded(urls: string[]) {
+    if (urls.length === 0) return;
+    set("image", urls[0] ?? "");
+  }
+
+  function handleAdditionalImagesUploaded(urls: string[]) {
+    if (urls.length === 0) return;
+    const existing = form.images
+      .split("\n")
+      .map((u) => u.trim())
+      .filter(Boolean);
+    const merged = [...existing, ...urls];
+    set("images", merged.join("\n"));
   }
 
   const inputCls = (hasError: boolean) =>
@@ -427,6 +443,12 @@ export default function TrekFormModal({
 
               {/* Main Image */}
               <Field label="Main Image URL *" error={errors.image}>
+                <ImageUploadField
+                  label="Upload Main Image"
+                  folder="treks"
+                  acceptVideo={false}
+                  onUploaded={handleMainImageUploaded}
+                />
                 <input
                   type="url"
                   value={form.image}
@@ -440,6 +462,13 @@ export default function TrekFormModal({
 
               {/* Additional Images */}
               <Field label="Additional Images (one URL per line)">
+                <ImageUploadField
+                  label="Upload Additional Images"
+                  folder="gallery"
+                  multiple
+                  acceptVideo={false}
+                  onUploaded={handleAdditionalImagesUploaded}
+                />
                 <textarea
                   value={form.images}
                   onChange={(e) => set("images", e.target.value)}

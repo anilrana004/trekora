@@ -139,6 +139,7 @@ export default function PackagesPage() {
           </span>
           <Link
             to="/book"
+            search={{ trek: undefined }}
             className="btn-white text-xs py-1.5 px-4"
             data-ocid="packages.summer_deal_button"
           >
@@ -226,6 +227,7 @@ export default function PackagesPage() {
               </ul>
               <Link
                 to="/book"
+                search={{ trek: undefined }}
                 className={
                   pkg.popular
                     ? "btn-primary w-full justify-center"

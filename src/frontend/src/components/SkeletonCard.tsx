@@ -5,15 +5,15 @@
 export default function SkeletonCard() {
   return (
     <div
-      className="flex-none w-full rounded-xl overflow-hidden bg-white shadow-card"
+      className="card flex-none w-full flex flex-col h-full"
       aria-hidden="true"
       data-ocid="skeleton.card"
     >
-      {/* Image area */}
-      <div className="skeleton w-full" style={{ aspectRatio: "16/9" }} />
+      {/* Image area — matches TrekCard h-52 */}
+      <div className="skeleton w-full h-52 shrink-0" />
 
       {/* Content */}
-      <div className="p-4 space-y-2">
+      <div className="p-5 space-y-2">
         {/* Title */}
         <div className="skeleton h-4 rounded w-3/4" />
         {/* Subtitle row */}

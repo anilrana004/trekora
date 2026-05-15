@@ -33,7 +33,8 @@ export interface UseWeatherResult {
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes
 const API_BASE = "https://api.openweathermap.org/data/2.5";
-const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY as string | undefined;
+const API_KEY = (import.meta.env.VITE_OPENWEATHER_API_KEY ??
+  import.meta.env.VITE_OPENWEATHERMAP_KEY) as string | undefined;
 
 function getCacheKey(location: string) {
   return `himalayan_weather_${location.toLowerCase().replace(/\s+/g, "_")}`;

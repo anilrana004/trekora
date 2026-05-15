@@ -1,5 +1,5 @@
-import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
+import { useActor } from "@trekora/icp";
 import {
   BarChart2,
   BookOpen,
@@ -13,6 +13,7 @@ import { useEffect, useRef } from "react";
 import { createActor } from "../../backend";
 import type { Booking } from "../../backend.d.ts";
 import { Skeleton } from "../../components/ui/skeleton";
+import { icpTimestampNsToMs } from "../../lib/icpTimestamp";
 
 interface BackendStats {
   totalTreks: bigint;
@@ -373,7 +374,7 @@ export default function AdminPage() {
                         style={{ color: "var(--ew-gray-dark)" }}
                       >
                         {new Date(
-                          Number(b.createdAt) / 1_000_000,
+                          icpTimestampNsToMs(b.createdAt),
                         ).toLocaleDateString("en-IN", {
                           day: "numeric",
                           month: "short",

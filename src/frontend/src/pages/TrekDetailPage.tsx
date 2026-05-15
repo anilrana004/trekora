@@ -26,10 +26,16 @@ import TrekCard from "../components/TrekCard";
 import TrustSignals from "../components/TrustSignals";
 import WeatherWidget from "../components/WeatherWidget";
 import WhatsAppCTA from "../components/WhatsAppCTA";
+import {
+  SPITI_VALLEY_FAQS,
+  SPITI_VALLEY_ITINERARY,
+  SPITI_VALLEY_TREK_SLUG,
+} from "../data/spitiValleyTrekDetail";
 import { TREKS } from "../data/treks";
 
+import { buildSeoImageUrl } from "@/lib/images";
+import { SITE_PHONE_TEL, SITE_PHONE_WA_DIGITS } from "@/lib/site-contact";
 import AltitudeChart from "../components/AltitudeChart";
-import BookingDrawer from "../components/BookingDrawer";
 import FitnessCalculator from "../components/FitnessCalculator";
 import QueryBottomSheet from "../components/QueryBottomSheet";
 import ReviewSubmitForm from "../components/ReviewSubmitForm";
@@ -39,7 +45,10 @@ import ShareSection from "../components/ShareSection";
 import TrailConditionBadge from "../components/TrailConditionBadge";
 import TrekMap from "../components/TrekMap";
 import TrekkerPhotoWall from "../components/TrekkerPhotoWall";
+import OptimizedImage from "../components/media/OptimizedImage";
+import { EnquiryButton } from "../components/ui/EnquiryButton";
 import { useGTM } from "../hooks/useGTM";
+import { useTrekBatches } from "../hooks/useTrekBatches";
 import { downloadTrekItineraryPDF } from "../lib/pdfGenerator";
 import {
   generateBreadcrumbJSONLD,
@@ -314,6 +323,7 @@ const REVIEWS = [
 export default function TrekDetailPage() {
   const { slug } = useParams({ from: "/layout/treks/$slug" });
   const trek = TREKS.find((t) => t.slug === slug);
+  useTrekBatches(trek?.id);
   const [activeTab, setActiveTab] = useState<Tab>("Overview");
   const [heroIndex, setHeroIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -331,7 +341,6 @@ export default function TrekDetailPage() {
   const [openDay, setOpenDay] = useState<number | null>(0);
   const [reviewRating, setReviewRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [bookingDrawerOpen, setBookingDrawerOpen] = useState(false);
   const [querySheetOpen, setQuerySheetOpen] = useState(false);
   const [_copied, setCopied] = useState(false);
 
@@ -347,18 +356,6 @@ export default function TrekDetailPage() {
     navigator.clipboard.writeText(window.location.href).catch(() => null);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  }, []);
-
-  // Parallax scroll effect — injects --scroll-y CSS variable
-  useEffect(() => {
-    const handleScroll = () => {
-      document.documentElement.style.setProperty(
-        "--scroll-y",
-        String(window.scrollY),
-      );
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // SEO: inject structured JSON-LD schemas on mount and when trek changes
@@ -382,8 +379,12 @@ export default function TrekDetailPage() {
       ]),
       "jsonld-breadcrumb",
     );
+    const faqsForSeo =
+      trek.slug === SPITI_VALLEY_TREK_SLUG ? SPITI_VALLEY_FAQS : FAQS;
     const cleanupFaq = injectJSONLD(
-      generateFAQJSONLD(FAQS.map((f) => ({ question: f.q, answer: f.a }))),
+      generateFAQJSONLD(
+        faqsForSeo.map((f) => ({ question: f.q, answer: f.a })),
+      ),
       "jsonld-faq",
     );
     return () => {
@@ -484,11 +485,12 @@ export default function TrekDetailPage() {
   const related = TREKS.filter(
     (t) => t.slug !== slug && t.state === trek.state,
   ).slice(0, 4);
-  const itinerary = buildItinerary(
-    trek.duration,
-    trek.startPoint,
-    trek.altitude,
-  );
+  const displayFaqs =
+    trek.slug === SPITI_VALLEY_TREK_SLUG ? SPITI_VALLEY_FAQS : FAQS;
+  const itinerary =
+    trek.slug === SPITI_VALLEY_TREK_SLUG
+      ? SPITI_VALLEY_ITINERARY
+      : buildItinerary(trek.duration, trek.startPoint, trek.altitude);
 
   /* Price calculation */
   const baseTotal = trek.price * groupSize;
@@ -506,7 +508,7 @@ export default function TrekDetailPage() {
 
   return (
     <div
-      className="pt-16 min-h-screen"
+      className="min-h-screen pt-16 pb-[5.75rem] lg:pb-0"
       style={{ backgroundColor: "var(--ew-gray-lt)" }}
     >
       <SEOHead
@@ -514,7 +516,7 @@ export default function TrekDetailPage() {
         description={`Book ${trek.name} trek in ${trek.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh"}. ${trek.duration} days, max altitude ${trek.altitude.toLocaleString()}m, difficulty: ${trek.difficulty}. Starting from ₹${trek.price.toLocaleString("en-IN")}/person. NCISM-certified guides, full support.`}
         keywords={`${trek.name}, ${trek.state} trek, ${trek.difficulty} trek, Himalayan trekking, ${trek.name} 2025, book ${trek.name.toLowerCase()}, Trekora`}
         canonical={`https://www.trekora.com/treks/${trek.slug}`}
-        ogImage={trek.image}
+        ogImage={buildSeoImageUrl(trek.image)}
         schema={[trekSchema, breadcrumbSchema]}
       />
       {/* ── Breadcrumb strip ── */}
@@ -557,58 +559,55 @@ export default function TrekDetailPage() {
         </div>
       </div>
 
-      {/* ── Hero Image Slider ── */}
+      {/* ── Hero Image Slider (visual treatment aligned with Yatra detail hero) ── */}
       <div
-        className="trek-hero-parallax relative bg-black overflow-hidden"
-        style={{
-          height: "56vw",
-          maxHeight: 520,
-          minHeight: "clamp(280px, 60vw, 480px)",
-        }}
+        className="relative overflow-hidden bg-black"
+        style={{ minHeight: "clamp(280px, 60vw, 480px)" }}
       >
-        <AnimatePresence mode="sync">
-          <motion.img
+        <AnimatePresence mode="wait">
+          <motion.div
             key={heroIndex}
-            src={trek.images[heroIndex] ?? trek.image}
-            alt={`${trek.name} — view ${heroIndex + 1}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            className="absolute inset-0"
+            initial={{ opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-          />
+          >
+            <OptimizedImage
+              src={trek.images[heroIndex] ?? trek.image}
+              alt={`${trek.name} — view ${heroIndex + 1}`}
+              fill
+              priority={heroIndex === 0}
+              variant="hero"
+              className="object-cover"
+            />
+          </motion.div>
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-
-        {/* Prev / Next */}
-        {trek.images.length > 1 && (
-          <>
-            <button
-              type="button"
-              onClick={() =>
-                setHeroIndex(
-                  (i) => (i - 1 + trek.images.length) % trek.images.length,
-                )
-              }
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition flex items-center justify-center"
-              aria-label="Previous image"
-            >
-              <ChevronLeft size={22} className="text-white" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setHeroIndex((i) => (i + 1) % trek.images.length)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/20 backdrop-blur hover:bg-white/40 transition flex items-center justify-center"
-              aria-label="Next image"
-            >
-              <ChevronRight size={22} className="text-white" />
-            </button>
-          </>
-        )}
-
-        {/* Bottom text overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 md:p-8">
-          <div className="container mx-auto flex flex-wrap items-end justify-between gap-4">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <button
+          type="button"
+          aria-label="Previous image"
+          onClick={() =>
+            setHeroIndex(
+              (i) => (i - 1 + trek.images.length) % trek.images.length,
+            )
+          }
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-black/40 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+        >
+          <ChevronRight size={18} className="rotate-180" />
+        </button>
+        <button
+          type="button"
+          aria-label="Next image"
+          onClick={() => setHeroIndex((i) => (i + 1) % trek.images.length)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-black/40 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+        >
+          <ChevronRight size={18} />
+        </button>
+        <div
+          className={`absolute bottom-6 left-0 right-0 container mx-auto px-4 ${trek.images.length > 1 ? "pb-6" : ""}`}
+        >
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <div className="flex flex-wrap gap-2 mb-2">
                 <DifficultyBadge level={trek.difficulty} />
@@ -618,30 +617,41 @@ export default function TrekDetailPage() {
                     : "Himachal Pradesh"}
                 </span>
               </div>
-              <h1 className="text-3xl md:text-5xl font-bold text-white text-shadow">
+              <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow mb-1">
                 {trek.name}
               </h1>
-              <p
-                className="text-sm mt-1"
-                style={{ color: "rgba(255,255,255,0.8)" }}
-              >
-                {trek.shortDesc}
-              </p>
+              <p className="text-sm mt-1 text-white/80">{trek.shortDesc}</p>
             </div>
-            <div className="flex items-center gap-2 bg-black/30 backdrop-blur px-3 py-2 rounded-xl">
+            <div className="flex items-center gap-2 bg-black/40 px-3 py-2 rounded-xl">
               <StarRow rating={trek.rating} size={16} />
               <span className="font-bold text-white text-lg">
                 {trek.rating}
               </span>
-              <span
-                className="text-sm"
-                style={{ color: "rgba(255,255,255,0.75)" }}
-              >
+              <span className="text-sm text-white/75">
                 ({trek.reviewCount} reviews)
               </span>
             </div>
           </div>
         </div>
+        {trek.images.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-1.5">
+            {trek.images.map((img, i) => (
+              <button
+                key={img || String(i)}
+                type="button"
+                aria-label={`Go to image ${i + 1}`}
+                onClick={() => setHeroIndex(i)}
+                className="rounded-full transition-all"
+                style={{
+                  width: heroIndex === i ? 20 : 8,
+                  height: 8,
+                  backgroundColor:
+                    heroIndex === i ? "var(--ew-red)" : "rgba(255,255,255,0.6)",
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Thumbnail strip */}
@@ -656,15 +666,18 @@ export default function TrekDetailPage() {
               style={{
                 outline:
                   i === heroIndex
-                    ? "2px solid var(--ew-orange)"
+                    ? "2px solid var(--ew-red)"
                     : "2px solid transparent",
                 outlineOffset: 1,
               }}
               aria-label={`View image ${i + 1}`}
             >
-              <img
-                src={img.replace("w=1200", "w=120")}
+              <OptimizedImage
+                src={img}
                 alt={`${trek.name} thumbnail ${i + 1}`}
+                width={64}
+                height={40}
+                variant="thumbnail"
                 className="w-16 h-10 object-cover"
               />
             </button>
@@ -672,52 +685,40 @@ export default function TrekDetailPage() {
         </div>
       )}
 
-      {/* ── Stats bar ── */}
-      <div style={{ backgroundColor: "var(--ew-footer)", color: "#fff" }}>
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex flex-wrap gap-x-8 gap-y-2 justify-start text-sm">
+      {/* ── Stats bar (matches Yatra detail red stats strip) ── */}
+      <div style={{ backgroundColor: "var(--ew-red)" }}>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-0 divide-x divide-white/20">
             {[
               {
                 label: "Duration",
                 value: `${trek.duration} Days`,
-                icon: <Clock size={14} />,
               },
               {
                 label: "Max Altitude",
                 value: `${trek.altitude.toLocaleString()}m`,
-                icon: <Mountain size={14} />,
               },
               {
                 label: "Difficulty",
                 value: trek.difficulty,
-                icon: <Shield size={14} />,
               },
               {
                 label: "Distance",
                 value: `${trek.distance} km`,
-                icon: <MapPin size={14} />,
               },
               {
                 label: "Best Season",
                 value: trek.bestSeason,
-                icon: <Star size={14} />,
               },
               {
                 label: "Start Point",
                 value: trek.startPoint,
-                icon: <MapPin size={14} />,
               },
-            ].map(({ label, value, icon }) => (
-              <div key={label} className="flex items-center gap-2">
-                <span style={{ color: "var(--ew-orange)" }}>{icon}</span>
-                <div>
-                  <p
-                    className="text-[11px]"
-                    style={{ color: "rgba(255,255,255,0.55)" }}
-                  >
-                    {label}
-                  </p>
-                  <p className="font-semibold text-[13px]">{value}</p>
+            ].map(({ label, value }) => (
+              <div key={label} className="py-3.5 px-3 text-center">
+                <div className="mb-0.5 text-xs text-white/70">{label}</div>
+                <div className="text-xs font-bold leading-tight text-white md:text-sm">
+                  {value}
                 </div>
               </div>
             ))}
@@ -1362,11 +1363,12 @@ export default function TrekDetailPage() {
                       onClick={() => setLightboxIndex(i)}
                       className="relative overflow-hidden rounded-xl group aspect-video"
                     >
-                      <img
-                        src={img.replace("w=1200", "w=400")}
+                      <OptimizedImage
+                        src={img}
                         alt={`${trek.name} view ${i + 1}`}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        fill
+                        variant="gallery-thumb"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-200 flex items-center justify-center">
                         <Share2
@@ -1403,12 +1405,14 @@ export default function TrekDetailPage() {
                       href={`https://www.youtube.com/watch?v=${v.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group relative block rounded-xl overflow-hidden"
+                      className="group relative block h-40 rounded-xl overflow-hidden"
                     >
-                      <img
+                      <OptimizedImage
                         src={trek.image}
                         alt={v.title}
-                        className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                        fill
+                        variant="blog-card"
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-black/45 flex items-center justify-center">
                         <div
@@ -1664,13 +1668,14 @@ export default function TrekDetailPage() {
                       </div>
                     ))}
                   </div>
-                  <button
+                  <EnquiryButton
                     type="button"
+                    trekName={trek.name}
                     className="btn-primary text-sm"
                     data-ocid="trek_detail.rent_equipment_button"
                   >
                     Rent Equipment — Book Now
-                  </button>
+                  </EnquiryButton>
                 </div>
               </motion.div>
             )}
@@ -1763,9 +1768,12 @@ export default function TrekDetailPage() {
                       data-ocid={`trek_detail.review.${i + 1}`}
                     >
                       <div className="flex items-start gap-3">
-                        <img
+                        <OptimizedImage
                           src={r.avatar}
                           alt={r.name}
+                          width={40}
+                          height={40}
+                          variant="avatar"
                           className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                         />
                         <div className="flex-1 min-w-0">
@@ -1913,7 +1921,7 @@ export default function TrekDetailPage() {
                   Frequently Asked Questions
                 </h2>
                 <div className="space-y-2">
-                  {FAQS.map((faq, i) => (
+                  {displayFaqs.map((faq, i) => (
                     <div
                       key={faq.q}
                       className="rounded-xl overflow-hidden"
@@ -1979,10 +1987,10 @@ export default function TrekDetailPage() {
           </div>
 
           {/* ── RIGHT COLUMN — Sticky Booking Sidebar ── */}
-          <div className="lg:col-span-4">
-            <div className="lg:sticky lg:top-36">
+          <div className="w-full min-w-0 lg:col-span-4">
+            <div className="lg:sticky lg:top-36 lg:max-h-[min(85vh,calc(100vh-9rem))] lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1">
               <div
-                className="bg-white rounded-2xl shadow-elevated overflow-hidden"
+                className="mx-auto w-full max-w-md overflow-hidden rounded-2xl shadow-elevated lg:mx-0 lg:max-w-none"
                 style={{ border: "1px solid var(--ew-gray-mid)" }}
                 data-ocid="trek_detail.booking_sidebar"
               >
@@ -2013,9 +2021,9 @@ export default function TrekDetailPage() {
                   </div>
                 </div>
 
-                <div className="p-5 space-y-4">
+                <div className="space-y-4 p-5 sm:p-6">
                   {/* Stats row */}
-                  <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="grid min-w-0 grid-cols-3 gap-2 text-center">
                     {[
                       {
                         label: "Duration",
@@ -2035,7 +2043,7 @@ export default function TrekDetailPage() {
                     ].map(({ label, value, icon }) => (
                       <div
                         key={label}
-                        className="rounded-lg py-2"
+                        className="min-w-0 rounded-lg py-2"
                         style={{ backgroundColor: "var(--ew-gray-lt)" }}
                       >
                         <span
@@ -2294,13 +2302,7 @@ export default function TrekDetailPage() {
                   <div className="space-y-2">
                     <Link
                       to="/book"
-                      className="flex items-center justify-center w-full font-bold text-lg rounded-xl transition-colors"
-                      style={{
-                        backgroundColor: "var(--ew-red)",
-                        color: "#fff",
-                        height: 56,
-                      }}
-                      data-ocid="trek_detail.book_button"
+                      search={{ trek: trek.slug }}
                       onClick={() =>
                         gtmPush({
                           event: "add_to_cart",
@@ -2308,8 +2310,14 @@ export default function TrekDetailPage() {
                           item_price: trek.price,
                         })
                       }
+                      className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-center text-sm font-bold leading-tight text-white transition-[filter] hover:brightness-95 sm:text-base"
+                      style={{
+                        backgroundColor: "var(--ew-red)",
+                        color: "#fff",
+                      }}
+                      data-ocid="trek_detail.book_button"
                     >
-                      Book Now
+                      <span className="line-clamp-2">Book {trek.name}</span>
                     </Link>
                     <button
                       type="button"
@@ -2339,7 +2347,7 @@ export default function TrekDetailPage() {
                     </button>
                     <div className="grid grid-cols-2 gap-2">
                       <a
-                        href="tel:+919810012345"
+                        href={`tel:${SITE_PHONE_TEL}`}
                         className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
                         style={{
                           borderColor: "var(--ew-red)",
@@ -2351,7 +2359,7 @@ export default function TrekDetailPage() {
                         <Phone size={14} /> Call Expert
                       </a>
                       <a
-                        href={`https://wa.me/919810012345?text=${encodeURIComponent(`Hi! I want to book the ${trek.name} trek. Please share details.`)}`}
+                        href={`https://wa.me/${SITE_PHONE_WA_DIGITS}?text=${encodeURIComponent(`Hi! I want to book the ${trek.name} trek. Please share details.`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
@@ -2455,37 +2463,44 @@ export default function TrekDetailPage() {
 
       {/* ── Mobile Sticky Bottom Bar ── */}
       <div
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center gap-3 px-4 shadow-elevated"
+        className="fixed bottom-0 left-0 right-0 z-50 flex min-h-[72px] items-center gap-2 px-3 shadow-elevated sm:gap-3 sm:px-4 lg:hidden"
         style={{
           backgroundColor: "#fff",
           borderTop: "1px solid var(--ew-gray-mid)",
-          height: 72,
-          paddingBottom: "env(safe-area-inset-bottom)",
+          paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+          paddingTop: "0.5rem",
         }}
       >
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="text-[11px]" style={{ color: "var(--ew-gray-dark)" }}>
             Starting from
           </p>
           <p
-            className="font-bold text-lg leading-none"
+            className="truncate font-bold text-base leading-tight sm:text-lg"
             style={{ color: "var(--ew-orange)" }}
           >
             ₹{trek.price.toLocaleString("en-IN")}
           </p>
         </div>
-        <button
-          type="button"
-          className="btn-primary text-sm"
-          style={{ borderRadius: "0.75rem", height: 44, padding: "0 1.25rem" }}
+        <Link
+          to="/book"
+          search={{ trek: trek.slug }}
+          onClick={() =>
+            gtmPush({
+              event: "add_to_cart",
+              item_name: trek.name,
+              item_price: trek.price,
+            })
+          }
+          className="btn-primary inline-flex max-w-[58%] min-h-[44px] min-w-0 flex-shrink-0 items-center justify-center gap-1.5 px-3 text-center text-xs font-semibold leading-tight sm:max-w-[55%] sm:px-4 sm:text-sm"
+          style={{ borderRadius: "0.75rem" }}
           data-ocid="trek_detail.mobile_book_button"
-          onClick={() => setBookingDrawerOpen(true)}
         >
-          Book Now
-        </button>
+          <span className="line-clamp-2">Book {trek.name}</span>
+        </Link>
         <Link
           to="/treks"
-          className="flex items-center justify-center w-10 h-10 rounded-lg"
+          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg sm:h-11 sm:w-11"
           style={{
             border: "1px solid var(--ew-gray-mid)",
             color: "var(--ew-text)",
@@ -2498,18 +2513,6 @@ export default function TrekDetailPage() {
 
       {/* ── WhatsApp CTA (scroll-triggered) ── */}
       <WhatsAppCTA trekName={trek.name} />
-
-      {/* ── Booking Drawer ── */}
-      <BookingDrawer
-        isOpen={bookingDrawerOpen}
-        onClose={() => setBookingDrawerOpen(false)}
-        trekName={trek.name}
-        trekSlug={trek.slug}
-        price={trek.price}
-        duration={`${trek.duration} Days`}
-        difficulty={trek.difficulty}
-        image={trek.image}
-      />
 
       {/* ── Query Bottom Sheet ── */}
       <QueryBottomSheet
@@ -2554,16 +2557,22 @@ export default function TrekDetailPage() {
             >
               <ChevronLeft size={22} className="text-white" />
             </button>
-            <motion.img
+            <motion.div
               key={lightboxIndex}
-              src={trek.images[lightboxIndex]}
-              alt={`${trek.name} — full view ${lightboxIndex + 1}`}
-              className="max-w-[90vw] max-h-[85vh] object-contain rounded-xl shadow-2xl"
+              className="max-w-[90vw] max-h-[85vh] flex items-center justify-center"
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.92, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-            />
+            >
+              <OptimizedImage
+                src={trek.images[lightboxIndex ?? 0]}
+                alt={`${trek.name} — full view ${(lightboxIndex ?? 0) + 1}`}
+                variant="gallery-full"
+                sizes="90vw"
+                className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-xl shadow-2xl"
+              />
+            </motion.div>
             <button
               type="button"
               className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center"

@@ -3,6 +3,7 @@ import { CheckCircle2, Package } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import BreadcrumbNav from "../components/BreadcrumbNav";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { TREKS } from "../data/treks";
 
 const GEAR_CATEGORIES = [
@@ -155,10 +156,12 @@ export default function TrekPackingListPage() {
     >
       {/* Hero */}
       <div className="relative h-48 md:h-64 overflow-hidden">
-        <img
+        <OptimizedImage
           src={trek.image}
           alt={trek.name}
-          className="w-full h-full object-cover"
+          fill
+          variant="hero"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-black/20" />
         <div className="absolute bottom-5 left-0 right-0 container mx-auto px-4">

@@ -1,7 +1,7 @@
 import { createActor } from "@/backend";
 import type { TrailCondition } from "@/backend.d.ts";
-import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
+import { useActor } from "@trekora/icp";
 
 const CACHE_KEY = "ew_trail_conditions";
 const CACHE_TTL_MS = 30 * 60 * 1000; // 30 minutes

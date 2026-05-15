@@ -1,10 +1,12 @@
 import { createActor } from "@/backend";
 import type { UgcPhoto, UgcPhotoInput } from "@/backend.d.ts";
-import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useActor } from "@trekora/icp";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+
+import OptimizedImage from "./media/OptimizedImage";
 
 // Local enum mirror — avoids importing runtime values from a .d.ts file
 const Variant_pending_approved_rejected = {
@@ -233,9 +235,10 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
 
           {preview && (
             <div className="relative inline-block">
-              <img
+              <OptimizedImage
                 src={preview}
                 alt="Preview"
+                variant="gallery-thumb"
                 className="h-32 w-auto rounded-xl object-cover"
                 style={{ border: "2px solid var(--ew-orange)" }}
               />
@@ -307,10 +310,10 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
               className="group relative break-inside-avoid rounded-xl overflow-hidden block w-full"
               data-ocid={`ugc.photo.item.${idx + 1}`}
             >
-              <img
+              <OptimizedImage
                 src={photo.photoData}
                 alt={`${photo.trekkerName} on ${photo.trekDate}`}
-                loading="lazy"
+                variant="gallery-thumb"
                 className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 right-0 px-2 py-2 bg-gradient-to-t from-black/70 to-transparent">
@@ -372,9 +375,10 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
               className="max-w-[90vw] max-h-[85vh] rounded-2xl overflow-hidden relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
+              <OptimizedImage
                 src={photos[lightboxIdx].photoData}
                 alt={photos[lightboxIdx].trekkerName}
+                variant="gallery-full"
                 className="max-w-[90vw] max-h-[85vh] object-contain"
               />
               <div

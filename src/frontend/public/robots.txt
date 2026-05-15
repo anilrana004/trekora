@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://www.eternawings.com/sitemap.xml
+Sitemap: https://www.trekora.com/sitemap.xml

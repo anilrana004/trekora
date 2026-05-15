@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft, CheckCircle2, Scale, Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCompare } from "../components/TrekCompare";
+import OptimizedImage from "../components/media/OptimizedImage";
+import { EnquiryButton } from "../components/ui/EnquiryButton";
 import { TREKS } from "../data/treks";
 
 function DifficultyStars({ level }: { level: string }) {
@@ -166,9 +168,12 @@ export default function ComparePage() {
                           style={{ minWidth: 220 }}
                         >
                           <div className="flex flex-col items-center gap-2">
-                            <img
+                            <OptimizedImage
                               src={t.image}
                               alt={t.name}
+                              width={96}
+                              height={64}
+                              variant="thumbnail"
                               className="w-24 h-16 object-cover rounded-lg"
                             />
                             <span
@@ -256,14 +261,14 @@ export default function ComparePage() {
                       </td>
                       {selectedTreks.map((t) => (
                         <td key={t.id} className="px-4 py-4 text-center">
-                          <Link
-                            to="/treks/$slug"
-                            params={{ slug: t.slug }}
+                          <EnquiryButton
+                            type="button"
+                            trekName={t.name}
                             className="btn-primary text-xs"
                             data-ocid="compare.book_button"
                           >
                             Book Now
-                          </Link>
+                          </EnquiryButton>
                         </td>
                       ))}
                       {Array.from(
@@ -295,11 +300,15 @@ export default function ComparePage() {
                       border: "1px solid var(--ew-gray-mid)",
                     }}
                   >
-                    <img
-                      src={t.image}
-                      alt={t.name}
-                      className="w-full h-40 object-cover"
-                    />
+                    <div className="relative h-40 w-full">
+                      <OptimizedImage
+                        src={t.image}
+                        alt={t.name}
+                        fill
+                        variant="blog-card"
+                        className="object-cover"
+                      />
+                    </div>
                     <div className="p-4">
                       <h3
                         className="font-bold text-base mb-3"
@@ -326,14 +335,14 @@ export default function ComparePage() {
                         ))}
                       </ul>
                       <div className="flex gap-2">
-                        <Link
-                          to="/treks/$slug"
-                          params={{ slug: t.slug }}
+                        <EnquiryButton
+                          type="button"
+                          trekName={t.name}
                           className="btn-primary flex-1 text-center text-xs"
                           data-ocid="compare.mobile.book_button"
                         >
                           Book Now
-                        </Link>
+                        </EnquiryButton>
                         <button
                           type="button"
                           onClick={() => removeFromCompare(String(t.id))}

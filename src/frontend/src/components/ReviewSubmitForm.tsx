@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { getReviewsByTrek } from "../data/reviews";
 import type { Review } from "../data/reviews";
+import OptimizedImage from "./media/OptimizedImage";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -655,12 +656,15 @@ export default function ReviewSubmitForm({
               {photoPreviews.length > 0 && (
                 <div className="flex gap-2 mt-2 flex-wrap">
                   {photoPreviews.map((src, i) => (
-                    <img
+                    <OptimizedImage
                       // biome-ignore lint/suspicious/noArrayIndexKey: stable preview list
                       key={i}
                       src={src}
                       alt={`Preview ${i + 1}`}
-                      className="w-16 h-16 object-cover rounded-lg"
+                      variant="thumbnail"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 rounded-lg"
                       style={{ border: "1px solid var(--ew-gray-mid)" }}
                     />
                   ))}

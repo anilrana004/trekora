@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useEffect, useMemo } from "react";
 import BreadcrumbNav from "../components/BreadcrumbNav";
 import TrekCard from "../components/TrekCard";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { TREKS, type TrekDifficulty } from "../data/treks";
 
 interface StateConfig {
@@ -303,10 +304,14 @@ export default function StateHubPage() {
     >
       {/* Hero */}
       <div className="relative h-64 md:h-80 overflow-hidden">
-        <img
+        <OptimizedImage
           src={config.heroImage}
           alt={config.title}
-          className="w-full h-full object-cover"
+          fill
+          priority
+          blurUp
+          variant="hero"
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
         <div className="absolute bottom-8 left-0 right-0 container mx-auto px-4">

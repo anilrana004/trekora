@@ -1,3 +1,4 @@
+import { buildSeoImageUrl } from "@/lib/images";
 import { Link, useParams } from "@tanstack/react-router";
 import {
   AlertTriangle,
@@ -18,7 +19,6 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import BookingDrawer from "../components/BookingDrawer";
 import QueryBottomSheet from "../components/QueryBottomSheet";
 import ReviewSubmitForm from "../components/ReviewSubmitForm";
 import { SEOHead } from "../components/SEOHead";
@@ -26,7 +26,9 @@ import SeoTagCloud from "../components/SeoTagCloud";
 import ShareSection from "../components/ShareSection";
 import TrekMap from "../components/TrekMap";
 import WhatsAppCTA from "../components/WhatsAppCTA";
+import YatraCard from "../components/YatraCard";
 import YatraInclusions from "../components/YatraInclusions";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { YATRAS } from "../data/yatras";
 import type { YatraHowToReach } from "../data/yatras";
 import { downloadYatraItineraryPDF } from "../lib/pdfGenerator";
@@ -178,7 +180,6 @@ export default function YatraDetailPage() {
     when: "",
   });
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
-  const [bookingDrawerOpen, setBookingDrawerOpen] = useState(false);
   const [querySheetOpen, setQuerySheetOpen] = useState(false);
   const tabBarRef = useRef<HTMLDivElement>(null);
   const [viewerCount] = useState(() => Math.floor(Math.random() * 15) + 8);
@@ -355,13 +356,16 @@ export default function YatraDetailPage() {
   );
 
   return (
-    <div key={yatra.slug} className="pt-16 min-h-screen bg-white">
+    <div
+      key={yatra.slug}
+      className="min-h-screen bg-white pb-[5.75rem] pt-16 lg:pb-0"
+    >
       <SEOHead
         title={`${yatra.name} 2025 | ${yatra.duration} Days | From ₹${yatra.price.toLocaleString("en-IN")} | Trekora`}
         description={`Book ${yatra.name} package. ${yatra.duration} days, spiritual pilgrimage to the Himalayas. All-inclusive: accommodation, meals, darshan arrangements, certified spiritual guide.`}
         keywords={`${yatra.name}, pilgrimage India, Himalayan yatra, ${yatra.name} 2025, book ${yatra.name.toLowerCase()}, Trekora yatra`}
         canonical={`https://www.trekora.com/yatras/${yatra.slug}`}
-        ogImage={allImages[0]}
+        ogImage={buildSeoImageUrl(allImages[0])}
         schema={[yatraSchema, yBreadcrumbSchema]}
       />
       {/* Breadcrumb */}
@@ -405,16 +409,23 @@ export default function YatraDetailPage() {
         style={{ minHeight: "clamp(280px, 60vw, 480px)" }}
       >
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.div
             key={heroImg}
-            src={allImages[heroImg]}
-            alt={`${yatra.name} — view ${heroImg + 1}`}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0"
             initial={{ opacity: 0, scale: 1.04 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-          />
+          >
+            <OptimizedImage
+              src={allImages[heroImg]}
+              alt={`${yatra.name} — view ${heroImg + 1}`}
+              fill
+              priority={heroImg === 0}
+              variant="hero"
+              className="object-cover"
+            />
+          </motion.div>
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <button
@@ -1324,15 +1335,13 @@ export default function YatraDetailPage() {
                       <button
                         key={img}
                         type="button"
-                        className="w-full block mb-3 rounded-xl overflow-hidden group"
+                        className="w-full block mb-3 rounded-xl overflow-hidden group text-left"
                         onClick={() => setLightboxIdx(idx)}
                         data-ocid={`yatra_detail.photo.${idx + 1}`}
                         aria-label={`View photo ${idx + 1}`}
                       >
-                        <img
-                          src={img}
-                          alt={`${yatra.name} — ${idx + 1}`}
-                          className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        <div
+                          className="relative w-full overflow-hidden rounded-xl"
                           style={{
                             aspectRatio:
                               idx % 3 === 0
@@ -1341,7 +1350,15 @@ export default function YatraDetailPage() {
                                   ? "1/1"
                                   : "16/9",
                           }}
-                        />
+                        >
+                          <OptimizedImage
+                            src={img}
+                            alt={`${yatra.name} — ${idx + 1}`}
+                            fill
+                            variant="gallery-thumb"
+                            className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -1674,392 +1691,401 @@ export default function YatraDetailPage() {
                   ))}
                 </motion.div>
               )}
-            </div>{" "}
+            </div>
             {/* end key={activeTab} */}
           </div>
 
           {/* RIGHT: Sticky Booking Sidebar */}
-          <div className="lg:col-span-4">
-            <div
-              className="sticky top-24 rounded-2xl shadow-elevated overflow-hidden border"
-              style={{ borderColor: "var(--ew-gray-mid)" }}
-            >
+          <div className="w-full min-w-0 lg:col-span-4">
+            <div className="lg:sticky lg:top-24 lg:max-h-[min(85vh,calc(100vh-9rem))] lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1">
               <div
-                className="px-5 py-4 border-b"
-                style={{
-                  backgroundColor: "var(--ew-gray-lt)",
-                  borderColor: "var(--ew-gray-mid)",
-                }}
+                className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border shadow-elevated lg:mx-0 lg:max-w-none"
+                style={{ borderColor: "var(--ew-gray-mid)" }}
               >
-                <p
-                  className="text-xs mb-0.5"
-                  style={{ color: "var(--ew-gray-dark)" }}
-                >
-                  Package starting from
-                </p>
                 <div
-                  className="text-3xl font-bold"
-                  style={{ color: "var(--ew-orange)" }}
+                  className="px-5 py-4 border-b"
+                  style={{
+                    backgroundColor: "var(--ew-gray-lt)",
+                    borderColor: "var(--ew-gray-mid)",
+                  }}
                 >
-                  &#8377;{yatra.price.toLocaleString("en-IN")}
-                </div>
-                <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
-                  per person (twin sharing)
-                </p>
-              </div>
-
-              <div className="p-5 space-y-3">
-                <div
-                  className="grid grid-cols-3 gap-2 text-xs text-center pb-3 border-b"
-                  style={{ borderColor: "var(--ew-gray-mid)" }}
-                >
-                  {[
-                    { label: "Duration", value: `${yatra.duration}D` },
-                    { label: "Dist", value: `${yatra.distance}km` },
-                    { label: "From", value: yatra.startPoint.split(" ")[0] },
-                  ].map((s) => (
-                    <div key={s.label}>
-                      <div
-                        className="font-bold text-sm"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        {s.value}
-                      </div>
-                      <div style={{ color: "var(--ew-gray-dark)" }}>
-                        {s.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Group size stepper */}
-                <div>
-                  <label
-                    htmlFor="yatra-group-size"
-                    className="text-xs font-medium block mb-1.5"
-                    style={{ color: "var(--ew-text)" }}
-                  >
-                    Group Size
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setGroupSize((g) => Math.max(1, g - 1))}
-                      className="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold transition-colors hover:opacity-80"
-                      style={{
-                        borderColor: "var(--ew-red)",
-                        color: "var(--ew-red)",
-                      }}
-                      data-ocid="yatra_detail.group_minus"
-                      aria-label="Decrease group size"
-                    >
-                      −
-                    </button>
-                    <span
-                      className="font-bold text-sm w-6 text-center"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      {groupSize}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setGroupSize((g) => Math.min(20, g + 1))}
-                      className="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold transition-colors hover:opacity-80"
-                      style={{
-                        borderColor: "var(--ew-red)",
-                        color: "var(--ew-red)",
-                      }}
-                      data-ocid="yatra_detail.group_plus"
-                      aria-label="Increase group size"
-                    >
-                      +
-                    </button>
-                    <span
-                      className="text-xs"
-                      style={{ color: "var(--ew-gray-dark)" }}
-                    >
-                      persons
-                    </span>
-                  </div>
-                </div>
-
-                {/* Add-ons */}
-                <div>
                   <p
-                    className="text-xs font-semibold mb-2"
-                    style={{ color: "var(--ew-text)" }}
+                    className="text-xs mb-0.5"
+                    style={{ color: "var(--ew-gray-dark)" }}
                   >
-                    Add-ons
+                    Package starting from
                   </p>
-                  <div className="space-y-1.5">
-                    {(
-                      [
-                        {
-                          key: "gear",
-                          label: "🎒 Gear Rental Pack",
-                          price: 800,
-                          per: "person",
-                        },
-                        {
-                          key: "insurance",
-                          label: "🛡️ Travel Insurance",
-                          price: 350,
-                          per: "person",
-                        },
-                        {
-                          key: "transport",
-                          label: "🚌 Base Camp Transport",
-                          price: 1200,
-                          per: "group",
-                        },
-                        {
-                          key: "photographer",
-                          label: "📸 Photographer",
-                          price: 2500,
-                          per: "group",
-                        },
-                      ] as {
-                        key: keyof typeof addOnsYatra;
-                        label: string;
-                        price: number;
-                        per: string;
-                      }[]
-                    ).map(({ key, label, price, per }) => (
-                      <label
-                        key={key}
-                        className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-colors"
-                        style={{
-                          backgroundColor: addOnsYatra[key]
-                            ? "var(--ew-orange-lt)"
-                            : "var(--ew-gray-lt)",
-                          border: `1px solid ${addOnsYatra[key] ? "var(--ew-orange)" : "var(--ew-gray-mid)"}`,
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={addOnsYatra[key]}
-                          onChange={(e) =>
-                            setAddOnsYatra((prev) => ({
-                              ...prev,
-                              [key]: e.target.checked,
-                            }))
-                          }
-                          className="w-3.5 h-3.5"
-                          data-ocid={`yatra_detail.addon.${key}`}
-                        />
-                        <span
-                          className="flex-1 text-xs font-medium"
+                  <div
+                    className="text-3xl font-bold"
+                    style={{ color: "var(--ew-orange)" }}
+                  >
+                    &#8377;{yatra.price.toLocaleString("en-IN")}
+                  </div>
+                  <p
+                    className="text-xs"
+                    style={{ color: "var(--ew-gray-dark)" }}
+                  >
+                    per person (twin sharing)
+                  </p>
+                </div>
+
+                <div className="space-y-3 p-5 sm:p-6">
+                  <div
+                    className="grid min-w-0 grid-cols-3 gap-2 border-b pb-3 text-center text-xs"
+                    style={{ borderColor: "var(--ew-gray-mid)" }}
+                  >
+                    {[
+                      { label: "Duration", value: `${yatra.duration}D` },
+                      { label: "Dist", value: `${yatra.distance}km` },
+                      { label: "From", value: yatra.startPoint.split(" ")[0] },
+                    ].map((s) => (
+                      <div key={s.label} className="min-w-0">
+                        <div
+                          className="font-bold text-sm"
                           style={{ color: "var(--ew-text)" }}
                         >
-                          {label}
-                        </span>
-                        <span
-                          className="text-[11px] font-bold"
-                          style={{ color: "var(--ew-orange)" }}
-                        >
-                          +₹{price.toLocaleString("en-IN")}
-                          <span
-                            className="font-normal text-[10px]"
-                            style={{ color: "var(--ew-gray-dark)" }}
-                          >
-                            /{per}
-                          </span>
-                        </span>
-                      </label>
+                          {s.value}
+                        </div>
+                        <div style={{ color: "var(--ew-gray-dark)" }}>
+                          {s.label}
+                        </div>
+                      </div>
                     ))}
                   </div>
-                </div>
 
-                {yatra.helicopterAvailable && (
-                  <label
-                    className="flex items-center gap-2.5 cursor-pointer"
-                    data-ocid="yatra_detail.helicopter_checkbox"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={heliAdd}
-                      onChange={(e) => setHeliAdd(e.target.checked)}
-                      className="w-4 h-4"
-                    />
-                    <span
-                      className="text-sm"
-                      style={{ color: "var(--ew-text-lt)" }}
+                  {/* Group size stepper */}
+                  <div>
+                    <label
+                      htmlFor="yatra-group-size"
+                      className="text-xs font-medium block mb-1.5"
+                      style={{ color: "var(--ew-text)" }}
                     >
-                      Add Helicopter (+&#8377;4,500/person)
-                    </span>
-                  </label>
-                )}
-
-                {yatra.registrationRequired && (
-                  <div
-                    className="text-xs rounded-lg px-3 py-2"
-                    style={{
-                      backgroundColor: "var(--ew-orange-lt)",
-                      color: "#92400E",
-                    }}
-                  >
-                    ⚠️ Registration required. Trekora assists with permits.
+                      Group Size
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setGroupSize((g) => Math.max(1, g - 1))}
+                        className="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold transition-colors hover:opacity-80"
+                        style={{
+                          borderColor: "var(--ew-red)",
+                          color: "var(--ew-red)",
+                        }}
+                        data-ocid="yatra_detail.group_minus"
+                        aria-label="Decrease group size"
+                      >
+                        −
+                      </button>
+                      <span
+                        className="font-bold text-sm w-6 text-center"
+                        style={{ color: "var(--ew-text)" }}
+                      >
+                        {groupSize}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setGroupSize((g) => Math.min(20, g + 1))}
+                        className="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold transition-colors hover:opacity-80"
+                        style={{
+                          borderColor: "var(--ew-red)",
+                          color: "var(--ew-red)",
+                        }}
+                        data-ocid="yatra_detail.group_plus"
+                        aria-label="Increase group size"
+                      >
+                        +
+                      </button>
+                      <span
+                        className="text-xs"
+                        style={{ color: "var(--ew-gray-dark)" }}
+                      >
+                        persons
+                      </span>
+                    </div>
                   </div>
-                )}
 
-                {/* Total price */}
-                <div
-                  className="flex items-center justify-between py-2.5 px-3 rounded-lg"
-                  style={{ backgroundColor: "var(--ew-gray-lt)" }}
-                >
-                  <span className="text-sm" style={{ color: "var(--ew-text)" }}>
-                    Total ({groupSize} {groupSize === 1 ? "person" : "persons"})
-                  </span>
-                  <span
-                    className="font-bold text-lg"
-                    style={{ color: "var(--ew-orange)" }}
-                  >
-                    &#8377;{totalPrice.toLocaleString("en-IN")}
-                  </span>
-                </div>
-
-                <Link
-                  to="/book"
-                  className="flex items-center justify-center w-full font-bold text-lg rounded-xl transition-colors"
-                  style={{
-                    backgroundColor: "var(--ew-red)",
-                    color: "#fff",
-                    height: 56,
-                  }}
-                  data-ocid="yatra_detail.book_button"
-                >
-                  Book Yatra Now
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => downloadYatraItineraryPDF(yatra)}
-                  className="flex items-center justify-center gap-2 w-full font-semibold text-sm rounded-xl border-2 transition-colors"
-                  style={{
-                    borderColor: "var(--ew-orange)",
-                    color: "var(--ew-orange)",
-                    height: 44,
-                  }}
-                  data-ocid="yatra_detail.download_pdf_button"
-                >
-                  📥 Download Full Itinerary PDF
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center justify-center gap-2 w-full font-semibold text-sm rounded-xl border transition-colors"
-                  style={{
-                    borderColor: "var(--ew-gray-mid)",
-                    color: "var(--ew-gray-dark)",
-                    height: 40,
-                  }}
-                  data-ocid="yatra_detail.inquiry_button"
-                  onClick={() => setQuerySheetOpen(true)}
-                >
-                  <HeartHandshake size={15} /> Send Inquiry
-                </button>
-                <div className="grid grid-cols-2 gap-2">
-                  <a
-                    href="tel:+919810012345"
-                    className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
-                    style={{
-                      borderColor: "var(--ew-red)",
-                      color: "var(--ew-red)",
-                      height: 40,
-                    }}
-                    data-ocid="yatra_detail.call_button"
-                  >
-                    <Phone size={14} /> Call Expert
-                  </a>
-                  <a
-                    href={`https://wa.me/919810012345?text=${encodeURIComponent(`Hi! I want to book the ${yatra.name}. Please share details.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
-                    style={{
-                      borderColor: "#25D366",
-                      color: "#25D366",
-                      height: 40,
-                    }}
-                    data-ocid="yatra_detail.whatsapp_button"
-                  >
-                    💬 WhatsApp
-                  </a>
-                </div>
-
-                {/* Trust badges */}
-                <div className="grid grid-cols-3 gap-1 text-center">
-                  {[
-                    { icon: "🔒", text: "Secure Payment" },
-                    { icon: "✅", text: "Free Cancel 30d" },
-                    { icon: "⭐", text: "4.8 Rated" },
-                  ].map((badge) => (
-                    <div
-                      key={badge.text}
-                      className="rounded-lg py-2 px-1"
-                      style={{
-                        backgroundColor: "var(--ew-gray-lt)",
-                        border: "1px solid var(--ew-gray-mid)",
-                      }}
+                  {/* Add-ons */}
+                  <div>
+                    <p
+                      className="text-xs font-semibold mb-2"
+                      style={{ color: "var(--ew-text)" }}
                     >
-                      <div className="text-base">{badge.icon}</div>
-                      <div
-                        className="text-[10px] leading-tight mt-0.5"
+                      Add-ons
+                    </p>
+                    <div className="space-y-1.5">
+                      {(
+                        [
+                          {
+                            key: "gear",
+                            label: "🎒 Gear Rental Pack",
+                            price: 800,
+                            per: "person",
+                          },
+                          {
+                            key: "insurance",
+                            label: "🛡️ Travel Insurance",
+                            price: 350,
+                            per: "person",
+                          },
+                          {
+                            key: "transport",
+                            label: "🚌 Base Camp Transport",
+                            price: 1200,
+                            per: "group",
+                          },
+                          {
+                            key: "photographer",
+                            label: "📸 Photographer",
+                            price: 2500,
+                            per: "group",
+                          },
+                        ] as {
+                          key: keyof typeof addOnsYatra;
+                          label: string;
+                          price: number;
+                          per: string;
+                        }[]
+                      ).map(({ key, label, price, per }) => (
+                        <label
+                          key={key}
+                          className="flex items-center gap-2 cursor-pointer rounded-lg px-3 py-2 transition-colors"
+                          style={{
+                            backgroundColor: addOnsYatra[key]
+                              ? "var(--ew-orange-lt)"
+                              : "var(--ew-gray-lt)",
+                            border: `1px solid ${addOnsYatra[key] ? "var(--ew-orange)" : "var(--ew-gray-mid)"}`,
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={addOnsYatra[key]}
+                            onChange={(e) =>
+                              setAddOnsYatra((prev) => ({
+                                ...prev,
+                                [key]: e.target.checked,
+                              }))
+                            }
+                            className="w-3.5 h-3.5"
+                            data-ocid={`yatra_detail.addon.${key}`}
+                          />
+                          <span
+                            className="flex-1 text-xs font-medium"
+                            style={{ color: "var(--ew-text)" }}
+                          >
+                            {label}
+                          </span>
+                          <span
+                            className="text-[11px] font-bold"
+                            style={{ color: "var(--ew-orange)" }}
+                          >
+                            +₹{price.toLocaleString("en-IN")}
+                            <span
+                              className="font-normal text-[10px]"
+                              style={{ color: "var(--ew-gray-dark)" }}
+                            >
+                              /{per}
+                            </span>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {yatra.helicopterAvailable && (
+                    <label
+                      className="flex items-center gap-2.5 cursor-pointer"
+                      data-ocid="yatra_detail.helicopter_checkbox"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={heliAdd}
+                        onChange={(e) => setHeliAdd(e.target.checked)}
+                        className="w-4 h-4"
+                      />
+                      <span
+                        className="text-sm"
                         style={{ color: "var(--ew-text-lt)" }}
                       >
-                        {badge.text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                        Add Helicopter (+&#8377;4,500/person)
+                      </span>
+                    </label>
+                  )}
 
-                {/* Social proof */}
-                <div
-                  className="text-center text-xs py-1.5 rounded-lg"
-                  style={{
-                    backgroundColor: "var(--ew-red-lt)",
-                    color: "var(--ew-red)",
-                  }}
-                >
-                  {
-                    [
-                      `👁️ ${viewerCount} people viewed this in the last 24 hrs`,
-                      "🔥 8 bookings made this week!",
-                      "⏰ Next batch filling fast — only 6 spots left",
-                    ][socialProofIdx]
-                  }
-                </div>
-
-                <div
-                  className="pt-2 border-t space-y-1.5"
-                  style={{ borderColor: "var(--ew-gray-mid)" }}
-                >
-                  {TRUST_ITEMS.map((t) => (
+                  {yatra.registrationRequired && (
                     <div
-                      key={t}
-                      className="flex items-center gap-2 text-xs"
-                      style={{ color: "var(--ew-text-lt)" }}
+                      className="text-xs rounded-lg px-3 py-2"
+                      style={{
+                        backgroundColor: "var(--ew-orange-lt)",
+                        color: "#92400E",
+                      }}
                     >
-                      <CheckCircle2
-                        size={12}
-                        style={{ color: "var(--ew-green)" }}
-                      />
-                      {t}
+                      ⚠️ Registration required. Trekora assists with permits.
                     </div>
-                  ))}
-                </div>
+                  )}
 
-                <div
-                  className="rounded-lg p-3 text-xs"
-                  style={{ backgroundColor: "var(--ew-orange-lt)" }}
-                >
-                  <span
-                    className="font-semibold"
-                    style={{ color: "var(--ew-orange)" }}
+                  {/* Total price */}
+                  <div
+                    className="flex items-center justify-between py-2.5 px-3 rounded-lg"
+                    style={{ backgroundColor: "var(--ew-gray-lt)" }}
                   >
-                    Best Time:{" "}
-                  </span>
-                  <span style={{ color: "var(--ew-text-lt)" }}>
-                    {yatra.bestTime}
-                  </span>
+                    <span
+                      className="text-sm"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      Total ({groupSize}{" "}
+                      {groupSize === 1 ? "person" : "persons"})
+                    </span>
+                    <span
+                      className="font-bold text-lg"
+                      style={{ color: "var(--ew-orange)" }}
+                    >
+                      &#8377;{totalPrice.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+
+                  <Link
+                    to="/book"
+                    search={{ trek: undefined }}
+                    className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-center text-sm font-bold leading-tight text-white transition-[filter] hover:brightness-95 sm:text-base"
+                    style={{
+                      backgroundColor: "var(--ew-red)",
+                      color: "#fff",
+                    }}
+                    data-ocid="yatra_detail.book_button"
+                  >
+                    <span className="line-clamp-2">Book {yatra.name}</span>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => downloadYatraItineraryPDF(yatra)}
+                    className="flex items-center justify-center gap-2 w-full font-semibold text-sm rounded-xl border-2 transition-colors"
+                    style={{
+                      borderColor: "var(--ew-orange)",
+                      color: "var(--ew-orange)",
+                      height: 44,
+                    }}
+                    data-ocid="yatra_detail.download_pdf_button"
+                  >
+                    📥 Download Full Itinerary PDF
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center justify-center gap-2 w-full font-semibold text-sm rounded-xl border transition-colors"
+                    style={{
+                      borderColor: "var(--ew-gray-mid)",
+                      color: "var(--ew-gray-dark)",
+                      height: 40,
+                    }}
+                    data-ocid="yatra_detail.inquiry_button"
+                    onClick={() => setQuerySheetOpen(true)}
+                  >
+                    <HeartHandshake size={15} /> Send Inquiry
+                  </button>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href="tel:+919810012345"
+                      className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
+                      style={{
+                        borderColor: "var(--ew-red)",
+                        color: "var(--ew-red)",
+                        height: 40,
+                      }}
+                      data-ocid="yatra_detail.call_button"
+                    >
+                      <Phone size={14} /> Call Expert
+                    </a>
+                    <a
+                      href={`https://wa.me/919810012345?text=${encodeURIComponent(`Hi! I want to book the ${yatra.name}. Please share details.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
+                      style={{
+                        borderColor: "#25D366",
+                        color: "#25D366",
+                        height: 40,
+                      }}
+                      data-ocid="yatra_detail.whatsapp_button"
+                    >
+                      💬 WhatsApp
+                    </a>
+                  </div>
+
+                  {/* Trust badges */}
+                  <div className="grid grid-cols-3 gap-1 text-center">
+                    {[
+                      { icon: "🔒", text: "Secure Payment" },
+                      { icon: "✅", text: "Free Cancel 30d" },
+                      { icon: "⭐", text: "4.8 Rated" },
+                    ].map((badge) => (
+                      <div
+                        key={badge.text}
+                        className="rounded-lg py-2 px-1"
+                        style={{
+                          backgroundColor: "var(--ew-gray-lt)",
+                          border: "1px solid var(--ew-gray-mid)",
+                        }}
+                      >
+                        <div className="text-base">{badge.icon}</div>
+                        <div
+                          className="text-[10px] leading-tight mt-0.5"
+                          style={{ color: "var(--ew-text-lt)" }}
+                        >
+                          {badge.text}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Social proof */}
+                  <div
+                    className="text-center text-xs py-1.5 rounded-lg"
+                    style={{
+                      backgroundColor: "var(--ew-red-lt)",
+                      color: "var(--ew-red)",
+                    }}
+                  >
+                    {
+                      [
+                        `👁️ ${viewerCount} people viewed this in the last 24 hrs`,
+                        "🔥 8 bookings made this week!",
+                        "⏰ Next batch filling fast — only 6 spots left",
+                      ][socialProofIdx]
+                    }
+                  </div>
+
+                  <div
+                    className="pt-2 border-t space-y-1.5"
+                    style={{ borderColor: "var(--ew-gray-mid)" }}
+                  >
+                    {TRUST_ITEMS.map((t) => (
+                      <div
+                        key={t}
+                        className="flex items-center gap-2 text-xs"
+                        style={{ color: "var(--ew-text-lt)" }}
+                      >
+                        <CheckCircle2
+                          size={12}
+                          style={{ color: "var(--ew-green)" }}
+                        />
+                        {t}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div
+                    className="rounded-lg p-3 text-xs"
+                    style={{ backgroundColor: "var(--ew-orange-lt)" }}
+                  >
+                    <span
+                      className="font-semibold"
+                      style={{ color: "var(--ew-orange)" }}
+                    >
+                      Best Time:{" "}
+                    </span>
+                    <span style={{ color: "var(--ew-text-lt)" }}>
+                      {yatra.bestTime}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2069,47 +2095,21 @@ export default function YatraDetailPage() {
 
         {/* Related Yatras */}
         {relatedYatras.length > 0 && (
-          <section className="mt-14">
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-14"
+          >
             <h2 className="section-title mb-6">Related Yatras</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
               {relatedYatras.map((y, i) => (
-                <Link
-                  key={y.id}
-                  to="/yatras/$slug"
-                  params={{ slug: y.slug }}
-                  className="card group block"
-                  data-ocid={`yatra_detail.related.${i + 1}`}
-                >
-                  <div className="h-44 overflow-hidden trek-card-img">
-                    <img
-                      src={y.image}
-                      alt={y.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3
-                      className="font-bold text-sm mb-1"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      {y.name}
-                    </h3>
-                    <div className="flex items-center justify-between text-xs">
-                      <span style={{ color: "var(--ew-gray-dark)" }}>
-                        {y.duration} Days
-                      </span>
-                      <span
-                        className="font-bold"
-                        style={{ color: "var(--ew-orange)" }}
-                      >
-                        &#8377;{y.price.toLocaleString("en-IN")}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
+                <div key={y.id} data-ocid={`yatra_detail.related.${i + 1}`}>
+                  <YatraCard yatra={y} index={i} />
+                </div>
               ))}
             </div>
-          </section>
+          </motion.section>
         )}
       </div>
 
@@ -2124,18 +2124,6 @@ export default function YatraDetailPage() {
       />
 
       <WhatsAppCTA trekName={yatra.name} />
-
-      {/* ── Booking Drawer ── */}
-      <BookingDrawer
-        isOpen={bookingDrawerOpen}
-        onClose={() => setBookingDrawerOpen(false)}
-        trekName={yatra.name}
-        trekSlug={yatra.slug}
-        price={yatra.price}
-        duration={`${yatra.duration} Days`}
-        difficulty={yatra.distance > 200 ? "Moderate" : "Easy"}
-        image={yatra.image}
-      />
 
       {/* ── Query Bottom Sheet ── */}
       <QueryBottomSheet
@@ -2178,9 +2166,11 @@ export default function YatraDetailPage() {
             >
               ‹
             </button>
-            <img
+            <OptimizedImage
               src={photoGrid[lightboxIdx]}
               alt={`${yatra.name} — ${lightboxIdx + 1}`}
+              variant="gallery-full"
+              sizes="95vw"
               className="max-h-[80vh] max-w-full rounded-xl object-contain"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
@@ -2206,28 +2196,32 @@ export default function YatraDetailPage() {
 
       {/* Mobile Sticky Bottom Bar */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-30 border-t flex items-center justify-between px-4 py-3 lg:hidden"
-        style={{ backgroundColor: "white", borderColor: "var(--ew-gray-mid)" }}
+        className="fixed bottom-0 left-0 right-0 z-30 flex min-h-[72px] items-center justify-between gap-2 border-t px-3 py-2 sm:px-4 lg:hidden"
+        style={{
+          backgroundColor: "white",
+          borderColor: "var(--ew-gray-mid)",
+          paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))",
+        }}
       >
-        <div>
+        <div className="min-w-0 flex-1">
           <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
             Starting from
           </p>
           <p
-            className="text-xl font-bold"
+            className="truncate text-lg font-bold leading-tight sm:text-xl"
             style={{ color: "var(--ew-orange)" }}
           >
             &#8377;{yatra.price.toLocaleString("en-IN")}
           </p>
         </div>
-        <button
-          type="button"
-          className="btn-primary"
+        <Link
+          to="/book"
+          search={{ trek: undefined }}
+          className="btn-primary inline-flex max-w-[58%] min-h-[44px] min-w-0 flex-shrink-0 items-center justify-center px-3 text-center text-xs font-semibold leading-tight sm:max-w-[55%] sm:px-4 sm:text-sm"
           data-ocid="yatra_detail.mobile_book_button"
-          onClick={() => setBookingDrawerOpen(true)}
         >
-          Book Yatra
-        </button>
+          <span className="line-clamp-2">Book {yatra.name}</span>
+        </Link>
       </div>
     </div>
   );

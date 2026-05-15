@@ -1,5 +1,5 @@
-import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
+import { useActor } from "@trekora/icp";
 import { createActor } from "../backend";
 import type { Trek as BackendTrek } from "../backend.d.ts";
 import { TREKS } from "../data/treks";

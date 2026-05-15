@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import type { TrekInput } from "../../backend.d.ts";
 import TrekFormModal from "../../components/admin/TrekFormModal";
+import OptimizedImage from "../../components/media/OptimizedImage";
 import { Skeleton } from "../../components/ui/skeleton";
 import { useAdminTreks } from "../../hooks/useAdminTreks";
 import { type BackendTrek, useTreks } from "../../hooks/useTreks";
@@ -426,10 +427,13 @@ export default function AdminTreksPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                          <img
+                          <OptimizedImage
                             src={trek.image}
                             alt={trek.name}
-                            className="w-8 h-8 rounded-lg object-cover hidden sm:block"
+                            variant="thumbnail"
+                            width={32}
+                            height={32}
+                            className="w-8 h-8 rounded-lg hidden sm:block"
                           />
                           <div>
                             <p

@@ -28,7 +28,7 @@ export default function LiveChatWidget() {
 
   return (
     <div
-      className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-end gap-3"
+      className="fixed left-5 z-50 flex flex-col items-start gap-3 bottom-[7rem] md:bottom-[7.25rem]"
       aria-live="polite"
     >
       {/* ── Chat window ── */}
@@ -44,7 +44,7 @@ export default function LiveChatWidget() {
               width: 320,
               maxHeight: 400,
               border: "1px solid var(--ew-gray-mid)",
-              transformOrigin: "bottom right",
+              transformOrigin: "bottom left",
             }}
             data-ocid="chat.dialog"
           >
@@ -146,7 +146,7 @@ export default function LiveChatWidget() {
 
               {/* WhatsApp CTA */}
               <a
-                href={`${WA_BASE}?text=Hi%2C%20I%20have%20a%20question%20about%20EternaWings%20treks`}
+                href={`${WA_BASE}?text=Hi%2C%20I%20have%20a%20question%20about%20Trekora%20treks`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"

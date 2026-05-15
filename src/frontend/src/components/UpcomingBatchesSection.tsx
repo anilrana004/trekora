@@ -1,6 +1,8 @@
-import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { TREKS } from "../data/treks";
+import { YATRAS } from "../data/yatras";
+import BookingDrawer from "./BookingDrawer";
 
 interface Batch {
   trek: string;
@@ -12,6 +14,23 @@ interface Batch {
   price: number;
   full: boolean;
   tab: string[];
+}
+
+function batchRowMeta(b: Batch) {
+  const trek = TREKS.find((t) => t.slug === b.slug);
+  if (trek) return { kind: "trek" as const, trek };
+  const yatra = YATRAS.find((y) => y.slug === b.slug);
+  if (yatra) return { kind: "yatra" as const, yatra };
+  return null;
+}
+
+function displayDateToIso(displayDate: string): string | undefined {
+  const d = new Date(displayDate);
+  if (Number.isNaN(d.getTime())) return undefined;
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
 }
 
 const BATCH_DATA: Batch[] = [
@@ -193,12 +212,12 @@ const BATCH_DATA: Batch[] = [
   },
   {
     trek: "Chopta Tungnath",
-    slug: "chopta-tungnath-chandrashila",
+    slug: "chopta-tungnath",
     date: "Oct 11, 2026",
-    duration: "3 Days",
+    duration: "5 Days",
     difficulty: "Easy-Moderate",
     slots: 8,
-    price: 7000,
+    price: 7200,
     full: false,
     tab: ["Winter 2025/26"],
   },
@@ -268,6 +287,50 @@ function SlotsCell({ slots }: { slots: number }) {
 export default function UpcomingBatchesSection() {
   const [activeTab, setActiveTab] = useState("All");
   const [showAll, setShowAll] = useState(false);
+  const [batchDrawer, setBatchDrawer] = useState<{
+    open: boolean;
+    trekName: string;
+    trekSlug: string;
+    price: number;
+    duration: string;
+    difficulty: string;
+    image?: string;
+    maxSlots: number;
+    suggestedDateIso?: string;
+  } | null>(null);
+
+  const openBatchBook = (b: Batch) => {
+    const meta = batchRowMeta(b);
+    if (!meta) return;
+    const suggestedDateIso = displayDateToIso(b.date);
+    if (meta.kind === "trek") {
+      const t = meta.trek;
+      setBatchDrawer({
+        open: true,
+        trekName: t.name,
+        trekSlug: t.slug,
+        price: t.price,
+        duration: `${t.duration} Days`,
+        difficulty: t.difficulty,
+        image: t.image,
+        maxSlots: b.slots,
+        suggestedDateIso,
+      });
+    } else {
+      const y = meta.yatra;
+      setBatchDrawer({
+        open: true,
+        trekName: y.name,
+        trekSlug: y.slug,
+        price: y.price,
+        duration: `${y.duration} Days`,
+        difficulty: y.distance > 200 ? "Moderate" : "Easy",
+        image: y.image,
+        maxSlots: b.slots,
+        suggestedDateIso,
+      });
+    }
+  };
 
   const filtered =
     activeTab === "All"
@@ -415,14 +478,15 @@ export default function UpcomingBatchesSection() {
                     ₹{b.price.toLocaleString("en-IN")}
                   </td>
                   <td className="py-3 px-4">
-                    <Link
-                      to="/book"
+                    <button
+                      type="button"
                       className="text-[12px] font-semibold px-4 py-2 rounded-lg whitespace-nowrap text-white transition-opacity hover:opacity-90"
                       style={{ background: "#E87722" }}
                       data-ocid={`batches2.book_button.${i + 1}`}
+                      onClick={() => openBatchBook(b)}
                     >
                       Book Now
-                    </Link>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -462,14 +526,15 @@ export default function UpcomingBatchesSection() {
               </div>
               <div className="flex items-center justify-between">
                 <SlotsCell slots={b.slots} />
-                <Link
-                  to="/book"
+                <button
+                  type="button"
                   className="text-[12px] font-semibold px-4 py-1.5 rounded-lg text-white"
                   style={{ background: "#E87722" }}
                   data-ocid={`batches2.mobile_book_button.${i + 1}`}
+                  onClick={() => openBatchBook(b)}
                 >
                   Book Now
-                </Link>
+                </button>
               </div>
             </div>
           ))}
@@ -490,6 +555,21 @@ export default function UpcomingBatchesSection() {
           </div>
         )}
       </div>
+
+      {batchDrawer && (
+        <BookingDrawer
+          isOpen={batchDrawer.open}
+          onClose={() => setBatchDrawer((d) => (d ? { ...d, open: false } : d))}
+          trekName={batchDrawer.trekName}
+          trekSlug={batchDrawer.trekSlug}
+          price={batchDrawer.price}
+          duration={batchDrawer.duration}
+          difficulty={batchDrawer.difficulty}
+          image={batchDrawer.image}
+          maxSlots={batchDrawer.maxSlots}
+          suggestedDateIso={batchDrawer.suggestedDateIso}
+        />
+      )}
     </section>
   );
 }

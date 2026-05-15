@@ -23,9 +23,9 @@ export default function WhatsAppCTA({ trekName }: WhatsAppCTAProps) {
 
   const encodedMessage = trekName
     ? encodeURIComponent(
-        `Hi, I want to know more about ${trekName} with EternaWings`,
+        `Hi, I want to know more about ${trekName} with Trekora`,
       )
-    : encodeURIComponent("Hi, I want to book a trek with EternaWings");
+    : encodeURIComponent("Hi, I want to book a trek with Trekora");
 
   const waHref = `https://wa.me/919876543210?text=${encodedMessage}`;
 

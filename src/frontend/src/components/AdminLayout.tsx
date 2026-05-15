@@ -1,3 +1,4 @@
+import { SITE_LOGO_URL } from "@/lib/site-brand";
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import {
   BarChart3,
@@ -46,15 +47,17 @@ export default function AdminLayout() {
           style={{ borderColor: "rgba(255,255,255,0.08)" }}
         >
           <div className="flex items-center gap-2.5">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: "var(--ew-red)" }}
-            >
-              <Mountain size={18} className="text-white" />
-            </div>
+            <img
+              src={SITE_LOGO_URL}
+              alt="Trekora"
+              width={72}
+              height={36}
+              decoding="async"
+              className="h-9 max-w-[4.75rem] shrink-0 rounded-lg object-contain object-left bg-black/25"
+            />
             <div>
               <p className="font-bold text-white text-sm leading-tight">
-                EternaWings
+                Trekora
               </p>
               <p
                 className="text-xs"

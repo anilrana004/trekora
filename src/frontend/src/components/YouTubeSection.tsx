@@ -1,5 +1,7 @@
 import { Play } from "lucide-react";
+
 import { motion } from "motion/react";
+import OptimizedImage from "./media/OptimizedImage";
 
 const YOUTUBE_VIDEOS = [
   {
@@ -160,11 +162,12 @@ export default function YouTubeSection() {
                 style={{ width: 110, aspectRatio: "9/16" }}
                 data-ocid={`youtube.reel.${i + 1}`}
               >
-                <img
+                <OptimizedImage
                   src={r.thumb}
                   alt={r.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  fill
+                  variant="gallery-thumb"
+                  className="group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-black/30" />
                 {/* Play button */}

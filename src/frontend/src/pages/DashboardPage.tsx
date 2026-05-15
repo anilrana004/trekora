@@ -21,6 +21,8 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import OptimizedImage from "../components/media/OptimizedImage";
+
 const MOCK_BOOKINGS = [
   {
     id: "TK240512",
@@ -305,10 +307,13 @@ export default function DashboardPage() {
                             className="p-5 flex items-center gap-4 flex-wrap"
                             data-ocid={`dashboard.booking.${i + 1}`}
                           >
-                            <img
+                            <OptimizedImage
                               src={booking.image}
                               alt={booking.trek}
-                              className="w-16 h-16 rounded-xl object-cover shrink-0 hidden sm:block"
+                              variant="thumbnail"
+                              width={64}
+                              height={64}
+                              className="w-16 h-16 rounded-xl shrink-0 hidden sm:block"
                             />
                             <div className="flex-1 min-w-0">
                               <p
@@ -387,10 +392,11 @@ export default function DashboardPage() {
                         key={t.name}
                         className="relative group rounded-xl overflow-hidden aspect-square"
                       >
-                        <img
+                        <OptimizedImage
                           src={t.image}
                           alt={t.name}
-                          className="w-full h-full object-cover"
+                          fill
+                          variant="gallery-thumb"
                         />
                         <div
                           className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"

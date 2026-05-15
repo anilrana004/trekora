@@ -3,55 +3,55 @@
 
   <!-- Core pages -->
   <url>
-    <loc>https://www.eternawings.com/</loc>
+    <loc>https://www.trekora.com/</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks</loc>
+    <loc>https://www.trekora.com/treks</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras</loc>
+    <loc>https://www.trekora.com/yatras</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/destinations</loc>
+    <loc>https://www.trekora.com/destinations</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/blog</loc>
+    <loc>https://www.trekora.com/blog</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/gallery</loc>
+    <loc>https://www.trekora.com/gallery</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/about</loc>
+    <loc>https://www.trekora.com/about</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/contact</loc>
+    <loc>https://www.trekora.com/contact</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/corporate</loc>
+    <loc>https://www.trekora.com/corporate</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -59,121 +59,121 @@
 
   <!-- Uttarakhand Trek Pages -->
   <url>
-    <loc>https://www.eternawings.com/treks/roopkund-trek</loc>
+    <loc>https://www.trekora.com/treks/roopkund-trek</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/valley-of-flowers</loc>
+    <loc>https://www.trekora.com/treks/valley-of-flowers</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kedarnath-trek</loc>
+    <loc>https://www.trekora.com/treks/kedarnath-trek</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/chopta-tungnath-chandrashila</loc>
+    <loc>https://www.trekora.com/treks/chopta-tungnath</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/har-ki-dun</loc>
+    <loc>https://www.trekora.com/treks/har-ki-dun</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/brahmatal-trek</loc>
+    <loc>https://www.trekora.com/treks/brahmatal-trek</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kedarkantha-trek</loc>
+    <loc>https://www.trekora.com/treks/kedarkantha-trek</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/dayara-bugyal</loc>
+    <loc>https://www.trekora.com/treks/dayara-bugyal</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/panwali-kantha</loc>
+    <loc>https://www.trekora.com/treks/panwali-kantha</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/rupin-pass</loc>
+    <loc>https://www.trekora.com/treks/rupin-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/bali-pass</loc>
+    <loc>https://www.trekora.com/treks/bali-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/audens-col</loc>
+    <loc>https://www.trekora.com/treks/audens-col</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/nanda-devi-base-camp</loc>
+    <loc>https://www.trekora.com/treks/nanda-devi-base-camp</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/pindari-glacier</loc>
+    <loc>https://www.trekora.com/treks/pindari-glacier</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kafni-glacier</loc>
+    <loc>https://www.trekora.com/treks/kafni-glacier</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/milam-glacier</loc>
+    <loc>https://www.trekora.com/treks/milam-glacier</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kuari-pass</loc>
+    <loc>https://www.trekora.com/treks/kuari-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/deoriatal-chandrashila</loc>
+    <loc>https://www.trekora.com/treks/deoriatal-chandrashila</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/pangarchulla-peak</loc>
+    <loc>https://www.trekora.com/treks/pangarchulla-peak</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kedartal</loc>
+    <loc>https://www.trekora.com/treks/kedartal</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -181,121 +181,121 @@
 
   <!-- Himachal Pradesh Trek Pages -->
   <url>
-    <loc>https://www.eternawings.com/treks/triund-trek</loc>
+    <loc>https://www.trekora.com/treks/triund-trek</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/hampta-pass</loc>
+    <loc>https://www.trekora.com/treks/hampta-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/chandratal-lake</loc>
+    <loc>https://www.trekora.com/treks/chandratal-lake</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/bhrigu-lake</loc>
+    <loc>https://www.trekora.com/treks/bhrigu-lake</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/beas-kund</loc>
+    <loc>https://www.trekora.com/treks/beas-kund</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/pin-parvati-pass</loc>
+    <loc>https://www.trekora.com/treks/pin-parvati-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kheerganga</loc>
+    <loc>https://www.trekora.com/treks/kheerganga</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/sar-pass</loc>
+    <loc>https://www.trekora.com/treks/sar-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/friendship-peak</loc>
+    <loc>https://www.trekora.com/treks/friendship-peak</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/deo-tibba-base-camp</loc>
+    <loc>https://www.trekora.com/treks/deo-tibba-base-camp</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/bara-bhangal</loc>
+    <loc>https://www.trekora.com/treks/bara-bhangal</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/chandra-tal-baralacha</loc>
+    <loc>https://www.trekora.com/treks/chandra-tal-baralacha</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/spiti-valley-circuit</loc>
+    <loc>https://www.trekora.com/treks/spiti-valley-circuit</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kinnaur-kailash-parikrama</loc>
+    <loc>https://www.trekora.com/treks/kinnaur-kailash-parikrama</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/shikari-mata</loc>
+    <loc>https://www.trekora.com/treks/shikari-mata</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/serolsar-lake</loc>
+    <loc>https://www.trekora.com/treks/serolsar-lake</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/thamsar-pass</loc>
+    <loc>https://www.trekora.com/treks/thamsar-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kalihani-pass</loc>
+    <loc>https://www.trekora.com/treks/kalihani-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/kullu-eravikulam</loc>
+    <loc>https://www.trekora.com/treks/kullu-eravikulam</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/treks/changer-lobang-pass</loc>
+    <loc>https://www.trekora.com/treks/changer-lobang-pass</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -303,67 +303,67 @@
 
   <!-- Yatra Pages -->
   <url>
-    <loc>https://www.eternawings.com/yatras/char-dham-yatra</loc>
+    <loc>https://www.trekora.com/yatras/char-dham-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/panch-kedar-yatra</loc>
+    <loc>https://www.trekora.com/yatras/panch-kedar-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/panch-badri-yatra</loc>
+    <loc>https://www.trekora.com/yatras/panch-badri-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/hemkund-sahib-yatra</loc>
+    <loc>https://www.trekora.com/yatras/hemkund-sahib-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/adi-kailash-om-parvat</loc>
+    <loc>https://www.trekora.com/yatras/adi-kailash-om-parvat</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/kartik-swami-temple</loc>
+    <loc>https://www.trekora.com/yatras/kartik-swami-temple</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/triyuginarayan-temple</loc>
+    <loc>https://www.trekora.com/yatras/triyuginarayan-temple</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/mani-mahesh-yatra</loc>
+    <loc>https://www.trekora.com/yatras/mani-mahesh-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/kinnaur-kailash-yatra</loc>
+    <loc>https://www.trekora.com/yatras/kinnaur-kailash-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/shrikhand-mahadev-yatra</loc>
+    <loc>https://www.trekora.com/yatras/shrikhand-mahadev-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eternawings.com/yatras/churdhar-yatra</loc>
+    <loc>https://www.trekora.com/yatras/churdhar-yatra</loc>
     <lastmod>2026-05-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

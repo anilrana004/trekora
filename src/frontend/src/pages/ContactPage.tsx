@@ -73,7 +73,7 @@ export default function ContactPage() {
           animate={{ opacity: 1, y: 0 }}
         >
           <h1 className="text-4xl md:text-5xl font-bold mt-2 mb-3">
-            Contact EternaWings
+            Contact Trekora
           </h1>
           <p className="opacity-80 text-sm">
             We're available Mon–Sat 9AM–9PM. Reach out anytime.
@@ -91,7 +91,7 @@ export default function ContactPage() {
               style={{ height: 280 }}
             >
               <iframe
-                title="EternaWings Office Location"
+                title="Trekora Office Location"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -139,7 +139,7 @@ export default function ContactPage() {
               </div>
               <div className="flex gap-3 mt-6">
                 <a
-                  href="https://wa.me/919999999999?text=Hi%20EternaWings%2C%20I%27d%20like%20to%20enquire%20about%20trekking%20packages"
+                  href="https://wa.me/919999999999?text=Hi%20Trekora%2C%20I%27d%20like%20to%20enquire%20about%20trekking%20packages"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 font-bold py-3 rounded-full text-white text-sm transition-opacity hover:opacity-90"

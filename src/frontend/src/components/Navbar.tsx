@@ -1,3 +1,5 @@
+import { SITE_LOGO_URL } from "@/lib/site-brand";
+import { SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/lib/site-contact";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
@@ -6,6 +8,8 @@ import { useIsMobile } from "../hooks/use-mobile";
 import LanguageBanner from "./LanguageBanner";
 import MobileSearchModal from "./MobileSearchModal";
 import SearchDropdown from "./SearchDropdown";
+import OptimizedImage from "./media/OptimizedImage";
+import { EnquiryButton } from "./ui/EnquiryButton";
 
 const UK_TREKS = [
   { name: "Roopkund Trek", slug: "roopkund-trek" },
@@ -28,7 +32,7 @@ const HP_TREKS = [
   { name: "Chandratal Lake", slug: "chandratal-lake" },
   { name: "Sar Pass", slug: "sar-pass" },
   { name: "Pin Parvati Pass", slug: "pin-parvati-pass" },
-  { name: "Spiti Valley", slug: "spiti-valley" },
+  { name: "Spiti Valley", slug: "spiti-valley-trek" },
   { name: "Kheerganga", slug: "kheerganga-trek" },
   { name: "Bhrigu Lake", slug: "bhrigu-lake" },
   { name: "Beas Kund", slug: "beas-kund" },
@@ -54,8 +58,8 @@ const SEASONS = [
 const UK_YATRAS = [
   { name: "Char Dham Yatra", slug: "char-dham-yatra" },
   { name: "Panch Kedar", slug: "panch-kedar" },
-  { name: "Panch Badri", slug: "panch-badri" },
-  { name: "Hemkund Sahib", slug: "hemkund-sahib" },
+  { name: "Panch Badri", slug: "panch-badri-yatra" },
+  { name: "Hemkund Sahib", slug: "hemkund-sahib-yatra" },
   { name: "Adi Kailash", slug: "adi-kailash" },
   { name: "Om Parvat", slug: "om-parvat" },
 ];
@@ -87,47 +91,23 @@ const NAV_LINKS = [
   { label: "More", to: "/about", key: null },
 ];
 
-function TrekoraLogo({ dark = false }: { dark?: boolean }) {
+function TrekoraLogo() {
   return (
-    <Link to="/" className="flex items-center gap-2 group" data-ocid="nav.logo">
-      {/* SVG wing + mountain mark */}
-      <svg
-        width="36"
-        height="36"
-        viewBox="0 0 36 36"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M18 6 C10 10, 4 18, 6 28 C10 24, 14 20, 18 22 C22 20, 26 24, 30 28 C32 18, 26 10, 18 6Z"
-          fill="#C0001C"
-          opacity="0.15"
-        />
-        <path d="M6 28 C10 24, 14 20, 18 22 L18 30 L6 28Z" fill="#C0001C" />
-        <path d="M30 28 C26 24, 22 20, 18 22 L18 30 L30 28Z" fill="#E87722" />
-        <polygon points="18,10 14,26 18,23 22,26" fill="#C0001C" />
-        <polygon points="18,23 22,26 18,30" fill="#C0001C" opacity="0.7" />
-      </svg>
-      <div className="flex flex-col leading-none">
-        <span
-          className="font-bold text-[1.1rem] tracking-tight"
-          style={{
-            color: dark ? "#ffffff" : "var(--ew-red)",
-            fontFamily: "var(--font-display)",
-          }}
-        >
-          Trekora
-        </span>
-        <span
-          className="text-[9px] tracking-widest uppercase"
-          style={{
-            color: dark ? "rgba(255,255,255,0.65)" : "var(--ew-gray-dark)",
-            fontFamily: "var(--font-body)",
-          }}
-        >
-          Where Every Peak Tells a Story
-        </span>
-      </div>
+    <Link
+      to="/"
+      className="flex shrink-0 items-center group"
+      data-ocid="nav.logo"
+    >
+      <OptimizedImage
+        src={SITE_LOGO_URL}
+        alt="Trekora — Where Every Peak Tells a Story"
+        width={200}
+        height={48}
+        priority
+        variant="blog-card"
+        sizes="(max-width: 768px) 46vw, 220px"
+        className="h-9 w-auto max-w-[min(200px,46vw)] object-contain object-left md:h-10 md:max-w-[220px] transition-opacity group-hover:opacity-90"
+      />
     </Link>
   );
 }
@@ -567,14 +547,14 @@ export default function Navbar() {
                                     ₹25,000
                                   </strong>
                                 </p>
-                                <Link
-                                  to="/yatras/$slug"
-                                  params={{ slug: "char-dham-yatra" }}
+                                <EnquiryButton
+                                  type="button"
+                                  trekName="Char Dham Yatra"
                                   className="btn-primary text-xs px-3 py-1.5"
-                                  style={{ textDecoration: "none" }}
+                                  data-ocid="nav.yatras_mega.book_char_dham"
                                 >
                                   Book Now →
-                                </Link>
+                                </EnquiryButton>
                               </div>
                             </div>
                           </div>
@@ -638,6 +618,14 @@ export default function Navbar() {
             >
               {lang === "en" ? "EN" : "हि"}
             </button>
+            <a
+              href={`tel:${SITE_PHONE_TEL}`}
+              className="hidden lg:flex items-center gap-1.5 text-sm font-medium transition-colors hover:underline text-[var(--ew-text)]"
+              data-ocid="nav.phone_link"
+            >
+              <Phone size={17} strokeWidth={2} aria-hidden />
+              {SITE_PHONE_DISPLAY}
+            </a>
             <button
               type="button"
               onClick={() => {
@@ -745,39 +733,16 @@ export default function Navbar() {
                 flexShrink: 0,
               }}
             >
-              <div className="flex items-center gap-2">
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 36 36"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M18 6 C10 10, 4 18, 6 28 C10 24, 14 20, 18 22 C22 20, 26 24, 30 28 C32 18, 26 10, 18 6Z"
-                    fill="rgba(255,255,255,0.18)"
-                  />
-                  <path
-                    d="M6 28 C10 24, 14 20, 18 22 L18 30 L6 28Z"
-                    fill="#fff"
-                  />
-                  <path
-                    d="M30 28 C26 24, 22 20, 18 22 L18 30 L30 28Z"
-                    fill="var(--ew-orange)"
-                  />
-                  <polygon points="18,10 14,26 18,23 22,26" fill="#fff" />
-                </svg>
-                <div>
-                  <p
-                    className="text-white font-bold text-base leading-tight"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    Trekora
-                  </p>
-                  <p className="text-white/65 text-[9px] uppercase tracking-widest">
-                    Where Every Peak Tells a Story
-                  </p>
-                </div>
+              <div className="min-w-0 max-w-[min(200px,55vw)] rounded-lg bg-black/25 p-1">
+                <OptimizedImage
+                  src={SITE_LOGO_URL}
+                  alt="Trekora — Where Every Peak Tells a Story"
+                  width={180}
+                  height={44}
+                  variant="blog-card"
+                  sizes="(max-width: 768px) 55vw, 200px"
+                  className="h-8 w-auto max-w-full object-contain object-left"
+                />
               </div>
               <button
                 type="button"

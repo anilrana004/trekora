@@ -1,6 +1,5 @@
-import { useActor } from "@caffeineai/core-infrastructure";
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
+import { useActor } from "@trekora/icp";
 import {
   AlertCircle,
   Calendar,
@@ -20,7 +19,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createActor } from "../backend";
 import type { TrekBatchPublic } from "../backend";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { TREKS } from "../data/treks";
+import { useTrekBatches } from "../hooks/useTrekBatches";
+import { icpTimestampNsToMs } from "../lib/icpTimestamp";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -217,6 +219,91 @@ function formatINR(n: number) {
   return n.toLocaleString("en-IN");
 }
 
+/** Local calendar key YYYY-MM-DD (matches `Date(y,m,d)` cells; avoids UTC-only `new Date("YYYY-MM-DD")` bugs). */
+function formatYmdLocal(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function parseYmdLocal(ymd: string): Date | null {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd.trim());
+  if (!m) return null;
+  const y = Number(m[1]);
+  const mo = Number(m[2]) - 1;
+  const day = Number(m[3]);
+  const d = new Date(y, mo, day);
+  if (d.getFullYear() !== y || d.getMonth() !== mo || d.getDate() !== day) {
+    return null;
+  }
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function formatYmdFromBatchTs(ts: bigint): string {
+  const d = new Date(icpTimestampNsToMs(ts));
+  if (Number.isNaN(d.getTime())) return "";
+  return formatYmdLocal(d);
+}
+
+/** Future bookable days in a calendar month (local dates, matches grid). */
+function countFutureAvailableSlotsInMonth(
+  viewYear: number,
+  viewMonth: number,
+  today: Date,
+  batchMap: Map<string, TrekBatchPublic>,
+): number {
+  const dim = new Date(viewYear, viewMonth + 1, 0).getDate();
+  let n = 0;
+  for (let day = 1; day <= dim; day++) {
+    const date = new Date(viewYear, viewMonth, day);
+    if (date < today) continue;
+    const k = formatYmdLocal(date);
+    const batch = batchMap.get(k);
+    if (batch && Number(batch.availableSlots) > 0) n++;
+  }
+  return n;
+}
+
+/** Earliest calendar month that still has an active batch on/after `today`. */
+function firstMonthWithFutureBatch(
+  batches: TrekBatchPublic[],
+  today: Date,
+): { y: number; m: number } | null {
+  let best: { y: number; m: number; t: number } | null = null;
+  for (const b of batches) {
+    if (!b.isActive || Number(b.availableSlots) <= 0) continue;
+    const d = new Date(icpTimestampNsToMs(b.batchDate));
+    if (Number.isNaN(d.getTime())) continue;
+    d.setHours(0, 0, 0, 0);
+    if (d < today) continue;
+    const t = d.getTime();
+    if (!best || t < best.t) {
+      best = { y: d.getFullYear(), m: d.getMonth(), t };
+    }
+  }
+  return best ? { y: best.y, m: best.m } : null;
+}
+
+function formatBatchDateLongIN(ymd: string): string {
+  const d = parseYmdLocal(ymd);
+  if (!d) return ymd;
+  return d.toLocaleDateString("en-IN", {
+    weekday: "short",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function formatBatchDateShortIN(ymd: string): string {
+  const d = parseYmdLocal(ymd);
+  if (!d) return ymd;
+  return d.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
 function generateRef() {
   return `EW-${new Date().getFullYear()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`;
 }
@@ -326,16 +413,70 @@ function BatchCalendar({
   const [viewMonth, setViewMonth] = useState(() => today.getMonth());
 
   const batchMap = useMemo(() => {
-    const map = new Map<string, TrekBatchPublic>();
+    const byDay = new Map<string, TrekBatchPublic[]>();
     for (const b of batches) {
       if (!b.isActive) continue;
-      const ms = Number(b.batchDate) / 1_000_000;
-      const d = new Date(ms);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-      map.set(key, b);
+      const key = formatYmdFromBatchTs(b.batchDate);
+      if (!key) continue;
+      const list = byDay.get(key) ?? [];
+      list.push(b);
+      byDay.set(key, list);
+    }
+    const map = new Map<string, TrekBatchPublic>();
+    for (const [key, list] of byDay) {
+      const best = list.reduce((acc, cur) =>
+        Number(cur.availableSlots) > Number(acc.availableSlots) ? cur : acc,
+      );
+      map.set(key, best);
     }
     return map;
   }, [batches]);
+
+  const batchesSnapSig = useMemo(
+    () =>
+      batches
+        .map((b) => `${b.id}:${b.availableSlots}:${b.batchDate}:${b.isActive}`)
+        .sort()
+        .join("|"),
+    [batches],
+  );
+
+  const snapSigRef = useRef<string>("");
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (batches.length === 0) {
+      snapSigRef.current = "";
+      return;
+    }
+    if (batchesSnapSig === snapSigRef.current) return;
+
+    const availableHere = countFutureAvailableSlotsInMonth(
+      viewYear,
+      viewMonth,
+      today,
+      batchMap,
+    );
+    if (availableHere > 0) {
+      snapSigRef.current = batchesSnapSig;
+      return;
+    }
+
+    const target = firstMonthWithFutureBatch(batches, today);
+    if (target) {
+      setViewYear(target.y);
+      setViewMonth(target.m);
+    }
+    snapSigRef.current = batchesSnapSig;
+  }, [
+    isLoading,
+    batches,
+    batchesSnapSig,
+    viewYear,
+    viewMonth,
+    today,
+    batchMap,
+  ]);
 
   const calendarDays = useMemo(() => {
     const firstOfMonth = new Date(viewYear, viewMonth, 1);
@@ -370,30 +511,30 @@ function BatchCalendar({
   if (isLoading) {
     return (
       <div
-        className="rounded-xl border p-4 space-y-3"
+        className="w-full min-w-0 rounded-xl border p-3 sm:p-4"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div
-            className="h-5 w-32 rounded animate-pulse"
+            className="h-5 w-28 rounded animate-pulse sm:w-32"
             style={{ background: "var(--ew-gray-mid)" }}
           />
           <div className="flex gap-2">
             <div
-              className="h-7 w-7 rounded-full animate-pulse"
+              className="h-12 w-12 shrink-0 rounded-full animate-pulse"
               style={{ background: "var(--ew-gray-mid)" }}
             />
             <div
-              className="h-7 w-7 rounded-full animate-pulse"
+              className="h-12 w-12 shrink-0 rounded-full animate-pulse"
               style={{ background: "var(--ew-gray-mid)" }}
             />
           </div>
         </div>
-        <div className="grid grid-cols-7 gap-1">
+        <div className="mt-3 grid grid-cols-7 gap-1 sm:gap-1.5">
           {Array.from({ length: 35 }, (_, i) => (
             <div
               key={`sk-${i + 1}`}
-              className="h-9 rounded-md animate-pulse"
+              className="min-h-12 rounded-md animate-pulse"
               style={{ background: "var(--ew-gray-mid)", opacity: 0.5 }}
             />
           ))}
@@ -402,42 +543,53 @@ function BatchCalendar({
     );
   }
 
+  const atOrBeforeCurrentMonth =
+    viewYear < today.getFullYear() ||
+    (viewYear === today.getFullYear() && viewMonth <= today.getMonth());
+
   return (
     <div
-      className="rounded-xl border overflow-hidden"
+      className="relative z-10 w-full min-w-0 touch-manipulation rounded-xl border overflow-hidden"
       style={{ borderColor: "var(--ew-gray-mid)" }}
       data-ocid="booking.calendar"
+      role="application"
+      aria-label="Batch departure calendar"
     >
       <div
-        className="flex items-center justify-between px-4 py-3"
+        className="flex items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3"
         style={{ background: "var(--ew-gray-lt)" }}
       >
         <button
           type="button"
           onClick={prevMonth}
-          className="p-1 rounded-full transition-colors hover:opacity-70"
+          disabled={atOrBeforeCurrentMonth}
+          className="flex min-h-12 min-w-12 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35"
           style={{ color: "#C0001C" }}
           aria-label="Previous month"
           data-ocid="booking.calendar.prev_button"
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={22} className="shrink-0" strokeWidth={2.25} />
         </button>
-        <span className="text-sm font-bold" style={{ color: "var(--ew-text)" }}>
+        <span
+          className="min-w-0 truncate text-center text-sm font-bold sm:text-base px-1"
+          style={{ color: "var(--ew-text)" }}
+          aria-live="polite"
+        >
           {monthLabel}
         </span>
         <button
           type="button"
           onClick={nextMonth}
-          className="p-1 rounded-full transition-colors hover:opacity-70"
+          className="flex min-h-12 min-w-12 shrink-0 items-center justify-center rounded-full transition-colors hover:opacity-80 active:scale-95"
           style={{ color: "#C0001C" }}
           aria-label="Next month"
           data-ocid="booking.calendar.next_button"
         >
-          <ChevronRight size={18} />
+          <ChevronRight size={22} className="shrink-0" strokeWidth={2.25} />
         </button>
       </div>
       <div
-        className="grid grid-cols-7 text-center py-1 px-2"
+        className="grid grid-cols-7 gap-1 px-2 py-1.5 text-center sm:gap-1.5 sm:px-3"
         style={{
           background: "var(--ew-gray-lt)",
           borderBottom: "1px solid var(--ew-gray-mid)",
@@ -446,104 +598,157 @@ function BatchCalendar({
         {DAYS_OF_WEEK.map((d) => (
           <div
             key={d}
-            className="text-xs font-semibold py-1"
+            className="truncate py-1.5 text-[11px] font-semibold uppercase tracking-wide sm:text-xs"
             style={{ color: "var(--ew-gray-dark)" }}
+            title={d}
           >
             {d}
           </div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-1 p-2">
-        {calendarDays.map((date, idx) => {
-          if (!date)
-            return <div key={`pad-${viewYear}-${viewMonth}-${idx + 1}`} />;
-          const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-          const batch = batchMap.get(key);
-          const isPast = date < today;
-          const isSelected = selectedDate === key;
-          const isFull = batch && Number(batch.availableSlots) === 0;
-          const isAvailable = batch && Number(batch.availableSlots) > 0;
-          const slots = batch ? Number(batch.availableSlots) : 0;
+      <fieldset className="m-0 min-w-0 border-0 p-0">
+        <legend className="sr-only">Departure dates</legend>
+        <div className="grid grid-cols-7 gap-1 p-2 sm:gap-1.5 sm:p-3">
+          {calendarDays.map((date, idx) => {
+            if (!date)
+              return (
+                <div
+                  key={`pad-${viewYear}-${viewMonth}-${idx + 1}`}
+                  className="min-h-12 min-w-0"
+                  aria-hidden
+                />
+              );
+            const key = formatYmdLocal(date);
+            const batch = batchMap.get(key);
+            const isPast = date < today;
+            const isSelected = selectedDate === key;
+            const isFull = batch && Number(batch.availableSlots) === 0;
+            const isAvailable = batch && Number(batch.availableSlots) > 0;
+            const slots = batch ? Number(batch.availableSlots) : 0;
 
-          let cellStyle: React.CSSProperties = {};
-          let cellClass =
-            "relative flex flex-col items-center justify-center h-10 rounded-md text-xs font-medium transition-all ";
-          if (isAvailable) {
-            cellClass += "cursor-pointer hover:opacity-80 ";
-            cellStyle = { background: "#2E7D32", color: "#fff" };
-          } else if (isFull) {
-            cellClass += "cursor-not-allowed line-through ";
-            cellStyle = { background: "#EBEBEB", color: "#888" };
-          } else if (isPast) {
-            cellClass += "cursor-not-allowed opacity-40 ";
-            cellStyle = { color: "var(--ew-gray-dark)" };
-          } else cellStyle = { color: "var(--ew-text-lt)" };
-          if (isSelected && isAvailable)
-            cellStyle = {
-              ...cellStyle,
-              outline: "2px solid #E87722",
-              outlineOffset: "1px",
-            };
+            let cellStyle: React.CSSProperties = {};
+            let cellClass =
+              "relative flex min-h-12 min-w-0 select-none flex-col items-center justify-center rounded-lg px-0.5 py-1 text-sm font-semibold transition-all sm:min-h-[3.25rem] sm:text-base ";
+            if (isAvailable) {
+              cellClass +=
+                "cursor-pointer transition-transform active:scale-[0.98] hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C0001C] ";
+              cellStyle = { background: "#2E7D32", color: "#fff" };
+            } else if (isFull) {
+              cellClass +=
+                "cursor-not-allowed line-through opacity-90 focus-visible:outline-none ";
+              cellStyle = { background: "#EBEBEB", color: "#888" };
+            } else if (isPast) {
+              cellClass +=
+                "cursor-not-allowed opacity-40 focus-visible:outline-none ";
+              cellStyle = { color: "var(--ew-gray-dark)" };
+            } else {
+              cellClass += "cursor-default focus-visible:outline-none ";
+              cellStyle = { color: "var(--ew-text-lt)" };
+            }
+            if (isSelected && isAvailable)
+              cellStyle = {
+                ...cellStyle,
+                outline: "2px solid #E87722",
+                outlineOffset: "1px",
+              };
 
-          return (
-            <div
-              key={key}
-              className={cellClass}
-              style={cellStyle}
-              onClick={() => isAvailable && onSelectDate(key, batch)}
-              onKeyDown={(e) => {
-                if ((e.key === "Enter" || e.key === " ") && isAvailable)
-                  onSelectDate(key, batch);
-              }}
-              role={isAvailable ? "button" : undefined}
-              tabIndex={isAvailable ? 0 : undefined}
-              title={
-                isAvailable
-                  ? `${slots} slot${slots !== 1 ? "s" : ""} available`
-                  : isFull
-                    ? "FULL"
-                    : undefined
-              }
-              data-ocid={
-                isAvailable ? "booking.calendar.available_date" : undefined
-              }
-            >
-              <span>{date.getDate()}</span>
-              {isFull && (
-                <span
-                  className="text-[8px] font-bold leading-none mt-0.5"
-                  style={{ color: "#888" }}
+            const labelParts = [
+              date.toLocaleDateString("en-IN", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }),
+            ];
+            if (isAvailable)
+              labelParts.push(
+                `${slots} slot${slots !== 1 ? "s" : ""} available`,
+              );
+            else if (isFull) labelParts.push("Full");
+            else if (isPast) labelParts.push("Past date");
+            else labelParts.push("No departure");
+
+            if (isAvailable && batch) {
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  className={`${cellClass} w-full border-0 bg-transparent p-0 font-inherit`}
+                  style={cellStyle}
+                  onClick={() => onSelectDate(key, batch)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onSelectDate(key, batch);
+                    }
+                  }}
+                  aria-pressed={isSelected}
+                  aria-label={labelParts.join(". ")}
+                  title={
+                    isAvailable
+                      ? `${slots} slot${slots !== 1 ? "s" : ""} available`
+                      : undefined
+                  }
+                  data-ocid="booking.calendar.available_date"
                 >
-                  FULL
-                </span>
-              )}
-              {isAvailable && slots <= 3 && (
-                <span className="text-[8px] font-bold leading-none mt-0.5">
-                  {slots}!
-                </span>
-              )}
-            </div>
-          );
-        })}
-      </div>
+                  <span className="tabular-nums">{date.getDate()}</span>
+                  {isAvailable && slots <= 3 && (
+                    <span
+                      className="mt-0.5 text-[9px] sm:text-[10px] font-bold leading-none"
+                      aria-hidden
+                    >
+                      {slots} left
+                    </span>
+                  )}
+                </button>
+              );
+            }
+
+            return (
+              <div
+                key={key}
+                className={cellClass}
+                style={cellStyle}
+                aria-disabled
+                aria-label={labelParts.join(". ")}
+                title={isFull ? "FULL" : undefined}
+              >
+                <span className="tabular-nums">{date.getDate()}</span>
+                {isFull && (
+                  <span
+                    className="mt-0.5 text-[9px] sm:text-[10px] font-bold leading-none"
+                    style={{ color: "#888" }}
+                    aria-hidden
+                  >
+                    FULL
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </fieldset>
       <div
-        className="flex gap-4 px-3 pb-3 text-xs"
+        className="flex flex-wrap gap-x-4 gap-y-2.5 px-3 pb-3 pt-0.5 text-xs sm:text-sm"
         style={{ color: "var(--ew-gray-dark)" }}
       >
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded" style={{ background: "#2E7D32" }} />{" "}
+        <span className="flex items-center gap-2 min-h-[44px] sm:min-h-0">
+          <span
+            className="h-3.5 w-3.5 shrink-0 rounded"
+            style={{ background: "#2E7D32" }}
+          />{" "}
           Available
         </span>
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-2 min-h-[44px] sm:min-h-0">
           <span
-            className="w-3 h-3 rounded"
+            className="h-3.5 w-3.5 shrink-0 rounded"
             style={{ background: "#EBEBEB", border: "1px solid #ccc" }}
           />{" "}
           Full
         </span>
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-2 min-h-[44px] sm:min-h-0">
           <span
-            className="w-3 h-3 rounded"
+            className="h-3.5 w-3.5 shrink-0 rounded"
             style={{ outline: "2px solid #E87722" }}
           />{" "}
           Selected
@@ -727,9 +932,57 @@ function Step1({
     (dateStr: string, batch: TrekBatchPublic) => {
       setFd((prev) => ({ ...prev, batchDate: dateStr }));
       setSelectedBatchObj(batch);
+      requestAnimationFrame(() => {
+        document
+          .querySelector<HTMLElement>('[data-ocid="booking.step1.next_button"]')
+          ?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "nearest",
+          });
+      });
     },
     [setFd],
   );
+
+  useEffect(() => {
+    if (!fd.batchDate || batchesLoading) return;
+    const actives = batches.filter((b) => b.isActive);
+    const matches = actives.filter(
+      (b) => formatYmdFromBatchTs(b.batchDate) === fd.batchDate,
+    );
+    if (matches.length === 0) {
+      setSelectedBatchObj(null);
+      setFd((p) =>
+        p.batchDate === fd.batchDate ? { ...p, batchDate: null } : p,
+      );
+      toast.error(
+        "This departure is no longer available. Please choose another batch date.",
+      );
+      return;
+    }
+    const best = matches.reduce((a, b) =>
+      Number(b.availableSlots) > Number(a.availableSlots) ? b : a,
+    );
+    if (Number(best.availableSlots) <= 0) {
+      setSelectedBatchObj(null);
+      setFd((p) =>
+        p.batchDate === fd.batchDate ? { ...p, batchDate: null } : p,
+      );
+      toast.error("This batch is now full. Please pick another date.");
+      return;
+    }
+    setSelectedBatchObj((prev) => {
+      if (
+        prev &&
+        prev.id === best.id &&
+        Number(prev.availableSlots) === Number(best.availableSlots)
+      ) {
+        return prev;
+      }
+      return best;
+    });
+  }, [batches, batchesLoading, fd.batchDate, setFd]);
 
   const toggleAddOn = (id: string) => {
     setFd((prev) => ({
@@ -756,10 +1009,13 @@ function Step1({
           className="rounded-xl p-4 flex items-center gap-4"
           style={{ background: "var(--ew-gray-lt)" }}
         >
-          <img
+          <OptimizedImage
             src={trek.image}
             alt={trek.name}
-            className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+            variant="thumbnail"
+            width={64}
+            height={64}
+            className="w-16 h-16 rounded-lg flex-shrink-0"
           />
           <div className="min-w-0">
             <p
@@ -811,18 +1067,14 @@ function Step1({
               background: "var(--ew-orange-lt)",
               border: "1px solid #E87722",
             }}
+            aria-live="polite"
           >
             <div>
               <p
                 className="text-sm font-bold"
                 style={{ color: "var(--ew-text)" }}
               >
-                {new Date(fd.batchDate).toLocaleDateString("en-IN", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
+                {formatBatchDateLongIN(fd.batchDate)}
               </p>
               <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
                 {selectedBatchObj
@@ -848,13 +1100,13 @@ function Step1({
         >
           How many people are joining?
         </p>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 touch-manipulation">
           <button
             type="button"
             onClick={() =>
               setFd((p) => ({ ...p, groupSize: Math.max(1, p.groupSize - 1) }))
             }
-            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-colors"
+            className="min-h-12 min-w-12 h-12 w-12 shrink-0 rounded-full flex items-center justify-center font-bold text-xl transition-colors active:scale-95"
             style={{
               border: "2px solid var(--ew-gray-mid)",
               color: "var(--ew-text)",
@@ -864,7 +1116,7 @@ function Step1({
             −
           </button>
           <span
-            className="text-2xl font-bold w-8 text-center"
+            className="text-2xl font-bold min-w-[2.5rem] text-center tabular-nums"
             style={{ color: "var(--ew-text)" }}
           >
             {fd.groupSize}
@@ -874,7 +1126,7 @@ function Step1({
             onClick={() =>
               setFd((p) => ({ ...p, groupSize: Math.min(20, p.groupSize + 1) }))
             }
-            className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-colors"
+            className="min-h-12 min-w-12 h-12 w-12 shrink-0 rounded-full flex items-center justify-center font-bold text-xl transition-colors active:scale-95"
             style={{
               border: "2px solid var(--ew-gray-mid)",
               color: "var(--ew-text)",
@@ -2370,10 +2622,13 @@ function Step6({
           className="flex items-center gap-4 p-4 rounded-xl"
           style={{ background: "var(--ew-gray-lt)" }}
         >
-          <img
+          <OptimizedImage
             src={trek.image}
             alt={trek.name}
-            className="w-20 h-20 rounded-xl object-cover flex-shrink-0"
+            variant="thumbnail"
+            width={80}
+            height={80}
+            className="w-20 h-20 rounded-xl flex-shrink-0"
           />
           <div className="min-w-0">
             <p
@@ -2384,12 +2639,7 @@ function Step6({
             </p>
             {fd.batchDate && (
               <p className="text-sm" style={{ color: "var(--ew-gray-dark)" }}>
-                📅{" "}
-                {new Date(fd.batchDate).toLocaleDateString("en-IN", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
+                📅 {formatBatchDateShortIN(fd.batchDate)}
               </p>
             )}
             <p className="text-sm" style={{ color: "var(--ew-gray-dark)" }}>
@@ -2540,31 +2790,29 @@ function Step6({
 // ── Main BookingPage ───────────────────────────────────────────────────────
 
 export default function BookingPage() {
+  const { trek: trekFromSearch } = useSearch({ from: "/layout/book" });
   const [step, setStep] = useState(0);
   const [trekSlug, setTrekSlug] = useState("");
   const [fd, setFd] = useState<FormDataAccumulated>(DEFAULT_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successRef, setSuccessRef] = useState<string | null>(null);
 
-  const { actor, isFetching: actorFetching } = useActor(createActor);
+  const { actor } = useActor(createActor);
 
   const trek = TREKS.find((t) => t.slug === trekSlug);
 
-  const { data: batches = [], isLoading: batchesLoading } = useQuery<
-    TrekBatchPublic[]
-  >({
-    queryKey: ["trekBatches", trek?.id],
-    queryFn: async () => {
-      if (!actor || !trek) return [];
-      try {
-        return await actor.getTrekBatches(BigInt(trek.id));
-      } catch {
-        return [];
-      }
-    },
-    enabled: !!actor && !actorFetching && !!trek,
-    staleTime: 30_000,
-  });
+  useEffect(() => {
+    if (!trekFromSearch) return;
+    const exists = TREKS.some((t) => t.slug === trekFromSearch);
+    if (exists) {
+      setTrekSlug(trekFromSearch);
+      setFd((p) => ({ ...p, batchDate: null }));
+    }
+  }, [trekFromSearch]);
+
+  const { data: batches = [], isLoading: batchesLoading } = useTrekBatches(
+    trek?.id,
+  );
 
   const unitPrice = useMemo(() => trek?.price ?? 0, [trek]);
   const prices = calcPrices(
@@ -2659,8 +2907,12 @@ export default function BookingPage() {
 
       setIsSubmitting(true);
       try {
-        const batchDateNs =
-          BigInt(new Date(fd.batchDate).getTime()) * 1_000_000n;
+        const dBatch = parseYmdLocal(fd.batchDate);
+        if (!dBatch) {
+          toast.error("Invalid batch date. Please pick a date again.");
+          return;
+        }
+        const batchDateNs = BigInt(dBatch.getTime()) * 1_000_000n;
         if (actor) {
           await actor.createBooking({
             itemId: BigInt(trek.id),
@@ -2732,7 +2984,7 @@ export default function BookingPage() {
 
   return (
     <div
-      className="min-h-screen pb-16"
+      className="min-h-screen max-sm:pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] sm:pb-32"
       style={{ background: "var(--ew-gray-lt)" }}
     >
       {/* Sticky header */}
@@ -2743,10 +2995,13 @@ export default function BookingPage() {
         <div className="max-w-2xl mx-auto px-4 h-16 flex items-center gap-3">
           {trek ? (
             <>
-              <img
+              <OptimizedImage
                 src={trek.image}
                 alt={trek.name}
-                className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
+                variant="thumbnail"
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-lg flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
                 <p
@@ -2887,31 +3142,33 @@ export default function BookingPage() {
 
             {/* Navigation (only for steps 0-4; step 5 has its own submit button) */}
             {step < 5 && (
-              <div className="flex items-center justify-between mt-8">
+              <div className="mt-8 flex items-center justify-between gap-3 max-sm:fixed max-sm:inset-x-0 max-sm:bottom-0 max-sm:z-[35] max-sm:mt-0 max-sm:rounded-none max-sm:border-t max-sm:border-[var(--ew-gray-mid)] max-sm:bg-white max-sm:px-4 max-sm:py-3 max-sm:shadow-[0_-8px_28px_rgba(0,0,0,0.1)] max-sm:pb-[max(0.75rem,env(safe-area-inset-bottom))]">
                 {step > 0 ? (
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl border-2 font-semibold text-sm transition-colors"
+                    className="flex min-h-12 min-w-0 flex-1 items-center justify-center gap-2 rounded-xl border-2 px-4 py-3 font-semibold text-sm transition-colors active:scale-[0.98] sm:min-h-0 sm:flex-none sm:px-5"
                     style={{
                       borderColor: "var(--ew-gray-mid)",
                       color: "var(--ew-text-lt)",
                     }}
                     data-ocid={`booking.step${step + 1}.back_button`}
                   >
-                    <ChevronLeft size={16} /> Back
+                    <ChevronLeft size={18} /> Back
                   </button>
-                ) : (
-                  <div />
-                )}
+                ) : null}
                 <button
                   type="submit"
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white transition-all"
-                  style={{ background: "#C0001C", minHeight: 48 }}
+                  className={`flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-sm text-white transition-all active:scale-[0.98] sm:min-h-[48px] sm:px-6 ${
+                    step === 0
+                      ? "w-full max-sm:w-full sm:flex-none sm:w-auto"
+                      : "min-w-0 flex-[1.35] sm:flex-none"
+                  }`}
+                  style={{ background: "#C0001C" }}
                   data-ocid={`booking.step${step + 1}.next_button`}
                 >
                   {step === 4 ? "Review Booking" : "Next Step"}{" "}
-                  <ChevronRight size={16} />
+                  <ChevronRight size={18} />
                 </button>
               </div>
             )}

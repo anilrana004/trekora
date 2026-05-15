@@ -1,10 +1,11 @@
-import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useActor } from "@trekora/icp";
 import { RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
 import { createActor } from "../../backend";
 import type { Booking, LeadQuery } from "../../backend.d.ts";
 import { Skeleton } from "../../components/ui/skeleton";
+import { icpTimestampNsToMs } from "../../lib/icpTimestamp";
 
 function useBookings() {
   const { actor, isFetching } = useActor(createActor);
@@ -35,7 +36,7 @@ function useQueries() {
 }
 
 function getMonthKey(ts: bigint): string {
-  const d = new Date(Number(ts) / 1_000_000);
+  const d = new Date(icpTimestampNsToMs(ts));
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 

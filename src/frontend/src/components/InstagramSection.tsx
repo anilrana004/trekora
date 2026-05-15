@@ -1,6 +1,8 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 
+import OptimizedImage from "./media/OptimizedImage";
+
 const POSTS = [
   {
     id: 1,
@@ -75,11 +77,12 @@ function InstaTile({
       onMouseLeave={() => setHovered(false)}
       data-ocid={`instagram.post.${index + 1}`}
     >
-      <img
+      <OptimizedImage
         src={post.src}
         alt={post.caption}
-        loading="lazy"
-        className="w-full h-full object-cover transition-transform duration-500"
+        fill
+        variant="destination"
+        className="transition-transform duration-500"
         style={{ transform: hovered ? "scale(1.1)" : "scale(1)" }}
       />
       {/* Overlay */}

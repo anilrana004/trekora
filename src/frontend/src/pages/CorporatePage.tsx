@@ -1,6 +1,8 @@
 import { motion } from "motion/react";
+
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import OptimizedImage from "../components/media/OptimizedImage";
 
 interface CorporateForm {
   company: string;
@@ -67,13 +69,13 @@ const TESTIMONIALS = [
   {
     name: "Riya Kapoor",
     company: "Zomato",
-    text: "EternaWings handled everything flawlessly — logistics, safety, meals. Our leadership team's Hampta Pass trek was a defining experience for our culture.",
+    text: "Trekora handled everything flawlessly — logistics, safety, meals. Our leadership team's Hampta Pass trek was a defining experience for our culture.",
     badge: "Leadership Trek",
   },
   {
     name: "Sandeep Joshi",
     company: "TCS",
-    text: "Third year running with EternaWings for our annual team outing. Every year exceeds the last. Highly recommend their Triund overnight package.",
+    text: "Third year running with Trekora for our annual team outing. Every year exceeds the last. Highly recommend their Triund overnight package.",
     badge: "3-Year Partner",
   },
 ];
@@ -101,10 +103,13 @@ export default function CorporatePage() {
         className="relative overflow-hidden"
         style={{ background: "var(--ew-red)", minHeight: 280 }}
       >
-        <img
+        <OptimizedImage
           src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80"
           alt="Corporate trekking"
-          className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 hidden lg:block"
+          variant="hero"
+          sizes="(max-width: 1024px) 0px, 50vw"
+          priority
+          className="absolute right-0 top-0 h-full w-1/2 opacity-20 hidden lg:block object-cover"
         />
         <div className="container mx-auto px-4 py-16 relative z-10">
           <motion.div
@@ -131,7 +136,7 @@ export default function CorporatePage() {
                 Get a Custom Quote
               </a>
               <a
-                href="https://wa.me/919999999999?text=Hi%20EternaWings%2C%20I%27d%20like%20to%20enquire%20about%20Corporate%20Treks"
+                href="https://wa.me/919999999999?text=Hi%20Trekora%2C%20I%27d%20like%20to%20enquire%20about%20Corporate%20Treks"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-white transition-opacity hover:opacity-90 text-sm"

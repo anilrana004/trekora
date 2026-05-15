@@ -1,5 +1,6 @@
-import { InternetIdentityProvider } from "@caffeineai/core-infrastructure";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { InternetIdentityProvider } from "@trekora/icp";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
@@ -15,12 +16,79 @@ declare global {
   }
 }
 
+class RootErrorBoundary extends Component<
+  { children: ReactNode },
+  { error: Error | null }
+> {
+  state: { error: Error | null } = { error: null };
+
+  static getDerivedStateFromError(error: unknown) {
+    return {
+      error: error instanceof Error ? error : new Error(String(error)),
+    };
+  }
+
+  componentDidCatch(error: unknown, info: ErrorInfo) {
+    console.error(error);
+    console.error(info.componentStack);
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div
+          style={{
+            fontFamily: "system-ui, sans-serif",
+            padding: 24,
+            maxWidth: 640,
+            margin: "0 auto",
+          }}
+        >
+          <h1 style={{ color: "#c0001c", fontSize: "1.25rem" }}>
+            Trekora could not start the UI
+          </h1>
+          <p style={{ color: "#444", fontSize: 14 }}>
+            Open DevTools (F12) → Console for the full stack trace.
+          </p>
+          <pre
+            style={{
+              background: "#f5f5f5",
+              padding: 12,
+              borderRadius: 8,
+              fontSize: 13,
+              overflow: "auto",
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {this.state.error.message}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const queryClient = new QueryClient();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <QueryClientProvider client={queryClient}>
-    <InternetIdentityProvider>
-      <App />
-    </InternetIdentityProvider>
-  </QueryClientProvider>,
+const rootEl = document.getElementById("root");
+if (!rootEl) {
+  throw new Error('Missing <div id="root"></div> in index.html');
+}
+
+const root = ReactDOM.createRoot(rootEl, {
+  onUncaughtError: (error, info) => {
+    console.error("Uncaught error while rendering:", error);
+    console.error(info.componentStack);
+  },
+});
+
+root.render(
+  <RootErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <InternetIdentityProvider>
+        <App />
+      </InternetIdentityProvider>
+    </QueryClientProvider>
+  </RootErrorBoundary>,
 );

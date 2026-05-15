@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useIsMobile } from "../hooks/use-mobile";
+import OptimizedImage from "./media/OptimizedImage";
 
 /* ── Types ── */
 export interface BookingDrawerProps {
@@ -13,6 +14,10 @@ export interface BookingDrawerProps {
   duration: string;
   difficulty: string;
   image?: string;
+  /** When set, group size cannot exceed this (matches batch availability). */
+  maxSlots?: number;
+  /** Pre-filled trek date (YYYY-MM-DD), e.g. batch start from upcoming batches. */
+  suggestedDateIso?: string;
 }
 
 type BookingState = {
@@ -84,10 +89,13 @@ export default function BookingDrawer({
   isOpen,
   onClose,
   trekName,
+  trekSlug,
   price,
   duration,
   difficulty,
   image,
+  maxSlots,
+  suggestedDateIso,
 }: BookingDrawerProps) {
   const isMobile = useIsMobile();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -115,10 +123,25 @@ export default function BookingDrawer({
     };
   }, [isOpen]);
 
-  /* Reset on close */
+  const maxGroup =
+    maxSlots !== undefined && maxSlots >= 1 ? Math.min(20, maxSlots) : 20;
+
+  /* Reset on close; on open or batch change, reset then apply batch presets */
   useEffect(() => {
-    if (!isOpen) dispatch({ type: "RESET" });
-  }, [isOpen]);
+    if (!isOpen) {
+      dispatch({ type: "RESET" });
+      return;
+    }
+    void trekSlug;
+    dispatch({ type: "RESET" });
+    if (suggestedDateIso) {
+      dispatch({ type: "SET_DATE", date: suggestedDateIso });
+    }
+    if (maxSlots !== undefined && maxSlots >= 1) {
+      const cap = Math.min(20, maxSlots);
+      dispatch({ type: "SET_GROUP", size: Math.min(2, cap) });
+    }
+  }, [isOpen, trekSlug, suggestedDateIso, maxSlots]);
 
   /* Price calc */
   const addOnTotal = ADD_ONS.filter((a) => state.addOns.includes(a.id)).reduce(
@@ -132,6 +155,9 @@ export default function BookingDrawer({
     const errs: Record<string, string> = {};
     if (!state.selectedDate) errs.date = "Please select a date";
     if (state.groupSize < 1) errs.group = "Minimum 1 person required";
+    if (maxSlots !== undefined && maxSlots >= 1 && state.groupSize > maxSlots) {
+      errs.group = `This batch has only ${maxSlots} seat(s) available`;
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -238,9 +264,12 @@ export default function BookingDrawer({
       >
         <div className="flex items-center gap-3 min-w-0">
           {image && (
-            <img
-              src={image.replace("w=1200", "w=80")}
+            <OptimizedImage
+              src={image}
               alt={trekName}
+              width={48}
+              height={48}
+              variant="thumbnail"
               className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
             />
           )}
@@ -390,7 +419,7 @@ export default function BookingDrawer({
                     onClick={() =>
                       dispatch({
                         type: "SET_GROUP",
-                        size: Math.min(20, state.groupSize + 1),
+                        size: Math.min(maxGroup, state.groupSize + 1),
                       })
                     }
                     aria-label="Increase group size"
@@ -404,7 +433,7 @@ export default function BookingDrawer({
                     className="text-xs"
                     style={{ color: "var(--ew-gray-dark)" }}
                   >
-                    persons (max 20)
+                    persons (max {maxGroup})
                   </span>
                 </div>
               </div>
@@ -692,9 +721,12 @@ export default function BookingDrawer({
               >
                 <div className="flex items-start gap-3 mb-4">
                   {image && (
-                    <img
-                      src={image.replace("w=1200", "w=80")}
+                    <OptimizedImage
+                      src={image}
                       alt={trekName}
+                      width={56}
+                      height={56}
+                      variant="thumbnail"
                       className="w-14 h-14 rounded-lg object-cover flex-shrink-0"
                     />
                   )}

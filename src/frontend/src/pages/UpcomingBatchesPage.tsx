@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useState } from "react";
+import BookingDrawer from "../components/BookingDrawer";
+import { TREKS } from "../data/treks";
 
 type TabKey = "this-month" | "next-3-months" | "summer-2025" | "all";
 
@@ -171,6 +173,11 @@ function filterBatches(tab: TabKey) {
 
 export default function UpcomingBatchesPage() {
   const [tab, setTab] = useState<TabKey>("all");
+  const [batchDrawer, setBatchDrawer] = useState<{
+    open: boolean;
+    trek: (typeof TREKS)[number];
+    maxSlots: number;
+  } | null>(null);
   const batches = filterBatches(tab);
 
   return (
@@ -350,13 +357,25 @@ export default function UpcomingBatchesPage() {
                     </td>
                     <td className="px-4 py-4 text-center">
                       {batch.slots > 0 ? (
-                        <Link
-                          to="/book"
+                        <button
+                          type="button"
                           className="btn-primary text-xs py-2 px-4"
                           data-ocid={`batch.book_button.${i + 1}`}
+                          onClick={() => {
+                            const trek = TREKS.find(
+                              (t) => t.name === batch.trek,
+                            );
+                            if (trek) {
+                              setBatchDrawer({
+                                open: true,
+                                trek,
+                                maxSlots: batch.slots,
+                              });
+                            }
+                          }}
                         >
                           Book Now
-                        </Link>
+                        </button>
                       ) : (
                         <button
                           type="button"
@@ -392,6 +411,20 @@ export default function UpcomingBatchesPage() {
           </a>
         </div>
       </div>
+
+      {batchDrawer?.trek && (
+        <BookingDrawer
+          isOpen={batchDrawer.open}
+          onClose={() => setBatchDrawer((s) => (s ? { ...s, open: false } : s))}
+          trekName={batchDrawer.trek.name}
+          trekSlug={batchDrawer.trek.slug}
+          price={batchDrawer.trek.price}
+          duration={`${batchDrawer.trek.duration} Days`}
+          difficulty={batchDrawer.trek.difficulty}
+          image={batchDrawer.trek.image}
+          maxSlots={batchDrawer.maxSlots}
+        />
+      )}
     </div>
   );
 }

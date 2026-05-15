@@ -1,8 +1,9 @@
 import { createActor } from "@/backend";
 import type { UserProfile } from "@/backend.d.ts";
-import { useActor } from "@caffeineai/core-infrastructure";
+import { icpTimestampNsToMs } from "@/lib/icpTimestamp";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "@tanstack/react-router";
+import { useActor } from "@trekora/icp";
 import { motion } from "motion/react";
 import { useState } from "react";
 
@@ -105,7 +106,7 @@ export default function TrekkerProfilePage() {
     );
   }
 
-  const joinYear = new Date(Number(profile.joinedAt) / 1_000_000).getFullYear();
+  const joinYear = new Date(icpTimestampNsToMs(profile.joinedAt)).getFullYear();
   const displayName = profile.name || username;
   const initials = displayName
     .split(" ")

@@ -1,7 +1,47 @@
+# Dependencies & build
 node_modules/
 dist/
+.pnpm-store/
+.cache/
+
+# Internet Computer / platform
 .mops/
 .old/
 .platform/
-.pnpm-store/
-.cache/
+.dfx/
+*.wasm
+.canister_id
+
+# Environment & secrets (never commit)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.local
+**/.env.*.local
+env.json
+**/env.json
+
+# Keys & credentials
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+*.credentials
+*credentials*.json
+secrets/
+.secrets/
+
+# OS & editors
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# IDE (optional local settings)
+.idea/
+*.swp
+*.swo

@@ -19,13 +19,13 @@ export default function BreadcrumbNav({ items }: BreadcrumbNavProps) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://eternawings.com",
+        item: "https://www.trekora.com",
       },
       ...items.map((item, idx) => ({
         "@type": "ListItem",
         position: idx + 2,
         name: item.label,
-        ...(item.href ? { item: `https://eternawings.com${item.href}` } : {}),
+        ...(item.href ? { item: `https://www.trekora.com${item.href}` } : {}),
       })),
     ],
   };
