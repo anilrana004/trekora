@@ -1,8 +1,10 @@
 import { uploadToCloudinary } from "@/lib/images/cloudinary-upload";
+import { getCloudinaryCloudName } from "@/lib/images/cloudinary-config";
 import type {
   CloudinaryAsset,
   CloudinaryFolderKey,
 } from "@/lib/images/upload-types";
+import { withRetry } from "@/lib/retry";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 export interface UploadItem {
@@ -17,6 +19,9 @@ export interface UploadItem {
 
 interface UseCloudinaryUploadOptions {
   folder?: CloudinaryFolderKey;
+  folderPath?: string;
+  tags?: string[];
+  context?: Record<string, string>;
 }
 
 function createUploadId() {
@@ -24,29 +29,47 @@ function createUploadId() {
 }
 
 export function useImageUpload(options: UseCloudinaryUploadOptions = {}) {
-  const { folder = "gallery" } = options;
+  const {
+    folder = "gallery",
+    folderPath,
+    tags,
+    context,
+  } = options;
   const [items, setItems] = useState<UploadItem[]>([]);
+  const itemsRef = useRef<UploadItem[]>([]);
   const controllersRef = useRef(new Map<string, AbortController>());
 
-  const queueFiles = useCallback((files: FileList | File[]) => {
-    const list = Array.from(files);
-    const queued = list.map<UploadItem>((file) => ({
-      id: createUploadId(),
-      file,
-      status: "queued",
-      progress: 0,
-      previewUrl: URL.createObjectURL(file),
-    }));
-    setItems((prev) => [...prev, ...queued]);
-    return queued.map((q) => q.id);
+  const syncItems = useCallback((next: UploadItem[]) => {
+    itemsRef.current = next;
+    setItems(next);
   }, []);
+
+  const queueFiles = useCallback(
+    (files: FileList | File[]) => {
+      const list = Array.from(files);
+      const queued = list.map<UploadItem>((file) => ({
+        id: createUploadId(),
+        file,
+        status: "queued",
+        progress: 0,
+        previewUrl: URL.createObjectURL(file),
+      }));
+      syncItems([...itemsRef.current, ...queued]);
+      return queued.map((q) => q.id);
+    },
+    [syncItems],
+  );
 
   const uploadOne = useCallback(
     async (id: string): Promise<CloudinaryAsset | undefined> => {
-      let snapshot: UploadItem | undefined;
-      setItems((prev) => {
-        snapshot = prev.find((i) => i.id === id);
-        return prev.map((item) =>
+      const snapshot = itemsRef.current.find((i) => i.id === id);
+      if (!snapshot?.file) return undefined;
+
+      const controller = new AbortController();
+      controllersRef.current.set(id, controller);
+
+      syncItems(
+        itemsRef.current.map((item) =>
           item.id === id
             ? {
                 ...item,
@@ -55,32 +78,38 @@ export function useImageUpload(options: UseCloudinaryUploadOptions = {}) {
                 error: undefined,
               }
             : item,
-        );
-      });
-
-      if (!snapshot) return undefined;
-
-      const controller = new AbortController();
-      controllersRef.current.set(id, controller);
+        ),
+      );
 
       try {
-        const asset = await uploadToCloudinary({
-          file: snapshot.file,
-          folder,
-          onProgress: (progress) => {
-            setItems((prev) =>
-              prev.map((item) =>
-                item.id === id
-                  ? { ...item, progress: progress.percentage }
-                  : item,
-              ),
-            );
+        const asset = await withRetry(
+          () =>
+            uploadToCloudinary({
+              file: snapshot.file,
+              folder,
+              folderPath,
+              tags,
+              context,
+              onProgress: (progress) => {
+                const pct = progress.percentage;
+                syncItems(
+                  itemsRef.current.map((item) =>
+                    item.id === id ? { ...item, progress: pct } : item,
+                  ),
+                );
+              },
+              signal: controller.signal,
+            }),
+          {
+            attempts: 2,
+            delayMs: 800,
+            shouldRetry: (err) =>
+              !(err instanceof DOMException && err.name === "AbortError"),
           },
-          signal: controller.signal,
-        });
+        );
 
-        setItems((prev) =>
-          prev.map((item) =>
+        syncItems(
+          itemsRef.current.map((item) =>
             item.id === id
               ? {
                   ...item,
@@ -94,16 +123,17 @@ export function useImageUpload(options: UseCloudinaryUploadOptions = {}) {
         );
         return asset;
       } catch (error) {
-        setItems((prev) =>
-          prev.map((item) =>
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Upload failed. Please retry.";
+        syncItems(
+          itemsRef.current.map((item) =>
             item.id === id
               ? {
                   ...item,
                   status: "error",
-                  error:
-                    error instanceof Error
-                      ? error.message
-                      : "Upload failed. Please retry.",
+                  error: message,
                 }
               : item,
           ),
@@ -113,39 +143,59 @@ export function useImageUpload(options: UseCloudinaryUploadOptions = {}) {
         controllersRef.current.delete(id);
       }
     },
-    [folder],
+    [folder, folderPath, tags, context, syncItems],
   );
 
-  const uploadQueued = useCallback(async (): Promise<CloudinaryAsset[]> => {
+  /** Upload every queued/failed file; include files already marked success. */
+  const uploadAllForSubmit = useCallback(async (): Promise<{
+    assets: CloudinaryAsset[];
+    errors: string[];
+  }> => {
     const collected: CloudinaryAsset[] = [];
-    const ids = items
-      .filter((item) => item.status === "queued" || item.status === "error")
-      .map((item) => item.id);
-    for (const id of ids) {
-      const asset = await uploadOne(id);
-      if (asset) collected.push(asset);
-    }
-    return collected;
-  }, [items, uploadOne]);
+    const errors: string[] = [];
+    const current = [...itemsRef.current];
 
-  const cancel = useCallback((id: string) => {
-    const controller = controllersRef.current.get(id);
-    if (controller) controller.abort();
-    setItems((prev) => {
-      const item = prev.find((i) => i.id === id);
+    for (const item of current) {
+      if (item.status === "success" && item.asset) {
+        collected.push(item.asset);
+        continue;
+      }
+      if (item.status === "queued" || item.status === "error") {
+        const asset = await uploadOne(item.id);
+        if (asset) collected.push(asset);
+        else {
+          const latest = itemsRef.current.find((i) => i.id === item.id);
+          errors.push(latest?.error ?? `Failed to upload ${item.file.name}`);
+        }
+      }
+    }
+
+    return { assets: collected, errors };
+  }, [uploadOne]);
+
+  const cancel = useCallback(
+    (id: string) => {
+      const controller = controllersRef.current.get(id);
+      if (controller) controller.abort();
+      const item = itemsRef.current.find((i) => i.id === id);
       if (item) URL.revokeObjectURL(item.previewUrl);
-      return prev.filter((i) => i.id !== id);
-    });
-  }, []);
+      syncItems(itemsRef.current.filter((i) => i.id !== id));
+    },
+    [syncItems],
+  );
 
   const clear = useCallback(() => {
     for (const [, controller] of controllersRef.current) controller.abort();
     controllersRef.current.clear();
-    setItems((prev) => {
-      for (const item of prev) URL.revokeObjectURL(item.previewUrl);
-      return [];
-    });
-  }, []);
+    for (const item of itemsRef.current) URL.revokeObjectURL(item.previewUrl);
+    syncItems([]);
+  }, [syncItems]);
+
+  /** @deprecated Prefer uploadAllForSubmit — kept for review/admin forms. */
+  const uploadQueued = useCallback(async (): Promise<CloudinaryAsset[]> => {
+    const { assets } = await uploadAllForSubmit();
+    return assets;
+  }, [uploadAllForSubmit]);
 
   const successfulAssets = useMemo(
     () =>
@@ -155,16 +205,25 @@ export function useImageUpload(options: UseCloudinaryUploadOptions = {}) {
     [items],
   );
 
+  const cloudinaryReady = useMemo(() => {
+    const cloud = getCloudinaryCloudName();
+    const preset =
+      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET ??
+      import.meta.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    return Boolean(cloud && preset && String(preset).trim());
+  }, []);
+
   return {
     items,
     queueFiles,
     uploadOne,
     uploadQueued,
+    uploadAllForSubmit,
     cancel,
     clear,
     successfulAssets,
+    cloudinaryReady,
   };
 }
 
-/** Preferred name — uploads images or videos via Cloudinary unsigned preset. */
 export const useCloudinaryUpload = useImageUpload;

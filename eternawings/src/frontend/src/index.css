@@ -1,0 +1,804 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap&font-display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: "DM Sans", sans-serif;
+    --font-body: "DM Sans", sans-serif;
+    --font-mono: "Geist Mono", monospace;
+    --radius: 0.5rem;
+
+    /* ── Trekora Brand Tokens ── */
+    --ew-red: #c0001c;
+    --ew-orange: #e87722;
+    --ew-orange-lt: #fff0e0;
+    --ew-red-lt: #f7e8e8;
+    --ew-white: #ffffff;
+    --ew-gray-lt: #f5f5f5;
+    --ew-gray-mid: #ebebeb;
+    --ew-gray-dark: #888888;
+    --ew-text: #2c2c2c;
+    --ew-text-lt: #555555;
+    --ew-gold: #ffc107;
+    --ew-footer: #1a1a2e;
+    --ew-footer-lt: #252540;
+    --ew-green: #2e7d32;
+    --ew-badge-red: #c0001c;
+
+    /* ── Tailwind semantic tokens (OKLCH) mapped to EternaWings palette ── */
+    --background: 0.98 0 0;
+    --foreground: 0.12 0 0;
+    --card: 0.99 0 0;
+    --card-foreground: 0.12 0 0;
+    --popover: 0.99 0 0;
+    --popover-foreground: 0.12 0 0;
+
+    /* primary → ew-orange */
+    --primary: 0.64 0.17 45;
+    --primary-foreground: 0.98 0 0;
+
+    /* secondary → ew-red */
+    --secondary: 0.35 0.2 20;
+    --secondary-foreground: 0.98 0 0;
+
+    --muted: 0.96 0 0;
+    --muted-foreground: 0.5 0 0;
+
+    --accent: 0.64 0.17 45;
+    --accent-foreground: 0.98 0 0;
+
+    --destructive: 0.35 0.2 20;
+    --destructive-foreground: 0.98 0 0;
+
+    --border: 0.92 0 0;
+    --input: 0.94 0 0;
+    --ring: 0.35 0.2 20;
+
+    --chart-1: 0.64 0.17 45;
+    --chart-2: 0.35 0.2 20;
+    --chart-3: 0.55 0.2 80;
+    --chart-4: 0.5 0.15 140;
+    --chart-5: 0.45 0.15 200;
+
+    --sidebar: 0.98 0 0;
+    --sidebar-foreground: 0.12 0 0;
+    --sidebar-primary: 0.35 0.2 20;
+    --sidebar-primary-foreground: 0.98 0 0;
+    --sidebar-accent: 0.96 0 0;
+    --sidebar-accent-foreground: 0.12 0 0;
+    --sidebar-border: 0.92 0 0;
+    --sidebar-ring: 0.35 0.2 20;
+  }
+
+  .dark {
+    --background: 0.08 0 0;
+    --foreground: 0.95 0 0;
+    --card: 0.12 0.01 20;
+    --card-foreground: 0.95 0 0;
+    --popover: 0.15 0.01 20;
+    --popover-foreground: 0.95 0 0;
+
+    --primary: 0.68 0.17 45;
+    --primary-foreground: 0.08 0 0;
+
+    --secondary: 0.45 0.2 20;
+    --secondary-foreground: 0.95 0 0;
+
+    --muted: 0.2 0.01 20;
+    --muted-foreground: 0.65 0 0;
+
+    --accent: 0.68 0.17 45;
+    --accent-foreground: 0.08 0 0;
+
+    --destructive: 0.52 0.22 20;
+    --destructive-foreground: 0.95 0 0;
+
+    --border: 0.2 0.01 20;
+    --input: 0.16 0.01 20;
+    --ring: 0.45 0.2 20;
+
+    --chart-1: 0.68 0.17 45;
+    --chart-2: 0.45 0.2 20;
+    --chart-3: 0.6 0.2 80;
+    --chart-4: 0.55 0.15 140;
+    --chart-5: 0.5 0.15 200;
+
+    --sidebar: 0.12 0.01 20;
+    --sidebar-foreground: 0.95 0 0;
+    --sidebar-primary: 0.45 0.2 20;
+    --sidebar-primary-foreground: 0.95 0 0;
+    --sidebar-accent: 0.2 0.01 20;
+    --sidebar-accent-foreground: 0.95 0 0;
+    --sidebar-border: 0.2 0.01 20;
+    --sidebar-ring: 0.45 0.2 20;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ew-text);
+    background-color: var(--ew-white);
+    /* Disable CSS scroll-behavior so programmatic scroll calls don't
+       animate and fight user scroll gestures */
+    scroll-behavior: auto;
+    /* Prevent the browser's scroll anchor from snapping to DOM nodes that
+       change during hero carousel state updates */
+    overflow-anchor: none;
+    /* No horizontal overflow on any device */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ew-text);
+  }
+
+  a {
+    color: var(--ew-red);
+    transition: color 0.2s ease;
+  }
+  a:hover {
+    color: #8f0015;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ew-red);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  button:focus:not(:focus-visible),
+  a:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+@layer utilities {
+  @font-face {
+    font-family: "Geist Mono";
+    src: url("/assets/fonts/GeistMono.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+
+  /* ── Transitions ── */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .transition-fast {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── Shadows ── */
+  .shadow-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  .shadow-elevated {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  }
+  .shadow-deep {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  /* ── Glass Effects ── */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .glass-dark {
+    background: rgba(26, 26, 46, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* ── Text shadow ── */
+  .text-shadow {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+
+  /* ── Primary CTA button (rounded pill, ew-orange) ── */
+  .btn-primary {
+    background-color: var(--ew-orange);
+    color: #ffffff;
+    border-radius: 9999px;
+    padding: 0.625rem 1.75rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow
+      0.2s ease;
+  }
+  .btn-primary:hover {
+    background-color: #c96a1a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(232, 119, 34, 0.4);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  /* ── Secondary outline button (ew-red border) ── */
+  .btn-secondary {
+    border: 2px solid var(--ew-red);
+    color: var(--ew-red);
+    background: transparent;
+    border-radius: 9999px;
+    padding: 0.575rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-secondary:hover {
+    background-color: var(--ew-red);
+    color: #ffffff;
+  }
+
+  /* ── White button (for dark/colored backgrounds) ── */
+  .btn-white {
+    background-color: #ffffff;
+    color: var(--ew-red);
+    border-radius: 9999px;
+    padding: 0.625rem 1.75rem;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+  }
+  .btn-white:hover {
+    background-color: var(--ew-red-lt);
+  }
+
+  /* ── Section title with ew-red underline accent ── */
+  .section-title {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--ew-text);
+  }
+  .section-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--ew-red);
+    border-radius: 2px;
+  }
+
+  /* ── Section heading (larger variant) ── */
+  .section-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ew-text);
+    line-height: 1.2;
+  }
+  @media (min-width: 768px) {
+    .section-heading {
+      font-size: 2.5rem;
+    }
+  }
+
+  /* ── Section alternate background ── */
+  .section-alt {
+    background-color: var(--ew-gray-lt);
+  }
+
+  /* ── Cards (generic) ── */
+  .card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.13);
+  }
+
+  /* ── Trek cards ── */
+  .trek-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .trek-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+  .trek-card-img {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  .trek-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .trek-card:hover .trek-card-img img {
+    transform: scale(1.03);
+  }
+  .trek-price {
+    color: var(--ew-orange);
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  /* ── Trek card hover alias ── */
+  .trek-card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .trek-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  /* ── Badges ── */
+  .badge-red {
+    background-color: var(--ew-red);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+    letter-spacing: 0.02em;
+  }
+  .badge-orange {
+    background-color: var(--ew-orange);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+  .badge-green {
+    background-color: var(--ew-green);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+
+  /* ── Difficulty badges (card-style) ── */
+  .trek-difficulty-easy {
+    background-color: #e8f5e9;
+    color: var(--ew-green);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+  .trek-difficulty-moderate {
+    background-color: var(--ew-orange-lt);
+    color: var(--ew-orange);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+  .trek-difficulty-difficult {
+    background-color: var(--ew-red-lt);
+    color: var(--ew-red);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+  .trek-difficulty-extreme {
+    background-color: #ede7f6;
+    color: #7b1fa2;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+
+  /* ── Legacy inline difficulty classes ── */
+  .difficulty-easy {
+    background-color: var(--ew-green);
+    color: #ffffff;
+  }
+  .difficulty-easy-moderate {
+    background-color: #65a30d;
+    color: #ffffff;
+  }
+  .difficulty-moderate {
+    background-color: var(--ew-orange);
+    color: #ffffff;
+  }
+  .difficulty-moderate-difficult {
+    background-color: #ea580c;
+    color: #ffffff;
+  }
+  .difficulty-difficult {
+    background-color: var(--ew-red);
+    color: #ffffff;
+  }
+  .difficulty-difficult-extreme {
+    background-color: #9333ea;
+    color: #ffffff;
+  }
+  .difficulty-extreme {
+    background-color: #7c3aed;
+    color: #ffffff;
+  }
+
+  /* ── Star ratings ── */
+  .star-rating {
+    color: var(--ew-gold);
+  }
+
+  /* ── Price highlight ── */
+  .price-text {
+    color: var(--ew-orange);
+    font-weight: 700;
+  }
+
+  /* ── Active tab underline ── */
+  .tab-active {
+    color: var(--ew-red);
+    border-bottom: 2px solid var(--ew-red);
+  }
+
+  /* ── Announcement / top bar ── */
+  .announcement-bar {
+    background-color: var(--ew-red);
+    color: #ffffff;
+    font-size: 12px;
+    padding: 6px 0;
+    width: 100%;
+  }
+
+  /* ── Navbar ── */
+  .navbar {
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    height: 64px;
+    display: flex;
+    align-items: center;
+  }
+  .navbar-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-link {
+    color: var(--ew-text);
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  .nav-link:hover {
+    color: var(--ew-red);
+  }
+  .nav-link-active {
+    color: var(--ew-red);
+  }
+
+  /* ── Mega menu ── */
+  .mega-menu {
+    background-color: #ffffff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-top: 3px solid var(--ew-red);
+  }
+  .mega-menu-header {
+    color: var(--ew-red);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    background-color: var(--ew-footer);
+    color: #ffffff;
+  }
+  .footer-heading {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+  .footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .footer-link:hover {
+    color: var(--ew-orange);
+  }
+  .footer-bottom {
+    background-color: var(--ew-footer-lt);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* ── Booking sidebar ── */
+  .booking-sidebar {
+    position: sticky;
+    top: 80px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    padding: 24px;
+  }
+
+  /* ── Step progress bar ── */
+  .step-active {
+    background-color: var(--ew-red);
+    color: #ffffff;
+  }
+  .step-completed {
+    background-color: var(--ew-green);
+    color: #ffffff;
+  }
+  .step-pending {
+    background-color: var(--ew-gray-mid);
+    color: var(--ew-gray-dark);
+  }
+
+  /* ── Homepage reviews infinite scroll ── */
+  @keyframes reviewScroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ── Marquee / trust strip ── */
+  .marquee-container {
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    animation: marquee 30s linear infinite;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ── Card spring animation utilities ── */
+  .card-hover-spring {
+    transition: border-left-color 0.2s ease;
+  }
+
+  /* Remove stuck hover on touch devices */
+  @media (hover: none) {
+    .card-hover-spring:active {
+      transform: scale(0.97);
+    }
+  }
+
+  /* Touch optimization — eliminate 300ms tap delay */
+  button,
+  a,
+  [role="button"],
+  .clickable {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── Animated counter numbers ── */
+  .counter-number {
+    font-size: 2rem;
+    color: var(--ew-red);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  /* ── Social proof ticker ── */
+  .ticker-track {
+    display: flex;
+    animation: ticker-scroll 45s linear infinite;
+  }
+  .ticker-track:hover {
+    animation-play-state: paused;
+  }
+  @keyframes ticker-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ── Trek parallax hero ── */
+  .trek-hero-parallax {
+    will-change: transform;
+    transform: translateY(calc(var(--scroll-y, 0) * 0.3px));
+    transition: transform 0.1s linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .trek-hero-parallax {
+      transform: none !important;
+      transition: none !important;
+    }
+
+    .review-row {
+      animation-play-state: paused !important;
+    }
+
+    * {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+
+  /* ── Hide scrollbar ── */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Parallax hero (TrekDetailPage) ── */
+  .trek-hero-parallax {
+    will-change: transform;
+    transform: translateY(calc(var(--scroll-y, 0) * 0.3px));
+    transition: transform 0.1s linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .trek-hero-parallax {
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+/*
+  Cloudinary URL transforms for production:
+  Card thumbnails: f_auto,q_auto,w_400,h_280,c_fill
+  Hero images:     f_auto,q_auto,w_1280,h_520,c_fill
+  Gallery:         f_auto,q_auto,w_800,h_600,c_fill
+  Mobile:          f_auto,q_auto,w_640,h_400,c_fill
+  Usage: https://res.cloudinary.com/[cloud]/image/fetch/f_auto,q_auto,w_400/{original_url}
+*/
+
+/* ── Image lazy loading fade-in ── */
+img[loading="lazy"] {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* ── Skeleton shimmer ── */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+/* ── Reset will-change after animation completes ── */
+.animation-complete {
+  will-change: auto;
+}
+
+/* ── Tap highlight suppression ── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --mobile-nav-height: 56px;
+  }
+  .main-content {
+    padding-bottom: 56px;
+  }
+  /* Ensure all tap targets are at minimum 44px */
+  button,
+  a,
+  [role="button"] {
+    touch-action: manipulation;
+  }
+
+  .trek-card {
+    min-width: 280px;
+  }
+}
+
+input,
+select,
+textarea {
+  /* Prevent iOS auto-zoom — minimum 16px on all inputs */
+  font-size: 16px !important;
+  min-height: 48px;
+}
+
+/* Horizontal overflow helpers (trust badges strip, carousels) */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes wa-ring-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+.wa-float-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid rgba(37, 211, 102, 0.5);
+  animation: wa-ring-pulse 3s ease-out infinite;
+}

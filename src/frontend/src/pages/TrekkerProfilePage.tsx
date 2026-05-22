@@ -167,7 +167,7 @@ export default function TrekkerProfilePage() {
               className="text-sm mt-0.5"
               style={{ color: "var(--ew-gray-dark)" }}
             >
-              Joined {joinYear} · EternaWings Trekker
+              Joined {joinYear} · Trekora Trekker
             </p>
 
             {/* Stats row */}
@@ -220,7 +220,7 @@ export default function TrekkerProfilePage() {
             className="text-sm font-semibold hover:underline"
             style={{ color: "var(--ew-red)" }}
           >
-            Explore EternaWings Treks →
+            Explore Trekora Treks →
           </Link>
         </div>
       </div>

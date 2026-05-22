@@ -1,0 +1,178 @@
+/* Request Callback — modal (hero / layout) + inline (side rail desktop) */
+
+.callback-panel {
+  background: #fff;
+  border: 1px solid var(--ew-gray-mid);
+  border-radius: 1rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+  padding: 1rem;
+  width: min(16rem, calc(100vw - 2rem));
+}
+
+.callback-panel__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  background: var(--ew-gray-lt);
+  flex-shrink: 0;
+}
+
+.callback-panel__close:focus-visible {
+  outline: 2px solid var(--ew-red);
+  outline-offset: 2px;
+}
+
+.callback-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.callback-panel__title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ew-text);
+}
+
+.callback-panel__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.callback-panel__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--ew-text);
+}
+
+.callback-panel__hint {
+  margin: 0;
+  font-size: 0.6875rem;
+  text-align: center;
+  color: var(--ew-gray-dark);
+}
+
+.callback-panel__success {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+.callback-panel__success-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.callback-panel__success-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ew-green);
+}
+
+.callback-panel__success-sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--ew-text-lt);
+}
+
+.callback-panel__submit {
+  width: 100%;
+  justify-content: center;
+  font-size: 0.875rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Side rail — opens beside tab on desktop */
+.callback-panel--inline-right {
+  position: absolute;
+  left: calc(100% + 0.5rem);
+  top: 50%;
+  z-index: 60;
+  transform: translateY(-50%);
+  transform-origin: center left;
+}
+
+/* Floating CTA — opens above trigger */
+.callback-panel--floating-left {
+  position: absolute;
+  bottom: calc(100% + 0.75rem);
+  left: 0;
+  z-index: 60;
+  transform-origin: bottom left;
+}
+
+/* Centered modal (hero, navbar, mobile side rail) */
+.callback-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: max(1rem, env(safe-area-inset-top, 0px)) 1rem
+    max(1rem, env(safe-area-inset-bottom, 0px));
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.callback-modal__dialog {
+  position: relative;
+  width: 100%;
+  max-width: 20rem;
+  margin: auto;
+  flex-shrink: 0;
+}
+
+.callback-modal__dialog.callback-panel {
+  width: 100%;
+  max-width: 20rem;
+}
+
+@media (max-width: 1023px) {
+  /* Mobile side rail: panel above the pill row, not beside (avoids clipping below nav) */
+  .callback-panel--inline-right {
+    left: 0;
+    top: auto;
+    bottom: calc(100% + 0.5rem);
+    transform: none;
+    transform-origin: bottom left;
+    width: min(17.5rem, calc(100vw - 2.5rem));
+  }
+
+  .travel-side-callback-wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  .callback-modal {
+    align-items: flex-start;
+    padding-bottom: max(
+      calc(1rem + var(--mobile-nav-height, 56px)),
+      env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  .callback-modal__dialog {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .callback-panel--inline-right {
+    width: min(16rem, calc(100vw - 1.5rem));
+  }
+}

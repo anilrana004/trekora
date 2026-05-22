@@ -1,5 +1,7 @@
+import { pressLogoForName } from "@/lib/press-media-logos";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
+import FeaturedInMedia from "../components/FeaturedInMedia";
 
 interface PressMention {
   name: string;
@@ -14,7 +16,7 @@ const PRESS_MENTIONS: PressMention[] = [
   {
     name: "Times of India",
     logo: "TOI",
-    headline: "EternaWings Redefines Himalayan Trekking Experience",
+    headline: "Trekora Redefines Himalayan Trekking Experience",
     url: "https://timesofindia.com",
     date: "March 2025",
     featured: true,
@@ -46,7 +48,7 @@ const PRESS_MENTIONS: PressMention[] = [
   {
     name: "Adventure Nation",
     logo: "AN",
-    headline: "EternaWings Named Top Trek Operator 2024",
+    headline: "Trekora Named Top Trek Operator 2024",
     url: "https://adventurenation.com",
     date: "November 2024",
     featured: false,
@@ -62,7 +64,7 @@ const PRESS_MENTIONS: PressMention[] = [
   {
     name: "MakeMyTrip",
     logo: "MMT",
-    headline: "Partner Spotlight: EternaWings Adventure Treks",
+    headline: "Partner Spotlight: Trekora Adventure Treks",
     url: "https://makemytrip.com",
     date: "September 2024",
     featured: false,
@@ -91,7 +93,7 @@ export default function PressPage() {
               Media & Press
             </p>
             <h1 className="text-white font-bold text-4xl md:text-5xl mb-3">
-              EternaWings in the Press
+              Trekora in the Press
             </h1>
             <p className="text-white/80 text-base max-w-xl mx-auto">
               Our journey covered by India's leading media — celebrating
@@ -129,16 +131,27 @@ export default function PressPage() {
                 }}
                 data-ocid={`press.featured.card.${i + 1}`}
               >
-                {/* Logo initials */}
-                <div
-                  className="inline-flex items-center justify-center w-14 h-14 rounded-xl font-black text-lg mb-4"
-                  style={{
-                    background: "var(--ew-orange)",
-                    color: "#fff",
-                    letterSpacing: "-0.05em",
-                  }}
-                >
-                  {m.logo}
+                <div className="mb-4 min-h-[56px] flex items-center">
+                  {pressLogoForName(m.name) ? (
+                    <FeaturedInMedia
+                      item={{
+                        name: m.name,
+                        logoSrc: pressLogoForName(m.name),
+                      }}
+                      className="h-10 w-auto max-w-[180px] object-contain"
+                    />
+                  ) : (
+                    <div
+                      className="inline-flex items-center justify-center w-14 h-14 rounded-xl font-black text-lg"
+                      style={{
+                        background: "var(--ew-orange)",
+                        color: "#fff",
+                        letterSpacing: "-0.05em",
+                      }}
+                    >
+                      {m.logo}
+                    </div>
+                  )}
                 </div>
                 <p
                   className="font-bold text-sm mb-1"
@@ -194,14 +207,26 @@ export default function PressPage() {
                 }}
                 data-ocid={`press.mention.card.${i + 1}`}
               >
-                <div
-                  className="inline-flex items-center justify-center w-11 h-11 rounded-lg font-black text-sm self-start"
-                  style={{
-                    background: "var(--ew-gray-lt)",
-                    color: "var(--ew-text)",
-                  }}
-                >
-                  {m.logo}
+                <div className="min-h-[44px] flex items-center self-start">
+                  {pressLogoForName(m.name) ? (
+                    <FeaturedInMedia
+                      item={{
+                        name: m.name,
+                        logoSrc: pressLogoForName(m.name)!,
+                      }}
+                      className="h-8 w-auto max-w-[140px] object-contain"
+                    />
+                  ) : (
+                    <div
+                      className="inline-flex items-center justify-center w-11 h-11 rounded-lg font-black text-sm"
+                      style={{
+                        background: "var(--ew-gray-lt)",
+                        color: "var(--ew-text)",
+                      }}
+                    >
+                      {m.logo}
+                    </div>
+                  )}
                 </div>
                 <div className="flex-1">
                   <p

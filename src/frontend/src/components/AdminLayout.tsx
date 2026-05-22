@@ -1,5 +1,7 @@
-import { SITE_LOGO_URL } from "@/lib/site-brand";
-import { Link, Outlet, useLocation } from "@tanstack/react-router";
+import { revokeAdminSession } from "@/lib/admin-access";
+import { SiteLogo } from "@/components/SiteLogo";
+import { Link, useLocation } from "@tanstack/react-router";
+import AdminScrollOutlet from "./AdminScrollOutlet";
 import {
   BarChart3,
   BookOpen,
@@ -24,6 +26,7 @@ const ADMIN_NAV = [
   { label: "Blog", to: "/admin/blogs", icon: FileText },
   { label: "Users", to: "/admin/users", icon: Users },
   { label: "Promo Codes", to: "/admin/promos", icon: Tag },
+  { label: "Reviews", to: "/admin/reviews", icon: MessageSquare },
   { label: "Analytics", to: "/admin/analytics", icon: BarChart3 },
   { label: "Settings", to: "/admin/settings", icon: Settings },
 ];
@@ -47,13 +50,12 @@ export default function AdminLayout() {
           style={{ borderColor: "rgba(255,255,255,0.08)" }}
         >
           <div className="flex items-center gap-2.5">
-            <img
-              src={SITE_LOGO_URL}
-              alt="Trekora"
-              width={72}
-              height={36}
-              decoding="async"
-              className="h-9 max-w-[4.75rem] shrink-0 rounded-lg object-contain object-left bg-black/25"
+            <SiteLogo
+              link={false}
+              priority
+              className="shrink-0"
+              imgClassName="site-logo__img site-logo__img--admin"
+              sizes="88px"
             />
             <div>
               <p className="font-bold text-white text-sm leading-tight">
@@ -114,9 +116,10 @@ export default function AdminLayout() {
             to="/"
             className="flex items-center gap-2 text-sm transition-colors"
             style={{ color: "rgba(255,255,255,0.45)" }}
+            onClick={() => revokeAdminSession()}
           >
             <LogOut size={15} />
-            Back to Site
+            Sign out & back to site
           </Link>
         </div>
       </aside>
@@ -133,7 +136,7 @@ export default function AdminLayout() {
               className="text-base font-bold"
               style={{ color: "var(--ew-text)" }}
             >
-              EternaWings Admin Dashboard
+              Trekora Admin Dashboard
             </h1>
             <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
               Where Every Peak Tells a Story
@@ -152,9 +155,7 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
-        </main>
+        <AdminScrollOutlet />
       </div>
     </div>
   );

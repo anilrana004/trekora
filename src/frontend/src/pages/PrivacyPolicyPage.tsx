@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
       <SEOHead
         title="Privacy Policy | Trekora"
         description="How Trekora collects, uses, and protects your personal information."
-        canonical="https://www.trekora.com/privacy-policy"
+        canonical="https://www.trekora.in/privacy-policy"
       />
       <section
         className="py-12 text-white"

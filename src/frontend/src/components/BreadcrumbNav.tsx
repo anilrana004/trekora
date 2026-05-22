@@ -1,3 +1,4 @@
+import { SITE_ORIGIN } from "@/lib/site-config";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, Home } from "lucide-react";
 
@@ -19,13 +20,13 @@ export default function BreadcrumbNav({ items }: BreadcrumbNavProps) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://www.trekora.com",
+        item: SITE_ORIGIN,
       },
       ...items.map((item, idx) => ({
         "@type": "ListItem",
         position: idx + 2,
         name: item.label,
-        ...(item.href ? { item: `https://www.trekora.com${item.href}` } : {}),
+        ...(item.href ? { item: `${SITE_ORIGIN}${item.href}` } : {}),
       })),
     ],
   };

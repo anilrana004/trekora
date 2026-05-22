@@ -3,6 +3,10 @@ node_modules/
 dist/
 .pnpm-store/
 .cache/
+.turbo/
+.next/
+out/
+build/
 
 # Internet Computer / platform
 .mops/
@@ -16,32 +20,68 @@ dist/
 .env
 .env.*
 !.env.example
+!**/.env.example
 **/.env
 **/.env.local
 **/.env.*.local
+**/.env.production
+**/.env.development
+**/.env.staging
 env.json
 **/env.json
+!**/env.json.example
 
 # Keys & credentials
 *.pem
 *.key
 *.p12
 *.pfx
+*.crt
+*.cer
 id_rsa
 id_rsa.*
 *.credentials
 *credentials*.json
+*service-account*.json
 secrets/
 .secrets/
+private/
+.private/
+
+# Cloud / deploy local state
+.vercel
+.railway
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Uploads & temp (may contain PII)
+uploads/
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Logs (may leak request payloads)
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
 # OS & editors
 .DS_Store
 Thumbs.db
-*.log
-npm-debug.log*
-pnpm-debug.log*
-
-# IDE (optional local settings)
 .idea/
+.vscode/settings.json
 *.swp
 *.swo
+*~
+
+# Test / coverage artifacts
+coverage/
+.nyc_output/
+
+# Local-only extracted or scratch (do not publish)
+_extracted/

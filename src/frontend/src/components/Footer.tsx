@@ -1,4 +1,3 @@
-import { SITE_LOGO_URL } from "@/lib/site-brand";
 import {
   SITE_ADDRESS_LINE,
   SITE_EMAIL,
@@ -18,7 +17,6 @@ import {
   Compass,
   Cookie,
   Facebook,
-  Heart,
   HeartHandshake,
   Instagram,
   Linkedin,
@@ -36,7 +34,7 @@ import { AnimatePresence, motion } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
 import { Fragment, useCallback, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
-import OptimizedImage from "./media/OptimizedImage";
+import { SiteLogo } from "./SiteLogo";
 
 const FOOTER_TAGLINE =
   "Trekora is your trusted travel partner for unforgettable Himalayan treks, spiritual yatras, and adventure experiences.";
@@ -61,7 +59,7 @@ const POPULAR_YATRAS = [
   { name: "Kinnaur Kailash", slug: "kinnaur-kailash" },
   { name: "Hemkund Sahib", slug: "hemkund-sahib-yatra" },
   { name: "Shrikhand Mahadev", slug: "shrikhand-mahadev" },
-  { name: "Adi Kailash", slug: "adi-kailash" },
+  { name: "Adi Kailash & Om Parvat", slug: "adi-kailash-om-parvat" },
 ];
 
 const QUICK_LINKS = [
@@ -483,21 +481,12 @@ export default function Footer() {
         <div className="container relative z-[2] mx-auto max-w-6xl px-4 pb-10 pt-12 md:pb-12 md:pt-16">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
             <div className="flex max-w-xl flex-col gap-4">
-              <Link
-                to="/"
-                className="inline-block max-w-[220px]"
-                data-ocid="footer.logo"
-              >
-                <OptimizedImage
-                  src={SITE_LOGO_URL}
-                  alt="Trekora — Where Every Peak Tells a Story"
-                  width={220}
-                  height={52}
-                  variant="blog-card"
-                  sizes="220px"
-                  className="h-11 w-auto max-w-full object-contain object-left drop-shadow-md md:h-12"
-                />
-              </Link>
+              <SiteLogo
+                className="max-w-[240px]"
+                imgClassName="site-logo__img site-logo__img--footer drop-shadow-md"
+                sizes="240px"
+                dataOcid="footer.logo"
+              />
               <p
                 className="text-[0.9375rem] leading-relaxed md:text-base"
                 style={{ color: "rgba(255,255,255,0.82)" }}
@@ -741,10 +730,6 @@ export default function Footer() {
               style={{ color: "rgba(255,255,255,0.48)" }}
             >
               © {year} Trekora. All rights reserved.
-              <span className="whitespace-nowrap">
-                {" "}
-                &nbsp;|&nbsp; GST: 05AAACE0000A1Z5
-              </span>
             </p>
 
             <nav
@@ -777,18 +762,16 @@ export default function Footer() {
               ))}
             </nav>
 
-            <p
-              className="order-3 flex items-center gap-1.5 text-xs font-medium"
-              style={{ color: "rgba(255,255,255,0.55)" }}
+            <a
+              href="https://omnistack.co.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="order-3 text-xs font-medium transition-colors hover:text-white"
+              style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none" }}
+              data-ocid="footer.built_with_omnistack"
             >
-              Made with
-              <Heart
-                size={14}
-                className="fill-[var(--ew-red)] text-[var(--ew-red)]"
-                aria-hidden
-              />
-              for Travelers
-            </p>
+              Built with omnistack.co.in
+            </a>
           </div>
         </div>
       </div>

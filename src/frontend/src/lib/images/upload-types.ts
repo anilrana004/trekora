@@ -14,6 +14,7 @@ export const CLOUDINARY_FOLDERS = {
   reels: "trekora/reels",
   team: "trekora/team",
   users: "trekora/users",
+  reviews: "trekora/reviews",
 } as const;
 
 export type CloudinaryFolderKey = keyof typeof CLOUDINARY_FOLDERS;
@@ -49,6 +50,8 @@ export interface UploadProgress {
 export interface UploadRequest {
   file: File;
   folder?: CloudinaryFolderKey;
+  /** Overrides `folder` — e.g. `trekora/reviews/treks/kedarkantha-trek`. */
+  folderPath?: string;
   /** When omitted, inferred from `file.type`. */
   resourceType?: CloudinaryResourceKind;
   tags?: string[];

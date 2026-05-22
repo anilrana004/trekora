@@ -1,37 +1,24 @@
 import { Link, useSearch } from "@tanstack/react-router";
-import {
-  AlertCircle,
-  Mountain,
-  Search,
-  SlidersHorizontal,
-  X,
-} from "lucide-react";
+import { AlertCircle, Mountain } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import ListingRegionFilterPills, {
+  type ListingRegionTab,
+} from "../components/ListingRegionFilterPills";
+import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import TreksListingFilters, {
+  type TreksSortValue,
+} from "../components/TreksListingFilters";
 import { SEOHead } from "../components/SEOHead";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import TrekCard from "../components/TrekCard";
 import { getTreksForDestination } from "../data/destination-treks";
 import { getDestinationBySlug } from "../data/destinations";
-import { HIMACHAL_TREKS, TREKS, UTTARAKHAND_TREKS } from "../data/treks";
+import { TREKS } from "../data/treks";
 import type { TrekDifficulty } from "../data/treks";
-
-const DIFFICULTIES: TrekDifficulty[] = [
-  "Easy",
-  "Easy-Moderate",
-  "Moderate",
-  "Moderate-Difficult",
-  "Difficult",
-  "Difficult-Extreme",
-  "Extreme",
-];
-
-const DURATION_OPTIONS = [
-  { label: "Any Duration", value: "all" },
-  { label: "1–3 Days", value: "1-3" },
-  { label: "4–6 Days", value: "4-6" },
-  { label: "7–10 Days", value: "7-10" },
-  { label: "10+ Days", value: "10+" },
-];
+import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
 
 function matchDuration(duration: number, filter: string): boolean {
   if (filter === "all") return true;
@@ -43,9 +30,14 @@ function matchDuration(duration: number, filter: string): boolean {
 }
 
 export default function TreksPage() {
-  const { destination: destinationSlug } = useSearch({ strict: false }) as {
+  const { destination: destinationSlug, tag, filter } = useSearch({
+    strict: false,
+  }) as {
     destination?: string;
+    tag?: string;
+    filter?: string;
   };
+  const seoTagQuery = tag ?? filter;
   const destinationHub = destinationSlug
     ? getDestinationBySlug(destinationSlug)
     : undefined;
@@ -53,43 +45,32 @@ export default function TreksPage() {
     ? getTreksForDestination(destinationHub)
     : null;
 
-  const [stateFilter, setStateFilter] = useState<
-    "all" | "uttarakhand" | "himachal"
-  >(() =>
-    destinationHub?.state === "Uttarakhand"
-      ? "uttarakhand"
-      : destinationHub?.state === "Himachal Pradesh"
-        ? "himachal"
-        : "all",
-  );
+  const [stateTab, setStateTab] = useState<ListingRegionTab>("all");
   const [difficultyFilter, setDifficultyFilter] = useState<
     TrekDifficulty | "all"
   >("all");
   const [durationFilter, setDurationFilter] = useState("all");
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState<
-    "price-asc" | "price-desc" | "rating" | "duration"
-  >("rating");
+  const [sort, setSort] = useState<TreksSortValue>("rating");
 
-  const baseList =
-    hubTreks ??
-    (stateFilter === "uttarakhand"
-      ? UTTARAKHAND_TREKS
-      : stateFilter === "himachal"
-        ? HIMACHAL_TREKS
-        : TREKS);
+  const baseList = hubTreks ?? TREKS;
+
+  const treksListingSeo = buildListingSEO("trek");
 
   const filtered = baseList
+    .filter((t) => stateTab === "all" || t.state === stateTab)
     .filter(
       (t) => difficultyFilter === "all" || t.difficulty === difficultyFilter,
     )
     .filter((t) => matchDuration(t.duration, durationFilter))
+    .filter((t) => !seoTagQuery || matchesSeoTag(t, seoTagQuery, "trek"))
     .filter(
       (t) =>
         !search ||
         t.name.toLowerCase().includes(search.toLowerCase()) ||
         t.startPoint.toLowerCase().includes(search.toLowerCase()) ||
-        t.state.toLowerCase().includes(search.toLowerCase()),
+        t.state.toLowerCase().includes(search.toLowerCase()) ||
+        matchesSeoTag(t, search, "trek"),
     )
     .sort((a, b) => {
       if (sort === "price-asc") return a.price - b.price;
@@ -100,16 +81,15 @@ export default function TreksPage() {
 
   const hasActiveFilters =
     Boolean(destinationSlug) ||
-    (!destinationHub && stateFilter !== "all") ||
+    Boolean(seoTagQuery) ||
+    stateTab !== "all" ||
     difficultyFilter !== "all" ||
     durationFilter !== "all" ||
     search !== "";
 
   function clearFilters() {
     setSearch("");
-    if (!destinationHub) {
-      setStateFilter("all");
-    }
+    setStateTab("all");
     setDifficultyFilter("all");
     setDurationFilter("all");
   }
@@ -117,10 +97,10 @@ export default function TreksPage() {
   return (
     <div className="pt-16 min-h-screen">
       <SEOHead
-        title="Himalayan Treks 2025 — All Treks in Uttarakhand & Himachal Pradesh | Trekora"
-        description="Browse 40+ Himalayan treks by difficulty, duration, and season. Expert-guided treks in Uttarakhand and Himachal Pradesh. Book online with Trekora."
-        keywords="Himalayan treks, Uttarakhand treks, Himachal Pradesh treks, trekking India 2025, guided treks, Trekora"
-        canonical="https://www.trekora.com/treks"
+        title={treksListingSeo.title}
+        description={treksListingSeo.description}
+        keywords={treksListingSeo.keywords}
+        canonical={treksListingSeo.canonical}
       />
       {/* ── Hero Banner (matches Yatras page shell) ── */}
       <div
@@ -192,12 +172,12 @@ export default function TreksPage() {
           <circle cx="100" cy="100" r="8" fill="white" opacity="0.6" />
         </svg>
 
-        <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="container mx-auto px-4 pt-16 pb-14 md:pb-16 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
-            className="text-center text-white"
+            className="text-center text-white max-w-3xl mx-auto"
           >
             <span className="inline-block text-xs font-semibold uppercase tracking-widest bg-white/20 px-4 py-1.5 rounded-full mb-4">
               Trekora — Where Every Peak Tells a Story
@@ -207,20 +187,27 @@ export default function TreksPage() {
                 ? `Treks from ${destinationHub.name}`
                 : "Explore Himalayan Treks"}
             </h1>
-            <p className="text-white/85 text-lg max-w-2xl mx-auto mb-6">
-              {destinationHub
-                ? destinationHub.tagline
-                : "40+ curated treks across Uttarakhand and Himachal Pradesh —"}
-            </p>
-            <p className="text-white/70 text-sm max-w-xl mx-auto">
-              {destinationHub
-                ? `${hubTreks?.length ?? 0} trek${(hubTreks?.length ?? 0) === 1 ? "" : "s"} starting near ${destinationHub.name}.`
-                : "for every level of trekker."}
+            <p className="text-white/85 text-lg max-w-2xl mx-auto">
+              {destinationHub ? (
+                <>
+                  {destinationHub.tagline}
+                  <span className="block mt-2 text-white/70 text-sm">
+                    {hubTreks?.length ?? 0} trek
+                    {(hubTreks?.length ?? 0) === 1 ? "" : "s"} starting near{" "}
+                    {destinationHub.name}.
+                  </span>
+                </>
+              ) : (
+                <>
+                  40+ curated treks across Uttarakhand and Himachal Pradesh —
+                  for every level of trekker.
+                </>
+              )}
             </p>
             {destinationHub ? (
               <Link
                 to="/treks"
-                className="inline-block mt-4 text-sm font-semibold text-white/90 underline underline-offset-2 hover:text-white"
+                className="inline-block mt-6 text-sm font-semibold text-white/90 underline underline-offset-2 hover:text-white"
               >
                 View all treks
               </Link>
@@ -229,190 +216,41 @@ export default function TreksPage() {
         </div>
       </div>
 
-      {/* ── State tabs + filters (tabs row matches YatrasPage exactly) ── */}
       <div
-        className="bg-white shadow-sm py-3 sticky top-16 z-20 border-b"
+        id={TRAVEL_HERO_SENTINEL_ID}
+        className="h-0 w-full"
+        aria-hidden
+      />
+      <TravelSideActionRail variant="listing-treks" />
+
+      {/* ── Region tabs + search/filters (single “All Treks” control — no hero duplicate) ── */}
+      <ListingStickyToolbar
+        className="bg-white shadow-sm border-b"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="container mx-auto px-4 flex items-center gap-3 justify-center flex-wrap">
-          {(
-            [
-              { key: "all", label: "All Treks" },
-              { key: "uttarakhand", label: "Uttarakhand" },
-              { key: "himachal", label: "Himachal Pradesh" },
-            ] as const
-          ).map(({ key, label }) => (
-            <button
-              key={key}
-              type="button"
-              onClick={() => setStateFilter(key)}
-              className={`px-6 py-2 rounded-full text-sm font-semibold transition-all border-2 ${
-                stateFilter === key
-                  ? "text-white border-transparent"
-                  : "bg-transparent border-current hover:opacity-80"
-              }`}
-              style={
-                stateFilter === key
-                  ? {
-                      backgroundColor: "var(--ew-red)",
-                      borderColor: "var(--ew-red)",
-                    }
-                  : { color: "var(--ew-gray-dark)" }
-              }
-              data-ocid={`treks.state_filter.${key}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <div
-          className="border-t mt-3 pt-3"
-          style={{
-            borderColor: "var(--ew-gray-mid)",
-            backgroundColor: "var(--ew-gray-lt)",
-          }}
-        >
-          <div className="container mx-auto px-4 flex flex-wrap gap-2 items-center justify-center sm:justify-between">
-            <div className="flex flex-wrap gap-2 items-center justify-center flex-1">
-              {/* Search */}
-              <div className="relative flex-1 min-w-[180px] max-w-xs">
-                <Search
-                  size={14}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                  style={{ color: "var(--ew-gray-dark)" }}
-                  aria-hidden
-                />
-                <input
-                  type="search"
-                  placeholder="Search treks or destinations…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 bg-white"
-                  style={
-                    {
-                      border: "1px solid var(--ew-gray-mid)",
-                      color: "var(--ew-text)",
-                      "--tw-ring-color": "var(--ew-red)",
-                    } as React.CSSProperties
-                  }
-                  data-ocid="treks.search_input"
-                />
-              </div>
-
-              <select
-                value={difficultyFilter}
-                onChange={(e) =>
-                  setDifficultyFilter(e.target.value as TrekDifficulty | "all")
-                }
-                className="px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 bg-white border"
-                style={
-                  {
-                    borderColor: "var(--ew-gray-mid)",
-                    color: "var(--ew-text)",
-                    "--tw-ring-color": "var(--ew-red)",
-                  } as React.CSSProperties
-                }
-                aria-label="Filter by difficulty"
-                data-ocid="treks.difficulty.select"
-              >
-                <option value="all">All Difficulties</option>
-                {DIFFICULTIES.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={durationFilter}
-                onChange={(e) => setDurationFilter(e.target.value)}
-                className="px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 bg-white border"
-                style={
-                  {
-                    borderColor: "var(--ew-gray-mid)",
-                    color: "var(--ew-text)",
-                    "--tw-ring-color": "var(--ew-red)",
-                  } as React.CSSProperties
-                }
-                aria-label="Filter by duration"
-                data-ocid="treks.duration.select"
-              >
-                {DURATION_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>
-                    {o.label}
-                  </option>
-                ))}
-              </select>
-
-              {hasActiveFilters &&
-                (destinationHub ? (
-                  <Link
-                    to="/treks"
-                    className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors border"
-                    style={{
-                      color: "var(--ew-red)",
-                      borderColor: "var(--ew-red)",
-                      backgroundColor: "#fff",
-                    }}
-                    data-ocid="treks.clear_destination_link"
-                  >
-                    <X size={13} aria-hidden />
-                    All treks
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors border"
-                    style={{
-                      color: "var(--ew-red)",
-                      borderColor: "var(--ew-red)",
-                      backgroundColor: "#fff",
-                    }}
-                    data-ocid="treks.clear_filters_button"
-                  >
-                    <X size={13} aria-hidden />
-                    Clear
-                  </button>
-                ))}
-            </div>
-
-            <div className="flex items-center gap-2 shrink-0 py-1">
-              <SlidersHorizontal
-                size={15}
-                style={{ color: "var(--ew-gray-dark)" }}
-                aria-hidden
-              />
-              <span
-                className="text-xs font-medium"
-                style={{ color: "var(--ew-gray-dark)" }}
-              >
-                Sort:
-              </span>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value as typeof sort)}
-                className="text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 bg-white border"
-                style={
-                  {
-                    borderColor: "var(--ew-gray-mid)",
-                    color: "var(--ew-text)",
-                    "--tw-ring-color": "var(--ew-red)",
-                  } as React.CSSProperties
-                }
-                aria-label="Sort treks"
-                data-ocid="treks.sort.select"
-              >
-                <option value="rating">Top Rated</option>
-                <option value="price-asc">Price: Low → High</option>
-                <option value="price-desc">Price: High → Low</option>
-                <option value="duration">Duration</option>
-              </select>
-            </div>
+        {!destinationHub && (
+          <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+            <ListingRegionFilterPills
+              kind="treks"
+              active={stateTab}
+              onChange={setStateTab}
+            />
           </div>
-        </div>
-      </div>
+        )}
+        <TreksListingFilters
+          search={search}
+          onSearchChange={setSearch}
+          difficultyFilter={difficultyFilter}
+          onDifficultyChange={setDifficultyFilter}
+          durationFilter={durationFilter}
+          onDurationChange={setDurationFilter}
+          sort={sort}
+          onSortChange={setSort}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={clearFilters}
+          destinationHub={destinationHub}
+        />
+      </ListingStickyToolbar>
 
       {/* ── Urgency note (matches Yatras strip) ── */}
       <div className="py-2" style={{ backgroundColor: "var(--ew-red-lt)" }}>
@@ -473,6 +311,7 @@ export default function TreksPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.07 }}
                   className="card"
+                  style={{ pointerEvents: "auto" }}
                   data-ocid={`treks.grid_card.${i + 1}`}
                 >
                   <TrekCard trek={trek} index={i} variant="listing" />

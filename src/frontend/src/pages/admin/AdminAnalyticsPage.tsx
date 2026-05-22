@@ -170,7 +170,7 @@ export default function AdminAnalyticsPage() {
             className="text-sm mt-0.5"
             style={{ color: "var(--ew-gray-dark)" }}
           >
-            Live data from your EternaWings backend
+            Live data from your Trekora backend
           </p>
         </div>
         <button

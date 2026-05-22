@@ -1,16 +1,20 @@
-import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import DestinationCard from "../components/DestinationCard";
+import ListingRegionFilterPills, {
+  type ListingRegionTab,
+} from "../components/ListingRegionFilterPills";
+import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import { DESTINATIONS } from "../data/destinations";
 
-type Filter = "All" | "Uttarakhand" | "Himachal Pradesh";
-
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: "All", label: "All Destinations" },
-  { key: "Uttarakhand", label: "Uttarakhand" },
-  { key: "Himachal Pradesh", label: "Himachal Pradesh" },
-];
+const TAB_STATE_LABEL: Record<ListingRegionTab, string | null> = {
+  all: null,
+  uttarakhand: "Uttarakhand",
+  himachal: "Himachal Pradesh",
+};
 
 const containerVariants = {
   hidden: {},
@@ -20,7 +24,7 @@ const containerVariants = {
 };
 
 export default function DestinationsPage() {
-  const [activeFilter, setActiveFilter] = useState<Filter>("All");
+  const [tab, setTab] = useState<ListingRegionTab>("all");
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -30,9 +34,10 @@ export default function DestinationsPage() {
   const [submitted, setSubmitted] = useState(false);
 
   const filteredDestinations = useMemo(() => {
-    if (activeFilter === "All") return DESTINATIONS;
-    return DESTINATIONS.filter((d) => d.state === activeFilter);
-  }, [activeFilter]);
+    const stateLabel = TAB_STATE_LABEL[tab];
+    if (!stateLabel) return DESTINATIONS;
+    return DESTINATIONS.filter((d) => d.state === stateLabel);
+  }, [tab]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,71 +111,49 @@ export default function DestinationsPage() {
         </div>
       </div>
 
-      {/* ── Filter Tabs ─────────────────────────────────────────────────────── */}
       <div
-        className="bg-white shadow-sm sticky top-16 z-20"
-        style={{ borderBottom: "1px solid var(--ew-gray-mid)" }}
+        id={TRAVEL_HERO_SENTINEL_ID}
+        className="h-0 w-full"
+        aria-hidden
+      />
+      <TravelSideActionRail variant="listing-destinations" />
+
+      {/* ── Region tabs (same shell as Treks / Yatras) ── */}
+      <ListingStickyToolbar
+        className="bg-white shadow-sm border-b"
+        style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="container mx-auto px-4">
-          <div className="flex gap-1 justify-center py-3 flex-wrap">
-            {FILTERS.map((f) => (
-              <button
-                key={f.key}
-                type="button"
-                onClick={() => setActiveFilter(f.key)}
-                className="relative px-5 py-2 text-sm font-semibold rounded-full transition-all duration-200 focus-visible:outline-none"
-                style={
-                  activeFilter === f.key
-                    ? {
-                        background: "var(--ew-red)",
-                        color: "#fff",
-                        boxShadow: "0 2px 8px rgba(192,0,28,0.3)",
-                      }
-                    : {
-                        background: "transparent",
-                        color: "var(--ew-text-lt)",
-                      }
-                }
-                data-ocid={`destinations.filter.${f.key.toLowerCase().replace(" ", "-")}`}
-              >
-                {f.label}
-                {activeFilter === f.key && (
-                  <motion.span
-                    layoutId="tab-pill"
-                    className="absolute inset-0 rounded-full -z-10"
-                    style={{ background: "var(--ew-red)" }}
-                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
+        <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+          <ListingRegionFilterPills
+            kind="destinations"
+            active={tab}
+            onChange={setTab}
+          />
         </div>
-      </div>
+      </ListingStickyToolbar>
 
-      {/* ── Destination Count Label ──────────────────────────────────────────── */}
-      <div className="container mx-auto px-4 pt-8 pb-2">
-        <p className="text-sm" style={{ color: "var(--ew-gray-dark)" }}>
-          Showing{" "}
-          <strong style={{ color: "var(--ew-text)" }}>
-            {filteredDestinations.length} destination
-            {filteredDestinations.length !== 1 ? "s" : ""}
-          </strong>
-          {activeFilter !== "All" && (
-            <>
-              {" "}
-              in{" "}
-              <strong style={{ color: "var(--ew-red)" }}>{activeFilter}</strong>
-            </>
-          )}
-        </p>
-      </div>
-
-      {/* ── Card Grid ───────────────────────────────────────────────────────── */}
-      <div className="container mx-auto px-4 pb-16 pt-4">
+      {/* ── Destination grid ── */}
+      <div className="py-12" style={{ backgroundColor: "var(--ew-gray-lt)" }}>
+        <div className="container mx-auto px-4">
+          <p className="text-sm mb-6" style={{ color: "var(--ew-gray-dark)" }}>
+            Showing{" "}
+            <strong style={{ color: "var(--ew-text)" }}>
+              {filteredDestinations.length} destination
+              {filteredDestinations.length !== 1 ? "s" : ""}
+            </strong>
+            {TAB_STATE_LABEL[tab] ? (
+              <>
+                {" "}
+                in{" "}
+                <strong style={{ color: "var(--ew-red)" }}>
+                  {TAB_STATE_LABEL[tab]}
+                </strong>
+              </>
+            ) : null}
+          </p>
         <AnimatePresence mode="wait">
           <motion.div
-            key={activeFilter}
+            key={tab}
             variants={containerVariants}
             initial="hidden"
             animate="show"
@@ -181,6 +164,7 @@ export default function DestinationsPage() {
             ))}
           </motion.div>
         </AnimatePresence>
+        </div>
       </div>
 
       {/* ── Plan Your Trip Form ──────────────────────────────────────────────── */}

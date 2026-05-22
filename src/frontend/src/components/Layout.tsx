@@ -1,3 +1,6 @@
+import CallbackRequestPanel from "@/components/CallbackRequestPanel";
+import { ListingScrollChromeProvider } from "@/contexts/ListingScrollChromeContext";
+import { registerLayoutModalOpeners } from "@/lib/layout-modals";
 import { useEffect, useState } from "react";
 import AnimatedOutlet from "./AnimatedOutlet";
 import FloatingCTA from "./FloatingCTA";
@@ -14,16 +17,39 @@ import WhatsAppButton from "./ui/WhatsAppButton";
 
 export default function Layout() {
   const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [isCallbackOpen, setIsCallbackOpen] = useState(false);
 
-  // Allow Navbar "Plan My Trek" button to open modal via custom event
   useEffect(() => {
-    const handler = () => setIsQueryModalOpen(true);
-    window.addEventListener("open-query-modal", handler);
-    return () => window.removeEventListener("open-query-modal", handler);
+    const openQuery = () => setIsQueryModalOpen(true);
+    const openQuiz = () => setIsQuizOpen(true);
+    const openCallback = () => setIsCallbackOpen(true);
+
+    registerLayoutModalOpeners({
+      openQueryModal: openQuery,
+      openTrekQuiz: openQuiz,
+      openCallback,
+    });
+
+    window.addEventListener("open-query-modal", openQuery);
+    window.addEventListener("open-trek-quiz", openQuiz);
+    window.addEventListener("open-callback-panel", openCallback);
+
+    return () => {
+      registerLayoutModalOpeners({
+        openQueryModal: null,
+        openTrekQuiz: null,
+        openCallback: null,
+      });
+      window.removeEventListener("open-query-modal", openQuery);
+      window.removeEventListener("open-trek-quiz", openQuiz);
+      window.removeEventListener("open-callback-panel", openCallback);
+    };
   }, []);
 
   return (
     <EnquiryProvider>
+      <ListingScrollChromeProvider>
       <div
         className="flex flex-col min-h-screen"
         style={{ background: "var(--ew-white)" }}
@@ -49,12 +75,19 @@ export default function Layout() {
           isOpen={isQueryModalOpen}
           onClose={() => setIsQueryModalOpen(false)}
         />
+        <CallbackRequestPanel
+          open={isCallbackOpen}
+          onClose={() => setIsCallbackOpen(false)}
+          placement="modal"
+          source="Site CTA"
+        />
         <MobileBottomNav />
         <LiveChatWidget />
         <WhatsAppButton />
         <CompareBar />
-        <TrekRecommenderQuiz />
+        <TrekRecommenderQuiz open={isQuizOpen} onOpenChange={setIsQuizOpen} />
       </div>
+      </ListingScrollChromeProvider>
     </EnquiryProvider>
   );
 }

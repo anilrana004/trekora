@@ -1,3 +1,4 @@
+import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 
@@ -12,9 +13,7 @@ export default function ShareSection({ title, url }: ShareSectionProps) {
   const shareUrl =
     url ?? (typeof window !== "undefined" ? window.location.href : "");
   const encodedUrl = encodeURIComponent(shareUrl);
-  const encodedMsg = encodeURIComponent(
-    `Check out ${title} on Trekora: ${shareUrl}`,
-  );
+  const shareMessage = `Check out ${title} on Trekora: ${shareUrl}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl).catch(() => null);
@@ -33,7 +32,7 @@ export default function ShareSection({ title, url }: ShareSectionProps) {
       label: "WhatsApp",
       ariaLabel: "Share on WhatsApp",
       bg: "#25D366",
-      href: `https://wa.me/?text=${encodedMsg}`,
+      href: buildWhatsAppUrl(shareMessage),
       icon: (
         <svg
           viewBox="0 0 24 24"

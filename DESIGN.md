@@ -1,4 +1,4 @@
-# EternaWings Design System
+# Trekora Design System
 
 ## Direction
 

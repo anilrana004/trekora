@@ -6,8 +6,9 @@
     "scripts": {
         "dev": "vite",
         "dev:clean": "vite --force",
-        "build": "vite build && pnpm copy:env",
-        "copy:env": "node -e \"require('fs').mkdirSync('dist',{recursive:true});require('fs').copyFileSync('env.json',require('path').join('dist','env.json'));\"",
+        "generate:sitemap": "node ../../scripts/generate-sitemap.mjs",
+        "build": "pnpm generate:sitemap && vite build && pnpm copy:env",
+        "copy:env": "node -e \"const fs=require('fs');const p=require('path');const src=p.join('env.json');const dest=p.join('dist','env.json');fs.mkdirSync('dist',{recursive:true});if(fs.existsSync(src))fs.copyFileSync(src,dest);else fs.writeFileSync(dest,'{}');\"",
         "typecheck": "tsc --noEmit",
         "check": "biome check src",
         "fix": "biome check --write src"
@@ -81,6 +82,8 @@
         "leaflet": "^1.9.4",
         "lucide-react": "0.511.0",
         "motion": "^12.34.3",
+        "mongoose": "^8.9.5",
+        "nodemailer": "^6.10.1",
         "next-themes": "~0.4.6",
         "react": "~19.1.0",
         "react-day-picker": "^9.5.0",

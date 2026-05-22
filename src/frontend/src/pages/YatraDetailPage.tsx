@@ -1,60 +1,76 @@
 import { buildSeoImageUrl } from "@/lib/images";
+import { bookSearch } from "@/lib/book-search";
+import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
+import {
+  SITE_PHONE_TEL,
+  buildWhatsAppUrl,
+} from "@/lib/site-contact";
 import { Link, useParams } from "@tanstack/react-router";
 import {
   AlertTriangle,
   CheckCircle2,
-  ChevronDown,
   ChevronRight,
-  ChevronUp,
   Clock,
   FileText,
   HeartHandshake,
   MapPin,
+  Minus,
   Mountain,
   Phone,
   Plane,
+  Plus,
   Star,
   Train,
   Truck,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import BookingQuickStats from "../components/BookingQuickStats";
+import FitnessCalculator from "../components/FitnessCalculator";
+import MobileStickyBookBar from "../components/MobileStickyBookBar";
 import QueryBottomSheet from "../components/QueryBottomSheet";
-import ReviewSubmitForm from "../components/ReviewSubmitForm";
+import DetailPageTabBar from "../components/DetailPageTabBar";
 import { SEOHead } from "../components/SEOHead";
-import SeoTagCloud from "../components/SeoTagCloud";
-import ShareSection from "../components/ShareSection";
 import TrekMap from "../components/TrekMap";
-import WhatsAppCTA from "../components/WhatsAppCTA";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import YatraCard from "../components/YatraCard";
+import WeatherWidget from "../components/WeatherWidget";
 import YatraInclusions from "../components/YatraInclusions";
 import OptimizedImage from "../components/media/OptimizedImage";
+import {
+  DetailTabPanel,
+  ProductDetailBestSeasonGrid,
+  ProductDetailBookingSidebarHeader,
+  ProductDetailFaqList,
+  ProductDetailGroupSizeStepper,
+  ProductDetailHero,
+  ProductDetailItinerarySection,
+  ProductDetailLightbox,
+  ProductDetailPhotosSection,
+  ProductDetailReviewsSection,
+  ProductDetailThumbnailStrip,
+  monthsFromSeasonLabel,
+  yatraItineraryToDisplayDays,
+} from "../components/product-detail";
 import { YATRAS } from "../data/yatras";
+import { formatWeatherLocation } from "@/lib/openweather";
+import {
+  yatraAltitudeLabel,
+  yatraAltitudeMeters,
+  yatraDifficultyLabel,
+  yatraFitnessDifficulty,
+} from "@/lib/yatra-booking-stats";
 import type { YatraHowToReach } from "../data/yatras";
 import { downloadYatraItineraryPDF } from "../lib/pdfGenerator";
+import { buildYatraPageSEO, getRelatedYatras } from "@/lib/product-seo";
 import {
   generateBreadcrumbJSONLD,
   generateFAQJSONLD,
   generateYatraJSONLD,
   injectJSONLD,
 } from "../lib/seo";
-
-function StarRow({ rating }: { rating: number }) {
-  return (
-    <span className="inline-flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <Star
-          key={s}
-          size={13}
-          style={{ color: "var(--ew-gold)" }}
-          className={
-            s <= Math.round(rating) ? "fill-[var(--ew-gold)]" : "fill-none"
-          }
-        />
-      ))}
-    </span>
-  );
-}
 
 type TabKey =
   | "overview"
@@ -67,17 +83,23 @@ type TabKey =
   | "reviews"
   | "faqs";
 
-const TABS: { key: TabKey; label: string }[] = [
+const TABS: { key: TabKey; label: string; shortLabel?: string }[] = [
   { key: "overview", label: "Overview" },
   { key: "itinerary", label: "Itinerary" },
-  { key: "inclusions", label: "Inclusions" },
-  { key: "map-route", label: "Map & Route" },
-  { key: "significance", label: "Significance" },
-  { key: "how-to-reach", label: "How to Reach" },
+  { key: "inclusions", label: "Inclusions & Exclusions", shortLabel: "Inclusions" },
+  { key: "map-route", label: "Map & Route", shortLabel: "Map" },
+  { key: "significance", label: "Significance", shortLabel: "Sacred" },
+  { key: "how-to-reach", label: "How to Reach", shortLabel: "Reach" },
   { key: "photos", label: "Photos" },
   { key: "reviews", label: "Reviews" },
   { key: "faqs", label: "FAQs" },
 ];
+
+const YATRA_DETAIL_TABS = TABS.map((t) => ({
+  id: t.key,
+  label: t.label,
+  shortLabel: t.shortLabel,
+}));
 
 const REVIEWS = [
   {
@@ -110,49 +132,6 @@ const REVIEWS = [
   },
 ];
 
-const DEFAULT_ITINERARY = [
-  {
-    day: 1,
-    title: "Arrival & Acclimatization",
-    altitude: "Base town",
-    distance: "",
-    description:
-      "Arrive at the base town. Rest, acclimatization, briefing by guide, and distribution of Trekora yatra kit.",
-    stay: "Hotel / guesthouse",
-    meals: "Dinner",
-  },
-  {
-    day: 2,
-    title: "Commence Trek to Trail Head",
-    altitude: "Varies",
-    distance: "Variable",
-    description:
-      "Early morning start. Drive or walk to the main trail head. Begin the pilgrimage with prayers at the base temple.",
-    stay: "Dharamshala / camp",
-    meals: "Breakfast, Dinner",
-  },
-  {
-    day: 3,
-    title: "Main Shrine Darshan",
-    altitude: "Varies",
-    distance: "Variable",
-    description:
-      "Reach the main shrine after gradual ascent. Ritual bath in sacred water. VIP darshan and aarti at the temple.",
-    stay: "Temple trust accommodation",
-    meals: "Breakfast, Dinner",
-  },
-  {
-    day: 4,
-    title: "Return Journey",
-    altitude: "Base town",
-    distance: "Variable",
-    description:
-      "Morning prayers and final darshan. Descend to base town. Debrief and departure preparations.",
-    stay: "Hotel / guesthouse",
-    meals: "Breakfast",
-  },
-];
-
 const TRUST_ITEMS = [
   "100% Secure Payment",
   "Free Cancellation up to 30 days",
@@ -164,24 +143,18 @@ export default function YatraDetailPage() {
   // CRITICAL BUG FIX: correct route path (was "/layout/yatras/$slug")
   const { slug } = useParams({ from: "/layout/yatras/$slug" });
   const yatra = YATRAS.find((y) => y.slug === slug);
+  const handleReviewContentChanged = useCallback(() => {
+    if (slug) refreshTrekkerGallery(slug, "yatra");
+  }, [slug]);
 
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [heroImg, setHeroImg] = useState(0);
   const [openDay, setOpenDay] = useState<number | null>(0);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-  const [groupSize, setGroupSize] = useState(2);
+  const [groupSize, setGroupSize] = useState(1);
   const [heliAdd, setHeliAdd] = useState(false);
-  const [reviewForm, setReviewForm] = useState({
-    name: "",
-    rating: 5,
-    title: "",
-    text: "",
-    when: "",
-  });
-  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [querySheetOpen, setQuerySheetOpen] = useState(false);
-  const tabBarRef = useRef<HTMLDivElement>(null);
   const [viewerCount] = useState(() => Math.floor(Math.random() * 15) + 8);
   const [socialProofIdx, setSocialProofIdx] = useState(0);
   const [addOnsYatra, setAddOnsYatra] = useState({
@@ -191,9 +164,24 @@ export default function YatraDetailPage() {
     photographer: false,
   });
 
-  const allImages = yatra?.images?.length
-    ? yatra.images
-    : [yatra?.image ?? "", yatra?.image ?? "", yatra?.image ?? ""];
+  const allImages = useMemo(() => {
+    if (yatra?.images?.length) return yatra.images;
+    const img = yatra?.image ?? "";
+    return [img, img, img];
+  }, [yatra]);
+
+  const galleryPhotos = useMemo(() => {
+    if (!yatra) return [];
+    const seen = new Set<string>();
+    return Array.from(
+      { length: Math.max(12, allImages.length) },
+      (_, i) => allImages[i % allImages.length],
+    ).filter((url) => {
+      if (!url || seen.has(url)) return false;
+      seen.add(url);
+      return true;
+    });
+  }, [yatra, allImages]);
 
   // Auto-rotate hero slider
   useEffect(() => {
@@ -217,7 +205,7 @@ export default function YatraDetailPage() {
     setOpenDay(0);
     setOpenFaq(null);
     setLightboxIdx(null);
-    setGroupSize(2);
+    setGroupSize(1);
     setHeliAdd(false);
   }, [slug]);
 
@@ -268,7 +256,7 @@ export default function YatraDetailPage() {
     provider: {
       "@type": "TouristInformationCenter",
       name: "Trekora",
-      url: "https://www.trekora.com",
+      url: "https://www.trekora.in",
     },
     offers: {
       "@type": "Offer",
@@ -286,19 +274,19 @@ export default function YatraDetailPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://www.trekora.com",
+        item: "https://www.trekora.in",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Yatras",
-        item: "https://www.trekora.com/yatras",
+        item: "https://www.trekora.in/yatras",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: yatra?.name ?? "",
-        item: `https://www.trekora.com/yatras/${slug}`,
+        item: `https://www.trekora.in/yatras/${slug}`,
       },
     ],
   };
@@ -339,33 +327,39 @@ export default function YatraDetailPage() {
         "All rituals and pooja guidance provided throughout",
       ];
 
-  const itinerary =
-    (yatra as unknown as { itinerary?: typeof DEFAULT_ITINERARY }).itinerary ??
-    DEFAULT_ITINERARY;
+  const itineraryDays = yatraItineraryToDisplayDays(yatra);
+
+  const handleDownloadItineraryPdf = async () => {
+    try {
+      await downloadYatraItineraryPDF(yatra);
+    } catch {
+      window.alert("Could not download itinerary PDF. Please try again.");
+    }
+  };
 
   const faqs = yatra.faqs ?? [];
   const howToReach: YatraHowToReach | null =
     typeof yatra.howToReach === "object" ? yatra.howToReach : null;
   const totalPrice = yatra.price * groupSize + (heliAdd ? 4500 : 0);
-  const relatedYatras = YATRAS.filter(
-    (y) => y.slug !== yatra.slug && y.state === yatra.state,
-  ).slice(0, 3);
-  const photoGrid = Array.from(
-    { length: 12 },
-    (_, i) => allImages[i % allImages.length],
-  );
+  const relatedYatras = getRelatedYatras(yatra, 3);
+  const yatraPageSeo = buildYatraPageSEO(yatra);
+  const displayRating = yatra.rating ?? 4.8;
+  const displayReviewCount = yatra.reviewCount ?? 84;
+  const bestSeasonMonths = monthsFromSeasonLabel(yatra.bestTime);
 
   return (
     <div
       key={yatra.slug}
-      className="min-h-screen bg-white pb-[5.75rem] pt-16 lg:pb-0"
+      className="min-h-screen mobile-detail-page-pad pt-16 lg:pb-0"
+      style={{ backgroundColor: "var(--ew-gray-lt)" }}
     >
       <SEOHead
-        title={`${yatra.name} 2025 | ${yatra.duration} Days | From ₹${yatra.price.toLocaleString("en-IN")} | Trekora`}
-        description={`Book ${yatra.name} package. ${yatra.duration} days, spiritual pilgrimage to the Himalayas. All-inclusive: accommodation, meals, darshan arrangements, certified spiritual guide.`}
-        keywords={`${yatra.name}, pilgrimage India, Himalayan yatra, ${yatra.name} 2025, book ${yatra.name.toLowerCase()}, Trekora yatra`}
-        canonical={`https://www.trekora.com/yatras/${yatra.slug}`}
-        ogImage={buildSeoImageUrl(allImages[0])}
+        title={yatraPageSeo.title}
+        description={yatraPageSeo.description}
+        keywords={yatraPageSeo.keywords}
+        canonical={yatraPageSeo.canonical}
+        ogImage={buildSeoImageUrl(yatraPageSeo.ogImage ?? allImages[0])}
+        ogType={yatraPageSeo.ogType}
         schema={[yatraSchema, yBreadcrumbSchema]}
       />
       {/* Breadcrumb */}
@@ -403,87 +397,51 @@ export default function YatraDetailPage() {
         </div>
       </div>
 
-      {/* Hero Slider */}
-      <div
-        className="relative overflow-hidden bg-black"
-        style={{ minHeight: "clamp(280px, 60vw, 480px)" }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={heroImg}
-            className="absolute inset-0"
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <OptimizedImage
-              src={allImages[heroImg]}
-              alt={`${yatra.name} — view ${heroImg + 1}`}
-              fill
-              priority={heroImg === 0}
-              variant="hero"
-              className="object-cover"
-            />
-          </motion.div>
-        </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <button
-          type="button"
-          aria-label="Previous image"
-          onClick={() =>
-            setHeroImg((i) => (i - 1 + allImages.length) % allImages.length)
-          }
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-black/40 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
-          data-ocid="yatra_detail.hero_prev"
-        >
-          <ChevronRight size={18} className="rotate-180" />
-        </button>
-        <button
-          type="button"
-          aria-label="Next image"
-          onClick={() => setHeroImg((i) => (i + 1) % allImages.length)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 bg-black/40 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
-          data-ocid="yatra_detail.hero_next"
-        >
-          <ChevronRight size={18} />
-        </button>
-        <div className="absolute bottom-6 left-0 right-0 container mx-auto px-4">
-          <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow mb-1">
-            {yatra.name}
-          </h1>
-          <div className="flex items-center gap-3 flex-wrap text-sm text-white/80">
-            <span className="flex items-center gap-1">
-              <Clock size={14} /> {yatra.duration} Days
+      <ProductDetailHero
+        images={allImages}
+        activeIndex={heroImg}
+        onIndexChange={setHeroImg}
+        name={yatra.name}
+        rating={displayRating}
+        reviewCount={displayReviewCount}
+        badges={
+          <>
+            <span className="badge-orange text-[10px] capitalize">
+              {yatra.state === "uttarakhand"
+                ? "Uttarakhand"
+                : "Himachal Pradesh"}
             </span>
-            <span className="flex items-center gap-1">
-              <MapPin size={14} /> Starts: {yatra.startPoint}
-            </span>
-            <span className="flex items-center gap-1">
-              <Mountain size={14} /> {yatra.distance} km
-            </span>
-          </div>
-        </div>
-        {/* Dot pagination */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {allImages.map((img, i) => (
-            <button
-              key={img || String(i)}
-              type="button"
-              aria-label={`Go to image ${i + 1}`}
-              onClick={() => setHeroImg(i)}
-              className="rounded-full transition-all"
-              style={{
-                width: heroImg === i ? 20 : 8,
-                height: 8,
-                backgroundColor:
-                  heroImg === i ? "var(--ew-red)" : "rgba(255,255,255,0.6)",
-              }}
-              data-ocid={`yatra_detail.hero_dot.${i + 1}`}
-            />
-          ))}
-        </div>
-      </div>
+            {yatra.difficulty ? (
+              <span className="badge-red text-[10px]">{yatra.difficulty}</span>
+            ) : null}
+          </>
+        }
+        subtitle={
+          <p className="text-sm text-white/80">{yatra.description.slice(0, 120)}…</p>
+        }
+        renderSlide={(src, index) => (
+          <OptimizedImage
+            src={src}
+            alt={`${yatra.name} — view ${index + 1}`}
+            fill
+            priority={index === 0}
+            variant="hero"
+            className="object-cover"
+          />
+        )}
+        ocidPrefix="yatra_detail"
+      />
+
+      <ProductDetailThumbnailStrip
+        images={allImages}
+        activeIndex={heroImg}
+        onSelect={setHeroImg}
+        productName={yatra.name}
+        ocidPrefix="yatra_detail"
+      />
+
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail productName={yatra.name} />
 
       {/* Stats Bar */}
       <div style={{ backgroundColor: "var(--ew-red)" }}>
@@ -554,48 +512,30 @@ export default function YatraDetailPage() {
           </div>
         </div>
       )}
+
+      <DetailPageTabBar
+        tabs={YATRA_DETAIL_TABS}
+        activeId={activeTab}
+        onChange={(id) => setActiveTab(id as TabKey)}
+        ocidPrefix="yatra_detail"
+      />
+
       {/* Main 8:4 Layout */}
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* LEFT: Tabs + Content */}
-          <div className="lg:col-span-8 min-w-0">
-            {/* Tab bar */}
-            <div
-              ref={tabBarRef}
-              className="flex overflow-x-auto mb-7 border-b scrollbar-hide -mx-4 px-4"
-              style={{ borderColor: "var(--ew-gray-mid)" }}
-            >
-              {TABS.map((t) => (
-                <button
-                  key={t.key}
-                  type="button"
-                  onClick={() => setActiveTab(t.key)}
-                  className="shrink-0 px-4 py-3 text-sm font-semibold -mb-px border-b-2 transition-colors whitespace-nowrap"
-                  style={
-                    activeTab === t.key
-                      ? { color: "var(--ew-red)", borderColor: "var(--ew-red)" }
-                      : {
-                          color: "var(--ew-gray-dark)",
-                          borderColor: "transparent",
-                        }
-                  }
-                  data-ocid={`yatra_detail.tab.${t.key}`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-            {/* Tab content — key forces remount on tab change */}
-            <div key={activeTab}>
+          {/* LEFT: Tab content */}
+          <div key={activeTab} className="lg:col-span-8 min-w-0 space-y-6">
               {/* ══ OVERVIEW ══ */}
               {activeTab === "overview" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-6"
-                >
+                <DetailTabPanel tabKey="overview" className="space-y-6">
+                  <h2 className="section-title mb-5">Overview</h2>
                   <div>
-                    <h2 className="section-title mb-4">About this Yatra</h2>
+                    <h3
+                      className="mb-3 text-base font-bold"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      About this Yatra
+                    </h3>
                     <p
                       className="text-base leading-relaxed"
                       style={{ color: "var(--ew-text-lt)" }}
@@ -685,103 +625,23 @@ export default function YatraDetailPage() {
                     </ul>
                   </div>
 
-                  {/* Best time table */}
-                  <div>
-                    <h3
-                      className="font-bold text-base mb-3"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Best Time to Visit
-                    </h3>
-                    <div
-                      className="rounded-xl border overflow-hidden"
-                      style={{ borderColor: "var(--ew-gray-mid)" }}
-                    >
-                      <table className="w-full text-sm">
-                        <thead style={{ backgroundColor: "var(--ew-red)" }}>
-                          <tr>
-                            {["Period", "Season", "Condition", "Rec"].map(
-                              (h) => (
-                                <th
-                                  key={h}
-                                  className="py-2.5 px-3 text-left text-white font-semibold text-xs"
-                                >
-                                  {h}
-                                </th>
-                              ),
-                            )}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {[
-                            [
-                              "May–June",
-                              "Pre-monsoon",
-                              "Clear skies, moderate crowd",
-                              "Ideal ✓",
-                            ],
-                            [
-                              "July–Aug",
-                              "Monsoon",
-                              "Heavy rain, landslide risk",
-                              "Caution ⚠",
-                            ],
-                            [
-                              "Sep–Oct",
-                              "Post-monsoon",
-                              "Crisp weather, fewer crowds",
-                              "Excellent ✓",
-                            ],
-                            [
-                              "Nov–Apr",
-                              "Winter",
-                              "Most shrines closed",
-                              "Avoid ✗",
-                            ],
-                          ].map(([period, season, condition, rec], ri) => (
-                            <tr
-                              key={period}
-                              style={{
-                                backgroundColor:
-                                  ri % 2 === 0 ? "var(--ew-gray-lt)" : "white",
-                              }}
-                            >
-                              <td
-                                className="py-2.5 px-3 font-medium"
-                                style={{ color: "var(--ew-text)" }}
-                              >
-                                {period}
-                              </td>
-                              <td
-                                className="py-2.5 px-3"
-                                style={{ color: "var(--ew-text-lt)" }}
-                              >
-                                {season}
-                              </td>
-                              <td
-                                className="py-2.5 px-3"
-                                style={{ color: "var(--ew-text-lt)" }}
-                              >
-                                {condition}
-                              </td>
-                              <td
-                                className="py-2.5 px-3 font-semibold"
-                                style={{
-                                  color: rec.includes("✓")
-                                    ? "var(--ew-green)"
-                                    : rec.includes("⚠")
-                                      ? "var(--ew-orange)"
-                                      : "var(--ew-red)",
-                                }}
-                              >
-                                {rec}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                  {/* Live weather at start point */}
+                  <WeatherWidget
+                    trekName={yatra.name}
+                    location={formatWeatherLocation(
+                      yatra.startPoint,
+                      yatra.state,
+                    )}
+                  />
+
+                  <ProductDetailBestSeasonGrid
+                    bestSeasonLabel={yatra.bestTime}
+                    activeMonths={
+                      bestSeasonMonths.length > 0
+                        ? bestSeasonMonths
+                        : ["May", "Jun", "Sep", "Oct"]
+                    }
+                  />
 
                   {/* Fitness requirements */}
                   <div
@@ -808,105 +668,35 @@ export default function YatraDetailPage() {
                           : "Easy — suitable for most ages. Short trails of 3–10 km. Helicopter options available. No prior trekking experience required."}
                     </p>
                   </div>
-                </motion.div>
+                </DetailTabPanel>
               )}
 
-              {/* ══ ITINERARY ══ */}
               {activeTab === "itinerary" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3"
-                >
-                  <h2 className="section-title mb-5">Day-by-Day Itinerary</h2>
-                  {itinerary.map((day, idx) => (
-                    <div
-                      key={day.day}
-                      className="border rounded-xl overflow-hidden"
-                      style={{ borderColor: "var(--ew-gray-mid)" }}
-                    >
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
-                        onClick={() => setOpenDay(openDay === idx ? null : idx)}
-                        data-ocid={`yatra_detail.itinerary.day.${day.day}`}
-                      >
-                        <div
-                          id="yatra-group-size"
-                          className="flex items-center gap-3"
-                        >
-                          <span
-                            className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                            style={{ backgroundColor: "var(--ew-red)" }}
-                          >
-                            {day.day}
-                          </span>
-                          <div>
-                            <span
-                              className="font-semibold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              {day.title}
-                            </span>
-                            {day.altitude && (
-                              <span
-                                className="ml-3 text-xs"
-                                style={{ color: "var(--ew-gray-dark)" }}
-                              >
-                                {day.altitude}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        {openDay === idx ? (
-                          <ChevronUp
-                            size={16}
-                            style={{ color: "var(--ew-gray-dark)" }}
-                          />
-                        ) : (
-                          <ChevronDown
-                            size={16}
-                            style={{ color: "var(--ew-gray-dark)" }}
-                          />
-                        )}
-                      </button>
-                      <AnimatePresence>
-                        {openDay === idx && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.25 }}
-                            className="overflow-hidden"
-                          >
-                            <div className="px-5 pb-5 pt-1">
-                              <p
-                                className="text-sm leading-relaxed mb-3"
-                                style={{ color: "var(--ew-text-lt)" }}
-                              >
-                                {day.description}
-                              </p>
-                              <div
-                                className="flex gap-4 text-xs flex-wrap"
-                                style={{ color: "var(--ew-gray-dark)" }}
-                              >
-                                {day.distance && (
-                                  <span>Distance: {day.distance}</span>
-                                )}
-                                <span>Stay: {day.stay}</span>
-                                <span>Meals: {day.meals}</span>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  ))}
-                </motion.div>
+                <ProductDetailItinerarySection
+                  days={itineraryDays}
+                  openDay={openDay}
+                  onOpenDayChange={setOpenDay}
+                  onDownloadPdf={handleDownloadItineraryPdf}
+                  ocidPrefix="yatra_detail"
+                  footer={
+                    <FitnessCalculator
+                      trekName={yatra.name}
+                      trekSlug={slug}
+                      trekDifficulty={yatraFitnessDifficulty(yatra)}
+                      trekAltitude={yatraAltitudeMeters(yatra)}
+                      trekDuration={yatra.duration}
+                      productKind="yatra"
+                    />
+                  }
+                />
               )}
 
               {/* ══ INCLUSIONS ══ */}
-              {activeTab === "inclusions" && <YatraInclusions />}
+              {activeTab === "inclusions" && (
+                <DetailTabPanel tabKey="inclusions" className="!p-0 overflow-hidden">
+                  <YatraInclusions />
+                </DetailTabPanel>
+              )}
 
               {/* ══ MAP & ROUTE ══ */}
               {activeTab === "map-route" && (
@@ -1325,484 +1115,101 @@ export default function YatraDetailPage() {
 
               {/* ══ PHOTOS ══ */}
               {activeTab === "photos" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <h2 className="section-title mb-5">Photo Gallery</h2>
-                  <div className="columns-1 sm:columns-2 md:columns-3 gap-3">
-                    {photoGrid.map((img, idx) => (
-                      <button
-                        key={img}
-                        type="button"
-                        className="w-full block mb-3 rounded-xl overflow-hidden group text-left"
-                        onClick={() => setLightboxIdx(idx)}
-                        data-ocid={`yatra_detail.photo.${idx + 1}`}
-                        aria-label={`View photo ${idx + 1}`}
-                      >
-                        <div
-                          className="relative w-full overflow-hidden rounded-xl"
-                          style={{
-                            aspectRatio:
-                              idx % 3 === 0
-                                ? "4/3"
-                                : idx % 3 === 1
-                                  ? "1/1"
-                                  : "16/9",
-                          }}
-                        >
-                          <OptimizedImage
-                            src={img}
-                            alt={`${yatra.name} — ${idx + 1}`}
-                            fill
-                            variant="gallery-thumb"
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="mt-8">
-                    <h3
-                      className="font-bold text-base mb-4"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Trek Diaries — Video Gallery
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {[1, 2].map((n) => (
-                        <div
-                          key={`yt-${n}`}
-                          className="rounded-xl overflow-hidden aspect-video flex items-center justify-center"
-                          style={{ backgroundColor: "#111" }}
-                        >
-                          <div className="text-center text-white p-4">
-                            <div className="text-4xl mb-2">▶️</div>
-                            <p className="text-xs opacity-70">
-                              Video {n} — {yatra.name}
-                            </p>
-                            <p className="text-xs opacity-50 mt-1">
-                              Add YouTube embed ID
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
+                <DetailTabPanel tabKey="photos">
+                  <ProductDetailPhotosSection
+                    productName={yatra.name}
+                    productSlug={slug ?? ""}
+                    productType="yatra"
+                    galleryPhotos={galleryPhotos}
+                    coverImage={allImages[0]}
+                    onPhotoClick={setLightboxIdx}
+                    ocidPrefix="yatra_detail"
+                  />
+                </DetailTabPanel>
               )}
 
               {/* ══ REVIEWS ══ */}
               {activeTab === "reviews" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-5"
-                >
-                  <ShareSection title={yatra.name} />
-                  <h2 className="section-title mb-4">Reviews and Ratings</h2>
-                  <ReviewSubmitForm trekSlug={slug} trekName={yatra.name} />
-                  <div
-                    className="flex items-center gap-5 p-5 rounded-xl"
-                    style={{ backgroundColor: "var(--ew-gray-lt)" }}
-                  >
-                    <div className="text-center shrink-0">
-                      <div
-                        className="text-4xl font-bold"
-                        style={{ color: "var(--ew-red)" }}
-                      >
-                        4.7
-                      </div>
-                      <StarRow rating={4.7} />
-                      <div
-                        className="text-xs mt-0.5"
-                        style={{ color: "var(--ew-gray-dark)" }}
-                      >
-                        84 reviews
-                      </div>
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      {["Excellent", "Good", "Average", "Poor"].map(
-                        (label, li) => (
-                          <div
-                            key={label}
-                            className="flex items-center gap-2 text-xs"
-                          >
-                            <span
-                              className="w-16"
-                              style={{ color: "var(--ew-gray-dark)" }}
-                            >
-                              {label}
-                            </span>
-                            <div
-                              className="flex-1 rounded-full h-2"
-                              style={{ backgroundColor: "var(--ew-gray-mid)" }}
-                            >
-                              <div
-                                className="h-2 rounded-full"
-                                style={{
-                                  width: ["72%", "18%", "7%", "3%"][li],
-                                  backgroundColor: "var(--ew-orange)",
-                                }}
-                              />
-                            </div>
-                            <span
-                              className="w-8 text-right"
-                              style={{ color: "var(--ew-gray-dark)" }}
-                            >
-                              {["72%", "18%", "7%", "3%"][li]}
-                            </span>
-                          </div>
-                        ),
-                      )}
-                    </div>
-                  </div>
-
-                  {REVIEWS.map((r) => (
-                    <div
-                      key={r.name}
-                      className="border rounded-xl p-5"
-                      style={{ borderColor: "var(--ew-gray-mid)" }}
-                    >
-                      <div className="flex items-start gap-3 mb-3">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
-                          style={{ backgroundColor: "var(--ew-red)" }}
-                        >
-                          {r.name.charAt(0)}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span
-                              className="font-semibold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              {r.name}
-                            </span>
-                            <span
-                              className="text-xs"
-                              style={{ color: "var(--ew-gray-dark)" }}
-                            >
-                              {r.city}
-                            </span>
-                            <span
-                              className="text-xs px-2 py-0.5 rounded-full"
-                              style={{
-                                backgroundColor: "var(--ew-red-lt)",
-                                color: "var(--ew-red)",
-                              }}
-                            >
-                              {r.when}
-                            </span>
-                          </div>
-                          <StarRow rating={r.rating} />
-                        </div>
-                      </div>
-                      <p
-                        className="text-sm leading-relaxed"
-                        style={{ color: "var(--ew-text-lt)" }}
-                      >
-                        {r.text}
-                      </p>
-                    </div>
-                  ))}
-
-                  <div
-                    className="rounded-xl border p-5"
-                    style={{ borderColor: "var(--ew-gray-mid)" }}
-                  >
-                    <h3
-                      className="font-bold text-base mb-4"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Share Your Experience
-                    </h3>
-                    {reviewSubmitted ? (
-                      <div
-                        className="text-center py-6 rounded-xl"
-                        style={{ backgroundColor: "var(--ew-gray-lt)" }}
-                        data-ocid="yatra_detail.review.success_state"
-                      >
-                        <p className="text-2xl mb-2">🙏</p>
-                        <p
-                          className="font-semibold text-sm"
-                          style={{ color: "var(--ew-text)" }}
-                        >
-                          Thank you for your review!
-                        </p>
-                        <p
-                          className="text-xs mt-1"
-                          style={{ color: "var(--ew-gray-dark)" }}
-                        >
-                          Your review will appear after admin approval.
-                        </p>
-                      </div>
-                    ) : (
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          setReviewSubmitted(true);
-                        }}
-                        className="space-y-3"
-                        data-ocid="yatra_detail.review_form"
-                      >
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <input
-                            type="text"
-                            required
-                            placeholder="Your name"
-                            value={reviewForm.name}
-                            onChange={(e) =>
-                              setReviewForm((f) => ({
-                                ...f,
-                                name: e.target.value,
-                              }))
-                            }
-                            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none"
-                            style={{ borderColor: "var(--ew-gray-mid)" }}
-                            data-ocid="yatra_detail.review.name_input"
-                          />
-                          <input
-                            type="text"
-                            placeholder="When did you travel?"
-                            value={reviewForm.when}
-                            onChange={(e) =>
-                              setReviewForm((f) => ({
-                                ...f,
-                                when: e.target.value,
-                              }))
-                            }
-                            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none"
-                            style={{ borderColor: "var(--ew-gray-mid)" }}
-                            data-ocid="yatra_detail.review.when_input"
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          placeholder="Review title"
-                          value={reviewForm.title}
-                          onChange={(e) =>
-                            setReviewForm((f) => ({
-                              ...f,
-                              title: e.target.value,
-                            }))
-                          }
-                          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none"
-                          style={{ borderColor: "var(--ew-gray-mid)" }}
-                          data-ocid="yatra_detail.review.title_input"
-                        />
-                        <textarea
-                          required
-                          rows={3}
-                          placeholder="Share your experience..."
-                          value={reviewForm.text}
-                          onChange={(e) =>
-                            setReviewForm((f) => ({
-                              ...f,
-                              text: e.target.value,
-                            }))
-                          }
-                          className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none resize-none"
-                          style={{ borderColor: "var(--ew-gray-mid)" }}
-                          data-ocid="yatra_detail.review.text_textarea"
-                        />
-                        <button
-                          type="submit"
-                          className="btn-primary"
-                          data-ocid="yatra_detail.review.submit_button"
-                        >
-                          Submit Review
-                        </button>
-                      </form>
-                    )}
-                  </div>
-                </motion.div>
+                <DetailTabPanel tabKey="reviews">
+                  <ProductDetailReviewsSection
+                    productName={yatra.name}
+                    productSlug={slug}
+                    productType="yatra"
+                    fallbackRating={displayRating}
+                    fallbackReviewCount={displayReviewCount}
+                    ocidPrefix="yatra_detail"
+                    onContentChanged={handleReviewContentChanged}
+                  />
+                </DetailTabPanel>
               )}
 
               {/* ══ FAQs ══ */}
               {activeTab === "faqs" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3"
-                >
+                <DetailTabPanel tabKey="faqs">
                   <h2 className="section-title mb-5">
                     Frequently Asked Questions
                   </h2>
-                  {faqs.length === 0 && (
-                    <p
-                      className="text-sm"
-                      style={{ color: "var(--ew-text-lt)" }}
-                    >
-                      Contact us for any questions about this yatra.
-                    </p>
-                  )}
-                  {faqs.map((faq, idx) => (
-                    <div
-                      key={faq.question}
-                      className="border rounded-xl overflow-hidden"
-                      style={{ borderColor: "var(--ew-gray-mid)" }}
-                    >
-                      <button
-                        type="button"
-                        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
-                        onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                        data-ocid={`yatra_detail.faq.${idx + 1}`}
-                      >
-                        <span
-                          className="font-semibold text-sm pr-4"
-                          style={{ color: "var(--ew-text)" }}
-                        >
-                          {faq.question}
-                        </span>
-                        {openFaq === idx ? (
-                          <ChevronUp
-                            size={16}
-                            className="shrink-0"
-                            style={{ color: "var(--ew-red)" }}
-                          />
-                        ) : (
-                          <ChevronDown
-                            size={16}
-                            className="shrink-0"
-                            style={{ color: "var(--ew-gray-dark)" }}
-                          />
-                        )}
-                      </button>
-                      <AnimatePresence>
-                        {openFaq === idx && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.22 }}
-                            className="overflow-hidden"
-                          >
-                            <div
-                              className="px-5 pb-4 text-sm leading-relaxed"
-                              style={{ color: "var(--ew-text-lt)" }}
-                            >
-                              {faq.answer}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  ))}
-                </motion.div>
+                  <ProductDetailFaqList
+                    faqs={faqs.map((f) => ({
+                      question: f.question,
+                      answer: f.answer,
+                    }))}
+                    openIndex={openFaq}
+                    onToggle={(idx) =>
+                      setOpenFaq(openFaq === idx ? null : idx)
+                    }
+                    ocidPrefix="yatra_detail"
+                    emptyMessage="Contact us for any questions about this yatra."
+                  />
+                </DetailTabPanel>
               )}
-            </div>
-            {/* end key={activeTab} */}
           </div>
 
           {/* RIGHT: Sticky Booking Sidebar */}
           <div className="w-full min-w-0 lg:col-span-4">
-            <div className="lg:sticky lg:top-24 lg:max-h-[min(85vh,calc(100vh-9rem))] lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1">
+            <div className="lg:sticky lg:top-36 lg:max-h-[min(85vh,calc(100vh-9rem))] lg:overflow-y-auto lg:overflow-x-hidden lg:pr-1">
               <div
-                className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border shadow-elevated lg:mx-0 lg:max-w-none"
-                style={{ borderColor: "var(--ew-gray-mid)" }}
+                className="mx-auto w-full max-w-md overflow-hidden rounded-2xl shadow-elevated lg:mx-0 lg:max-w-none"
+                style={{ border: "1px solid var(--ew-gray-mid)" }}
+                data-ocid="yatra_detail.booking_sidebar"
               >
-                <div
-                  className="px-5 py-4 border-b"
-                  style={{
-                    backgroundColor: "var(--ew-gray-lt)",
-                    borderColor: "var(--ew-gray-mid)",
-                  }}
-                >
-                  <p
-                    className="text-xs mb-0.5"
-                    style={{ color: "var(--ew-gray-dark)" }}
-                  >
-                    Package starting from
-                  </p>
-                  <div
-                    className="text-3xl font-bold"
-                    style={{ color: "var(--ew-orange)" }}
-                  >
-                    &#8377;{yatra.price.toLocaleString("en-IN")}
-                  </div>
-                  <p
-                    className="text-xs"
-                    style={{ color: "var(--ew-gray-dark)" }}
-                  >
-                    per person (twin sharing)
-                  </p>
-                </div>
+                <ProductDetailBookingSidebarHeader
+                  price={yatra.price}
+                  priceLabel="Starting from"
+                  perPersonLabel="/ person"
+                />
 
-                <div className="space-y-3 p-5 sm:p-6">
-                  <div
-                    className="grid min-w-0 grid-cols-3 gap-2 border-b pb-3 text-center text-xs"
-                    style={{ borderColor: "var(--ew-gray-mid)" }}
-                  >
-                    {[
-                      { label: "Duration", value: `${yatra.duration}D` },
-                      { label: "Dist", value: `${yatra.distance}km` },
-                      { label: "From", value: yatra.startPoint.split(" ")[0] },
-                    ].map((s) => (
-                      <div key={s.label} className="min-w-0">
-                        <div
-                          className="font-bold text-sm"
-                          style={{ color: "var(--ew-text)" }}
-                        >
-                          {s.value}
-                        </div>
-                        <div style={{ color: "var(--ew-gray-dark)" }}>
-                          {s.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                <div className="space-y-4 p-5 sm:p-6">
+                  <BookingQuickStats
+                    stats={[
+                      {
+                        label: "Duration",
+                        value: `${yatra.duration}D`,
+                        icon: <Clock size={14} />,
+                      },
+                      {
+                        label: "Difficulty",
+                        value: yatraDifficultyLabel(yatra),
+                        icon: <Mountain size={14} />,
+                      },
+                      {
+                        label: "Altitude",
+                        value: yatraAltitudeLabel(yatra),
+                        icon: <MapPin size={14} />,
+                      },
+                    ]}
+                  />
 
-                  {/* Group size stepper */}
-                  <div>
-                    <label
-                      htmlFor="yatra-group-size"
-                      className="text-xs font-medium block mb-1.5"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Group Size
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setGroupSize((g) => Math.max(1, g - 1))}
-                        className="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold transition-colors hover:opacity-80"
-                        style={{
-                          borderColor: "var(--ew-red)",
-                          color: "var(--ew-red)",
-                        }}
-                        data-ocid="yatra_detail.group_minus"
-                        aria-label="Decrease group size"
-                      >
-                        −
-                      </button>
-                      <span
-                        className="font-bold text-sm w-6 text-center"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        {groupSize}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setGroupSize((g) => Math.min(20, g + 1))}
-                        className="w-8 h-8 rounded-full border-2 flex items-center justify-center font-bold transition-colors hover:opacity-80"
-                        style={{
-                          borderColor: "var(--ew-red)",
-                          color: "var(--ew-red)",
-                        }}
-                        data-ocid="yatra_detail.group_plus"
-                        aria-label="Increase group size"
-                      >
-                        +
-                      </button>
-                      <span
-                        className="text-xs"
-                        style={{ color: "var(--ew-gray-dark)" }}
-                      >
-                        persons
-                      </span>
-                    </div>
-                  </div>
+                  <ProductDetailGroupSizeStepper
+                    value={groupSize}
+                    onChange={setGroupSize}
+                    min={1}
+                    max={20}
+                    title="How many people are joining?"
+                    hint="Starts at 1 — tap + to add more travelers."
+                    maxLabel="persons (max 20)"
+                    ocidPrefix="yatra_detail"
+                  />
 
                   {/* Add-ons */}
                   <div>
@@ -1945,7 +1352,7 @@ export default function YatraDetailPage() {
 
                   <Link
                     to="/book"
-                    search={{ trek: undefined }}
+                    search={bookSearch({ yatra: yatra.slug, group: groupSize })}
                     className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-center text-sm font-bold leading-tight text-white transition-[filter] hover:brightness-95 sm:text-base"
                     style={{
                       backgroundColor: "var(--ew-red)",
@@ -1957,7 +1364,7 @@ export default function YatraDetailPage() {
                   </Link>
                   <button
                     type="button"
-                    onClick={() => downloadYatraItineraryPDF(yatra)}
+                    onClick={() => void handleDownloadItineraryPdf()}
                     className="flex items-center justify-center gap-2 w-full font-semibold text-sm rounded-xl border-2 transition-colors"
                     style={{
                       borderColor: "var(--ew-orange)",
@@ -1983,7 +1390,7 @@ export default function YatraDetailPage() {
                   </button>
                   <div className="grid grid-cols-2 gap-2">
                     <a
-                      href="tel:+919810012345"
+                      href={`tel:${SITE_PHONE_TEL}`}
                       className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
                       style={{
                         borderColor: "var(--ew-red)",
@@ -1995,7 +1402,9 @@ export default function YatraDetailPage() {
                       <Phone size={14} /> Call Expert
                     </a>
                     <a
-                      href={`https://wa.me/919810012345?text=${encodeURIComponent(`Hi! I want to book the ${yatra.name}. Please share details.`)}`}
+                      href={buildWhatsAppUrl(
+                        `Hi! I want to book the ${yatra.name}. Please share details.`,
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-1.5 font-semibold text-xs rounded-xl border-2 transition-colors"
@@ -2113,18 +1522,6 @@ export default function YatraDetailPage() {
         )}
       </div>
 
-      {/* ── SEO Tag Cloud ── */}
-      <SeoTagCloud
-        name={yatra.name}
-        slug={yatra.slug}
-        state={yatra.state}
-        type="yatra"
-        relatedSlugs={relatedYatras.map((y) => y.slug)}
-        relatedNames={relatedYatras.map((y) => y.name)}
-      />
-
-      <WhatsAppCTA trekName={yatra.name} />
-
       {/* ── Query Bottom Sheet ── */}
       <QueryBottomSheet
         isOpen={querySheetOpen}
@@ -2132,97 +1529,31 @@ export default function YatraDetailPage() {
         trekName={yatra.name}
       />
 
-      {/* Photo Lightbox */}
-      <AnimatePresence>
-        {lightboxIdx !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-            onClick={() => setLightboxIdx(null)}
-            data-ocid="yatra_detail.lightbox"
-          >
-            <button
-              type="button"
-              aria-label="Close lightbox"
-              className="absolute top-4 right-4 text-white text-2xl hover:opacity-70"
-              onClick={() => setLightboxIdx(null)}
-              data-ocid="yatra_detail.lightbox.close_button"
-            >
-              ×
-            </button>
-            <button
-              type="button"
-              aria-label="Previous photo"
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl hover:opacity-70"
-              onClick={(e) => {
-                e.stopPropagation();
-                setLightboxIdx(
-                  (i) => ((i ?? 0) - 1 + photoGrid.length) % photoGrid.length,
-                );
-              }}
-              data-ocid="yatra_detail.lightbox.prev"
-            >
-              ‹
-            </button>
-            <OptimizedImage
-              src={photoGrid[lightboxIdx]}
-              alt={`${yatra.name} — ${lightboxIdx + 1}`}
-              variant="gallery-full"
-              sizes="95vw"
-              className="max-h-[80vh] max-w-full rounded-xl object-contain"
-              onClick={(e) => e.stopPropagation()}
-              onKeyDown={(e) => e.stopPropagation()}
-            />
-            <button
-              type="button"
-              aria-label="Next photo"
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl hover:opacity-70"
-              onClick={(e) => {
-                e.stopPropagation();
-                setLightboxIdx((i) => ((i ?? 0) + 1) % photoGrid.length);
-              }}
-              data-ocid="yatra_detail.lightbox.next"
-            >
-              ›
-            </button>
-            <div className="absolute bottom-4 text-white text-sm opacity-70">
-              {lightboxIdx + 1} / {photoGrid.length}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {lightboxIdx !== null ? (
+        <ProductDetailLightbox
+          productName={yatra.name}
+          photos={galleryPhotos}
+          activeIndex={lightboxIdx}
+          onClose={() => setLightboxIdx(null)}
+          onPrev={() =>
+            setLightboxIdx(
+              (lightboxIdx - 1 + galleryPhotos.length) % galleryPhotos.length,
+            )
+          }
+          onNext={() =>
+            setLightboxIdx((lightboxIdx + 1) % galleryPhotos.length)
+          }
+          ocidPrefix="yatra_detail"
+        />
+      ) : null}
 
-      {/* Mobile Sticky Bottom Bar */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-30 flex min-h-[72px] items-center justify-between gap-2 border-t px-3 py-2 sm:px-4 lg:hidden"
-        style={{
-          backgroundColor: "white",
-          borderColor: "var(--ew-gray-mid)",
-          paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))",
-        }}
-      >
-        <div className="min-w-0 flex-1">
-          <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
-            Starting from
-          </p>
-          <p
-            className="truncate text-lg font-bold leading-tight sm:text-xl"
-            style={{ color: "var(--ew-orange)" }}
-          >
-            &#8377;{yatra.price.toLocaleString("en-IN")}
-          </p>
-        </div>
-        <Link
-          to="/book"
-          search={{ trek: undefined }}
-          className="btn-primary inline-flex max-w-[58%] min-h-[44px] min-w-0 flex-shrink-0 items-center justify-center px-3 text-center text-xs font-semibold leading-tight sm:max-w-[55%] sm:px-4 sm:text-sm"
-          data-ocid="yatra_detail.mobile_book_button"
-        >
-          <span className="line-clamp-2">Book {yatra.name}</span>
-        </Link>
-      </div>
+      <MobileStickyBookBar
+        price={yatra.price}
+        productName={yatra.name}
+        bookTo="/book"
+        bookSearch={bookSearch({ yatra: yatra.slug, group: groupSize })}
+        bookButtonOcid="yatra_detail.mobile_book_button"
+      />
     </div>
   );
 }

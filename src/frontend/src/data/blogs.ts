@@ -38,15 +38,15 @@ export const BLOGS: Blog[] = [
     authorBio:
       "Lead trek guide with 12 years of experience in Uttarakhand and Himachal Pradesh treks. Summited Roopkund 14 times.",
     authorImage:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778728594/qs0zitesubzqzagtwzee.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778728594/qs0zitesubzqzagtwzee.jpg",
     images: [
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778728594/qs0zitesubzqzagtwzee.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778729344/b14unbxbppghtggmsybi.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778729657/okrw4uwo8h1xsdctnkrg.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778729760/ojtqz77bljwwlifkh6q5.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778729976/kaer1ysm9quy3nlqdzov.jpg",
     ],
     tableOfContents: [
       { id: "introduction", heading: "What is Roopkund?", level: 2 },
@@ -200,15 +200,15 @@ The Roopkund Trek remains one of India's most iconic and mysterious trekking exp
     authorBio:
       "Botanist and nature writer who has documented 200+ plant species in the Valley of Flowers. Regular contributor to travel magazines.",
     authorImage:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778733827/zptp7esgn1lhv9mwqlht.webp",
     heroImage:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778733827/zptp7esgn1lhv9mwqlht.webp",
     images: [
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778733827/zptp7esgn1lhv9mwqlht.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778734037/nvgypzvhvpx7aqcajts4.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778734157/xxapthoazvmvxu3uu4xl.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778734336/w7m742udfcfagesfo6mp.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778734432/njbcajvtcrxmpqwfa68i.jpg",
     ],
     tableOfContents: [
       { id: "overview", heading: "Valley of Flowers Overview", level: 2 },
@@ -297,15 +297,15 @@ The valley itself is flat (entry at 3,352m, inner valley around 3,600m), making 
     authorBio:
       "Adventure travel writer based in Dharamsala. Has guided Triund treks over 200 times since 2016.",
     authorImage:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762878/qkhu5phox4x6diqpllii.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1556296240-b6b6e89c0f9f?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762878/qkhu5phox4x6diqpllii.jpg",
     images: [
-      "https://images.unsplash.com/photo-1556296240-b6b6e89c0f9f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762878/qkhu5phox4x6diqpllii.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762895/qxpcbgkqfl8tj95m7jmr.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762930/rlmplvv2apshtxlwnbmw.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762955/dm9qnffccv4a1mzgrejk.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762999/rla7vu2gzqlmfzms9n48.jpg",
     ],
     isPublished: true,
     content: `# Triund Trek from McLeod Ganj: The Perfect Weekend Trek
@@ -392,15 +392,15 @@ Sunset too is spectacular, with the Kangra valley far below turning golden in th
     authorBio:
       "Mountain guide and adventure photographer. Led Hampta Pass expeditions for 8 years. Instagram: @vikramsinhahimalayas",
     authorImage:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763372/d6igt6vhmcv8w70xog9n.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763372/d6igt6vhmcv8w70xog9n.jpg",
     images: [
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763372/d6igt6vhmcv8w70xog9n.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763428/c2jp1mzkgj4vkfjan2ib.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763406/yd8ruvk6pff92duunugb.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763390/tqzlqqhys5z4w94oemdg.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763381/ydf0yaorapb0aj11ygz5.jpg",
     ],
     isPublished: true,
     content: `# Hampta Pass Trek: Crossing Two Worlds
@@ -465,16 +465,15 @@ Hampta Pass is one of the most photogenic treks in India:
     authorBio:
       'Religious travel specialist with 20 years of experience organizing Char Dham yatras. Author of "Devbhoomi Pilgrimage Guide".',
     authorImage:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779166977/ua9r1wq5xaf2c5kvb2tc.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779166977/ua9r1wq5xaf2c5kvb2tc.jpg",
     images: [
-      "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1609766418204-94aaeaf0f4b7?w=1200&q=80",
-      "https://images.unsplash.com/photo-1473445730015-841f29a9490b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779166977/ua9r1wq5xaf2c5kvb2tc.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127455/nsxxwivjb7l3nfkihbqs.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127445/qydtgxc8lqqsdqh7jpyy.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127434/yvezslozsgklhelnmw5h.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127423/mewsw7b5e3vqzsar2hzy.jpg",
     ],
     tableOfContents: [
       { id: "significance", heading: "Significance of Char Dham", level: 2 },
@@ -610,15 +609,15 @@ The Char Dham Yatra is more than a pilgrimage — it is a journey through some o
     authorBio:
       "Lead trek guide with 12 years of experience in Uttarakhand Himalayas.",
     authorImage:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758528/jnclab82ligcpo4uqndh.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758528/jnclab82ligcpo4uqndh.jpg",
     images: [
-      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758528/jnclab82ligcpo4uqndh.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758716/ylndqrnxrh139aectzpb.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758824/ngtezosfzrgfufxgrrae.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758847/uupksocu5jlrxmcil0xe.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758916/uvmfnig1yu1asdfi2qau.jpg",
     ],
     isPublished: true,
     content: `# Kedarkantha Trek: India's Best Winter Trek Explained
@@ -687,16 +686,15 @@ For winter Kedarkantha, these items are non-negotiable:
     authorBio:
       'Travel writer and photographer who has covered Spiti Valley annually since 2017. Author of digital guide "Spiti: The Middle Land".',
     authorImage:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771717/afydimlzdw4hotiqs02b.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771717/afydimlzdw4hotiqs02b.jpg",
     images: [
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771717/afydimlzdw4hotiqs02b.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771783/ksr51qxjcquemjpkxwsm.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771728/hkoq0b9gzn96atdtr1nt.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771854/hre8klhgn9j41l48iscu.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771874/cqo8fnd8aousfju8eyog.jpg",
     ],
     isPublished: true,
     content: `# Spiti Valley Complete Travel Guide 2025
@@ -782,13 +780,15 @@ Key expenses: Accommodation in Kaza ₹600-2,000/night; meals ₹150-300; local 
     authorBio:
       "Wilderness medicine physician and Himalayan trekking specialist. Medical director for 15 high-altitude expeditions.",
     authorImage:
-      "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127413/gdf8o4bjefb45bmkjszu.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127413/gdf8o4bjefb45bmkjszu.jpg",
     images: [
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127413/gdf8o4bjefb45bmkjszu.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127178/sfbjp1qs6w2rgf5tskey.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127164/vgbqzzcq6zqxquet9kbn.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127147/ea2mfuao4nz74tbcy36h.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127134/stcckupnukwugrvpjwii.jpg",
     ],
     isPublished: true,
     content: `# Altitude Sickness — How to Prevent, Identify & Treat AMS on Himalayan Treks
@@ -919,14 +919,15 @@ The only definitive treatment for any form of altitude illness is descent. Even 
     authorBio:
       "Solo trekker who has completed 40+ Himalayan treks. Mountain safety instructor and women's trek advocate.",
     authorImage:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127127/lvmkbidskzjlvdedn0ft.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127127/lvmkbidskzjlvdedn0ft.jpg",
     images: [
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127127/lvmkbidskzjlvdedn0ft.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126705/zomr4e5g2npv3c2rejtl.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126692/punzv0qkr8uldttsqa7r.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126677/lfl5zoldc1xowscg9ekc.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126662/xn4z1zp0waiusiisbpnk.jpg",
     ],
     isPublished: true,
     content: `# Solo Trekking in Himalayas — Complete Safety Guide for Beginners
@@ -1035,15 +1036,15 @@ Solo women trekkers face different considerations in India. The Himalayan region
     authorBio:
       "Mountain guide and trek planner with 8 years experience. Specializes in beginner-friendly itineraries.",
     authorImage:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126653/exo2ldjgxdmuaurhfv8p.jpg",
     heroImage:
-      "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126653/exo2ldjgxdmuaurhfv8p.jpg",
     images: [
-      "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126653/exo2ldjgxdmuaurhfv8p.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126306/ozcokzp0z614pjnjvezn.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126270/vstfgwpnxmikvilgsnlu.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126257/v5zerq649e0hfxmqtsaw.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126245/orkriejad6yaue5cspxo.jpg",
     ],
     isPublished: true,
     content: `# Best Treks for Beginners in Uttarakhand and Himachal Pradesh 2025

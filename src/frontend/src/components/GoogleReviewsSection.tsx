@@ -5,21 +5,21 @@ const REVIEWS = [
     name: "Priya Sharma",
     city: "Delhi",
     rating: 5,
-    text: "EternaWings made our Kedarkantha trek unforgettable! The guides were professional, safety measures top-notch, and the entire experience exceeded expectations. Highly recommend for first-timers.",
+    text: "Trekora made our Kedarkantha trek unforgettable! The guides were professional, safety measures top-notch, and the entire experience exceeded expectations. Highly recommend for first-timers.",
     date: "March 2025",
   },
   {
     name: "Rahul Verma",
     city: "Mumbai",
     rating: 5,
-    text: "Booked Triund trek with EternaWings. From booking to completion, every detail was taken care of. The team was responsive and the trek itself was breathtaking.",
+    text: "Booked Triund trek with Trekora. From booking to completion, every detail was taken care of. The team was responsive and the trek itself was breathtaking.",
     date: "February 2025",
   },
   {
     name: "Anita Kapoor",
     city: "Bangalore",
     rating: 4,
-    text: "Valley of Flowers trek was magical. EternaWings team knows these trails inside out. A bit pricey but worth every rupee for the safety and experience.",
+    text: "Valley of Flowers trek was magical. Trekora team knows these trails inside out. A bit pricey but worth every rupee for the safety and experience.",
     date: "January 2025",
   },
 ];
@@ -48,7 +48,7 @@ export default function GoogleReviewsSection() {
   const jsonLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "EternaWings",
+    name: "Trekora",
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: String(AGGREGATE.ratingValue),

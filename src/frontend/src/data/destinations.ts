@@ -13,10 +13,16 @@ export interface Destination {
   image: string;
   /** Use `contain` for infographic / map artwork so labels stay readable in cards. */
   imageFit?: "cover" | "contain";
+  /** CSS `object-position` when `imageFit` is `cover` (e.g. `center 40%`). */
+  imagePosition?: string;
   category: string;
   nearestAirport?: string;
   nearestRailway?: string;
 }
+
+/** Shared Himachal Pradesh treks & yatra guide map (destination cards). */
+const HIMACHAL_DESTINATION_GUIDE_IMAGE =
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778840061/ul4a10njsyc7nu4an6gw.png";
 
 export const DESTINATIONS: Destination[] = [
   // --- Uttarakhand ---
@@ -35,7 +41,9 @@ export const DESTINATIONS: Destination[] = [
     yatraCount: 5,
     category: "spiritual",
     image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778837306/j04nqewqbycr84x1wdtl.png",
+    /** Illustrated trek/yatra map — show full artwork without cropping. */
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (35 km)",
     nearestRailway: "Rishikesh Railway Station",
   },
@@ -54,7 +62,8 @@ export const DESTINATIONS: Destination[] = [
     yatraCount: 5,
     category: "spiritual",
     image:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778837671/rqchkskw9pmssfuodne5.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (55 km)",
     nearestRailway: "Haridwar Junction",
   },
@@ -92,7 +101,8 @@ export const DESTINATIONS: Destination[] = [
     yatraCount: 2,
     category: "base-camp",
     image:
-      "https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778837978/hzmf6et5nmoskzpjcfte.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (270 km)",
     nearestRailway: "Haridwar (270 km)",
   },
@@ -110,7 +120,8 @@ export const DESTINATIONS: Destination[] = [
     trekCount: 2,
     category: "alpine",
     image:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778838169/rklwgtvg3vegfosw8zqx.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (220 km)",
     nearestRailway: "Rishikesh (190 km)",
   },
@@ -128,7 +139,8 @@ export const DESTINATIONS: Destination[] = [
     trekCount: 2,
     category: "alpine",
     image:
-      "https://images.unsplash.com/photo-1518407613690-d9fc990e795f?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778838378/ovjnis9zaseokiyhd5n1.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (285 km)",
     nearestRailway: "Haridwar (280 km)",
   },
@@ -147,7 +159,8 @@ export const DESTINATIONS: Destination[] = [
     yatraCount: 2,
     category: "spiritual",
     image:
-      "https://images.unsplash.com/photo-1621922688758-6b41a8c7d48c?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778838378/ovjnis9zaseokiyhd5n1.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (250 km)",
     nearestRailway: "Rishikesh (215 km)",
   },
@@ -166,7 +179,8 @@ export const DESTINATIONS: Destination[] = [
     yatraCount: 2,
     category: "spiritual",
     image:
-      "https://images.unsplash.com/photo-1609920861880-e83a0e7d1c5e?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778838805/b07caaj2x7vjoh6nwv2m.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (315 km)",
     nearestRailway: "Haridwar (305 km)",
   },
@@ -185,7 +199,8 @@ export const DESTINATIONS: Destination[] = [
     yatraCount: 1,
     category: "spiritual",
     image:
-      "https://images.unsplash.com/photo-1585025083368-1bd0ce0ea7e3?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778839008/a4we7s2tcz5acfsptgac.png",
+    imageFit: "contain",
     nearestAirport: "Jolly Grant, Dehradun (250 km)",
     nearestRailway: "Rishikesh (230 km)",
   },
@@ -203,7 +218,8 @@ export const DESTINATIONS: Destination[] = [
     trekCount: 2,
     category: "hill-station",
     image:
-      "https://images.unsplash.com/photo-1609920748085-af24e3e6d3b8?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778839201/ff6eblm9dsrfd5hcs8jn.png",
+    imageFit: "contain",
     nearestAirport: "Pantnagar Airport (70 km)",
     nearestRailway: "Kathgodam (35 km)",
   },
@@ -221,7 +237,8 @@ export const DESTINATIONS: Destination[] = [
     trekCount: 3,
     category: "alpine",
     image:
-      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778839328/mbkbtv73w1hi7o4vvaui.png",
+    imageFit: "contain",
     nearestAirport: "Pantnagar Airport (285 km)",
     nearestRailway: "Kathgodam (280 km)",
   },
@@ -259,8 +276,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "May-Jun, Sep-Oct",
     trekCount: 8,
     category: "adventure",
-    image:
-      "https://images.unsplash.com/photo-1518002054494-3a6f94352e9d?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Bhuntar Airport, Kullu (50 km)",
     nearestRailway: "Joginder Nagar (165 km)",
   },
@@ -277,8 +294,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Mar-Jun, Sep-Nov",
     trekCount: 4,
     category: "spiritual",
-    image:
-      "https://images.unsplash.com/photo-1591474600793-7e3dc0ea70e9?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Gaggal Airport, Kangra (15 km)",
     nearestRailway: "Pathankot (90 km)",
   },
@@ -295,8 +312,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Mar-Jun, Oct-Nov",
     trekCount: 4,
     category: "adventure",
-    image:
-      "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Bhuntar Airport, Kullu (30 km)",
     nearestRailway: "Joginder Nagar (135 km)",
   },
@@ -313,8 +330,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Jun-Sep",
     trekCount: 4,
     category: "high-altitude",
-    image:
-      "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Bhuntar Airport, Kullu (195 km)",
     nearestRailway: "Shimla (410 km)",
   },
@@ -331,8 +348,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Mar-Jun, Sep-Nov",
     trekCount: 2,
     category: "hill-station",
-    image:
-      "https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Shimla Airport (22 km)",
     nearestRailway: "Kalka (90 km via toy train)",
   },
@@ -349,8 +366,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Jun-Sep",
     trekCount: 3,
     category: "high-altitude",
-    image:
-      "https://images.unsplash.com/photo-1601823984263-b87b59798b70?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Bhuntar Airport, Kullu (235 km)",
     nearestRailway: "Shimla (450 km)",
   },
@@ -367,8 +384,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "May-Oct",
     trekCount: 2,
     category: "high-altitude",
-    image:
-      "https://images.unsplash.com/photo-1566956773887-c19d2e35aeab?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Shimla Airport (200 km)",
     nearestRailway: "Kalka (285 km)",
   },
@@ -385,8 +402,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Mar-Jun, Sep-Nov",
     trekCount: 2,
     category: "hill-station",
-    image:
-      "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Gaggal Airport, Kangra (105 km)",
     nearestRailway: "Pathankot (80 km)",
   },
@@ -403,8 +420,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Oct-Nov, Mar-May",
     trekCount: 1,
     category: "adventure",
-    image:
-      "https://images.unsplash.com/photo-1559628233-100c798642d5?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Gaggal Airport, Kangra (65 km)",
     nearestRailway: "Pathankot (130 km)",
   },
@@ -421,8 +438,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "Mar-Jun, Oct-Nov",
     trekCount: 3,
     category: "adventure",
-    image:
-      "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Bhuntar Airport, Kullu (10 km)",
     nearestRailway: "Joginder Nagar (140 km)",
   },
@@ -439,8 +456,8 @@ export const DESTINATIONS: Destination[] = [
     bestSeason: "May-Jun, Sep-Oct",
     trekCount: 2,
     category: "adventure",
-    image:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Bhuntar Airport (10 km)",
     nearestRailway: "Joginder Nagar (130 km)",
   },
@@ -458,8 +475,8 @@ export const DESTINATIONS: Destination[] = [
     trekCount: 1,
     yatraCount: 1,
     category: "alpine",
-    image:
-      "https://images.unsplash.com/photo-1544736779-8b4e6a70a6f2?auto=format&fit=crop&w=800&q=80",
+    image: HIMACHAL_DESTINATION_GUIDE_IMAGE,
+    imageFit: "contain",
     nearestAirport: "Shimla Airport (245 km)",
     nearestRailway: "Kalka (300 km)",
   },

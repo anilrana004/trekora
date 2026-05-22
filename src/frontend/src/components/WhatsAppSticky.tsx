@@ -1,3 +1,7 @@
+import {
+  SITE_PHONE_DISPLAY,
+  WHATSAPP_CHAT_URL,
+} from "@/lib/site-contact";
 import { useState } from "react";
 
 const _WA_ICON = (
@@ -13,11 +17,7 @@ const _WA_ICON = (
   </svg>
 );
 
-const WA_NUMBER = "919810012345";
-const WA_MSG = encodeURIComponent(
-  "Hi Trekora! I want to enquire about your Himalayan treks",
-);
-const WA_HREF = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`;
+const WA_HREF = WHATSAPP_CHAT_URL;
 
 export default function WhatsAppSticky() {
   const [hovered, setHovered] = useState(false);
@@ -108,7 +108,7 @@ export default function WhatsAppSticky() {
             overflow: "hidden",
           }}
         >
-          +91 98100-12345
+          {SITE_PHONE_DISPLAY}
         </span>
       )}
     </a>

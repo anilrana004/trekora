@@ -1,0 +1,21 @@
+{
+  "name": "Trekora — Himalayan Treks & Yatras",
+  "short_name": "Trekora",
+  "description": "Book expert-led Himalayan treks and sacred yatras in Uttarakhand and Himachal Pradesh.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#c0001c",
+  "icons": [
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

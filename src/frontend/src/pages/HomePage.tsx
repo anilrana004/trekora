@@ -1,3 +1,7 @@
+import { bookSearch } from "@/lib/book-search";
+import { isFeatureLive } from "@/lib/dormant-features";
+import { buildHomePageSEO } from "@/lib/product-seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import { SITE_EMAIL, SITE_PHONE_TEL } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
 import {
@@ -29,30 +33,69 @@ import TrekCard from "../components/TrekCard";
 import UpcomingBatchesSection from "../components/UpcomingBatchesSection";
 import YatraCard from "../components/YatraCard";
 import YouTubeSection from "../components/YouTubeSection";
+import HomeTrekFeatureMedia from "../components/media/HomeTrekFeatureMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
-import { EnquiryButton } from "../components/ui/EnquiryButton";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
+import HomeMobileSearchPanel from "../components/HomeMobileSearchPanel";
 import TrustBadgesStrip from "../components/ui/TrustBadgesStrip";
+import {
+  HOME_PRESS_PARTNERS,
+  pressLogoForName,
+} from "@/lib/press-media-logos";
+import FeaturedInMedia from "../components/FeaturedInMedia";
 import { BLOGS } from "../data/blogs";
+import { resolveBlogCardImage } from "../lib/blog-product-images";
+import { homeTrekReelVideo } from "../data/trek-reels";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
 
-const CHAR_DHAM_YATRA = YATRAS.find((y) => y.slug === "char-dham-yatra");
 const PANCH_KEDAR_YATRA = YATRAS.find((y) => y.slug === "panch-kedar-yatra");
 const PANCH_BADRI_YATRA = YATRAS.find((y) => y.slug === "panch-badri-yatra");
 const HEMKUND_SAHIB_YATRA = YATRAS.find(
   (y) => y.slug === "hemkund-sahib-yatra",
 );
-const CHAR_DHAM_COVER =
-  CHAR_DHAM_YATRA?.image ??
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778773622/hdcqmlampuxdxcd3ixmu.png";
+const KARTIK_SWAMI_YATRA = YATRAS.find(
+  (y) => y.slug === "kartik-swami-temple",
+);
+const CHURDHAR_YATRA = YATRAS.find((y) => y.slug === "churdhar-yatra");
+const SHRIKHAND_MAHADEV_YATRA = YATRAS.find(
+  (y) => y.slug === "shrikhand-mahadev-yatra",
+);
+const KINNAUR_KAILASH_YATRA = YATRAS.find(
+  (y) => y.slug === "kinnaur-kailash-yatra",
+);
+const MANI_MAHESH_YATRA = YATRAS.find((y) => y.slug === "mani-mahesh-yatra");
+const TRIYUGINARAYAN_YATRA = YATRAS.find(
+  (y) => y.slug === "triyuginarayan-temple",
+);
+const DO_DHAM_YATRA = YATRAS.find((y) => y.slug === "do-dham-yatra");
+/** Char Dham Yatra — `hero/yatras/char-dham-yatra` (order left-to-right in grid). */
+const CHAR_DHAM_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778773622/hdcqmlampuxdxcd3ixmu.png",
+    alt: "Char Dham Yatra collage — Yamunotri, Gangotri, Kedarnath and Badrinath shrines",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778773747/op6noetbepos6hoxx7bg.png",
+    alt: "Gangotri temple with white domes against forested Garhwal peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778773717/js3s5ps4zjgxkfccgaob.jpg",
+    alt: "Kedarnath stone temple with pilgrims and snow-capped Himalayan mountains",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778773660/boxdwesrvdj5h6gzqs4f.png",
+    alt: "Yamunotri temple on the sacred Yamuna source pilgrimage route",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778773688/qrbhk9v9fr9kummt85xt.png",
+    alt: "Badrinath temple ornate facade with Neelkanth peak at dusk",
+  },
+];
 
-const CHAR_DHAM_GALLERY_ALTS = [
-  "Yamunotri temple in the Garhwal Himalayas",
-  "Gangotri temple with white domes against forested peaks",
-  "Kedarnath stone temple with pilgrims and snow-capped mountains",
-  "Badrinath temple ornate colourful facade",
-  "Badrinath temple and Neelkanth peak at dusk",
-] as const;
+const CHAR_DHAM_COVER = CHAR_DHAM_PHOTO_GALLERY[0].src;
 
 /** Panch Badri Yatra — five-shrine collage (`hero/home` + yatras section). */
 const PANCH_BADRI_YATRA_COLLAGE_WEBP =
@@ -107,6 +150,74 @@ const PANCH_KEDAR_WEBP_GALLERY: { src: string; alt: string }[] = [
   {
     src: PANCH_KEDAR_KEDARNATH_NIGHT_JPG,
     alt: "Kedarnath temple lit at night against snow-capped Himalayan peaks on the Panch Kedar pilgrimage",
+  },
+];
+
+/** Kartik Swami Temple Trek — summit shrine & Himalayan panorama (home yatras strip). */
+const KARTIK_SWAMI_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127413/gdf8o4bjefb45bmkjszu.jpg",
+    alt: "Kartik Swami temple on a rocky Himalayan summit with prayer flags and snow peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127423/mewsw7b5e3vqzsar2hzy.jpg",
+    alt: "Pilgrims on the steep forest trail ascending to Kartik Swami near Rudraprayag",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127434/yvezslozsgklhelnmw5h.jpg",
+    alt: "Panoramic Garhwal Himalaya vista from the Kartik Swami temple ridge at sunrise",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127445/qydtgxc8lqqsdqh7jpyy.webp",
+    alt: "Ancient Kartikeya shrine perched on Kanakchauri hilltop above Rudraprayag valley",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127455/nsxxwivjb7l3nfkihbqs.webp",
+    alt: "Snow-capped peaks of Kedarnath and Chaukhamba visible from Kartik Swami temple",
+  },
+];
+
+/** Churdhar Yatra — Shirgul Maharaj summit & Sirmaur Shivalik (home yatras strip). */
+const CHURDHAR_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125643/knylgm28qswce3csjjbg.jpg",
+    alt: "Shirgul Maharaj temple atop Churdhar Peak with prayer flags and Himalayan panorama",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125650/xs4qldukxvb8imhyr2bs.jpg",
+    alt: "Trekkers on the deodar forest trail from Nohradhar toward Churdhar summit",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125663/otuhnf6c5cbezcz53ebb.jpg",
+    alt: "Rhododendron-lined path through Sirmaur hills on the Churdhar Yatra route",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125676/dxklfm4wpbpb6hno23st.jpg",
+    alt: "360° Shivalik and plains vista from Churdhar Peak at 3,647m in Himachal Pradesh",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125684/rpjvdklw7lv4hvkwwuzg.jpg",
+    alt: "Churdhar summit shrine and snow ridges above the outer Himalaya in Sirmaur district",
+  },
+];
+
+/** Shrikhand Mahadev Yatra — natural Shiva lingam at 5,155m · Kullu (home yatras strip). */
+const SHRIKHAND_MAHADEV_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125919/wc4tbcy191zvlzauo45b.webp",
+    alt: "Natural rock Shiva Lingam formation at Shrikhand Mahadev summit, 5,155m Kullu",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125944/mzxlbztog1kv6unsrjcc.webp",
+    alt: "Pilgrims ascending snow fields on the Shrikhand Mahadev trail from Jaon village",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125960/vinkwvr1mdtblugliazj.webp",
+    alt: "Prayer flags and rocky ridge near Bheem Dwar on the Shrikhand Mahadev Yatra",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125969/rb6dz2kkatm26nxy64k2.webp",
+    alt: "High-altitude Himalayan panorama from Shrikhand Mahadev pilgrimage in Himachal Pradesh",
   },
 ];
 
@@ -190,10 +301,22 @@ const BEAS_KUND_TREK = TREKS.find((t) => t.slug === "beas-kund");
 
 interface HeroBanner {
   image: string;
+  /** Mobile-only inline reel (homepage hero / dest grid). */
+  videoSrc?: string;
   title: string;
   subtitle: string;
   cta: string;
   ctaLink: string;
+  /** When `ctaLink` is `/book`, pre-fills trek/yatra/package on the booking page. */
+  ctaBookSearch?: {
+    trek?: string;
+    yatra?: string;
+    package?: string;
+  };
+}
+
+function trekSlugFromCtaLink(ctaLink: string): string | undefined {
+  return /^\/treks\/([^/]+)$/.exec(ctaLink)?.[1];
 }
 
 interface HeroSet {
@@ -209,21 +332,360 @@ const HOME_HERO_ROOPKUND_MAIN_IMAGE =
 const HOME_HERO_VALLEY_OF_FLOWERS_MAIN_IMAGE =
   "https://res.cloudinary.com/ddbcauxef/image/upload/v1778700231/pkew3vrpnvqbwbdxltff.jpg";
 
+const VALLEY_OF_FLOWERS_TREK = TREKS.find((t) => t.slug === "valley-of-flowers");
+
+/** Valley of Flowers — UNESCO meadow gallery (Uttarakhand feature strip). */
+const VALLEY_OF_FLOWERS_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  VALLEY_OF_FLOWERS_TREK?.images?.length
+    ? VALLEY_OF_FLOWERS_TREK.images
+    : [HOME_HERO_VALLEY_OF_FLOWERS_MAIN_IMAGE]
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Alpine wildflowers in full bloom in the UNESCO Valley of Flowers National Park"
+      : idx === 1
+        ? "Trekkers on a lush green trail through the Valley of Flowers monsoon meadow"
+        : idx === 2
+          ? "Snow-capped peaks above the flower-filled Valley of Flowers basin"
+          : idx === 3
+            ? "Close view of Brahma Kamal and alpine blooms on the Valley of Flowers trek"
+            : "Himalayan scenery on the Valley of Flowers and Hemkund circuit",
+}));
+
 /** Brahmatal winter trek — hero slide + UK destinations (`hero/home`). */
 const HOME_HERO_BRAHMATAL_WINTER_IMAGE =
   "https://res.cloudinary.com/ddbcauxef/image/upload/v1778700831/cqkhz2o0jehuskfikrih.jpg";
 
-/** Triund trek — hero strip + HP destinations (`hero/home`). */
-const HOME_HERO_TRIUND_IMAGE =
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778701115/zm174z1j9ooi3tjjenhe.jpg";
+const BRAHMATAL_TREK = TREKS.find((t) => t.slug === "brahmatal-trek");
+const KEDARKANTHA_TREK = TREKS.find((t) => t.slug === "kedarkantha-trek");
+const DAYARA_BUGYAL_TREK = TREKS.find((t) => t.slug === "dayara-bugyal");
+const RUPIN_PASS_TREK = TREKS.find((t) => t.slug === "rupin-pass");
 
-/** Hampta Pass trek — hero strip + HP destinations (`hero/home`). */
-const HOME_HERO_HAMPTA_PASS_IMAGE =
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763372/d6igt6vhmcv8w70xog9n.jpg";
+/** Rupin Pass — dramatic valley crossing (Uttarakhand feature strip). */
+const RUPIN_PASS_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  RUPIN_PASS_TREK?.images?.length
+    ? RUPIN_PASS_TREK.images
+    : RUPIN_PASS_TREK
+      ? [RUPIN_PASS_TREK.image]
+      : []
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Dramatic Rupin Pass valley waterfall and snow bridge on the trek trail"
+      : idx === 1
+        ? "High alpine meadows on the Rupin Pass trek in Uttarakhand"
+        : idx === 2
+          ? "Snow-covered pass approach on the Rupin Pass expedition"
+          : "Himalayan ridgeline views from the Rupin Pass trek route",
+}));
 
-/** Sar Pass trek — HP destinations (`hero/home`). */
-const HOME_HERO_SAR_PASS_IMAGE =
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771073/qhvb9wlwzl6x3pslktln.jpg";
+/** Dayara Bugyal — alpine meadow trek (Uttarakhand feature strip). */
+const DAYARA_BUGYAL_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  DAYARA_BUGYAL_TREK?.images?.length
+    ? DAYARA_BUGYAL_TREK.images
+    : DAYARA_BUGYAL_TREK
+      ? [DAYARA_BUGYAL_TREK.image]
+      : []
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Rolling Dayara Bugyal alpine meadow with Bandarpoonch peaks in Uttarakhand"
+      : idx === 1
+        ? "Wildflower-covered bugyal on the Dayara Bugyal trek trail"
+        : idx === 2
+          ? "Trekkers crossing high meadow ridges on Dayara Bugyal"
+          : "Panoramic Himalayan views from Dayara Bugyal campsite",
+}));
+
+/** Kedarkantha — winter summit trek (Uttarakhand feature strip). */
+const KEDARKANTHA_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  KEDARKANTHA_TREK?.images?.length
+    ? KEDARKANTHA_TREK.images
+    : KEDARKANTHA_TREK
+      ? [KEDARKANTHA_TREK.image]
+      : []
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Snow-covered Kedarkantha summit trail with Himalayan peaks at sunrise"
+      : idx === 1
+        ? "Winter pine forest on the Kedarkantha trek from Sankri"
+        : idx === 2
+          ? "Frozen meadow campsite on the Kedarkantha winter trek"
+          : "360° summit views from Kedarkantha peak in Uttarakhand",
+}));
+
+const CHOPTA_TUNGNATH_TREK = TREKS.find((t) => t.slug === "chopta-tungnath");
+const PANGARCHULLA_TREK = TREKS.find((t) => t.slug === "pangarchulla-peak");
+const DEORIATAL_CHANDRASHILA_TREK = TREKS.find(
+  (t) => t.slug === "deoriatal-chandrashila",
+);
+const AUDENS_COL_TREK = TREKS.find((t) => t.slug === "audens-col");
+const KEDARTAL_TREK = TREKS.find((t) => t.slug === "kedartal");
+const HAR_KI_DUN_TREK = TREKS.find((t) => t.slug === "har-ki-dun");
+
+/** Pangarchulla Peak trek — `hero/treks/pangarchulla-peak` (order left-to-right in grid). */
+const PANGARCHULLA_PEAK_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110196/zicesdvggif1pxye65kq.webp",
+    alt: "Snow-covered summit ridge on Pangarchulla Peak with Nanda Devi massif, Garhwal Himalaya",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110209/fyrqdf7p6046myyvth2z.webp",
+    alt: "Trekkers crossing Khullara bugyal meadows on the Pangarchulla Peak summit trek",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110218/xja7mgekq6jjbwgxobpc.webp",
+    alt: "Steep snow and rock approach to Pangarchulla summit at 4,586m in Uttarakhand",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110226/rui1j6fpf44kgxhcz273.webp",
+    alt: "360° Himalayan panorama from Pangarchulla Peak — Dronagiri and Hathi-Ghodi peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110234/upx7hmp4yubpldnfxyzk.webp",
+    alt: "High-altitude camp and Kuari Pass region ridgelines on the Pangarchulla Peak circuit",
+  },
+] as const;
+
+const HOME_HERO_PANGARCHULLA_PEAK_IMAGE = PANGARCHULLA_PEAK_TREK_IMAGES[0].src;
+
+/** Pangarchulla Peak — summit climb · Kuari region (Uttarakhand feature strip). */
+const PANGARCHULLA_PHOTO_GALLERY: { src: string; alt: string }[] =
+  PANGARCHULLA_PEAK_TREK_IMAGES.map((item) => ({ src: item.src, alt: item.alt }));
+
+/** Deoriatal Chandrashila trek — `hero/treks/deoriatal-chandrashila`. */
+const DEORIATAL_CHANDRASHILA_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098235/sytzfdbqwe4slnrblzgl.jpg",
+    alt: "Deoriatal lake reflecting Chaukhamba peaks at sunrise on the Chandrashila trek",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098245/jgcpi7n3zjxwxln0carr.jpg",
+    alt: "Rhododendron forest trail from Sari village toward Deoriatal in Garhwal Himalaya",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098255/ga8ronscnuxoepezv9vg.jpg",
+    alt: "Trekkers at Deoriatal lakeside camp with snow peaks mirrored in still water",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098266/pzo38odcjwnn1l85jymg.jpg",
+    alt: "Chandrashila summit ridge panorama above Chopta meadows at 4,090m",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098273/kosmewn9tqlelq65n1v8.jpg",
+    alt: "Golden-hour Himalayan vista from Chandrashila on the Deoriatal Chandrashila circuit",
+  },
+] as const;
+
+const HOME_HERO_DEORIATAL_CHANDRASHILA_IMAGE =
+  DEORIATAL_CHANDRASHILA_TREK_IMAGES[0].src;
+
+/** Deoriatal Chandrashila — lake & summit weekend (Uttarakhand feature strip). */
+const DEORIATAL_CHANDRASHILA_PHOTO_GALLERY: { src: string; alt: string }[] =
+  DEORIATAL_CHANDRASHILA_TREK_IMAGES.map((item) => ({
+    src: item.src,
+    alt: item.alt,
+  }));
+
+/** Auden's Col trek — `hero/treks/audens-col`. */
+const AUDENS_COL_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096640/cami1uct7alkbydbadir.jpg",
+    alt: "Technical glacier crossing on Auden's Col trek between Gangotri and Kedarnath",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096648/qcfzu06o491oxtomsoga.jpg",
+    alt: "Crevasse-laced ice field on the Auden's Col high-altitude route at 5,490m",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096657/jjwjw7sw761m98erh8h1.jpg",
+    alt: "Mountaineers roped on steep snow slope approaching Auden's Col pass",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096665/nrr2za078guy1tf9547b.jpg",
+    alt: "Remote Garhwal ridgeline and moraine on the Auden's Col expedition",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096674/iqyguk8wqm1rlwuojqmj.jpg",
+    alt: "Summit camp below jagged peaks on India's legendary Auden's Col glacier trek",
+  },
+] as const;
+
+const HOME_HERO_AUDENS_COL_IMAGE = AUDENS_COL_TREK_IMAGES[0].src;
+
+/** Auden's Col — extreme glacier pass (Uttarakhand feature strip). */
+const AUDENS_COL_PHOTO_GALLERY: { src: string; alt: string }[] =
+  AUDENS_COL_TREK_IMAGES.map((item) => ({ src: item.src, alt: item.alt }));
+
+/** Kedartal trek — `hero/treks/kedartal` (order left-to-right in grid). */
+const KEDARTAL_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094566/y7ly2faaw5i510f1rqml.webp",
+    alt: "Kedartal glacial lake at 4,750m reflecting Thalay Sagar and Bhrigupanth peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094557/mlusmmphrcf67pgjswzl.webp",
+    alt: "Turquoise Kedartal tarn rimmed by moraine below granite walls in Gangotri National Park",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094548/bfy8gtldowajcx14as34.webp",
+    alt: "Steep boulder and moraine trail from Gangotri toward Lord Shiva's Kedartal lake",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094534/keupqfxnevciufwajlzd.webp",
+    alt: "High camp with jagged Himalayan spires on the challenging Kedartal trek route",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094526/smfl5cftr4io2eg4sqca.webp",
+    alt: "Kedar Glacier basin and sacred high-altitude scenery on the Kedartal expedition",
+  },
+] as const;
+
+const HOME_HERO_KEDARTAL_IMAGE = KEDARTAL_TREK_IMAGES[0].src;
+
+/** Kedartal — Shiva's lake · Thalay Sagar (Uttarakhand feature strip). */
+const KEDARTAL_PHOTO_GALLERY: { src: string; alt: string }[] =
+  KEDARTAL_TREK_IMAGES.map((item) => ({ src: item.src, alt: item.alt }));
+
+/** Har Ki Dun — Valley of the Gods (Uttarakhand feature strip). */
+const HAR_KI_DUN_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  HAR_KI_DUN_TREK?.images?.length
+    ? HAR_KI_DUN_TREK.images
+    : HAR_KI_DUN_TREK
+      ? [HAR_KI_DUN_TREK.image]
+      : []
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Har Ki Dun valley meadows with Swargarohini peaks in Garhwal Himalaya"
+      : idx === 1
+        ? "Ancient Osla village on the Har Ki Dun trek trail in Uttarakhand"
+        : idx === 2
+          ? "Alpine forest and river crossing on the Har Ki Dun valley trek"
+          : "Scenic campsite and mountain views on the Har Ki Dun trek",
+}));
+
+/** Chopta Tungnath — Panch Kedar & Chandrashila (Uttarakhand feature strip). */
+const CHOPTA_TUNGNATH_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  CHOPTA_TUNGNATH_TREK?.images?.length
+    ? CHOPTA_TUNGNATH_TREK.images
+    : CHOPTA_TUNGNATH_TREK
+      ? [CHOPTA_TUNGNATH_TREK.image]
+      : []
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Rhododendron forest trail toward Tungnath temple on the Chopta Tungnath trek"
+      : idx === 1
+        ? "Chandrashila summit panorama above Chopta meadows in Garhwal Himalaya"
+        : idx === 2
+          ? "Tungnath temple and snow peaks on the Panch Kedar circuit"
+          : "Scenery on the Chopta Tungnath Chandrashila trek in Uttarakhand",
+}));
+
+/** Brahmatal Winter Trek — snow lakes & Trishul views (Uttarakhand feature strip). */
+const BRAHMATAL_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  BRAHMATAL_TREK?.images?.length
+    ? BRAHMATAL_TREK.images
+    : [HOME_HERO_BRAHMATAL_WINTER_IMAGE]
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Snow-covered Brahmatal trail with frozen forest and distant Trishul peaks"
+      : idx === 1
+        ? "Trekkers crossing a white winter meadow on the Brahmatal Winter Trek"
+        : idx === 2
+          ? "Frozen Bekaltal or Brahmatal lake rimmed by snow-laden oak forest"
+          : idx === 3
+            ? "Summit camp panorama — Garhwal Himalaya from Brahmatal at 3,861m"
+            : "Winter trekking path through deep snow on the Brahmatal circuit",
+}));
+
+/** Triund trek — `hero/treks/triund-trek` (order left-to-right in grid). */
+const TRIUND_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762878/qkhu5phox4x6diqpllii.jpg",
+    alt: "Triund ridge camp with Dhauladhar peaks above McLeod Ganj",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762895/qxpcbgkqfl8tj95m7jmr.jpg",
+    alt: "Oak and rhododendron forest trail on the Triund weekend trek",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762930/rlmplvv2apshtxlwnbmw.jpg",
+    alt: "Panoramic Kangra Valley vista from Triund top at 2,828m",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762955/dm9qnffccv4a1mzgrejk.jpg",
+    alt: "Trekkers at Triund meadow with snow-capped Dhauladhar backdrop",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778762999/rla7vu2gzqlmfzms9n48.jpg",
+    alt: "Golden-hour sunset over Triund ridge and Himalayan ridgelines",
+  },
+] as const;
+
+const HOME_HERO_TRIUND_IMAGE = TRIUND_TREK_IMAGES[0].src;
+
+/** Hampta Pass trek — `hero/treks/hampta-pass`. */
+const HAMPTA_PASS_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763372/d6igt6vhmcv8w70xog9n.jpg",
+    alt: "Hampta Pass trail through lush Kullu Valley meadows near Manali",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763428/c2jp1mzkgj4vkfjan2ib.jpg",
+    alt: "Alpine river crossing on the Hampta Pass contrast trek",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763406/yd8ruvk6pff92duunugb.jpg",
+    alt: "High meadow camp below Hampta Pass with Pir Panjal views",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763390/tqzlqqhys5z4w94oemdg.jpg",
+    alt: "Snow patches and boulders on the approach to Hampta Pass at 4,270m",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763381/ydf0yaorapb0aj11ygz5.jpg",
+    alt: "Barren Spiti-side descent after crossing Hampta Pass into Lahaul",
+  },
+] as const;
+
+const HOME_HERO_HAMPTA_PASS_IMAGE = HAMPTA_PASS_TREK_IMAGES[0].src;
+
+/** Sar Pass trek — `hero/treks/sar-pass`. */
+const SAR_PASS_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771073/qhvb9wlwzl6x3pslktln.jpg",
+    alt: "Sar Pass alpine meadow with Parvati Valley peaks in Himachal",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771124/vejxmjntznrrsx3ktrtx.jpg",
+    alt: "Snow-lined trail on the Sar Pass trek from Kasol",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771143/mjzlnjt5d3dyh1smrbga.jpg",
+    alt: "Trekkers ascending forested switchbacks toward Sar Pass",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771109/osdmrxevxuxxrjgodlyq.jpg",
+    alt: "High-altitude camp with Himalayan ridgelines on Sar Pass circuit",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771088/oip9aatnxewaa77hrlrh.jpg",
+    alt: "Summit panorama from Sar Pass at 4,250m in Parvati Valley",
+  },
+] as const;
+
+const HOME_HERO_SAR_PASS_IMAGE = SAR_PASS_TREK_IMAGES[0].src;
 
 /** Kedarnath Dham — hero strip + UK destinations (`hero/home`). */
 const HOME_HERO_KEDARNATH_IMAGE =
@@ -256,13 +718,185 @@ const SPITI_VALLEY_TREK_IMAGES = [
 /** Himachal destination card — second image for variety vs hero tile. */
 const HOME_HP_SPITI_VALLEY_IMAGE = SPITI_VALLEY_TREK_IMAGES[1].src;
 
-/** Chandratal Lake — hero strip + HP destinations (`hero/home`). */
-const HOME_HERO_CHANDRATAL_LAKE_IMAGE =
+/** Chandratal trek — single hero card (`hero/treks/chandratal-trek`). */
+const HOME_HERO_CHANDRATAL_TREK_IMAGE =
   "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763958/e0wqfec93qgb2510weua.jpg";
 
-/** Kinnaur Kailash Yatra — hero strip (`hero/home`). */
-const HOME_HERO_KINNAUR_KAILASH_IMAGE =
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778728123/pfdxq1pqmnxmfgt1faxf.jpg";
+/** Chandratal Lake trek — `hero/treks/chandratal-lake`. */
+const CHANDRATAL_LAKE_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763919/onypowdlhqpxerj54o3r.jpg",
+    alt: "Chandratal Moon Lake crescent shoreline in Lahaul–Spiti",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763904/o7pxq47ylheuqnvqqbn5.jpg",
+    alt: "Turquoise glacial water of Chandratal at 4,300m",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763937/gsk17paadcrmbve6cewu.jpg",
+    alt: "Chandratal lake reflection with barren Spiti mountains",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763947/sfdxfildo0mawbyauczp.jpg",
+    alt: "Lakeside camping at Chandratal under Himalayan twilight",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763958/e0wqfec93qgb2510weua.jpg",
+    alt: "Wide view of Chandratal high-altitude lake in cold desert terrain",
+  },
+] as const;
+
+const HOME_HERO_CHANDRATAL_LAKE_IMAGE = HOME_HERO_CHANDRATAL_TREK_IMAGE;
+
+/** Spiti Valley Circuit — `hero/treks/spiti-valley-circuit`. */
+const SPITI_VALLEY_CIRCUIT_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097189/gcfek7p9w7hzfx0qf2m.jpg",
+    alt: "Key Monastery perched above the cold-desert Spiti Valley on the circuit trek",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097196/x95zfk6bprjguerez7jr.jpg",
+    alt: "Ancient Buddhist gompa and prayer flags in high-altitude Spiti village",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097210/xz47lpwtf9gxi1n8rg9i.jpg",
+    alt: "Barren Spiti moonscape with braided river and distant snow peaks",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097217/xgstsxm3alodgktofgjw.jpg",
+    alt: "Fossil-rich cliffs and turquoise stream in Pin Valley on the Spiti circuit",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097231/pvyk94ns57xeetcnmo5v.jpg",
+    alt: "High mountain road through Spiti cold desert toward Kaza and Chandratal",
+  },
+] as const;
+
+const HOME_HERO_SPITI_VALLEY_CIRCUIT_IMAGE = SPITI_VALLEY_CIRCUIT_TREK_IMAGES[0].src;
+
+/** Pin Parvati Pass trek — `hero/treks/pin-parvati-pass`. */
+const PIN_PARVATI_PASS_TREK_IMAGES = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779095979/lni2oa8lfrxr05syce6o.webp",
+    alt: "Pin Parvati Pass high ridge with Parvati Valley meadows and Spiti desert beyond",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779095989/nb5fd7hgu2qrjavguk2l.webp",
+    alt: "Snow bridge and glacial stream on the Pin Parvati Pass extreme crossing",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096005/ybvdzafi77gcyomj884k.webp",
+    alt: "Trekkers on moraine below 5,319m Pin Parvati Pass in Himachal Pradesh",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096017/ahiud7htfgg5tz0p3nso.webp",
+    alt: "Barren Pin Valley landscape after crossing Pin Parvati Pass into Spiti",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096034/gewqqkmgiovc3mrnq6bm.webp",
+    alt: "Summit panorama from Pin Parvati Pass — one of India's toughest high passes",
+  },
+] as const;
+
+const HOME_HERO_PIN_PARVATI_PASS_IMAGE = PIN_PARVATI_PASS_TREK_IMAGES[0].src;
+
+/** Do Dham Yatra — Kedarnath & Badrinath (home yatras strip + hero). */
+const DO_DHAM_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125096/qyjicoc6biih2ghwodne.jpg",
+    alt: "Kedarnath temple with snow-capped peaks on the Do Dham Yatra circuit",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125108/p5ezmk0a0zw0klyrgoxt.jpg",
+    alt: "Badrinath temple colourful facade and Neelkanth peak on Do Dham pilgrimage",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125121/tyogrgtxm8ocgjb3flxz.jpg",
+    alt: "Pilgrims on the Kedarnath trek path during Do Dham Yatra in Garhwal Himalaya",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125153/zbjkynrx4btrxewjmwff.jpg",
+    alt: "Tapt Kund hot spring and Badrinath valley on the Kedarnath–Badrinath Do Dham route",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779125178/fdcekxsm7tctentvje8q.jpg",
+    alt: "Himalayan confluence and mountain shrines along Do Dham Yatra in Uttarakhand",
+  },
+];
+
+/** Triyuginarayan Temple Yatra — Shiva–Parvati wedding site & eternal flame (home strip). */
+const TRIYUGINARAYAN_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127178/sfbjp1qs6w2rgf5tskey.jpg",
+    alt: "Triyuginarayan Temple with stone shikhara and Himalayan backdrop near Kedarnath",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127164/vgbqzzcq6zqxquet9kbn.jpg",
+    alt: "Akhand dhuni eternal fire at Triyuginarayan where Shiva and Parvati were wed",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127147/ea2mfuao4nz74tbcy36h.jpg",
+    alt: "Pilgrims at Triyuginarayan village temple in Rudraprayag district, Uttarakhand",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127134/stcckupnukwugrvpjwii.jpg",
+    alt: "Ancient stone temple courtyard at Triyuginarayan sacred wedding venue",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779127127/lvmkbidskzjlvdedn0ft.jpg",
+    alt: "Mandakini valley views on the route to Triyuginarayan Temple from Sonprayag",
+  },
+];
+
+/** Mani Mahesh Yatra — sacred lake & Kailash of Chamba (home yatras strip + hero). */
+const MANI_MAHESH_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126662/xn4z1zp0waiusiisbpnk.jpg",
+    alt: "Turquoise Mani Mahesh Lake at 4,080m with Mani Mahesh Kailash peak above Chamba",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126677/lfl5zoldc1xowscg9ekc.jpg",
+    alt: "Pilgrims on the forest trail from Hadsar toward Mani Mahesh Lake during annual yatra",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126653/exo2ldjgxdmuaurhfv8p.jpg",
+    alt: "Mani Mahesh Kailash snow peak reflected in the glacial lake at Bhadon Chaturdashi",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126705/zomr4e5g2npv3c2rejtl.jpg",
+    alt: "Prayer flags and alpine meadows on the Mani Mahesh Yatra route near Bharmour",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126692/punzv0qkr8uldttsqa7r.jpg",
+    alt: "Devotees at Shiva Kund holy dip on the shores of Mani Mahesh Lake, Himachal Pradesh",
+  },
+];
+
+/** Kinnaur Kailash Parikrama Yatra — sacred peak & parikrama (home yatras strip + hero). */
+const KINNAUR_KAILASH_PHOTO_GALLERY: { src: string; alt: string }[] = [
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126257/v5zerq649e0hfxmqtsaw.jpg",
+    alt: "Kinnaur Kailash peak and natural Shivalinga rock formation on the parikrama circuit",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126230/dfrqtyywkwbupvnvygyk.webp",
+    alt: "Pilgrims crossing high alpine terrain on the Kinnaur Kailash Parikrama in Himachal",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126245/orkriejad6yaue5cspxo.jpg",
+    alt: "Ancient Kinnauri village and Buddhist monastery along the Kinnaur Kailash Yatra route",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126270/vstfgwpnxmikvilgsnlu.jpg",
+    alt: "Snow-covered Charang La approach with views of the Kinnaur Kailash massif",
+  },
+  {
+    src: "https://res.cloudinary.com/ddbcauxef/image/upload/v1779126306/ozcokzp0z614pjnjvezn.jpg",
+    alt: "Prayer flags and Himalayan ridges on the Kinnaur Kailash Parikrama near Sangla",
+  },
+];
+
+const HOME_HERO_KINNAUR_KAILASH_IMAGE = KINNAUR_KAILASH_PHOTO_GALLERY[0].src;
 
 /** Panch Kedar Yatra — five-shrine collage (yatras section banner). */
 const HOME_HERO_PANCH_KEDAR_YATRA_IMAGE =
@@ -272,6 +906,7 @@ const HERO_SETS: HeroSet[] = [
   {
     left: {
       image: HOME_HERO_ROOPKUND_MAIN_IMAGE,
+      videoSrc: homeTrekReelVideo("roopkund-trek"),
       title: "Roopkund Trek",
       subtitle: "The Skeleton Lake Awaits",
       cta: "Explore Now",
@@ -280,17 +915,18 @@ const HERO_SETS: HeroSet[] = [
     right: [
       {
         image: CHAR_DHAM_COVER,
-        title: "Char Dham Yatra 2025",
+        title: "Char Dham Yatra 2026",
         subtitle: "Sacred Journey · Limited Spots",
         cta: "Book Yatra",
-        ctaLink: "/yatras/char-dham-yatra",
+        ctaLink: "/book",
+        ctaBookSearch: { yatra: "char-dham-yatra" },
       },
       {
-        image: BALI_PASS_PHOTO_GALLERY[0].src,
-        title: "Bali Pass Trek",
-        subtitle: "Har Ki Dun to Yamunotri · 9 Days",
-        cta: "View Package",
-        ctaLink: "/treks/bali-pass",
+        image: DO_DHAM_PHOTO_GALLERY[0].src,
+        title: "Do Dham Yatra",
+        subtitle: "Kedarnath + Badrinath · 7 Days",
+        cta: "Book Yatra",
+        ctaLink: "/yatras/do-dham-yatra",
       },
       {
         image: BEAS_KUND_PHOTO_GALLERY[0].src,
@@ -304,6 +940,7 @@ const HERO_SETS: HeroSet[] = [
   {
     left: {
       image: HOME_HERO_VALLEY_OF_FLOWERS_MAIN_IMAGE,
+      videoSrc: homeTrekReelVideo("valley-of-flowers"),
       title: "Valley of Flowers",
       subtitle: "A Bloom Like No Other",
       cta: "Explore",
@@ -318,24 +955,25 @@ const HERO_SETS: HeroSet[] = [
         ctaLink: "/yatras/char-dham-yatra",
       },
       {
-        image: HOME_HERO_KINNAUR_KAILASH_IMAGE,
-        title: "Kinnaur Kailash Yatra",
-        subtitle: "Sacred Parikrama · Himachal",
+        image: KINNAUR_KAILASH_PHOTO_GALLERY[0].src,
+        title: "Kinnaur Kailash Parikrama",
+        subtitle: "Sacred parikrama · 5,241m pass",
         cta: "Book Yatra",
         ctaLink: "/yatras/kinnaur-kailash-yatra",
       },
       {
-        image: PANCH_KEDAR_KEDARNATH_NIGHT_JPG,
-        title: "Panch Kedar Yatra",
-        subtitle: "Five Shiva shrines · 14 Days",
+        image: TRIYUGINARAYAN_PHOTO_GALLERY[0].src,
+        title: "Triyuginarayan Temple Yatra",
+        subtitle: "Shiva–Parvati wedding site",
         cta: "Book Yatra",
-        ctaLink: "/yatras/panch-kedar-yatra",
+        ctaLink: "/yatras/triyuginarayan-temple",
       },
     ],
   },
   {
     left: {
       image: HOME_HERO_BRAHMATAL_WINTER_IMAGE,
+      videoSrc: homeTrekReelVideo("brahmatal-trek"),
       title: "Brahmatal Winter Trek",
       subtitle: "Frozen Wonderland Awaits",
       cta: "Book Winter Trek",
@@ -343,11 +981,11 @@ const HERO_SETS: HeroSet[] = [
     },
     right: [
       {
-        image: HOME_HERO_CHANDRATAL_LAKE_IMAGE,
-        title: "Chandratal Lake",
-        subtitle: "The Moon Lake · 5 Days",
-        cta: "View Package",
-        ctaLink: "/treks/chandratal-lake-trek",
+        image: SHRIKHAND_MAHADEV_PHOTO_GALLERY[0].src,
+        title: "Shrikhand Mahadev Yatra",
+        subtitle: "Natural Shiva lingam · 5,155m",
+        cta: "Book Yatra",
+        ctaLink: "/yatras/shrikhand-mahadev-yatra",
       },
       {
         image: PANCH_BADRI_PHOTO_GALLERY[0].src,
@@ -357,17 +995,21 @@ const HERO_SETS: HeroSet[] = [
         ctaLink: "/yatras/panch-badri-yatra",
       },
       {
-        image: HEMKUND_SAHIB_PHOTO_GALLERY[0].src,
-        title: "Hemkund Sahib Yatra",
-        subtitle: "World's highest Gurudwara · 3 Days",
+        image: MANI_MAHESH_PHOTO_GALLERY[0].src,
+        title: "Mani Mahesh Yatra",
+        subtitle: "Kailash of Chamba · sacred lake",
         cta: "Book Yatra",
-        ctaLink: "/yatras/hemkund-sahib-yatra",
+        ctaLink: "/yatras/mani-mahesh-yatra",
       },
     ],
   },
 ];
 
 // ─── Destination Grid Data ────────────────────────────────────────────────────
+
+function ukDestPrice(trek: (typeof TREKS)[number]): string {
+  return `₹${trek.price.toLocaleString("en-IN")}`;
+}
 
 const UK_DESTINATIONS = [
   {
@@ -394,20 +1036,56 @@ const UK_DESTINATIONS = [
     price: "₹7,500",
     slug: "brahmatal-trek",
   },
-  {
-    name: "Rupin Pass",
-    image:
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=80",
-    price: "₹11,000",
-    slug: "rupin-pass-trek",
-  },
-  {
-    name: "Har Ki Dun",
-    image:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80",
-    price: "₹8,000",
-    slug: "har-ki-dun-trek",
-  },
+  ...(RUPIN_PASS_TREK
+    ? [
+        {
+          name: RUPIN_PASS_TREK.name,
+          image: RUPIN_PASS_TREK.image,
+          price: ukDestPrice(RUPIN_PASS_TREK),
+          slug: RUPIN_PASS_TREK.slug,
+        },
+      ]
+    : []),
+  ...(HAR_KI_DUN_TREK
+    ? [
+        {
+          name: HAR_KI_DUN_TREK.name,
+          image: HAR_KI_DUN_TREK.image,
+          price: ukDestPrice(HAR_KI_DUN_TREK),
+          slug: HAR_KI_DUN_TREK.slug,
+        },
+      ]
+    : []),
+  ...(PANGARCHULLA_TREK
+    ? [
+        {
+          name: PANGARCHULLA_TREK.name,
+          image: HOME_HERO_PANGARCHULLA_PEAK_IMAGE,
+          price: ukDestPrice(PANGARCHULLA_TREK),
+          slug: PANGARCHULLA_TREK.slug,
+        },
+      ]
+    : []),
+  ...(DEORIATAL_CHANDRASHILA_TREK
+    ? [
+        {
+          name: DEORIATAL_CHANDRASHILA_TREK.name,
+          image: HOME_HERO_DEORIATAL_CHANDRASHILA_IMAGE,
+          price: ukDestPrice(DEORIATAL_CHANDRASHILA_TREK),
+          slug: DEORIATAL_CHANDRASHILA_TREK.slug,
+        },
+      ]
+    : []),
+  ...(KEDARTAL_TREK
+    ? [
+        {
+          name: KEDARTAL_TREK.name,
+          image: HOME_HERO_KEDARTAL_IMAGE,
+          price: ukDestPrice(KEDARTAL_TREK),
+          slug: KEDARTAL_TREK.slug,
+        },
+      ]
+    : []),
 ];
 
 const HP_DESTINATIONS = [
@@ -426,19 +1104,18 @@ const HP_DESTINATIONS = [
   {
     name: "Chandratal Lake",
     image: HOME_HERO_CHANDRATAL_LAKE_IMAGE,
-    price: "₹10,000",
-    slug: "chandratal-lake-trek",
+    price: "₹8,000",
+    slug: "chandratal-lake",
   },
   {
     name: "Sar Pass",
     image: HOME_HERO_SAR_PASS_IMAGE,
-    price: "₹8,000",
-    slug: "sar-pass-trek",
+    price: "₹8,500",
+    slug: "sar-pass",
   },
   {
     name: "Pin Parvati Pass",
-    image:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80",
+    image: HOME_HERO_PIN_PARVATI_PASS_IMAGE,
     price: "₹18,000",
     slug: "pin-parvati-pass",
   },
@@ -447,6 +1124,51 @@ const HP_DESTINATIONS = [
     image: HOME_HP_SPITI_VALLEY_IMAGE,
     price: "₹14,000",
     slug: "spiti-valley-trek",
+  },
+];
+
+/** Himachal trek photo strips (`hero/treks/*`) on the trending section. */
+const HP_TREK_GALLERIES: {
+  title: string;
+  slug: string;
+  images: readonly { src: string; alt: string }[];
+  ocid: string;
+}[] = [
+  {
+    title: "Triund Trek — McLeod Ganj ridge weekend",
+    slug: "triund-trek",
+    images: TRIUND_TREK_IMAGES,
+    ocid: "triund",
+  },
+  {
+    title: "Hampta Pass — Kullu to Spiti contrast crossing",
+    slug: "hampta-pass",
+    images: HAMPTA_PASS_TREK_IMAGES,
+    ocid: "hampta",
+  },
+  {
+    title: "Sar Pass — Parvati Valley classic",
+    slug: "sar-pass",
+    images: SAR_PASS_TREK_IMAGES,
+    ocid: "sar_pass",
+  },
+  {
+    title: "Chandratal Lake — Moon Lake camping trek",
+    slug: "chandratal-lake",
+    images: CHANDRATAL_LAKE_TREK_IMAGES,
+    ocid: "chandratal_lake",
+  },
+  {
+    title: "Pin Parvati Pass — 5,319m Parvati to Spiti crossing",
+    slug: "pin-parvati-pass",
+    images: PIN_PARVATI_PASS_TREK_IMAGES,
+    ocid: "pin_parvati",
+  },
+  {
+    title: "Spiti Valley Circuit — monasteries & cold desert",
+    slug: "spiti-valley-circuit",
+    images: SPITI_VALLEY_CIRCUIT_TREK_IMAGES,
+    ocid: "spiti_circuit",
   },
 ];
 
@@ -701,23 +1423,40 @@ function AnimatedCounter({
 
 function HeroRightPromoCta({
   ctaLink,
+  ctaBookSearch,
   className,
   style,
   children,
   "data-ocid": dataOcid,
 }: {
   ctaLink: string;
+  ctaBookSearch?: HeroBanner["ctaBookSearch"];
   className?: string;
   style?: CSSProperties;
   children: ReactNode;
   "data-ocid"?: string;
 }) {
+  if (ctaLink === "/book") {
+    return (
+      <Link
+        to="/book"
+        search={bookSearch(ctaBookSearch ?? {})}
+        preload="intent"
+        className={className}
+        style={style}
+        data-ocid={dataOcid}
+      >
+        {children}
+      </Link>
+    );
+  }
   const yatraSlug = /^\/yatras\/([^/]+)$/.exec(ctaLink)?.[1];
   if (yatraSlug) {
     return (
       <Link
         to="/yatras/$slug"
         params={{ slug: yatraSlug }}
+        preload="intent"
         className={className}
         style={style}
         data-ocid={dataOcid}
@@ -732,6 +1471,7 @@ function HeroRightPromoCta({
       <Link
         to="/treks/$slug"
         params={{ slug: trekSlug }}
+        preload="intent"
         className={className}
         style={style}
         data-ocid={dataOcid}
@@ -741,17 +1481,70 @@ function HeroRightPromoCta({
     );
   }
   return (
-    <Link to="/treks" className={className} style={style} data-ocid={dataOcid}>
+    <Link
+      to="/treks"
+      preload="intent"
+      className={className}
+      style={style}
+      data-ocid={dataOcid}
+    >
       {children}
     </Link>
+  );
+}
+
+function HeroFeaturedMedia({
+  banner,
+  setIdx,
+  mobile,
+  sizes,
+  className,
+  priority,
+}: {
+  banner: HeroBanner;
+  setIdx: number;
+  mobile: boolean;
+  sizes: string;
+  className?: string;
+  priority?: boolean;
+}) {
+  const trekSlug = trekSlugFromCtaLink(banner.ctaLink);
+
+  if (mobile && trekSlug && homeTrekReelVideo(trekSlug)) {
+    return (
+      <HomeTrekFeatureMedia
+        key={`hero-reel-video-${setIdx}`}
+        trekSlug={trekSlug}
+        image={banner.image}
+        alt={banner.title}
+        sizes={sizes}
+        className={className ?? "object-cover"}
+        priority={priority}
+      />
+    );
+  }
+
+  return (
+    <OptimizedImage
+      key={`hero-img-${setIdx}-${mobile ? "m" : "d"}`}
+      src={banner.image}
+      alt={banner.title}
+      fill
+      variant="hero"
+      priority={priority}
+      sizes={sizes}
+      className={className ?? "object-cover lg:min-h-[420px]"}
+    />
   );
 }
 
 function HeroBannerGrid() {
   const [setIdx, setSetIdx] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [carouselPaused, setCarouselPaused] = useState(false);
 
   useEffect(() => {
+    if (carouselPaused) return;
     const timer = setInterval(() => {
       setVisible(false);
       setTimeout(() => {
@@ -760,98 +1553,113 @@ function HeroBannerGrid() {
       }, 400);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [carouselPaused]);
 
   const set = HERO_SETS[setIdx];
 
+  const heroDots = (
+    <div className="home-hero__dots flex justify-center gap-2">
+      {HERO_SETS.map((heroSet, i) => (
+        <button
+          key={heroSet.left.title}
+          type="button"
+          onClick={() => setSetIdx(i)}
+          aria-label={`Banner set ${i + 1}`}
+          className="rounded-full transition-all"
+          style={{
+            width: i === setIdx ? 24 : 8,
+            height: 8,
+            background:
+              i === setIdx ? "var(--ew-orange)" : "rgba(255,255,255,0.35)",
+          }}
+        />
+      ))}
+    </div>
+  );
+
+  const featuredCard = (
+    <div className="home-hero__featured relative overflow-hidden rounded-2xl">
+      <HeroFeaturedMedia
+        banner={set.left}
+        setIdx={setIdx}
+        mobile
+        priority
+        sizes="(max-width: 1024px) 100vw, 50vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+        <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white/75 sm:text-xs">
+          Trekora Featured
+        </p>
+        <h2 className="text-shadow mb-1 text-xl font-bold leading-tight text-white sm:text-2xl lg:text-3xl">
+          {set.left.title}
+        </h2>
+        <p className="text-shadow mb-3 line-clamp-2 text-sm text-white/90">
+          {set.left.subtitle}
+        </p>
+        <HeroRightPromoCta
+          ctaLink={set.left.ctaLink}
+          className="btn-primary text-sm"
+          data-ocid="hero.left_cta"
+        >
+          {set.left.cta}
+        </HeroRightPromoCta>
+      </div>
+    </div>
+  );
+
   return (
     <section
-      className="w-full"
+      className="home-hero w-full"
       data-ocid="hero.section"
+      data-travel-image-section
       style={{ background: "#111", position: "relative" }}
+      onPointerEnter={() => setCarouselPaused(true)}
+      onPointerLeave={() => setCarouselPaused(false)}
+      onFocusCapture={() => setCarouselPaused(true)}
+      onBlurCapture={() => setCarouselPaused(false)}
     >
+      {/* ── Phone: full-width featured + horizontal more treks ── */}
       <div
-        className="container mx-auto px-4 py-4"
+        className="home-hero__mobile lg:hidden"
         style={{
           opacity: visible ? 1 : 0,
           transition: "opacity 0.4s ease",
-          /* Fixed height prevents any layout shift that could trigger scroll restoration */
-          minHeight: 520,
+          pointerEvents: visible ? "auto" : "none",
         }}
       >
-        <div
-          className="grid gap-2"
-          style={{
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "auto",
-            /* Prevent height change on content swap */
-            height: "100%",
-          }}
-        >
-          {/* Left — tall */}
+        <div className="container mx-auto px-4 pb-3 pt-3">
+          {featuredCard}
           <div
-            className="relative rounded-lg overflow-hidden"
-            style={{ minHeight: 280, height: "clamp(280px, 50vw, 420px)" }}
-          >
-            <OptimizedImage
-              key={`hero-left-${setIdx}`}
-              src={set.left.image}
-              alt={set.left.title}
-              fill
-              variant="hero"
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="min-h-[420px]"
-              style={{ minHeight: 420 }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <p className="text-white/80 text-xs uppercase tracking-widest mb-1">
-                Trekora Featured
-              </p>
-              <h2 className="text-white font-bold text-2xl md:text-3xl mb-1 text-shadow">
-                {set.left.title}
-              </h2>
-              <p className="text-white/90 text-sm mb-4 text-shadow">
-                {set.left.subtitle}
-              </p>
-              <Link
-                to="/treks"
-                className="btn-primary text-sm"
-                data-ocid="hero.left_cta"
-              >
-                {set.left.cta}
-              </Link>
-            </div>
-          </div>
-          {/* Right — 3 stacked */}
-          <div
-            className="flex flex-col gap-2"
-            style={{ height: "clamp(280px, 50vw, 420px)" }}
+            className="home-hero__strip mt-2.5 flex gap-2 overflow-x-auto pb-1"
+            style={{ scrollSnapType: "x mandatory" }}
           >
             {set.right.map((b, i) => (
               <div
                 key={b.title}
-                className="relative rounded-lg overflow-hidden flex-1"
-                style={{ minHeight: 128 }}
+                className="home-hero__strip-card relative shrink-0 overflow-hidden rounded-xl"
+                style={{ scrollSnapAlign: "start" }}
               >
                 <OptimizedImage
                   src={b.image}
                   alt={b.title}
                   fill
                   variant="hero"
-                  sizes="(max-width: 1024px) 33vw, 25vw"
+                  sizes="78vw"
+                  className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
-                <div className="absolute inset-0 flex flex-col justify-center px-4">
-                  <h3 className="text-white font-bold text-base leading-tight text-shadow">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <h3 className="text-shadow text-sm font-bold leading-tight text-white">
                     {b.title}
                   </h3>
-                  <p className="text-white/85 text-xs mb-2 text-shadow">
+                  <p className="text-shadow mb-2 line-clamp-1 text-[11px] text-white/85">
                     {b.subtitle}
                   </p>
                   <HeroRightPromoCta
                     ctaLink={b.ctaLink}
+                    ctaBookSearch={b.ctaBookSearch}
                     className="btn-primary text-xs py-1 px-3"
                     style={{ width: "fit-content" }}
                     data-ocid={`hero.right_cta.${i + 1}`}
@@ -862,24 +1670,104 @@ function HeroBannerGrid() {
               </div>
             ))}
           </div>
+          <div className="mt-3">{heroDots}</div>
         </div>
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-3">
-          {HERO_SETS.map((heroSet, i) => (
-            <button
-              key={heroSet.left.title}
-              type="button"
-              onClick={() => setSetIdx(i)}
-              aria-label={`Banner set ${i + 1}`}
-              className="rounded-full transition-all"
-              style={{
-                width: i === setIdx ? 24 : 8,
-                height: 8,
-                background:
-                  i === setIdx ? "var(--ew-orange)" : "var(--ew-gray-mid)",
-              }}
-            />
-          ))}
+      </div>
+
+      {/* ── Desktop: original 2-column grid (unchanged layout) ── */}
+      <div
+        className="home-hero__desktop hidden lg:block"
+        style={{
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.4s ease",
+          pointerEvents: visible ? "auto" : "none",
+          minHeight: 520,
+        }}
+      >
+        <div className="container mx-auto px-4 py-4">
+          <div
+            className="grid gap-2"
+            style={{
+              gridTemplateColumns: "1fr 1fr",
+              gridTemplateRows: "auto",
+              height: "100%",
+            }}
+          >
+            <div
+              className="relative overflow-hidden rounded-lg"
+              style={{ minHeight: 280, height: "clamp(280px, 50vw, 420px)" }}
+            >
+              <OptimizedImage
+                key={`hero-left-desk-${setIdx}`}
+                src={set.left.image}
+                alt={set.left.title}
+                fill
+                variant="hero"
+                priority
+                sizes="50vw"
+                className="min-h-[420px]"
+                style={{ minHeight: 420 }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <p className="mb-1 text-xs uppercase tracking-widest text-white/80">
+                  Trekora Featured
+                </p>
+                <h2 className="text-shadow mb-1 text-3xl font-bold text-white">
+                  {set.left.title}
+                </h2>
+                <p className="text-shadow mb-4 text-sm text-white/90">
+                  {set.left.subtitle}
+                </p>
+                <HeroRightPromoCta
+                  ctaLink={set.left.ctaLink}
+                  className="btn-primary text-sm"
+                  data-ocid="hero.left_cta"
+                >
+                  {set.left.cta}
+                </HeroRightPromoCta>
+              </div>
+            </div>
+            <div
+              className="flex flex-col gap-2"
+              style={{ height: "clamp(280px, 50vw, 420px)" }}
+            >
+              {set.right.map((b, i) => (
+                <div
+                  key={b.title}
+                  className="relative flex-1 overflow-hidden rounded-lg"
+                  style={{ minHeight: 128 }}
+                >
+                  <OptimizedImage
+                    src={b.image}
+                    alt={b.title}
+                    fill
+                    variant="hero"
+                    sizes="25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
+                  <div className="absolute inset-0 flex flex-col justify-center px-4">
+                    <h3 className="text-shadow text-base font-bold leading-tight text-white">
+                      {b.title}
+                    </h3>
+                    <p className="text-shadow mb-2 text-xs text-white/85">
+                      {b.subtitle}
+                    </p>
+                    <HeroRightPromoCta
+                      ctaLink={b.ctaLink}
+                      ctaBookSearch={b.ctaBookSearch}
+                      className="btn-primary px-3 py-1 text-xs"
+                      style={{ width: "fit-content" }}
+                      data-ocid={`hero.right_cta.${i + 1}`}
+                    >
+                      {b.cta}
+                    </HeroRightPromoCta>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-3">{heroDots}</div>
         </div>
       </div>
     </section>
@@ -943,7 +1831,7 @@ function TrustMarquee() {
 // ─── Stats Section ───────────────────────────────────────────────────────────
 
 const STATS = [
-  { end: 1000, suffix: "+", label: "International Packages" },
+  { end: 1000, suffix: "+", label: "Trekking Experiences" },
   { end: 300, suffix: "+", label: "Domestic Treks" },
   { end: 3000, suffix: "+", label: "Trusted Hotels" },
   { end: 15, suffix: "+", label: "Years Experience" },
@@ -1009,20 +1897,20 @@ function TrekCarousel({ treks, id }: { treks: typeof TREKS; id: string }) {
         onClick={() => scroll("left")}
         aria-label="Scroll left"
         data-ocid={`${id}.carousel_prev`}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -ml-4 w-9 h-9 rounded-full bg-white shadow-elevated flex items-center justify-center transition-all hover:scale-110 border"
+        className="home-carousel-nav absolute left-0 top-1/2 z-10 -ml-4 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border bg-white shadow-elevated transition-all hover:scale-110 sm:flex"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
         <ChevronLeft size={16} style={{ color: "var(--ew-red)" }} />
       </button>
       <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2 px-1"
+        className="home-carousel-track flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2 px-1"
         style={{ scrollSnapType: "x mandatory" }}
       >
         {treks.map((trek, i) => (
           <div
             key={trek.id}
-            className="flex-none w-[85vw] sm:w-64 md:w-56"
+            className="home-carousel-card flex-none w-[85vw] sm:w-64 md:w-56"
             style={{ scrollSnapAlign: "start" }}
             data-ocid={`${id}.card.${i + 1}`}
           >
@@ -1035,7 +1923,7 @@ function TrekCarousel({ treks, id }: { treks: typeof TREKS; id: string }) {
         onClick={() => scroll("right")}
         aria-label="Scroll right"
         data-ocid={`${id}.carousel_next`}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 -mr-4 w-9 h-9 rounded-full bg-white shadow-elevated flex items-center justify-center transition-all hover:scale-110 border"
+        className="home-carousel-nav absolute right-0 top-1/2 z-10 -mr-4 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border bg-white shadow-elevated transition-all hover:scale-110 sm:flex"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
         <ChevronRight size={16} style={{ color: "var(--ew-red)" }} />
@@ -1061,10 +1949,11 @@ function DestGrid({
           style={{ aspectRatio: "4/3" }}
           data-ocid={`${prefix}.dest.${i + 1}`}
         >
-          <OptimizedImage
-            src={d.image}
+          <HomeTrekFeatureMedia
+            trekSlug={d.slug}
+            image={d.image}
             alt={d.name}
-            fill
+            sizes="(max-width: 1024px) 33vw, 200px"
             variant="destination"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -1161,9 +2050,9 @@ function RecommendedSection() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex items-end justify-between mb-4"
+          className="home-section-head mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
         >
-          <div>
+          <div className="min-w-0">
             <SectionTitle>Recommended Treks &amp; Packages</SectionTitle>
             <p className="text-sm mt-1" style={{ color: "var(--ew-text-lt)" }}>
               Handpicked experiences for every kind of trekker
@@ -1171,7 +2060,7 @@ function RecommendedSection() {
           </div>
           <Link
             to="/treks"
-            className="text-sm font-semibold flex items-center gap-1 whitespace-nowrap"
+            className="home-section-link shrink-0 text-sm font-semibold flex items-center gap-1"
             style={{ color: "var(--ew-red)" }}
             data-ocid="recommended.view_all_link"
           >
@@ -1180,7 +2069,7 @@ function RecommendedSection() {
         </motion.div>
 
         {/* Filter tabs */}
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-3 mb-4">
+        <div className="home-filter-tabs flex gap-1.5 overflow-x-auto scrollbar-hide pb-3 mb-4">
           {FILTER_TABS.map((f) => (
             <button
               key={f.value}
@@ -1209,7 +2098,7 @@ function RecommendedSection() {
             type="button"
             onClick={() => scroll("left")}
             aria-label="Scroll left"
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -ml-4 w-9 h-9 rounded-full bg-white shadow-elevated flex items-center justify-center transition-all hover:scale-110 border"
+            className="home-carousel-nav absolute left-0 top-1/2 z-10 -ml-4 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border bg-white shadow-elevated transition-all hover:scale-110 sm:flex"
             style={{ borderColor: "var(--ew-gray-mid)" }}
             data-ocid="recommended.carousel_prev"
           >
@@ -1217,13 +2106,13 @@ function RecommendedSection() {
           </button>
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2 px-1"
+            className="home-carousel-track flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2 px-1"
             style={{ scrollSnapType: "x mandatory" }}
           >
             {filtered.map((trek, i) => (
               <div
                 key={trek.id}
-                className="flex-none w-[85vw] sm:w-64 md:w-56"
+                className="home-carousel-card flex-none w-[85vw] sm:w-64 md:w-56"
                 style={{ scrollSnapAlign: "start" }}
                 data-ocid={`recommended.card.${i + 1}`}
               >
@@ -1235,7 +2124,7 @@ function RecommendedSection() {
             type="button"
             onClick={() => scroll("right")}
             aria-label="Scroll right"
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 -mr-4 w-9 h-9 rounded-full bg-white shadow-elevated flex items-center justify-center transition-all hover:scale-110 border"
+            className="home-carousel-nav absolute right-0 top-1/2 z-10 -mr-4 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border bg-white shadow-elevated transition-all hover:scale-110 sm:flex"
             style={{ borderColor: "var(--ew-gray-mid)" }}
             data-ocid="recommended.carousel_next"
           >
@@ -1270,13 +2159,15 @@ export default function HomePage() {
     setNewsSubmitted(true);
   };
 
+  const homeSeo = buildHomePageSEO();
+
   return (
-    <div>
+    <div className="home-page">
       <SEOHead
-        title="Trekora — Himalayan Treks & Yatras | Book Expert-Led Treks in India"
-        description="Trekora offers 40+ guided Himalayan treks and sacred yatras in Uttarakhand and Himachal Pradesh. Certified guides, all-inclusive packages, Razorpay booking. Roopkund, Kedarnath, Valley of Flowers and more."
-        keywords="Himalayan treks, trekking in India, Uttarakhand trek, Himachal trek, Char Dham yatra, book trek online, Trekora, Roopkund trek, Valley of Flowers"
-        canonical="https://www.trekora.com"
+        title={homeSeo.title}
+        description={homeSeo.description}
+        keywords={homeSeo.keywords}
+        canonical={homeSeo.canonical}
         schema={[
           {
             "@context": "https://schema.org",
@@ -1284,7 +2175,7 @@ export default function HomePage() {
             name: "Trekora",
             description:
               "Himalayan treks and yatras with certified mountain guides in Uttarakhand and Himachal Pradesh",
-            url: "https://www.trekora.com",
+            url: SITE_ORIGIN,
             telephone: SITE_PHONE_TEL,
             email: SITE_EMAIL,
             address: {
@@ -1320,10 +2211,28 @@ export default function HomePage() {
           },
           {
             "@context": "https://schema.org",
+            "@type": "TravelAgency",
+            name: "Trekora",
+            url: SITE_ORIGIN,
+            logo: `${SITE_ORIGIN}/favicon-32x32.png`,
+            description:
+              "Expert-led Himalayan treks and sacred yatras in Uttarakhand and Himachal Pradesh.",
+            telephone: SITE_PHONE_TEL,
+            email: SITE_EMAIL,
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Dehradun",
+              addressRegion: "Uttarakhand",
+              addressCountry: "IN",
+            },
+            areaServed: ["Uttarakhand", "Himachal Pradesh", "India"],
+          },
+          {
+            "@context": "https://schema.org",
             "@type": "Organization",
             name: "Trekora",
-            url: "https://www.trekora.com",
-            logo: "https://www.trekora.com/logo.png",
+            url: SITE_ORIGIN,
+            logo: `${SITE_ORIGIN}/logo.png`,
             description:
               "India's premier Himalayan trekking and yatra company. 40+ treks, 11 yatras across Uttarakhand and Himachal Pradesh.",
             contactPoint: {
@@ -1342,10 +2251,10 @@ export default function HomePage() {
             "@context": "https://schema.org",
             "@type": "WebSite",
             name: "Trekora",
-            url: "https://www.trekora.com",
+            url: SITE_ORIGIN,
             potentialAction: {
               "@type": "SearchAction",
-              target: "https://www.trekora.com/treks?q={search_term_string}",
+              target: `${SITE_ORIGIN}/treks?q={search_term_string}`,
               "query-input": "required name=search_term_string",
             },
           },
@@ -1354,13 +2263,24 @@ export default function HomePage() {
       {/* ── SECTION 1: HERO BANNER GRID ── */}
       <HeroBannerGrid />
 
+      <div
+        id={TRAVEL_HERO_SENTINEL_ID}
+        className="h-0 w-full"
+        aria-hidden
+      />
+
       <TrustBadgesStrip />
 
       {/* ── SOCIAL PROOF TICKER (below hero) ── */}
       <SocialProofTicker />
 
-      {/* ── SECTION 2: SEARCH PANEL ── */}
-      <section className="bg-white py-5 shadow-card" data-ocid="search.section">
+      <HomeMobileSearchPanel />
+
+      {/* ── SECTION 2: SEARCH PANEL (desktop) ── */}
+      <section
+        className="home-search-desktop hidden bg-white py-5 shadow-card lg:block"
+        data-ocid="search.section"
+      >
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap gap-3 items-end">
             {/* Destination */}
@@ -1525,6 +2445,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <TravelSideActionRail variant="home" />
+
       {/* ── SECTION 3: TRUST MARQUEE ── */}
       <TrustMarquee />
 
@@ -1592,15 +2514,15 @@ export default function HomePage() {
                   <Link
                     to="/treks/$slug"
                     params={{ slug: "bali-pass" }}
-                    className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
                     data-ocid="uttarakhand.bali_pass_feature"
                   >
                     <OptimizedImage
                       src={BALI_PASS_PHOTO_GALLERY[0].src}
                       alt={BALI_PASS_PHOTO_GALLERY[0].alt}
                       fill
-                      variant="yatra-card"
-                      className="object-cover"
+                      variant="hero"
+                      className="media-frame__img object-cover"
                       sizes="(max-width:768px) 100vw, 768px"
                     />
                   </Link>
@@ -1610,15 +2532,561 @@ export default function HomePage() {
                         key={`${item.src}-${idx}`}
                         to="/treks/$slug"
                         params={{ slug: "bali-pass" }}
-                        className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
                         data-ocid={`uttarakhand.bali_pass_thumb.${idx + 1}`}
                       >
                         <OptimizedImage
                           src={item.src}
                           alt={item.alt}
                           fill
-                          variant="yatra-card"
-                          className="object-cover"
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {RUPIN_PASS_TREK && RUPIN_PASS_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.rupin_pass_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Rupin Pass Trek — 4,650m pass · snow bridge & valley drama
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "rupin-pass" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.rupin_pass_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="rupin-pass"
+                      image={RUPIN_PASS_PHOTO_GALLERY[0].src}
+                      alt={RUPIN_PASS_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {RUPIN_PASS_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "rupin-pass" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.rupin_pass_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {VALLEY_OF_FLOWERS_TREK &&
+              VALLEY_OF_FLOWERS_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.valley_of_flowers_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Valley of Flowers — UNESCO alpine meadow · 500+ wildflower
+                    species
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "valley-of-flowers" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.valley_of_flowers_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="valley-of-flowers"
+                      image={VALLEY_OF_FLOWERS_PHOTO_GALLERY[0].src}
+                      alt={VALLEY_OF_FLOWERS_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {VALLEY_OF_FLOWERS_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "valley-of-flowers" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.valley_of_flowers_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {BRAHMATAL_TREK && BRAHMATAL_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.brahmatal_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Brahmatal Winter Trek — frozen lakes · Trishul & Nanda Ghunti
+                    views
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "brahmatal-trek" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.brahmatal_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="brahmatal-trek"
+                      image={BRAHMATAL_PHOTO_GALLERY[0].src}
+                      alt={BRAHMATAL_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {BRAHMATAL_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "brahmatal-trek" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.brahmatal_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {KEDARKANTHA_TREK && KEDARKANTHA_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.kedarkantha_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Kedarkantha Trek — winter summit · 360° Himalayan views
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "kedarkantha-trek" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.kedarkantha_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="kedarkantha-trek"
+                      image={KEDARKANTHA_PHOTO_GALLERY[0].src}
+                      alt={KEDARKANTHA_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {KEDARKANTHA_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "kedarkantha-trek" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.kedarkantha_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {DAYARA_BUGYAL_TREK && DAYARA_BUGYAL_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.dayara_bugyal_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Dayara Bugyal — alpine meadows · Bandarpoonch panorama
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "dayara-bugyal" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.dayara_bugyal_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="dayara-bugyal"
+                      image={DAYARA_BUGYAL_PHOTO_GALLERY[0].src}
+                      alt={DAYARA_BUGYAL_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {DAYARA_BUGYAL_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "dayara-bugyal" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.dayara_bugyal_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {HAR_KI_DUN_TREK && HAR_KI_DUN_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.har_ki_dun_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Har Ki Dun — Valley of the Gods · Swargarohini views
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "har-ki-dun" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.har_ki_dun_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="har-ki-dun"
+                      image={HAR_KI_DUN_PHOTO_GALLERY[0].src}
+                      alt={HAR_KI_DUN_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {HAR_KI_DUN_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "har-ki-dun" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.har_ki_dun_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {CHOPTA_TUNGNATH_TREK &&
+              CHOPTA_TUNGNATH_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.chopta_tungnath_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Chopta Tungnath — Panch Kedar · Chandrashila 4,090m
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "chopta-tungnath" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.chopta_tungnath_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="chopta-tungnath"
+                      image={CHOPTA_TUNGNATH_PHOTO_GALLERY[0].src}
+                      alt={CHOPTA_TUNGNATH_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {CHOPTA_TUNGNATH_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "chopta-tungnath" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.chopta_tungnath_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {PANGARCHULLA_TREK && PANGARCHULLA_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.pangarchulla_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Pangarchulla Peak — 4,586m summit · Nanda Devi panorama
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "pangarchulla-peak" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.pangarchulla_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="pangarchulla-peak"
+                      image={PANGARCHULLA_PHOTO_GALLERY[0].src}
+                      alt={PANGARCHULLA_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {PANGARCHULLA_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "pangarchulla-peak" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.pangarchulla_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {DEORIATAL_CHANDRASHILA_TREK &&
+              DEORIATAL_CHANDRASHILA_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.deoriatal_chandrashila_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Deoriatal Chandrashila — lake reflections · 4,090m summit
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "deoriatal-chandrashila" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.deoriatal_chandrashila_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="deoriatal-chandrashila"
+                      image={DEORIATAL_CHANDRASHILA_PHOTO_GALLERY[0].src}
+                      alt={DEORIATAL_CHANDRASHILA_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {DEORIATAL_CHANDRASHILA_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "deoriatal-chandrashila" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.deoriatal_chandrashila_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {AUDENS_COL_TREK && AUDENS_COL_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.audens_col_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Auden's Col — 5,490m glacier pass · Gangotri to Kedarnath
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "audens-col" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.audens_col_feature"
+                  >
+                    <OptimizedImage
+                      src={AUDENS_COL_PHOTO_GALLERY[0].src}
+                      alt={AUDENS_COL_PHOTO_GALLERY[0].alt}
+                      fill
+                      variant="hero"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {AUDENS_COL_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "audens-col" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.audens_col_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
+                          sizes="(max-width:640px) 50vw, 25vw"
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : null}
+              {KEDARTAL_TREK && KEDARTAL_PHOTO_GALLERY.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 14 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="mt-6"
+                  data-ocid="uttarakhand.kedartal_strip"
+                >
+                  <p
+                    className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    Kedartal — Shiva's lake at 4,750m · Thalay Sagar backdrop
+                  </p>
+                  <Link
+                    to="/treks/$slug"
+                    params={{ slug: "kedartal" }}
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    data-ocid="uttarakhand.kedartal_feature"
+                  >
+                    <HomeTrekFeatureMedia
+                      trekSlug="kedartal"
+                      image={KEDARTAL_PHOTO_GALLERY[0].src}
+                      alt={KEDARTAL_PHOTO_GALLERY[0].alt}
+                      sizes="(max-width:768px) 100vw, 768px"
+                    />
+                  </Link>
+                  <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                    {KEDARTAL_PHOTO_GALLERY.map((item, idx) => (
+                      <Link
+                        key={`${item.src}-${idx}`}
+                        to="/treks/$slug"
+                        params={{ slug: "kedartal" }}
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        data-ocid={`uttarakhand.kedartal_thumb.${idx + 1}`}
+                      >
+                        <OptimizedImage
+                          src={item.src}
+                          alt={item.alt}
+                          fill
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
                           sizes="(max-width:640px) 50vw, 25vw"
                         />
                       </Link>
@@ -1724,15 +3192,15 @@ export default function HomePage() {
                   <Link
                     to="/treks/$slug"
                     params={{ slug: "beas-kund" }}
-                    className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                    className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
                     data-ocid="himachal.beas_kund_feature"
                   >
                     <OptimizedImage
                       src={BEAS_KUND_PHOTO_GALLERY[0].src}
                       alt={BEAS_KUND_PHOTO_GALLERY[0].alt}
                       fill
-                      variant="yatra-card"
-                      className="object-cover"
+                      variant="hero"
+                      className="media-frame__img object-cover"
                       sizes="(max-width:768px) 100vw, 768px"
                     />
                   </Link>
@@ -1742,15 +3210,15 @@ export default function HomePage() {
                         key={`${item.src}-${idx}`}
                         to="/treks/$slug"
                         params={{ slug: "beas-kund" }}
-                        className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                        className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
                         data-ocid={`himachal.beas_kund_thumb.${idx + 1}`}
                       >
                         <OptimizedImage
                           src={item.src}
                           alt={item.alt}
                           fill
-                          variant="yatra-card"
-                          className="object-cover"
+                          variant="gallery-thumb"
+                          className="media-frame__img object-cover"
                           sizes="(max-width:640px) 50vw, 25vw"
                         />
                       </Link>
@@ -1758,6 +3226,59 @@ export default function HomePage() {
                   </div>
                 </motion.div>
               ) : null}
+              <div className="mt-8 space-y-8">
+                {HP_TREK_GALLERIES.map((gallery) => (
+                  <motion.div
+                    key={gallery.slug}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    data-ocid={`himachal.${gallery.ocid}_strip`}
+                  >
+                    <p
+                      className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                      style={{ color: "var(--ew-text-lt)" }}
+                    >
+                      {gallery.title}
+                    </p>
+                    <Link
+                      to="/treks/$slug"
+                      params={{ slug: gallery.slug }}
+                      className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                      data-ocid={`himachal.${gallery.ocid}_feature`}
+                    >
+                      <OptimizedImage
+                        src={gallery.images[0].src}
+                        alt={gallery.images[0].alt}
+                        fill
+                        variant="hero"
+                        className="media-frame__img object-cover"
+                        sizes="(max-width:768px) 100vw, 768px"
+                      />
+                    </Link>
+                    <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                      {gallery.images.map((item, idx) => (
+                        <Link
+                          key={`${item.src}-${idx}`}
+                          to="/treks/$slug"
+                          params={{ slug: gallery.slug }}
+                          className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-black/10 transition-shadow hover:ring-black/25"
+                          data-ocid={`himachal.${gallery.ocid}_thumb.${idx + 1}`}
+                        >
+                          <OptimizedImage
+                            src={item.src}
+                            alt={item.alt}
+                            fill
+                            variant="gallery-thumb"
+                            className="media-frame__img object-cover"
+                            sizes="(max-width:640px) 50vw, 25vw"
+                          />
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
               <div
                 className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2"
                 data-ocid="himachal.spiti_gallery"
@@ -1767,7 +3288,7 @@ export default function HomePage() {
                     key={img.src}
                     to="/treks/$slug"
                     params={{ slug: "spiti-valley-trek" }}
-                    className="relative aspect-[4/3] rounded-lg overflow-hidden ring-1 ring-black/5 hover:opacity-95 transition-opacity"
+                    className="media-frame relative aspect-[4/3] rounded-lg overflow-hidden ring-1 ring-black/5 hover:opacity-95 transition-opacity"
                     data-ocid="himachal.spiti_gallery_thumb"
                   >
                     <OptimizedImage
@@ -1939,7 +3460,7 @@ export default function HomePage() {
               Journey Beyond the Ordinary
             </p>
           </motion.div>
-          {CHAR_DHAM_YATRA?.images && CHAR_DHAM_YATRA.images.length > 0 ? (
+          {CHAR_DHAM_PHOTO_GALLERY.length > 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1953,24 +3474,88 @@ export default function HomePage() {
               >
                 Char Dham Yatra — The four sacred shrines
               </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "char-dham-yatra" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.char_dham_feature"
+              >
+                <OptimizedImage
+                  src={CHAR_DHAM_PHOTO_GALLERY[0].src}
+                  alt={CHAR_DHAM_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 px-1">
-                {CHAR_DHAM_YATRA.images.map((src, idx) => (
+                {CHAR_DHAM_PHOTO_GALLERY.map((item, idx) => (
                   <Link
-                    key={src}
+                    key={`${item.src}-${idx}`}
                     to="/yatras/$slug"
                     params={{ slug: "char-dham-yatra" }}
-                    className="relative aspect-[4/3] rounded-lg overflow-hidden ring-2 ring-white/15 hover:ring-white/45 transition-shadow"
+                    className="media-frame relative aspect-[4/3] rounded-lg overflow-hidden ring-2 ring-white/15 hover:ring-white/45 transition-shadow"
                     data-ocid={`yatras.char_dham_thumb.${idx + 1}`}
                   >
                     <OptimizedImage
-                      src={src}
-                      alt={
-                        CHAR_DHAM_GALLERY_ALTS[idx] ??
-                        `Char Dham Yatra — photo ${idx + 1}`
-                      }
+                      src={item.src}
+                      alt={item.alt}
                       fill
-                      variant="yatra-card"
-                      className="object-cover"
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 20vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {DO_DHAM_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.do_dham_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Do Dham Yatra — Kedarnath & Badrinath · 7-day sacred circuit
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "do-dham-yatra" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.do_dham_feature"
+              >
+                <OptimizedImage
+                  src={DO_DHAM_PHOTO_GALLERY[0].src}
+                  alt={DO_DHAM_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {DO_DHAM_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "do-dham-yatra" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.do_dham_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
                     />
                   </Link>
                 ))}
@@ -1995,15 +3580,15 @@ export default function HomePage() {
               <Link
                 to="/yatras/$slug"
                 params={{ slug: "panch-kedar-yatra" }}
-                className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
                 data-ocid="yatras.panch_kedar_feature"
               >
                 <OptimizedImage
                   src={HOME_HERO_PANCH_KEDAR_YATRA_IMAGE}
                   alt="Panch Kedar Yatra — collage of the five sacred Shiva temples in Garhwal: Kedarnath, Kalpeshwar, Rudranath, Tungnath, and Madhyamaheshwar"
                   fill
-                  variant="yatra-card"
-                  className="object-cover"
+                  variant="hero"
+                  className="media-frame__img object-cover"
                   sizes="(max-width:768px) 100vw, 768px"
                 />
               </Link>
@@ -2013,15 +3598,15 @@ export default function HomePage() {
                     key={`${item.src}-${idx}`}
                     to="/yatras/$slug"
                     params={{ slug: "panch-kedar-yatra" }}
-                    className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
                     data-ocid={`yatras.panch_kedar_thumb.${idx + 1}`}
                   >
                     <OptimizedImage
                       src={item.src}
                       alt={item.alt}
                       fill
-                      variant="yatra-card"
-                      className="object-cover"
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
                       sizes="(max-width:640px) 50vw, 25vw"
                     />
                   </Link>
@@ -2047,15 +3632,15 @@ export default function HomePage() {
               <Link
                 to="/yatras/$slug"
                 params={{ slug: "panch-badri-yatra" }}
-                className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
                 data-ocid="yatras.panch_badri_feature"
               >
                 <OptimizedImage
                   src={PANCH_BADRI_YATRA_COLLAGE_WEBP}
                   alt="Panch Badri Yatra — collage of the five Vishnu shrines: Vishal (Badrinath), Yogdhyan, Bhavishya, Vridha, and Adi Badri in Uttarakhand"
                   fill
-                  variant="yatra-card"
-                  className="object-cover"
+                  variant="hero"
+                  className="media-frame__img object-cover"
                   sizes="(max-width:768px) 100vw, 768px"
                 />
               </Link>
@@ -2065,15 +3650,324 @@ export default function HomePage() {
                     key={`${item.src}-${idx}`}
                     to="/yatras/$slug"
                     params={{ slug: "panch-badri-yatra" }}
-                    className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
                     data-ocid={`yatras.panch_badri_thumb.${idx + 1}`}
                   >
                     <OptimizedImage
                       src={item.src}
                       alt={item.alt}
                       fill
-                      variant="yatra-card"
-                      className="object-cover"
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {KARTIK_SWAMI_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.kartik_swami_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Kartik Swami Temple Trek — Kartikeya shrine at 3,048m · Rudraprayag
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "kartik-swami-temple" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.kartik_swami_feature"
+              >
+                <OptimizedImage
+                  src={KARTIK_SWAMI_PHOTO_GALLERY[0].src}
+                  alt={KARTIK_SWAMI_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {KARTIK_SWAMI_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "kartik-swami-temple" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.kartik_swami_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {CHURDHAR_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.churdhar_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Churdhar Yatra — Shirgul Maharaj at 3,647m · Sirmaur, Himachal
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "churdhar-yatra" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.churdhar_feature"
+              >
+                <OptimizedImage
+                  src={CHURDHAR_PHOTO_GALLERY[0].src}
+                  alt={CHURDHAR_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {CHURDHAR_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "churdhar-yatra" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.churdhar_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {TRIYUGINARAYAN_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.triyuginarayan_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Triyuginarayan Temple Yatra — Shiva & Parvati wedding · eternal
+                flame
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "triyuginarayan-temple" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.triyuginarayan_feature"
+              >
+                <OptimizedImage
+                  src={TRIYUGINARAYAN_PHOTO_GALLERY[0].src}
+                  alt={TRIYUGINARAYAN_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {TRIYUGINARAYAN_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "triyuginarayan-temple" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.triyuginarayan_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {MANI_MAHESH_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.mani_mahesh_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Mani Mahesh Yatra — Shiva&apos;s lake at 4,080m · Chamba,
+                Himachal
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "mani-mahesh-yatra" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.mani_mahesh_feature"
+              >
+                <OptimizedImage
+                  src={MANI_MAHESH_PHOTO_GALLERY[0].src}
+                  alt={MANI_MAHESH_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {MANI_MAHESH_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "mani-mahesh-yatra" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.mani_mahesh_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {KINNAUR_KAILASH_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.kinnaur_kailash_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Kinnaur Kailash Parikrama Yatra — 79km sacred circuit · Kinnaur,
+                Himachal
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "kinnaur-kailash-yatra" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.kinnaur_kailash_feature"
+              >
+                <OptimizedImage
+                  src={KINNAUR_KAILASH_PHOTO_GALLERY[0].src}
+                  alt={KINNAUR_KAILASH_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {KINNAUR_KAILASH_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "kinnaur-kailash-yatra" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.kinnaur_kailash_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {SHRIKHAND_MAHADEV_YATRA ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.shrikhand_mahadev_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Shrikhand Mahadev Yatra — 75-ft natural lingam at 5,155m · Kullu
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "shrikhand-mahadev-yatra" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.shrikhand_mahadev_feature"
+              >
+                <OptimizedImage
+                  src={SHRIKHAND_MAHADEV_PHOTO_GALLERY[0].src}
+                  alt={SHRIKHAND_MAHADEV_PHOTO_GALLERY[0].alt}
+                  fill
+                  variant="hero"
+                  className="media-frame__img object-cover"
+                  sizes="(max-width:768px) 100vw, 768px"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {SHRIKHAND_MAHADEV_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "shrikhand-mahadev-yatra" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.shrikhand_mahadev_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
                       sizes="(max-width:640px) 50vw, 25vw"
                     />
                   </Link>
@@ -2099,15 +3993,15 @@ export default function HomePage() {
               <Link
                 to="/yatras/$slug"
                 params={{ slug: "hemkund-sahib-yatra" }}
-                className="relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
                 data-ocid="yatras.hemkund_sahib_feature"
               >
                 <OptimizedImage
                   src={HEMKUND_SAHIB_PHOTO_GALLERY[0].src}
                   alt={HEMKUND_SAHIB_PHOTO_GALLERY[0].alt}
                   fill
-                  variant="yatra-card"
-                  className="object-cover"
+                  variant="hero"
+                  className="media-frame__img object-cover"
                   sizes="(max-width:768px) 100vw, 768px"
                 />
               </Link>
@@ -2117,15 +4011,15 @@ export default function HomePage() {
                     key={`${item.src}-${idx}`}
                     to="/yatras/$slug"
                     params={{ slug: "hemkund-sahib-yatra" }}
-                    className="relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
                     data-ocid={`yatras.hemkund_sahib_thumb.${idx + 1}`}
                   >
                     <OptimizedImage
                       src={item.src}
                       alt={item.alt}
                       fill
-                      variant="yatra-card"
-                      className="object-cover"
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
                       sizes="(max-width:640px) 50vw, 25vw"
                     />
                   </Link>
@@ -2168,67 +4062,64 @@ export default function HomePage() {
           {/* 2 wide banners */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div
-              className="relative rounded-lg overflow-hidden flex items-center p-6 min-h-[140px]"
-              style={{ background: "var(--ew-orange)" }}
+              className="offer-banner offer-banner--orange"
               data-ocid="offers.bogo_banner"
             >
-              <OptimizedImage
-                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80"
-                alt="Trek offer"
-                fill
-                variant="banner-strip"
-                className="absolute right-0 top-0 h-full w-1/3 object-cover opacity-30"
-              />
-              <div className="relative z-10">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-white/80 mb-1 block">
-                  Limited Offer
-                </span>
-                <h3 className="text-white font-bold text-xl mb-1">
-                  Buy 1 Get 1 Trek Packages
-                </h3>
-                <p className="text-white/90 text-sm mb-3">
-                  Book any trek and bring a friend free — limited seats
-                  available
+              <div className="offer-banner__media-wrap" aria-hidden>
+                <OptimizedImage
+                  src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80"
+                  alt=""
+                  width={400}
+                  height={280}
+                  variant="banner-strip"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="offer-banner__content">
+                <span className="offer-banner__eyebrow">Limited Offer</span>
+                <h3 className="offer-banner__title">Buy 1 Get 1 Trek Packages</h3>
+                <p className="offer-banner__desc">
+                  Book any trek and bring a friend free — limited seats available
                 </p>
-                <button
-                  type="button"
-                  className="btn-white text-sm py-2 px-5"
+                <Link
+                  to="/treks"
+                  className="btn-white text-sm py-2 px-5 inline-flex items-center gap-1"
                   data-ocid="offers.bogo_button"
                 >
                   Claim Offer
-                </button>
+                  <ChevronRight size={16} strokeWidth={2.5} aria-hidden />
+                </Link>
               </div>
             </div>
             <div
-              className="relative rounded-lg overflow-hidden flex items-center p-6 min-h-[140px]"
-              style={{ background: "var(--ew-red)" }}
+              className="offer-banner offer-banner--red"
               data-ocid="offers.chardham_banner"
             >
-              <OptimizedImage
-                src={CHAR_DHAM_COVER}
-                alt="Char Dham"
-                fill
-                variant="banner-strip"
-                className="absolute right-0 top-0 h-full w-1/3 object-cover opacity-30"
-              />
-              <div className="relative z-10">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-white/80 mb-1 block">
-                  2025 Season Open
-                </span>
-                <h3 className="text-white font-bold text-xl mb-1">
-                  Char Dham Yatra 2025
-                </h3>
-                <p className="text-white/90 text-sm mb-3">
+              <div className="offer-banner__media-wrap" aria-hidden>
+                <OptimizedImage
+                  src={CHAR_DHAM_COVER}
+                  alt=""
+                  width={400}
+                  height={280}
+                  variant="banner-strip"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="offer-banner__content">
+                <span className="offer-banner__eyebrow">2026 Season Open</span>
+                <h3 className="offer-banner__title">Char Dham Yatra 2026</h3>
+                <p className="offer-banner__desc">
                   Sacred journey packages from ₹18,999 — seats filling fast
                 </p>
-                <EnquiryButton
-                  type="button"
-                  className="btn-white text-sm py-2 px-5"
-                  trekName="Char Dham Yatra"
+                <Link
+                  to="/book"
+                  search={bookSearch({ yatra: "char-dham-yatra" })}
+                  className="btn-white text-sm py-2 px-5 inline-flex items-center gap-1"
                   data-ocid="offers.chardham_button"
                 >
                   Book Now
-                </EnquiryButton>
+                  <ChevronRight size={16} strokeWidth={2.5} aria-hidden />
+                </Link>
               </div>
             </div>
           </div>
@@ -2278,7 +4169,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── SECTION 11: WHY CHOOSE ETERNAWINGS ── */}
+      {/* ── SECTION 11: WHY CHOOSE TREKORA ── */}
       <section className="py-12 section-alt" data-ocid="why_choose.section">
         <div className="container mx-auto px-4">
           <motion.div
@@ -2290,7 +4181,11 @@ export default function HomePage() {
             <SectionTitle>Why Choose Trekora</SectionTitle>
           </motion.div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {WHY_CHOOSE.map((item, i) => (
+            {WHY_CHOOSE.filter(
+              (item) =>
+                item.title !== "EMI & Easy Payments" ||
+                (isFeatureLive("payment") && isFeatureLive("emi")),
+            ).map((item, i) => (
               <motion.div
                 key={item.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -2369,7 +4264,7 @@ export default function HomePage() {
               >
                 <div className="relative h-40 overflow-hidden">
                   <OptimizedImage
-                    src={blog.heroImage}
+                    src={resolveBlogCardImage(blog)}
                     alt={blog.title}
                     fill
                     variant="blog-card"
@@ -2404,11 +4299,8 @@ export default function HomePage() {
                   >
                     {blog.excerpt}
                   </p>
-                  <span
-                    className="text-[12px] font-semibold flex items-center gap-1"
-                    style={{ color: "var(--ew-red)" }}
-                  >
-                    Read More <ArrowRight size={12} />
+                  <span className="inline-flex items-center justify-center gap-1 text-[11px] font-semibold py-1.5 px-3 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] group-hover:bg-[var(--ew-red)] group-hover:text-white transition-colors">
+                    Read More <ArrowRight size={12} aria-hidden />
                   </span>
                 </div>
               </Link>
@@ -2417,10 +4309,10 @@ export default function HomePage() {
           <div className="text-center mt-6">
             <Link
               to="/blog"
-              className="btn-primary"
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] hover:bg-[var(--ew-red)] hover:text-white transition-colors"
               data-ocid="blog.view_all_button"
             >
-              View All Blogs <ArrowRight size={14} />
+              View All Blogs <ArrowRight size={14} aria-hidden />
             </Link>
           </div>
         </div>
@@ -2492,31 +4384,35 @@ export default function HomePage() {
             As Featured In
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
-            {(
-              [
-                { name: "Times of India", url: "/press" },
-                { name: "NDTV", url: "/press" },
-                { name: "Outlook Traveller", url: "/press" },
-                { name: "National Geographic", url: "/press" },
-                { name: "Adventure Nation", url: "/press" },
-                { name: "Thrillophilia", url: "/press" },
-                { name: "MakeMyTrip", url: "/press" },
-              ] as { name: string; url: string }[]
-            ).map(({ name, url }) => (
-              <Link
-                key={name}
-                to={url}
-                className="px-4 py-2 rounded border text-sm font-bold opacity-40 hover:opacity-80 transition-opacity"
-                style={{
-                  borderColor: "var(--ew-gray-mid)",
-                  color: "var(--ew-gray-dark)",
-                  textDecoration: "none",
-                }}
-                data-ocid={`partners.logo.${name.toLowerCase().replace(/\s+/g, "_")}`}
-              >
-                {name}
-              </Link>
-            ))}
+            {HOME_PRESS_PARTNERS.map(({ name, url }) => {
+              const logoSrc = pressLogoForName(name);
+              return (
+                <Link
+                  key={name}
+                  to={url}
+                  className="flex items-center justify-center px-3 py-2 rounded border opacity-80 hover:opacity-100 transition-opacity min-h-[52px]"
+                  style={{
+                    borderColor: "var(--ew-gray-mid)",
+                    textDecoration: "none",
+                  }}
+                  data-ocid={`partners.logo.${name.toLowerCase().replace(/\s+/g, "_")}`}
+                >
+                  {logoSrc ? (
+                    <FeaturedInMedia
+                      item={{ name, logoSrc }}
+                      className="h-9 w-auto max-w-[min(180px,40vw)] object-contain"
+                    />
+                  ) : (
+                    <span
+                      className="text-sm font-bold"
+                      style={{ color: "var(--ew-gray-dark)" }}
+                    >
+                      {name}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
           </div>
           <div className="text-center mt-4">
             <Link

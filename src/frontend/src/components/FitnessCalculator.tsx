@@ -7,11 +7,16 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { downloadFitnessTrainingPlanPDF } from "../lib/pdfGenerator";
 
 interface FitnessCalculatorProps {
+  trekName?: string;
+  trekSlug?: string;
   trekDifficulty: string;
   trekAltitude: number;
   trekDuration: number;
+  /** Trek detail (default) or yatra detail — adjusts headings and result copy. */
+  productKind?: "trek" | "yatra";
 }
 
 type FitnessLevel = "Sedentary" | "Active" | "Fit";
@@ -77,9 +82,15 @@ function calculateScore(
 }
 
 export default function FitnessCalculator({
+  trekName = "Your Trek",
+  trekSlug,
   trekDifficulty,
   trekAltitude,
+  trekDuration,
+  productKind = "trek",
 }: FitnessCalculatorProps) {
+  const isYatra = productKind === "yatra";
+  const productNoun = isYatra ? "Yatra" : "Trek";
   const [open, setOpen] = useState(false);
   const [age, setAge] = useState(30);
   const [fitness, setFitness] = useState<FitnessLevel>("Active");
@@ -116,7 +127,9 @@ export default function FitnessCalculator({
     if (score >= 70)
       return {
         emoji: "✅",
-        text: "You're Fit for This Trek!",
+        text: isYatra
+          ? "You're Ready for This Yatra!"
+          : "You're Fit for This Trek!",
         bg: "#E8F5E9",
         border: "#2E7D32",
         textColor: "#2E7D32",
@@ -131,7 +144,9 @@ export default function FitnessCalculator({
       };
     return {
       emoji: "❌",
-      text: "This trek may not be suitable — Consider easier alternatives",
+      text: isYatra
+        ? "This yatra may be challenging — Consider easier routes or helicopter options"
+        : "This trek may not be suitable — Consider easier alternatives",
       bg: "var(--ew-red-lt)",
       border: "var(--ew-red)",
       textColor: "var(--ew-red)",
@@ -139,6 +154,36 @@ export default function FitnessCalculator({
   }
 
   const badge = result !== null ? getBadge(result) : null;
+
+  async function handleDownloadTrainingPlan() {
+    if (result === null || !badge) {
+      toast.error("Calculate your fitness score first.");
+      return;
+    }
+    try {
+      await downloadFitnessTrainingPlanPDF({
+        trekName,
+        trekSlug,
+        trekDifficulty,
+        trekAltitude,
+        trekDuration,
+        age,
+        fitness,
+        experience,
+        conditions,
+        score: result,
+        readinessLabel: badge.text,
+        trainingWeeks: TRAINING_WEEKS,
+      });
+      toast.success("Training plan PDF downloaded.");
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "Could not download training plan PDF. Please try again.",
+      );
+    }
+  }
 
   return (
     <div
@@ -161,7 +206,7 @@ export default function FitnessCalculator({
             className="font-bold text-sm"
             style={{ color: "var(--ew-text)" }}
           >
-            Are You Ready for This Trek?
+            {`Are You Ready for This ${productNoun}?`}
           </span>
           <span
             className="text-[11px] font-medium px-2 py-0.5 rounded-full"
@@ -413,11 +458,7 @@ export default function FitnessCalculator({
                       </div>
                       <button
                         type="button"
-                        onClick={() =>
-                          toast.success("Download starting...", {
-                            duration: 2000,
-                          })
-                        }
+                        onClick={() => void handleDownloadTrainingPlan()}
                         className="mt-3 flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg transition-colors w-full justify-center"
                         style={{
                           backgroundColor: "var(--ew-orange-lt)",

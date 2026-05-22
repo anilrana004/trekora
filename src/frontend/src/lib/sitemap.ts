@@ -1,6 +1,11 @@
 import { BLOGS } from "../data/blogs";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
+import {
+  HIGH_CONVERSION_SEO_KEYWORDS,
+  TREK_SEO_BY_SLUG,
+  YATRA_SEO_BY_SLUG,
+} from "./product-seo-taxonomy";
 
 export interface SitemapEntry {
   url: string;
@@ -15,25 +20,50 @@ export interface SitemapEntry {
     | "never";
 }
 
+const STATE_HUB_SLUGS = ["uttarakhand", "himachal"] as const;
+
+const TREK_SEO_SUFFIXES = [
+  "packing-list",
+  "best-time",
+  "difficulty-guide",
+  "altitude-profile",
+] as const;
+
 export function generateSitemapData(): SitemapEntry[] {
   const staticPages: SitemapEntry[] = [
     { url: "/", priority: 1.0, changefreq: "daily" },
-    { url: "/treks", priority: 0.8, changefreq: "weekly" },
-    { url: "/yatras", priority: 0.8, changefreq: "weekly" },
-    { url: "/destinations", priority: 0.7, changefreq: "monthly" },
-    { url: "/blog", priority: 0.7, changefreq: "weekly" },
-    { url: "/about", priority: 0.5, changefreq: "monthly" },
-    { url: "/contact", priority: 0.5, changefreq: "monthly" },
-    { url: "/gallery", priority: 0.5, changefreq: "weekly" },
+    { url: "/treks", priority: 0.9, changefreq: "weekly" },
+    { url: "/yatras", priority: 0.9, changefreq: "weekly" },
+    { url: "/destinations", priority: 0.8, changefreq: "monthly" },
+    { url: "/blog", priority: 0.8, changefreq: "weekly" },
+    { url: "/gallery", priority: 0.7, changefreq: "weekly" },
+    { url: "/about", priority: 0.6, changefreq: "monthly" },
+    { url: "/contact", priority: 0.6, changefreq: "monthly" },
+    { url: "/corporate", priority: 0.6, changefreq: "monthly" },
+    { url: "/packages", priority: 0.7, changefreq: "weekly" },
+    { url: "/upcoming-batches", priority: 0.8, changefreq: "daily" },
+    { url: "/press", priority: 0.5, changefreq: "monthly" },
+    { url: "/compare", priority: 0.6, changefreq: "weekly" },
+    { url: "/privacy-policy", priority: 0.3, changefreq: "yearly" },
+    { url: "/terms-and-conditions", priority: 0.3, changefreq: "yearly" },
   ];
 
-  const trekPages: SitemapEntry[] = TREKS.filter((t) => t.isActive).map(
-    (t) => ({
-      url: `/treks/${t.slug}`,
-      priority: 0.9,
-      changefreq: "weekly",
-    }),
-  );
+  const stateHubPages: SitemapEntry[] = STATE_HUB_SLUGS.map((state) => ({
+    url: `/treks/state/${state}`,
+    priority: 0.75,
+    changefreq: "weekly",
+  }));
+
+  const activeTreks = TREKS.filter((t) => t.isActive);
+
+  const trekPages: SitemapEntry[] = activeTreks.flatMap((t) => [
+    { url: `/treks/${t.slug}`, priority: 0.9, changefreq: "weekly" },
+    ...TREK_SEO_SUFFIXES.map((suffix) => ({
+      url: `/treks/${t.slug}/${suffix}`,
+      priority: 0.7,
+      changefreq: "monthly" as const,
+    })),
+  ]);
 
   const yatraPages: SitemapEntry[] = YATRAS.filter((y) => y.isActive).map(
     (y) => ({
@@ -46,10 +76,54 @@ export function generateSitemapData(): SitemapEntry[] {
   const blogPages: SitemapEntry[] = BLOGS.filter((b) => b.isPublished).map(
     (b) => ({
       url: `/blog/${b.slug}`,
-      priority: 0.8,
+      priority: 0.75,
       changefreq: "weekly",
     }),
   );
 
-  return [...staticPages, ...trekPages, ...yatraPages, ...blogPages];
+  return [
+    ...staticPages,
+    ...stateHubPages,
+    ...trekPages,
+    ...yatraPages,
+    ...blogPages,
+    ...generateSeoTagDiscoveryEntries(),
+  ];
+}
+
+/**
+ * High-value tag filter URLs for crawlers (listing pages with `?tag=`).
+ * Keeps count bounded; pairs with matchesSeoTag on /treks and /yatras.
+ */
+export function generateSeoTagDiscoveryEntries(): SitemapEntry[] {
+  const trekTags = Object.values(TREK_SEO_BY_SLUG).flatMap((p) =>
+    p.tags.slice(0, 3),
+  );
+  const yatraTags = Object.values(YATRA_SEO_BY_SLUG).flatMap((p) =>
+    p.tags.slice(0, 2),
+  );
+  const conversion = HIGH_CONVERSION_SEO_KEYWORDS.slice(0, 5);
+
+  const encode = (tag: string) =>
+    encodeURIComponent(tag.trim().toLowerCase());
+
+  const trekEntries: SitemapEntry[] = [...new Set(trekTags)].map((tag) => ({
+    url: `/treks?tag=${encode(tag)}`,
+    priority: 0.55,
+    changefreq: "weekly" as const,
+  }));
+
+  const yatraEntries: SitemapEntry[] = [...new Set(yatraTags)].map((tag) => ({
+    url: `/yatras?tag=${encode(tag)}`,
+    priority: 0.55,
+    changefreq: "weekly" as const,
+  }));
+
+  const brandEntries: SitemapEntry[] = conversion.map((tag) => ({
+    url: `/treks?tag=${encode(tag)}`,
+    priority: 0.5,
+    changefreq: "monthly" as const,
+  }));
+
+  return [...trekEntries, ...yatraEntries, ...brandEntries];
 }

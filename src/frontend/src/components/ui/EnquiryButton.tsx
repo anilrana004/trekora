@@ -24,6 +24,8 @@ export function EnquiryButton({
         onClick?.(e);
         if (!e.defaultPrevented) openEnquiry(trekName);
       }}
-    />
+    >
+      {children}
+    </button>
   );
 }

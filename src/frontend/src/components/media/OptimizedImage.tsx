@@ -3,7 +3,9 @@ import {
   buildBlurPlaceholderUrl,
   buildOptimizedImageUrl,
   buildResponsiveSrcSet,
+  type ImageDeliveryOptions,
 } from "@/lib/images/cloudinary-url";
+import { getVariantImageDelivery } from "@/lib/images/variant-delivery";
 import { type ImgHTMLAttributes, forwardRef, useMemo, useState } from "react";
 
 export type ImageVariant =
@@ -17,6 +19,7 @@ export type ImageVariant =
   | "blog-card"
   | "thumbnail"
   | "banner-strip"
+  | "brand-logo"
   | "default";
 
 const VARIANT_SIZES: Record<ImageVariant, string> = {
@@ -30,20 +33,22 @@ const VARIANT_SIZES: Record<ImageVariant, string> = {
   "blog-card": "(max-width: 640px) 85vw, 256px",
   thumbnail: "64px",
   "banner-strip": "(max-width: 768px) 40vw, 200px",
+  "brand-logo": "(max-width: 1023px) 200px, 220px",
   default: "100vw",
 };
 
 const VARIANT_WIDTHS: Record<ImageVariant, readonly number[]> = {
-  "trek-card": [384, 640, 828, 960],
-  "yatra-card": [384, 640, 828, 960],
+  "trek-card": [480, 640, 828, 1080, 1280],
+  "yatra-card": [480, 640, 828, 1080, 1280],
   hero: [640, 828, 1080, 1200, 1440, 1920],
-  "gallery-thumb": [400, 600, 800, 1000, 1200],
+  "gallery-thumb": [400, 560, 720, 960, 1200],
   "gallery-full": [1080, 1440, 1680, 1920],
   destination: [480, 720, 960, 1200],
   avatar: [64, 96, 128, 160],
   "blog-card": [256, 384, 512, 640],
   thumbnail: [96, 128, 192, 256],
   "banner-strip": [200, 320, 400, 480],
+  "brand-logo": [320, 440, 560, 720, 880, 960],
   default: [...RESPONSIVE_IMAGE_WIDTHS],
 };
 
@@ -64,6 +69,8 @@ export type OptimizedImageProps = Omit<
    * Use with `fill` or explicit `width` + `height` for stable layout.
    */
   blurUp?: boolean;
+  /** Cloudinary delivery overrides (e.g. brand logo PNG + transparency). */
+  delivery?: ImageDeliveryOptions;
 };
 
 function cn(...parts: Array<string | false | undefined>) {
@@ -82,6 +89,7 @@ export const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
       priority,
       variant = "default",
       blurUp = false,
+      delivery,
       className,
       style,
       onLoad: onLoadProp,
@@ -94,6 +102,10 @@ export const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
     const [lazyRevealed, setLazyRevealed] = useState(false);
     const widths = VARIANT_WIDTHS[variant];
     const resolvedSizes = sizes ?? VARIANT_SIZES[variant];
+    const effectiveDelivery = useMemo(
+      () => getVariantImageDelivery(variant, delivery),
+      [variant, delivery],
+    );
 
     const skipResponsive =
       src.startsWith("blob:") ||
@@ -101,16 +113,19 @@ export const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
       src.startsWith("chrome-extension:");
 
     const srcSet = useMemo(
-      () => (skipResponsive ? undefined : buildResponsiveSrcSet(src, widths)),
-      [src, widths, skipResponsive],
+      () =>
+        skipResponsive
+          ? undefined
+          : buildResponsiveSrcSet(src, widths, effectiveDelivery),
+      [src, widths, skipResponsive, effectiveDelivery],
     );
 
     const fallbackSrc = useMemo(() => {
       if (skipResponsive) return src;
       const mid =
         widths[Math.min(widths.length - 1, Math.floor(widths.length / 2))];
-      return buildOptimizedImageUrl(src, { width: mid });
-    }, [src, widths, skipResponsive]);
+      return buildOptimizedImageUrl(src, { ...effectiveDelivery, width: mid });
+    }, [src, widths, skipResponsive, effectiveDelivery]);
 
     const blurPlaceholderSrc = useMemo(
       () => (blurUp && !skipResponsive ? buildBlurPlaceholderUrl(src) : ""),
@@ -127,10 +142,14 @@ export const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
       !fill &&
       variant !== "gallery-thumb" &&
       variant !== "gallery-full" &&
-      variant !== "avatar";
+      variant !== "avatar" &&
+      variant !== "brand-logo";
 
     const mergedClass = fill
-      ? ["absolute inset-0 h-full w-full object-cover", className]
+      ? [
+          "absolute inset-0 h-full w-full object-cover object-center",
+          className,
+        ]
           .filter(Boolean)
           .join(" ")
       : [needsDefaultCover ? "object-cover" : "", className]

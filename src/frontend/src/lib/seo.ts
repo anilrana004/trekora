@@ -1,6 +1,15 @@
 import type { Blog } from "../data/blogs";
+import { resolveBlogCardImage } from "./blog-product-images";
 import type { Trek } from "../data/treks";
 import type { Yatra } from "../data/yatras";
+import {
+  buildTrekPageSEO,
+  buildYatraPageSEO,
+  enrichTrekJSONLD,
+  enrichYatraJSONLD,
+} from "./product-seo";
+import { SITE_PHONE_TEL } from "./site-contact";
+import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "./site-config";
 
 /* ── DOM helpers ── */
 function setMetaTag(name: string, content: string): void {
@@ -42,7 +51,7 @@ export interface PageMetaConfig {
   keywords?: string;
   canonical?: string;
   ogImage?: string;
-  ogType?: string;
+  ogType?: "website" | "article";
   twitterCard?: string;
 }
 
@@ -72,7 +81,7 @@ export function setPageMeta(config: PageMetaConfig): void {
   // OpenGraph
   setOGTag("og:title", title);
   setOGTag("og:description", description);
-  setOGTag("og:image", ogImage ?? "https://www.trekora.com/og-default.jpg");
+  setOGTag("og:image", ogImage ?? DEFAULT_OG_IMAGE);
   setOGTag("og:url", canonicalUrl);
   setOGTag("og:type", ogType);
   setOGTag("og:locale", "en_IN");
@@ -84,7 +93,7 @@ export function setPageMeta(config: PageMetaConfig): void {
   setMetaTag("twitter:description", description);
   setMetaTag(
     "twitter:image",
-    ogImage ?? "https://www.trekora.com/og-default.jpg",
+    ogImage ?? DEFAULT_OG_IMAGE,
   );
 }
 
@@ -111,37 +120,17 @@ export function injectJSONLD(
 
 /* ── Trek helpers ── */
 export function generateTrekMeta(trek: Trek): PageMetaConfig {
-  const year = new Date().getFullYear();
-  const stateLabel =
-    trek.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh";
-  return {
-    title: `${trek.name} ${year} — ${trek.shortDesc} | Trekora Himalayan Treks`,
-    description: `${trek.name} in ${stateLabel}: ${trek.duration} days, ${trek.altitude.toLocaleString()}m altitude, difficulty ${trek.difficulty}. From ₹${trek.price.toLocaleString("en-IN")}/person. Certified mountain guides, small groups, guaranteed departures. Book ${year} batch.`,
-    keywords: `${trek.name.toLowerCase()}, ${trek.name.toLowerCase()} trek, ${stateLabel.toLowerCase()} treks, himalayan treks india, ${trek.slug.replace(/-/g, " ")} ${year}, Trekora treks, ${trek.difficulty.toLowerCase()} trek india`,
-    canonical: `https://www.trekora.com/treks/${trek.slug}`,
-    ogImage: trek.images?.[0] ?? trek.image,
-    ogType: "article",
-  };
+  return buildTrekPageSEO(trek);
 }
 
 export function generateYatraMeta(yatra: Yatra): PageMetaConfig {
-  const year = new Date().getFullYear();
-  const stateLabel =
-    yatra.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh";
-  return {
-    title: `${yatra.name} ${year} — ${yatra.duration} Days Sacred Pilgrimage | Trekora`,
-    description: `Book ${yatra.name} package — ${yatra.duration} days spiritual journey in ${stateLabel}. All-inclusive: accommodation, meals, VIP darshan, certified spiritual guide. From ₹${yatra.price.toLocaleString("en-IN")}/person.`,
-    keywords: `${yatra.name.toLowerCase()}, ${yatra.name.toLowerCase()} pilgrimage, himalayan yatra, ${stateLabel.toLowerCase()} yatra, ${yatra.slug.replace(/-/g, " ")} ${year}, Trekora yatra, sacred pilgrimage india`,
-    canonical: `https://www.trekora.com/yatras/${yatra.slug}`,
-    ogImage: yatra.images?.[0] ?? yatra.image,
-    ogType: "article",
-  };
+  return buildYatraPageSEO(yatra);
 }
 
 /* ── JSON-LD schema generators ── */
 export function generateTrekJSONLD(trek: Trek): Record<string, unknown> {
   const year = new Date().getFullYear();
-  return {
+  return enrichTrekJSONLD(trek, {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
     name: trek.name,
@@ -149,8 +138,8 @@ export function generateTrekJSONLD(trek: Trek): Record<string, unknown> {
     provider: {
       "@type": "TravelAgency",
       name: "Trekora",
-      url: "https://www.trekora.com",
-      telephone: "+91-98100-12345",
+      url: SITE_ORIGIN,
+      telephone: SITE_PHONE_TEL,
       address: {
         "@type": "PostalAddress",
         addressLocality: "Dehradun",
@@ -176,12 +165,12 @@ export function generateTrekJSONLD(trek: Trek): Record<string, unknown> {
           },
         }
       : {}),
-  };
+  });
 }
 
 export function generateYatraJSONLD(yatra: Yatra): Record<string, unknown> {
   const year = new Date().getFullYear();
-  return {
+  return enrichYatraJSONLD(yatra, {
     "@context": "https://schema.org",
     "@type": ["TouristAttraction", "Event"],
     name: yatra.name,
@@ -196,14 +185,14 @@ export function generateYatraJSONLD(yatra: Yatra): Record<string, unknown> {
     organizer: {
       "@type": "Organization",
       name: "Trekora",
-      url: "https://www.trekora.com",
+      url: SITE_ORIGIN,
     },
     offers: {
       "@type": "Offer",
       price: yatra.price.toString(),
       priceCurrency: "INR",
     },
-  };
+  });
 }
 
 export function generateBlogJSONLD(blog: Blog): Record<string, unknown> {
@@ -221,11 +210,11 @@ export function generateBlogJSONLD(blog: Blog): Record<string, unknown> {
       name: "Trekora",
       logo: {
         "@type": "ImageObject",
-        url: "https://www.trekora.com/logo.png",
+        url: `${SITE_ORIGIN}/logo.png`,
       },
     },
     datePublished: blog.publishedAt ?? new Date().toISOString().split("T")[0],
-    image: blog.heroImage ?? blog.images?.[0],
+    image: resolveBlogCardImage(blog) ?? blog.images?.[0],
   };
 }
 
@@ -239,7 +228,7 @@ export function generateBreadcrumbJSONLD(
       "@type": "ListItem",
       position: index + 1,
       item: {
-        "@id": `https://www.trekora.com${item.url}`,
+        "@id": `${SITE_ORIGIN}${item.url}`,
         name: item.name,
       },
     })),

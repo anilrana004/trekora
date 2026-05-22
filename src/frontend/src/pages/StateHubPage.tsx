@@ -1,8 +1,14 @@
-import { Link, useParams } from "@tanstack/react-router";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { MapPin, Mountain } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo } from "react";
 import BreadcrumbNav from "../components/BreadcrumbNav";
+import ListingRegionFilterPills, {
+  type ListingRegionTab,
+} from "../components/ListingRegionFilterPills";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import TrekCard from "../components/TrekCard";
 import OptimizedImage from "../components/media/OptimizedImage";
 import { TREKS, type TrekDifficulty } from "../data/treks";
@@ -117,7 +123,7 @@ const STATES: Record<string, StateConfig> = {
     heroImage:
       "https://images.unsplash.com/photo-1571401835393-8c5f35328320?w=1400&q=80",
     description:
-      "Sikkim's Himalayan trails offer pristine rhododendron forests, views of Kanchenjunga (the world's third highest peak), and a unique Buddhist cultural landscape unlike any other state in India. EternaWings is expanding to Sikkim — treks coming soon.",
+      "Sikkim's Himalayan trails offer pristine rhododendron forests, views of Kanchenjunga (the world's third highest peak), and a unique Buddhist cultural landscape unlike any other state in India. Trekora is expanding to Sikkim — treks coming soon.",
     seasonGuide: [
       {
         season: "Spring",
@@ -138,7 +144,7 @@ const STATES: Record<string, StateConfig> = {
     heroImage:
       "https://images.unsplash.com/photo-1598091383021-15ddea10925d?w=1400&q=80",
     description:
-      "West Bengal's Himalayan foothills — the Singalila Ridge, Sandakphu, and Phalut — offer dramatic Himalayan panoramas including Everest and Kanchenjunga from a single viewpoint. EternaWings is expanding to West Bengal — treks coming soon.",
+      "West Bengal's Himalayan foothills — the Singalila Ridge, Sandakphu, and Phalut — offer dramatic Himalayan panoramas including Everest and Kanchenjunga from a single viewpoint. Trekora is expanding to West Bengal — treks coming soon.",
     seasonGuide: [
       {
         season: "Autumn",
@@ -159,7 +165,7 @@ const STATES: Record<string, StateConfig> = {
     heroImage:
       "https://images.unsplash.com/photo-1568454537842-d933259bb258?w=1400&q=80",
     description:
-      "Maharashtra's Sahyadri range (Western Ghats) offers dramatic fort treks, waterfall trails, and misty monsoon hikes with a unique flavour distinct from Himalayan trekking. Kalsubai, Harishchandragad, and Rajmachi are iconic routes. EternaWings is expanding to Maharashtra — treks coming soon.",
+      "Maharashtra's Sahyadri range (Western Ghats) offers dramatic fort treks, waterfall trails, and misty monsoon hikes with a unique flavour distinct from Himalayan trekking. Kalsubai, Harishchandragad, and Rajmachi are iconic routes. Trekora is expanding to Maharashtra — treks coming soon.",
     seasonGuide: [
       {
         season: "Monsoon",
@@ -180,7 +186,7 @@ const STATES: Record<string, StateConfig> = {
     heroImage:
       "https://images.unsplash.com/photo-1529008922463-fd89f025f468?w=1400&q=80",
     description:
-      "Karnataka's Western Ghats are a UNESCO World Heritage biodiversity hotspot. Kumara Parvatha, Brahmagiri, and Kudremukh offer pristine forest trails and wildlife encounters. EternaWings is expanding to Karnataka — treks coming soon.",
+      "Karnataka's Western Ghats are a UNESCO World Heritage biodiversity hotspot. Kumara Parvatha, Brahmagiri, and Kudremukh offer pristine forest trails and wildlife encounters. Trekora is expanding to Karnataka — treks coming soon.",
     seasonGuide: [
       {
         season: "Winter",
@@ -252,7 +258,14 @@ function ComingSoonSection({ config }: { config: StateConfig }) {
   );
 }
 
+const STATE_HUB_PATHS: Record<ListingRegionTab, string> = {
+  all: "/treks",
+  uttarakhand: "/treks/state/uttarakhand",
+  himachal: "/treks/state/himachal-pradesh",
+};
+
 export default function StateHubPage() {
+  const navigate = useNavigate();
   const { state: stateParam } = useParams({
     from: "/layout/treks/state/$state",
   });
@@ -276,7 +289,7 @@ export default function StateHubPage() {
 
   useEffect(() => {
     const name = config?.title ?? stateParam;
-    document.title = `${name} Treks 2025 | EternaWings`;
+    document.title = `${name} Treks 2025 | Trekora`;
   }, [stateParam, config]);
 
   if (!config) {
@@ -303,7 +316,10 @@ export default function StateHubPage() {
       style={{ background: "var(--ew-gray-lt)" }}
     >
       {/* Hero */}
-      <div className="relative h-64 md:h-80 overflow-hidden">
+      <div
+        className="relative h-64 md:h-80 overflow-hidden"
+        data-travel-image-section
+      >
         <OptimizedImage
           src={config.heroImage}
           alt={config.title}
@@ -328,6 +344,30 @@ export default function StateHubPage() {
               available
             </p>
           )}
+        </div>
+      </div>
+
+      <div
+        id={TRAVEL_HERO_SENTINEL_ID}
+        className="h-0 w-full"
+        aria-hidden
+      />
+      <TravelSideActionRail
+        variant="listing-treks"
+        productName={`${config.title} treks`}
+      />
+
+      <div
+        className="listing-sticky-toolbar bg-white shadow-sm py-2.5 border-b"
+        style={{ borderColor: "var(--ew-gray-mid)" }}
+      >
+        <div className="container mx-auto px-4">
+          <ListingRegionFilterPills
+            kind="treks"
+            active={config.filterKey as ListingRegionTab}
+            highlightTab={config.filterKey as ListingRegionTab}
+            onChange={(tab) => navigate({ to: STATE_HUB_PATHS[tab] })}
+          />
         </div>
       </div>
 
@@ -451,6 +491,7 @@ export default function StateHubPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: (i % 3) * 0.1 }}
+                  style={{ pointerEvents: "auto" }}
                   data-ocid={`state_hub.trek_card.${i + 1}`}
                 >
                   <TrekCard trek={trek} />

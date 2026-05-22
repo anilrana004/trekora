@@ -72,7 +72,7 @@ const GEAR_CATEGORIES = [
     title: "Documents",
     items: [
       "Government-issued photo ID (Aadhaar / Passport)",
-      "Trek permit (provided by EternaWings)",
+      "Trek permit (provided by Trekora)",
       "Emergency contact details (written copy)",
       "Travel insurance policy document",
       "Medical fitness certificate",
@@ -88,7 +88,7 @@ const PACKING_FAQS = [
   },
   {
     q: "Can I rent equipment at the base camp?",
-    a: "Yes — EternaWings offers rentals for trekking poles, sleeping bags, and crampons from ₹200/day. Book in advance as stock is limited.",
+    a: "Yes — Trekora offers rentals for trekking poles, sleeping bags, and crampons from ₹200/day. Book in advance as stock is limited.",
   },
   {
     q: "Are trekking boots mandatory?",
@@ -122,7 +122,7 @@ export default function TrekPackingListPage() {
 
   useEffect(() => {
     const name = trek?.name ?? slug;
-    document.title = `Packing List for ${name} | EternaWings`;
+    document.title = `Packing List for ${name} | Trekora`;
     const meta = document.querySelector('meta[name="description"]');
     if (meta)
       meta.setAttribute(

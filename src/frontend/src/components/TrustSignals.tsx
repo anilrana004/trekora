@@ -1,3 +1,5 @@
+// INVARIANT: batchDate is epoch milliseconds (ms) from the canister.
+// Do NOT divide by 1_000_000 (that would be for nanoseconds). Do NOT multiply on write.
 import { useActor } from "@trekora/icp";
 import { useEffect, useState } from "react";
 import { createActor } from "../backend";
@@ -67,12 +69,12 @@ export default function TrustSignals({ trekSlug, trekId }: TrustSignalsProps) {
 
         const startOfToday = new Date();
         startOfToday.setHours(0, 0, 0, 0);
-        const todayStartNs = BigInt(startOfToday.getTime()) * 1_000_000n;
+        const todayStartMs = BigInt(startOfToday.getTime());
 
         const upcomingBatches = (batches as TrekBatchPublic[]).filter(
           (batch) =>
             batch.isActive &&
-            batch.batchDate >= todayStartNs &&
+            batch.batchDate >= todayStartMs &&
             Number(batch.availableSlots) > 0,
         );
 

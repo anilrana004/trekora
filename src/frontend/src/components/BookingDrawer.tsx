@@ -1,6 +1,22 @@
+import { isFeatureLive } from "@/lib/dormant-features";
+import {
+  bookingDetailsPlainText,
+  buildBookingEmailSections,
+} from "@/lib/booking-email-details";
+import { bookingEmailSuccessMessage } from "@/services/booking-email-api";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import { submitBookingEmail } from "@/services/booking-email-api";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { toast } from "sonner";
+import {
+  CTA_NAV_PRIMARY,
+  CTA_NAV_PRIMARY_GROW,
+  CTA_NAV_SECONDARY_FLEX,
+  ctaMerge,
+} from "@/lib/cta-buttons";
+import PhoneInput from "@/components/ui/PhoneInput";
+import { validateNationalPhone } from "@/lib/phone-countries";
 import { useIsMobile } from "../hooks/use-mobile";
 import OptimizedImage from "./media/OptimizedImage";
 
@@ -65,7 +81,7 @@ function reducer(state: BookingState, action: BookingAction): BookingState {
 const initialState: BookingState = {
   step: 1,
   selectedDate: "",
-  groupSize: 2,
+  groupSize: 1,
   addOns: [],
   name: "",
   phone: "",
@@ -97,8 +113,10 @@ export default function BookingDrawer({
   maxSlots,
   suggestedDateIso,
 }: BookingDrawerProps) {
+  const paymentLive = isFeatureLive("payment");
   const isMobile = useIsMobile();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [phoneCountry, setPhoneCountry] = useState("IN");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [rzpLoading, setRzpLoading] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -166,55 +184,156 @@ export default function BookingDrawer({
   function validateStep2() {
     const errs: Record<string, string> = {};
     if (!state.name.trim()) errs.name = "Full name is required";
-    if (!state.phone.match(/^[6-9]\d{9}$/))
-      errs.phone = "Enter valid 10-digit mobile number";
+    const phoneCheck = validateNationalPhone(state.phone, phoneCountry);
+    if (phoneCheck !== true) errs.phone = phoneCheck;
     if (!state.email.match(/^[^@]+@[^@]+\.[^@]+$/))
       errs.email = "Enter valid email address";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
 
-  /* Razorpay payment */
-  function initiatePayment() {
-    setRzpLoading(true);
-    setTimeout(() => {
-      setRzpLoading(false);
-      if (typeof window.Razorpay !== "undefined") {
-        const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder",
-          amount: total * 100,
-          currency: "INR",
-          name: "Trekora",
-          description: `${trekName} — ${state.selectedDate}`,
-          prefill: {
-            name: state.name,
-            email: state.email,
-            contact: state.phone,
-          },
-          theme: { color: "#C0001C" },
-          handler: (_response: RazorpayResponse) => {
-            toast.success(
-              `🎉 Booking confirmed! Confirmation sent to ${state.email}`,
-            );
-            onClose();
-          },
-        };
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      } else {
-        toast.success(
-          "🎉 Booking request received! Our team will contact you shortly.",
-        );
+  function bookingRef() {
+    return `EW-${new Date().getFullYear()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+  }
+
+  function submitBookingRequest(): boolean {
+    const ref = bookingRef();
+    const addOnLabels = ADD_ONS.filter((a) => state.addOns.includes(a.id)).map(
+      (a) => a.label,
+    );
+    const sections = buildBookingEmailSections(
+      {
+        batchDate: state.selectedDate,
+        groupSize: state.groupSize,
+        addOns: state.addOns,
+        fullName: state.name.trim(),
+        email: state.email.trim(),
+        mobile: state.phone.trim(),
+        whatsappSame: true,
+        whatsapp: state.phone.trim(),
+        city: "",
+        age: "",
+        gender: "",
+        emergencyName: "",
+        emergencyPhone: "",
+        emergencyRelation: "",
+        bloodGroup: "",
+        medicalConditions: [],
+        medicalOther: "",
+        fitnessLevel: "",
+        hasTrekked: false,
+        longestTrek: "",
+        idProofFile: null,
+        photoFile: null,
+        fitnessCertFile: null,
+        hasCoTravelers: false,
+        coTravelers: [],
+        heardFrom: "",
+        dietary: [],
+        accommodationNote: "",
+        needsTransport: false,
+        transportCity: "",
+        transportDate: "",
+        contactMode: ["WhatsApp"],
+        promoCode: "",
+        promoApplied: false,
+        promoDiscount: 0,
+        otherNotes: "",
+        termsAccepted: true,
+      },
+      {
+        itemType: "trek",
+        itemName: trekName,
+        trekSlug,
+        batchDateLabel: state.selectedDate,
+        batchStatus: maxSlots
+          ? `Batch — up to ${maxSlots} seat(s)`
+          : "Quick booking — team will confirm",
+        addOnLabels,
+        pricing: {
+          unitPrice: price,
+          groupSize: state.groupSize,
+          base: price * state.groupSize,
+          groupDiscount: 0,
+          addOnsTotal: addOnTotal * state.groupSize,
+          gst: 0,
+          promoSavings: 0,
+          grandTotal: total,
+        },
+      },
+    );
+    const email = state.email.trim();
+    submitEmailOptimistic(
+      () =>
+        submitBookingEmail({
+          bookingRef: ref,
+          source: "Booking Drawer",
+          trekName,
+          trekSlug,
+          batchDate: state.selectedDate,
+          groupSize: state.groupSize,
+          totalAmount: total,
+          travelerName: state.name.trim(),
+          email,
+          phone: state.phone.trim(),
+          addOns: addOnLabels,
+          sections,
+          details: bookingDetailsPlainText(sections),
+        }),
+      () => {
+        toast.success(`🎉 ${bookingEmailSuccessMessage(email)}`);
         onClose();
-      }
-    }, 500);
+      },
+      (message) => {
+        toast.error(
+          `${message} Reference ${ref} — save it and WhatsApp us if needed.`,
+        );
+      },
+    );
+    return true;
+  }
+
+  /* Razorpay payment or enquiry submit */
+  async function initiatePayment() {
+    if (!validateStep2()) return;
+
+    if (paymentLive && typeof window.Razorpay !== "undefined") {
+      setRzpLoading(true);
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder",
+        amount: total * 100,
+        currency: "INR",
+        name: "Trekora",
+        description: `${trekName} — ${state.selectedDate}`,
+        prefill: {
+          name: state.name,
+          email: state.email,
+          contact: state.phone,
+        },
+        theme: { color: "#C0001C" },
+        handler: (_response: RazorpayResponse) => {
+          submitBookingRequest();
+          setRzpLoading(false);
+        },
+        modal: {
+          ondismiss: () => setRzpLoading(false),
+        },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+      return;
+    }
+
+    setRzpLoading(false);
+    submitBookingRequest();
   }
 
   /* Step dots */
   function StepDots() {
+    const steps = paymentLive ? ([1, 2, 3] as const) : ([1, 2] as const);
     return (
       <div className="flex items-center justify-center gap-2 mb-6">
-        {([1, 2, 3] as const).map((s) => (
+        {steps.map((s) => (
           <div
             key={s}
             className="rounded-full transition-all duration-300"
@@ -601,30 +720,16 @@ export default function BookingDrawer({
                 >
                   Mobile Number *
                 </label>
-                <input
+                <PhoneInput
                   id="booking-phone"
-                  type="tel"
-                  placeholder="10-digit mobile number"
                   value={state.phone}
-                  onChange={(e) =>
-                    dispatch({
-                      type: "SET_FIELD",
-                      field: "phone",
-                      value: e.target.value,
-                    })
+                  countryIso={phoneCountry}
+                  onValueChange={(value) =>
+                    dispatch({ type: "SET_FIELD", field: "phone", value })
                   }
-                  onFocus={(e) =>
-                    e.currentTarget.scrollIntoView({
-                      behavior: "smooth",
-                      block: "nearest",
-                    })
-                  }
-                  className="w-full rounded-xl px-4 text-sm focus:outline-none"
-                  style={{
-                    height: 48,
-                    border: `1px solid ${errors.phone ? "var(--ew-red)" : "var(--ew-gray-mid)"}`,
-                    color: "var(--ew-text)",
-                  }}
+                  onCountryChange={(meta) => setPhoneCountry(meta.iso)}
+                  hasError={Boolean(errors.phone)}
+                  placeholder="Enter Your Mobile Number"
                   data-ocid="booking_drawer.phone_input"
                 />
                 {errors.phone && (
@@ -698,7 +803,7 @@ export default function BookingDrawer({
           )}
 
           {/* ── STEP 3 ── */}
-          {state.step === 3 && (
+          {paymentLive && state.step === 3 && (
             <motion.div
               key="step3"
               initial={{ opacity: 0, x: 20 }}
@@ -803,7 +908,8 @@ export default function BookingDrawer({
                   🔒 100% Secure Payment via Razorpay
                 </p>
                 <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
-                  UPI · Cards · Net Banking · EMI available
+                  UPI · Cards · Net Banking
+                  {isFeatureLive("emi") ? " · EMI available" : ""}
                 </p>
               </div>
             </motion.div>
@@ -822,11 +928,10 @@ export default function BookingDrawer({
             onClick={() => {
               if (validateStep1()) dispatch({ type: "SET_STEP", step: 2 });
             }}
-            className="w-full rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
-            style={{ height: 48, backgroundColor: "var(--ew-orange)" }}
+            className={ctaMerge(CTA_NAV_PRIMARY, "w-full")}
             data-ocid="booking_drawer.step1_continue"
           >
-            Continue →
+            Continue
           </button>
         )}
 
@@ -835,53 +940,55 @@ export default function BookingDrawer({
             <button
               type="button"
               onClick={() => dispatch({ type: "SET_STEP", step: 1 })}
-              className="flex-1 rounded-xl font-semibold text-sm transition-colors"
-              style={{
-                height: 48,
-                border: "1px solid var(--ew-gray-mid)",
-                color: "var(--ew-text)",
-                backgroundColor: "var(--ew-gray-lt)",
-              }}
+              className={CTA_NAV_SECONDARY_FLEX}
               data-ocid="booking_drawer.step2_back"
             >
-              ← Back
+              Back
             </button>
             <button
               type="button"
+              disabled={rzpLoading}
               onClick={() => {
-                if (validateStep2()) dispatch({ type: "SET_STEP", step: 3 });
+                if (!validateStep2()) return;
+                if (paymentLive) {
+                  dispatch({ type: "SET_STEP", step: 3 });
+                } else {
+                  void initiatePayment();
+                }
               }}
-              className="flex-[2] rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
-              style={{ height: 48, backgroundColor: "var(--ew-orange)" }}
+              className={ctaMerge(
+                CTA_NAV_PRIMARY_GROW,
+                "disabled:opacity-60",
+              )}
               data-ocid="booking_drawer.step2_proceed"
             >
-              Proceed to Pay
+              {rzpLoading
+                ? "Sending…"
+                : paymentLive
+                  ? "Proceed to Pay"
+                  : "Submit enquiry"}
             </button>
           </div>
         )}
 
-        {state.step === 3 && (
+        {paymentLive && state.step === 3 && (
           <div className="flex gap-2">
             <button
               type="button"
               onClick={() => dispatch({ type: "SET_STEP", step: 2 })}
-              className="flex-1 rounded-xl font-semibold text-sm transition-colors"
-              style={{
-                height: 48,
-                border: "1px solid var(--ew-gray-mid)",
-                color: "var(--ew-text)",
-                backgroundColor: "var(--ew-gray-lt)",
-              }}
+              className={CTA_NAV_SECONDARY_FLEX}
               data-ocid="booking_drawer.step3_back"
             >
-              ← Back
+              Back
             </button>
             <button
               type="button"
-              onClick={initiatePayment}
+              onClick={() => void initiatePayment()}
               disabled={rzpLoading}
-              className="flex-[2] rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 disabled:opacity-60"
-              style={{ height: 48, backgroundColor: "var(--ew-red)" }}
+              className={ctaMerge(
+                CTA_NAV_PRIMARY_GROW,
+                "!bg-[var(--ew-red)] hover:!brightness-95 disabled:opacity-60",
+              )}
               data-ocid="booking_drawer.pay_button"
             >
               {rzpLoading ? (

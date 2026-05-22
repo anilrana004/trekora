@@ -1,0 +1,60 @@
+/* Floating Plan My Trek + Callback tray — stack above mobile bottom nav */
+
+@media (max-width: 1023px) {
+  :root {
+    --mobile-fab-size: 2.75rem;
+    --mobile-fab-gap: 0.75rem;
+    --mobile-fab-left-step: calc(var(--mobile-fab-size) + var(--mobile-fab-gap));
+    --mobile-fab-bottom: calc(
+      var(--mobile-nav-height, 56px) + 0.75rem + env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  body:has(.mobile-detail-page-pad) {
+    --mobile-fab-bottom: calc(
+      var(--mobile-book-bar-height, 5rem) + 0.75rem +
+        env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  .floating-cta-tray {
+    right: max(1rem, env(safe-area-inset-right, 0px)) !important;
+    bottom: var(--mobile-fab-bottom) !important;
+    left: auto !important;
+  }
+
+  .floating-cta-callback {
+    position: fixed;
+    left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+    right: auto !important;
+    bottom: var(--mobile-fab-bottom) !important;
+    z-index: 40;
+  }
+
+  .floating-cta-callback .callback-panel--floating-left {
+    bottom: calc(100% + 0.5rem);
+    z-index: 55;
+  }
+
+  .fab-left-stack-0 {
+    bottom: var(--mobile-fab-bottom) !important;
+    left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+    right: auto !important;
+  }
+
+  .fab-left-stack-1 {
+    bottom: calc(
+      var(--mobile-fab-bottom) + var(--mobile-fab-left-step)
+    ) !important;
+    left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+    right: auto !important;
+  }
+
+  .fab-left-stack-2 {
+    bottom: calc(
+      var(--mobile-fab-bottom) + var(--mobile-fab-left-step) * 2
+    ) !important;
+    left: max(1rem, env(safe-area-inset-left, 0px)) !important;
+    right: auto !important;
+  }
+}

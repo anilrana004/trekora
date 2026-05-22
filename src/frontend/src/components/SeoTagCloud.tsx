@@ -1,3 +1,4 @@
+import { allSeoTagsForProduct } from "@/lib/product-seo";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -14,7 +15,7 @@ interface SeoTagCloudProps {
 
 function makeSearchUrl(tag: string, type: "trek" | "yatra" = "trek"): string {
   const base = type === "trek" ? "/treks" : "/yatras";
-  return `${base}?filter=${encodeURIComponent(tag)}`;
+  return `${base}?tag=${encodeURIComponent(tag)}`;
 }
 
 export default function SeoTagCloud({
@@ -35,6 +36,13 @@ export default function SeoTagCloud({
   // Build tag list dynamically
   const tags: Array<{ label: string; href: string }> = [];
 
+  for (const curated of allSeoTagsForProduct(slug, type).slice(0, 12)) {
+    tags.push({
+      label: curated,
+      href: makeSearchUrl(curated, type),
+    });
+  }
+
   const addSearch = (label: string) =>
     tags.push({ label, href: makeSearchUrl(label, type) });
   const addPage = (label: string, href: string) => tags.push({ label, href });
@@ -53,7 +61,7 @@ export default function SeoTagCloud({
     if (duration) addSearch(`${duration} Days Trek`);
     addSearch("Himalayan Treks India");
     addSearch("Trek Packages from Delhi");
-    addSearch("EternaWings Reviews");
+    addSearch("Trekora Reviews");
     addSearch("Certified Mountain Guide Treks");
     addSearch("Safe Himalayan Treks");
     addSearch("Small Group Treks India");
@@ -72,7 +80,7 @@ export default function SeoTagCloud({
     addPage("Valley of Flowers Trek", "/treks/valley-of-flowers-trek");
     addPage("Hampta Pass Trek", "/treks/hampta-pass-trek");
     addPage("Triund Trek", "/treks/triund-trek");
-    addPage("Har Ki Dun Trek", "/treks/har-ki-dun-trek");
+    addPage("Har Ki Dun Trek", "/treks/har-ki-dun");
     // Related treks
     relatedNames.forEach((rName, i) => {
       if (relatedSlugs[i]) {
@@ -96,7 +104,7 @@ export default function SeoTagCloud({
     addSearch("Hindu Pilgrimage India");
     addSearch("Sikh Pilgrimage India");
     addSearch("Pilgrimage Packages 2025");
-    addSearch("EternaWings Yatra Reviews");
+    addSearch("Trekora Yatra Reviews");
     addSearch("VIP Darshan Yatra");
     addSearch("Group Pilgrimage India");
     addSearch("Senior Friendly Yatra");

@@ -1,6 +1,11 @@
+import { useListingScrollChromeContext } from "@/contexts/ListingScrollChromeContext";
+import { openQueryModalFromLayout } from "@/lib/layout-modals";
+import { isListingScrollChromeRoute } from "@/lib/listing-scroll-chrome";
+import { bookSearch } from "@/lib/book-search";
+import { isFeatureLive } from "@/lib/dormant-features";
 import { SITE_LOGO_URL } from "@/lib/site-brand";
 import { SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/lib/site-contact";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +14,7 @@ import LanguageBanner from "./LanguageBanner";
 import MobileSearchModal from "./MobileSearchModal";
 import SearchDropdown from "./SearchDropdown";
 import OptimizedImage from "./media/OptimizedImage";
-import { EnquiryButton } from "./ui/EnquiryButton";
+const CHAR_DHAM_YATRA_SLUG = "char-dham-yatra";
 
 const UK_TREKS = [
   { name: "Roopkund Trek", slug: "roopkund-trek" },
@@ -130,6 +135,12 @@ export default function Navbar() {
   const rafRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isListingChromeRoute = isListingScrollChromeRoute(pathname);
+  const { chromeActive: listingChromeActive } = useListingScrollChromeContext();
+  const hideMobileNav =
+    isMobile &&
+    (isListingChromeRoute ? listingChromeActive : mobileNavHidden);
 
   function toggleLang() {
     const next = lang === "en" ? "hi" : "en";
@@ -150,10 +161,10 @@ export default function Navbar() {
         const isScrollingDown = y > lastScrollY.current;
         if (isScrollingDown && y > 60) {
           setAnnouncementVisible(false);
-          if (isMobile) setMobileNavHidden(true);
+          if (isMobile && !isListingChromeRoute) setMobileNavHidden(true);
         } else if (!isScrollingDown) {
           setAnnouncementVisible(true);
-          if (isMobile) setMobileNavHidden(false);
+          if (isMobile && !isListingChromeRoute) setMobileNavHidden(false);
         }
         setScrolled(y > 10);
         lastScrollY.current = y;
@@ -164,7 +175,7 @@ export default function Navbar() {
       window.removeEventListener("scroll", onScroll);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, [isMobile]);
+  }, [isMobile, isListingChromeRoute]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -233,7 +244,7 @@ export default function Navbar() {
       {/* Sticky Navbar */}
       <motion.header
         animate={{
-          y: isMobile && mobileNavHidden ? "-100%" : "0%",
+          y: hideMobileNav ? "-100%" : "0%",
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ${scrolled ? "shadow-lg" : "shadow-sm"}`}
@@ -251,10 +262,7 @@ export default function Navbar() {
           {isMobile && (
             <button
               type="button"
-              onClick={() => {
-                const evt = new CustomEvent("open-query-modal");
-                window.dispatchEvent(evt);
-              }}
+              onClick={() => openQueryModalFromLayout()}
               className="flex-1 mx-2 text-xs font-semibold rounded-full px-3 py-1.5 transition-colors"
               style={{
                 border: "1.5px solid var(--ew-red)",
@@ -533,7 +541,7 @@ export default function Navbar() {
                                 }}
                               >
                                 <span className="text-white font-bold text-sm leading-tight">
-                                  Char Dham Yatra 2025
+                                  Char Dham Yatra 2026
                                   <br />
                                   <span className="font-normal text-white/80 text-xs">
                                     Register Now — Limited Spots
@@ -547,14 +555,17 @@ export default function Navbar() {
                                     ₹25,000
                                   </strong>
                                 </p>
-                                <EnquiryButton
-                                  type="button"
-                                  trekName="Char Dham Yatra"
-                                  className="btn-primary text-xs px-3 py-1.5"
+                                <Link
+                                  to="/book"
+                                  search={bookSearch({
+                                    yatra: CHAR_DHAM_YATRA_SLUG,
+                                  })}
+                                  className="btn-primary text-xs px-3 py-1.5 inline-flex items-center justify-center"
+                                  onClick={() => setActiveMenu(null)}
                                   data-ocid="nav.yatras_mega.book_char_dham"
                                 >
                                   Book Now →
-                                </EnquiryButton>
+                                </Link>
                               </div>
                             </div>
                           </div>
@@ -591,14 +602,16 @@ export default function Navbar() {
             >
               <Search size={19} />
             </button>
-            <button
-              type="button"
-              onClick={() => navigate({ to: "/" })}
-              className="text-sm font-medium px-4 py-2 rounded-md text-[var(--ew-text)] hover:text-[var(--ew-red)] hover:bg-[var(--ew-red-lt)] transition-colors"
-              data-ocid="nav.login_button"
-            >
-              Login
-            </button>
+            {isFeatureLive("login") ? (
+              <button
+                type="button"
+                onClick={() => navigate({ to: "/dashboard" })}
+                className="text-sm font-medium px-4 py-2 rounded-md text-[var(--ew-text)] hover:text-[var(--ew-red)] hover:bg-[var(--ew-red-lt)] transition-colors"
+                data-ocid="nav.login_button"
+              >
+                Login
+              </button>
+            ) : null}
             <button
               type="button"
               onClick={toggleLang}
@@ -628,10 +641,7 @@ export default function Navbar() {
             </a>
             <button
               type="button"
-              onClick={() => {
-                const evt = new CustomEvent("open-query-modal");
-                window.dispatchEvent(evt);
-              }}
+              onClick={() => openQueryModalFromLayout()}
               className="btn-primary text-sm"
               data-ocid="nav.plan_trek_button"
             >

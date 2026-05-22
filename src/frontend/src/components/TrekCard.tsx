@@ -3,6 +3,7 @@ import { ChevronRight, Clock, MapPin, Star } from "lucide-react";
 import TrailConditionBadge from "../components/TrailConditionBadge";
 import { CompareButton } from "../components/TrekCompare";
 import WishlistHeart from "../components/WishlistHeart";
+import { isFeatureLive } from "@/lib/dormant-features";
 import type { Trek } from "../data/treks";
 import OptimizedImage from "./media/OptimizedImage";
 
@@ -27,7 +28,9 @@ export default function TrekCard({
   showEmiBadge,
   compactCta,
 }: TrekCardProps) {
-  const showEmi = showEmiBadge !== undefined ? showEmiBadge : trek.price > 8000;
+  const showEmi =
+    isFeatureLive("emi") &&
+    (showEmiBadge !== undefined ? showEmiBadge : trek.price > 8000);
   const mi = index !== undefined ? `.${index + 1}` : "";
   const safeRating = trek.rating ?? 4.5;
   const safeReviewCount = trek.reviewCount ?? 0;
@@ -279,7 +282,7 @@ export default function TrekCard({
                     ₹{trek.price.toLocaleString("en-IN")}
                   </div>
                 </div>
-                <CompareButton trekId={String(trek.id)} />
+                <CompareButton trekId={trek.slug} />
               </div>
               <Link
                 to="/treks/$slug"
@@ -307,7 +310,7 @@ export default function TrekCard({
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
-                <CompareButton trekId={String(trek.id)} />
+                <CompareButton trekId={trek.slug} />
                 <Link
                   to="/treks/$slug"
                   params={{ slug: trek.slug }}

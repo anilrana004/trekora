@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE } from "@/lib/site-config";
 import { useEffect } from "react";
 
 interface SEOHeadProps {
@@ -71,7 +72,7 @@ export function SEOHead({
     // OpenGraph
     setOGMeta("og:title", title);
     setOGMeta("og:description", description);
-    setOGMeta("og:image", ogImage || "https://www.trekora.com/og-default.jpg");
+    setOGMeta("og:image", ogImage || DEFAULT_OG_IMAGE);
     setOGMeta("og:url", canonicalUrl);
     setOGMeta("og:type", ogType);
     setOGMeta("og:locale", "en_IN");
@@ -83,7 +84,7 @@ export function SEOHead({
     setMeta("twitter:description", description);
     setMeta(
       "twitter:image",
-      ogImage || "https://www.trekora.com/og-default.jpg",
+      ogImage || DEFAULT_OG_IMAGE,
     );
 
     // JSON-LD

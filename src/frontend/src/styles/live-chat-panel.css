@@ -1,0 +1,77 @@
+/* Ask Priya chat — inline beside rail (desktop) / centered modal (mobile, clears side tabs) */
+
+.live-chat-panel {
+  background: #fff;
+  border: 1px solid var(--ew-gray-mid);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.14);
+  width: 300px;
+  max-width: min(300px, calc(100vw - 4rem));
+  max-height: min(380px, calc(100dvh - 8rem));
+}
+
+.live-chat-panel--inline-right {
+  position: absolute;
+  left: calc(100% + 0.5rem);
+  top: 0;
+  z-index: 60;
+  transform-origin: center left;
+}
+
+.live-chat-panel--floating-left {
+  position: absolute;
+  bottom: calc(100% + 0.75rem);
+  left: 0;
+  z-index: 60;
+  transform-origin: bottom left;
+}
+
+.live-chat-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: max(1rem, env(safe-area-inset-top, 0px)) 1rem
+    max(
+      calc(1rem + var(--mobile-nav-height, 56px)),
+      env(safe-area-inset-bottom, 0px)
+    );
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.live-chat-modal .live-chat-panel {
+  position: relative;
+  left: auto;
+  top: auto;
+  bottom: auto;
+  margin: auto;
+  flex-shrink: 0;
+  width: min(300px, calc(100vw - 5.5rem));
+  max-width: min(300px, calc(100vw - 5.5rem));
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --travel-rail-gutter: 2.75rem;
+  }
+
+  /* Fallback if inline placement is used without modal */
+  .live-chat-panel--inline-right,
+  .live-chat-panel--floating-left {
+    position: fixed;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: calc(var(--travel-rail-mobile-bottom, 4.5rem) + 3.25rem);
+    transform: translateX(-50%);
+    transform-origin: center bottom;
+    width: min(280px, calc(100vw - var(--travel-rail-gutter) * 2));
+    max-width: min(280px, calc(100vw - var(--travel-rail-gutter) * 2));
+    z-index: 110;
+  }
+}

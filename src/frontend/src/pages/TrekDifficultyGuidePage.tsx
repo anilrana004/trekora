@@ -119,7 +119,7 @@ export default function TrekDifficultyGuidePage() {
 
   useEffect(() => {
     const name = trek?.name ?? slug;
-    document.title = `Difficulty Guide — ${name} | EternaWings`;
+    document.title = `Difficulty Guide — ${name} | Trekora`;
   }, [slug, trek]);
 
   if (!trek) {

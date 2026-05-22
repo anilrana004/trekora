@@ -1,8 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { SEOHead } from "../components/SEOHead";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { BLOGS } from "../data/blogs";
+import { resolveBlogCardImage } from "../lib/blog-product-images";
 
 const CATEGORIES = [
   "All",
@@ -12,6 +18,19 @@ const CATEGORIES = [
   "Safety",
   "Gear",
 ];
+
+/** Outlined red pill — matches trek / packages / gallery CTAs */
+const CTA_OUTLINE_RED =
+  "inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-5 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] hover:bg-[var(--ew-red)] hover:text-white transition-colors";
+
+const FILTER_PILL_BASE =
+  "px-4 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors";
+
+function filterPillClass(active: boolean): string {
+  return active
+    ? `${FILTER_PILL_BASE} border-[var(--ew-red)] bg-[var(--ew-red)] text-white`
+    : `${FILTER_PILL_BASE} border-[var(--ew-red)] text-[var(--ew-red)] bg-transparent hover:bg-[var(--ew-red)] hover:text-white`;
+}
 
 export default function BlogPage() {
   const [category, setCategory] = useState("All");
@@ -29,70 +48,100 @@ export default function BlogPage() {
       className="pt-16 min-h-screen"
       style={{ background: "var(--ew-gray-lt)" }}
     >
-      {/* Hero */}
-      <div
-        className="py-16 text-center border-b"
-        style={{
-          background: "var(--ew-gray-lt)",
-          borderColor: "var(--ew-gray-mid)",
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <span
-            className="text-xs font-bold uppercase tracking-widest"
-            style={{ color: "var(--ew-red)" }}
-          >
-            Trek Knowledge
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold mt-2 mb-3 section-title mx-auto">
-            Travel Stories &amp; Tips
-          </h1>
-          <p className="mt-4 text-sm" style={{ color: "var(--ew-text-lt)" }}>
-            Expert guides, tips and stories from the Himalayas
-          </p>
-        </motion.div>
+      <SEOHead
+        title="Trek Knowledge — Travel Stories & Tips from the Himalayas | Trekora"
+        description="Expert Himalayan trek guides, yatra tips, destination stories, safety advice, and gear recommendations from Trekora."
+        keywords="Himalayan trek blog, trekking tips India, Trekora travel stories, trek guides Uttarakhand"
+        canonical="https://www.trekora.in/blog"
+      />
 
-        {/* Search */}
-        <div className="mt-6 flex justify-center">
-          <div className="relative w-full max-w-md">
-            <Search
-              size={16}
-              className="absolute left-3 top-1/2 -translate-y-1/2"
-              style={{ color: "var(--ew-gray-dark)" }}
-            />
-            <input
-              type="text"
-              placeholder="Search articles..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-full text-sm bg-white shadow-sm focus:outline-none"
-              style={{ border: "2px solid var(--ew-red)" }}
-              data-ocid="blog.search_input"
-            />
-          </div>
+      {/* Hero — matches gallery / packages listing */}
+      <div
+        className="relative overflow-hidden"
+        style={{ backgroundColor: "var(--ew-red)" }}
+      >
+        <svg
+          className="absolute bottom-0 left-0 w-full opacity-10 pointer-events-none"
+          viewBox="0 0 1440 180"
+          preserveAspectRatio="none"
+          aria-hidden
+        >
+          <path
+            d="M0 180L120 90L240 150L360 60L480 120L600 40L720 100L840 30L960 110L1080 50L1200 120L1320 70L1440 130L1440 180Z"
+            fill="white"
+          />
+          <path
+            d="M0 180L180 110L360 155L540 80L720 130L900 55L1080 120L1260 75L1440 145L1440 180Z"
+            fill="white"
+            opacity="0.5"
+          />
+        </svg>
+
+        <div className="container mx-auto px-4 py-16 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55 }}
+            className="text-center text-white"
+          >
+            <span className="inline-block text-xs font-semibold uppercase tracking-widest bg-white/20 px-4 py-1.5 rounded-full mb-4">
+              Trek Knowledge
+            </span>
+            <h1 className="text-4xl md:text-5xl font-bold mb-3 text-shadow">
+              Travel Stories &amp; Tips
+            </h1>
+            <p className="text-white/85 text-sm md:text-base max-w-2xl mx-auto mb-6">
+              Expert guides, tips and stories from the Himalayas
+            </p>
+
+            {/* Search */}
+            <div className="flex justify-center">
+              <div className="relative w-full max-w-md">
+                <Search
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70"
+                  aria-hidden
+                />
+                <input
+                  type="search"
+                  placeholder="Search articles..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2.5 rounded-full text-sm bg-white/95 text-[var(--ew-text)] shadow-sm focus:outline-none focus:ring-2 focus:ring-white/80"
+                  style={{ border: "2px solid rgba(255,255,255,0.5)" }}
+                  data-ocid="blog.search_input"
+                />
+              </div>
+            </div>
+
+            <span
+              className="inline-block mt-6 px-7 py-2.5 rounded-full text-sm font-semibold text-white shadow-md"
+              style={{
+                backgroundColor: "var(--ew-red)",
+                border: "2px solid rgba(255,255,255,0.35)",
+              }}
+            >
+              All Articles
+            </span>
+          </motion.div>
         </div>
       </div>
 
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail variant="listing-blog" />
+
       {/* Category tabs */}
-      <div className="bg-white py-4 shadow-sm sticky top-16 z-20">
+      <div
+        className="listing-sticky-toolbar bg-white py-3 shadow-sm"
+        style={{ borderBottom: "1px solid var(--ew-gray-mid)" }}
+      >
         <div className="container mx-auto px-4 flex flex-wrap gap-2 justify-center">
           {CATEGORIES.map((c) => (
             <button
               key={c}
               type="button"
               onClick={() => setCategory(c)}
-              className="px-4 py-1.5 rounded-full text-sm font-semibold transition-all"
-              style={
-                category === c
-                  ? { background: "var(--ew-red)", color: "#fff" }
-                  : {
-                      background: "var(--ew-gray-lt)",
-                      color: "var(--ew-text-lt)",
-                    }
-              }
+              className={filterPillClass(category === c)}
               data-ocid={`blog.filter.${c.toLowerCase().replace(/\s+/g, "_")}`}
             >
               {c}
@@ -116,43 +165,38 @@ export default function BlogPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filtered.map((blog, i) => (
-              <motion.div
-                key={blog.id}
+              <motion.article
+                key={blog.slug}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.07 }}
+                className="bg-white rounded-xl overflow-hidden shadow-card flex flex-col"
                 style={{
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
                   borderLeft: "3px solid transparent",
-                  borderRadius: "0.75rem",
-                  willChange: "transform",
-                  overflow: "hidden",
                 }}
                 whileHover={{
-                  scale: 1.035,
-                  y: -6,
-                  boxShadow: "0 12px 32px rgba(0,0,0,0.16)",
+                  y: -4,
+                  boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
                   borderLeftColor: "var(--ew-red)",
                 }}
-                whileTap={{ scale: 0.97 }}
               >
                 <Link
                   to="/blog/$slug"
                   params={{ slug: blog.slug }}
-                  className="group block bg-white rounded-xl overflow-hidden"
+                  className="group block flex-1"
                   data-ocid={`blog.card.${i + 1}`}
                 >
                   <div className="h-52 overflow-hidden">
-                    <motion.img
-                      src={blog.heroImage}
+                    <OptimizedImage
+                      src={resolveBlogCardImage(blog)}
                       alt={blog.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.08 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
+                      variant="blog-card"
+                      width={640}
+                      height={360}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
-                  <div className="p-5">
+                  <div className="p-5 pb-3">
                     <div className="flex items-center gap-2 mb-2">
                       <span
                         className="text-xs font-bold uppercase tracking-wide px-2.5 py-0.5 rounded-full"
@@ -177,26 +221,30 @@ export default function BlogPage() {
                       {blog.title}
                     </h3>
                     <p
-                      className="text-sm line-clamp-3 mb-3"
+                      className="text-sm line-clamp-3"
                       style={{ color: "var(--ew-text-lt)" }}
                     >
                       {blog.excerpt}
                     </p>
-                    <div
-                      className="flex items-center justify-between text-xs"
+                    <p
+                      className="text-xs mt-3"
                       style={{ color: "var(--ew-gray-dark)" }}
                     >
-                      <span>{blog.author}</span>
-                      <span
-                        className="font-semibold"
-                        style={{ color: "var(--ew-red)" }}
-                      >
-                        Read More →
-                      </span>
-                    </div>
+                      {blog.author}
+                    </p>
                   </div>
                 </Link>
-              </motion.div>
+                <div className="px-5 pb-5 pt-0">
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: blog.slug }}
+                    className={`${CTA_OUTLINE_RED} w-full text-xs py-2`}
+                    data-ocid={`blog.read_button.${i + 1}`}
+                  >
+                    Read Article <ChevronRight size={14} aria-hidden />
+                  </Link>
+                </div>
+              </motion.article>
             ))}
           </div>
         )}

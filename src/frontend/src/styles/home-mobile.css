@@ -1,0 +1,255 @@
+@media (max-width: 1023px) {
+  .home-page {
+    overflow-x: hidden;
+  }
+
+  /* Hero */
+  .home-hero__featured {
+    min-height: min(72vw, 22rem);
+    aspect-ratio: 4 / 5;
+    max-height: 26rem;
+  }
+
+  .home-hero__strip {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .home-hero__strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-hero__strip-card {
+    width: min(78vw, 17.5rem);
+    aspect-ratio: 16 / 11;
+  }
+
+  /* Mobile trek finder */
+  .home-search {
+    background: #fff;
+    border-bottom: 1px solid var(--ew-gray-mid);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .home-search__shell {
+    padding: 0.5rem 1rem 0.625rem;
+  }
+
+  .home-search__toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.875rem;
+    border: 2px solid var(--ew-gray-mid);
+    border-radius: 9999px;
+    background: var(--ew-gray-lt);
+    color: var(--ew-text);
+    font-size: 0.875rem;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .home-search__toggle[aria-expanded="true"] {
+    border-color: var(--ew-red);
+    background: var(--ew-red-lt);
+    color: var(--ew-red);
+  }
+
+  .home-search__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+  }
+
+  .home-search__panel--open {
+    grid-template-rows: 1fr;
+  }
+
+  .home-search__panel-inner {
+    overflow: hidden;
+  }
+
+  .home-search__panel--open .home-search__panel-inner {
+    padding-top: 0.625rem;
+  }
+
+  .home-search__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 0.625rem;
+  }
+
+  .home-search__people {
+    grid-column: 1 / -1;
+  }
+
+  .home-search__label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ew-text-lt);
+  }
+
+  .home-search__submit {
+    margin-top: 0.625rem;
+  }
+
+  .home-search__tags {
+    margin-top: 0.625rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .home-search__tags-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--ew-gray-dark);
+  }
+
+  .home-search__tags-scroll {
+    display: flex;
+    gap: 0.375rem;
+    overflow-x: auto;
+    padding-bottom: 0.125rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .home-search__tags-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .home-search__tag {
+    flex-shrink: 0;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    background: var(--ew-gray-lt);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ew-text-lt);
+    text-decoration: none;
+    border: 1px solid var(--ew-gray-mid);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .home-search__tag:hover {
+    background: var(--ew-red);
+    border-color: var(--ew-red);
+    color: #fff;
+  }
+
+  /* Trust strip under hero */
+  .home-page [data-ocid="home.trust_badges"] {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .home-page [data-ocid="home.trust_badges"] .text-sm {
+    font-size: 0.8125rem;
+  }
+
+  .home-page [data-ocid="home.trust_badges"] svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  /* Section rhythm */
+  .home-page .py-12 {
+    padding-top: 2.25rem;
+    padding-bottom: 2.25rem;
+  }
+
+  .home-page .py-14 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .home-page .py-10 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .home-page .section-title {
+    font-size: 1.375rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .home-page .section-title::after {
+    width: 2rem;
+    height: 2px;
+  }
+
+  /* Carousels — swipe-first on phone */
+  .home-page .home-carousel-track {
+    scroll-padding-inline: 1rem;
+    margin-inline: -0.25rem;
+    padding-inline: 0.25rem;
+  }
+
+  .home-page .home-carousel-card {
+    width: min(88vw, 18.5rem);
+  }
+
+  .home-page .home-carousel-nav {
+    display: none !important;
+  }
+
+  /* Filter chips — match listing pills */
+  .home-page .home-filter-tabs button {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border-width: 1.5px;
+    border-radius: 9999px;
+  }
+
+  /* Destination mini-grids on state sections */
+  .home-page .grid.grid-cols-3.gap-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  /* Stats */
+  .home-page [data-ocid="stats.section"] .py-8 {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+
+  .home-page .counter-number {
+    font-size: 1.5rem;
+  }
+
+  /* Yatra section heading */
+  .home-page [data-ocid="yatras.section"] h2 {
+    font-size: 1.5rem;
+  }
+
+  /* Offer banners */
+  .home-page [data-ocid="offers.section"] .offer-banner {
+    min-height: 7.5rem;
+    padding: 1.125rem;
+  }
+
+  .home-page [data-ocid="offers.section"] .offer-banner__title {
+    font-size: 1.125rem;
+  }
+
+  /* Newsletter */
+  .home-page [data-ocid="newsletter.section"] input {
+    min-height: 2.75rem !important;
+  }
+}

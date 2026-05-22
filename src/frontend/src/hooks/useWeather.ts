@@ -1,3 +1,4 @@
+import { getOpenWeatherApiKey } from "@/lib/openweather";
 import { useCallback, useEffect, useState } from "react";
 
 export interface CurrentWeather {
@@ -29,12 +30,12 @@ export interface UseWeatherResult {
   data: WeatherData | null;
   isLoading: boolean;
   error: string | null;
+  refetch: () => void;
 }
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 60 minutes
 const API_BASE = "https://api.openweathermap.org/data/2.5";
-const API_KEY = (import.meta.env.VITE_OPENWEATHER_API_KEY ??
-  import.meta.env.VITE_OPENWEATHERMAP_KEY) as string | undefined;
+const API_KEY = getOpenWeatherApiKey();
 
 function getCacheKey(location: string) {
   return `himalayan_weather_${location.toLowerCase().replace(/\s+/g, "_")}`;
@@ -200,5 +201,5 @@ export function useWeather(location: string): UseWeatherResult {
     void fetchWeather();
   }, [location, fetchWeather]);
 
-  return { data, isLoading, error };
+  return { data, isLoading, error, refetch: () => void fetchWeather() };
 }

@@ -1,9 +1,23 @@
+import { SEOHead } from "@/components/SEOHead";
+import { ERROR_PAGE_SEO } from "@/lib/route-seo";
+import {
+  SITE_EMAIL,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_TEL,
+  buildWhatsAppUrl,
+} from "@/lib/site-contact";
 import { AlertTriangle, MessageCircle, Phone, RefreshCw } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function ErrorPage() {
   return (
     <main id="main-content">
+      <SEOHead
+        title={ERROR_PAGE_SEO.title}
+        description={ERROR_PAGE_SEO.description}
+        canonical={ERROR_PAGE_SEO.canonical}
+        noindex={ERROR_PAGE_SEO.noindex}
+      />
       <section
         className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-20"
         style={{ background: "var(--ew-gray-lt)" }}
@@ -45,7 +59,7 @@ export default function ErrorPage() {
               Reload Page
             </button>
             <a
-              href="https://wa.me/911800000000?text=Hi%2C%20I%20need%20help%20on%20EternaWings"
+              href={buildWhatsAppUrl("Hi, I need help on Trekora")}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-secondary flex items-center gap-2"
@@ -68,20 +82,22 @@ export default function ErrorPage() {
               className="font-semibold text-base mb-4"
               style={{ color: "var(--ew-text)" }}
             >
-              Contact EternaWings Support
+              Contact Trekora Support
             </h2>
             <div className="space-y-3">
               <a
-                href="tel:+911800000000"
+                href={`tel:${SITE_PHONE_TEL}`}
                 className="flex items-center gap-3 no-underline"
                 style={{ color: "var(--ew-text-lt)" }}
                 data-ocid="error.call_link"
               >
                 <Phone size={16} style={{ color: "var(--ew-red)" }} />
-                <span>Toll Free: 1800-000-0000 (9AM–9PM Daily)</span>
+                <span>
+                  {SITE_PHONE_DISPLAY} (9AM–9PM Daily)
+                </span>
               </a>
               <a
-                href="mailto:hello@eternawings.com"
+                href={`mailto:${SITE_EMAIL}`}
                 className="flex items-center gap-3 no-underline"
                 style={{ color: "var(--ew-text-lt)" }}
                 data-ocid="error.email_link"
@@ -90,7 +106,7 @@ export default function ErrorPage() {
                   size={16}
                   style={{ color: "var(--ew-orange)" }}
                 />
-                <span>hello@eternawings.com</span>
+                <span>{SITE_EMAIL}</span>
               </a>
             </div>
           </div>

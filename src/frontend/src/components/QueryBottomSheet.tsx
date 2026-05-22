@@ -1,7 +1,27 @@
+import { TREKS } from "@/data/treks";
+import { YATRAS } from "@/data/yatras";
+import PhoneInput from "@/components/ui/PhoneInput";
+import {
+  formatPhoneForDisplay,
+  normalizeIndianPhoneDigits,
+  validateNationalPhone,
+} from "@/lib/phone-countries";
+import { SITE_PHONE_DISPLAY } from "@/lib/site-contact";
+import FormSuccessMessage from "@/components/FormSuccessMessage";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useIsMobile } from "../hooks/use-mobile";
+
+function resolveProductSlug(productName?: string): string | undefined {
+  if (!productName) return undefined;
+  const trek = TREKS.find((t) => t.name === productName);
+  if (trek) return trek.slug;
+  const yatra = YATRAS.find((y) => y.name === productName);
+  return yatra?.slug;
+}
 
 export interface QueryBottomSheetProps {
   isOpen: boolean;
@@ -12,11 +32,18 @@ export interface QueryBottomSheetProps {
 interface FormState {
   name: string;
   phone: string;
+  phoneCountry: string;
   email: string;
   message: string;
 }
 
-const INITIAL: FormState = { name: "", phone: "", email: "", message: "" };
+const INITIAL: FormState = {
+  name: "",
+  phone: "",
+  phoneCountry: "IN",
+  email: "",
+  message: "",
+};
 
 export default function QueryBottomSheet({
   isOpen,
@@ -27,6 +54,9 @@ export default function QueryBottomSheet({
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Partial<FormState>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [successSnapshot, setSuccessSnapshot] = useState<{
+    phone: string;
+  } | null>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
 
   /* Close on Escape */
@@ -54,6 +84,7 @@ export default function QueryBottomSheet({
         setForm(INITIAL);
         setErrors({});
         setSubmitted(false);
+        setSuccessSnapshot(null);
       }, 300);
     }
   }, [isOpen]);
@@ -61,8 +92,8 @@ export default function QueryBottomSheet({
   function validate() {
     const errs: Partial<FormState> = {};
     if (!form.name.trim()) errs.name = "Name is required";
-    if (!form.phone.match(/^[6-9]\d{9}$/))
-      errs.phone = "Enter valid 10-digit mobile";
+    const phoneCheck = validateNationalPhone(form.phone, form.phoneCountry);
+    if (phoneCheck !== true) errs.phone = phoneCheck;
     if (!form.email.match(/^[^@]+@[^@]+\.[^@]+$/))
       errs.email = "Enter valid email";
     if (!form.message.trim()) errs.message = "Please write a message";
@@ -73,16 +104,36 @@ export default function QueryBottomSheet({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
-    // Optimistic UI
-    setSubmitted(true);
-    // Log data (no backend in this SPA)
-    console.log("[EternaWings] Query submitted:", {
-      trek: trekName,
-      ...form,
-      timestamp: new Date().toISOString(),
-    });
-    toast.success("Query sent! We'll contact you within 1 hour. 🏔️");
-    setTimeout(onClose, 1800);
+
+    const phone = normalizeIndianPhoneDigits(form.phone);
+    const destinationLabel = trekName ?? "General enquiry";
+    const payload = {
+      name: form.name.trim(),
+      phone,
+      phoneCountry: form.phoneCountry,
+      email: form.email.trim(),
+      destination: resolveProductSlug(trekName) ?? "",
+      destinationLabel,
+      message: form.message.trim(),
+      source: trekName ? `Send Query — ${trekName}` : "Send Query",
+    };
+
+    submitEmailOptimistic(
+      () => submitPlanTrekEmail(payload),
+      () => {
+        setSuccessSnapshot({
+          phone: formatPhoneForDisplay(phone, form.phoneCountry),
+        });
+        setSubmitted(true);
+        toast.success("Query sent! We'll contact you within 1 hour.");
+        window.setTimeout(onClose, 2200);
+      },
+      (message) => {
+        setSubmitted(false);
+        setSuccessSnapshot(null);
+        toast.error(message);
+      },
+    );
   }
 
   function setField(field: keyof FormState, value: string) {
@@ -152,7 +203,7 @@ export default function QueryBottomSheet({
                   {trekName ? `Ask Us About ${trekName}` : "Send a Query"}
                 </h3>
                 <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
-                  We'll respond within 1 hour · Toll-free: 1800-XXX-XXXX
+                  We'll respond within 1 hour · {SITE_PHONE_DISPLAY}
                 </p>
               </div>
               <button
@@ -186,29 +237,15 @@ export default function QueryBottomSheet({
             {/* Body */}
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {submitted ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center justify-center py-10 text-center"
+                <FormSuccessMessage
+                  title="Query sent!"
+                  description={
+                    successSnapshot
+                      ? `Our trek expert will call you at ${successSnapshot.phone} within 1 hour (9AM–9PM).`
+                      : "Our trek expert will contact you within 1 hour (9AM–9PM)."
+                  }
                   data-ocid="query_sheet.success_state"
-                >
-                  <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-4 text-3xl"
-                    style={{ backgroundColor: "#E8F5E9" }}
-                  >
-                    ✅
-                  </div>
-                  <h4
-                    className="font-bold text-lg mb-1"
-                    style={{ color: "var(--ew-text)" }}
-                  >
-                    Query Sent!
-                  </h4>
-                  <p className="text-sm" style={{ color: "var(--ew-text-lt)" }}>
-                    Our trek expert will contact you at {form.phone} within 1
-                    hour.
-                  </p>
-                </motion.div>
+                />
               ) : (
                 <form
                   onSubmit={handleSubmit}
@@ -265,26 +302,18 @@ export default function QueryBottomSheet({
                         className="block text-xs font-semibold mb-1"
                         style={{ color: "var(--ew-text)" }}
                       >
-                        Mobile *
+                        Mobile Number *
                       </label>
-                      <input
+                      <PhoneInput
                         id="qs-phone"
-                        type="tel"
-                        placeholder="10-digit number"
                         value={form.phone}
-                        onChange={(e) => setField("phone", e.target.value)}
-                        onFocus={(e) =>
-                          e.currentTarget.scrollIntoView({
-                            behavior: "smooth",
-                            block: "nearest",
-                          })
+                        countryIso={form.phoneCountry}
+                        onValueChange={(v) => setField("phone", v)}
+                        onCountryChange={(meta) =>
+                          setField("phoneCountry", meta.iso)
                         }
-                        className="w-full rounded-xl px-4 text-sm focus:outline-none"
-                        style={{
-                          height: 48,
-                          border: `1px solid ${errors.phone ? "var(--ew-red)" : "var(--ew-gray-mid)"}`,
-                          color: "var(--ew-text)",
-                        }}
+                        hasError={Boolean(errors.phone)}
+                        placeholder="Enter Your Mobile Number"
                         data-ocid="query_sheet.phone_input"
                       />
                       {errors.phone && (

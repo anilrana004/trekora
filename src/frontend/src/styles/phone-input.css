@@ -1,0 +1,138 @@
+/* International phone field — country selector + national number (Plan My Trek, booking, etc.) */
+
+.phone-input {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-height: 3rem;
+  background: #fff;
+  border: 1px solid var(--ew-gray-mid);
+  border-radius: 0.625rem;
+  overflow: hidden;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.phone-input:focus-within {
+  border-color: var(--ew-red);
+  box-shadow: 0 0 0 3px rgba(192, 0, 28, 0.12);
+}
+
+.phone-input--error {
+  border-color: var(--ew-red);
+}
+
+.phone-input--error:focus-within {
+  box-shadow: 0 0 0 3px rgba(192, 0, 28, 0.15);
+}
+
+.phone-input__country {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  padding: 0 0.5rem 0 0.65rem;
+  color: var(--ew-text);
+  background: var(--ew-gray-lt);
+}
+
+.phone-input__iso {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.phone-input__dial {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ew-text-lt);
+  line-height: 1;
+}
+
+.phone-input__country-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px;
+  border: none;
+  background: transparent;
+}
+
+.phone-input__chevron {
+  color: var(--ew-gray-dark);
+  margin-right: 0.125rem;
+  flex-shrink: 0;
+}
+
+.phone-input__divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 0.45rem 0;
+  background: var(--ew-gray-mid);
+  flex-shrink: 0;
+}
+
+.phone-input__number {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0 0.875rem;
+  font-size: 1rem !important;
+  line-height: 1.4;
+  color: var(--ew-text);
+  min-height: 3rem;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.phone-input__number::placeholder {
+  color: var(--ew-gray-dark);
+  opacity: 0.85;
+}
+
+.phone-input__number:focus {
+  box-shadow: none;
+}
+
+.phone-input__number:disabled,
+.phone-input__country-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Plan My Trek modal — align with other fields */
+.plan-trek-modal__field .phone-input {
+  width: 100%;
+}
+
+.plan-trek-modal__field .phone-input__number,
+.plan-trek-modal__field .phone-input__country-select {
+  min-height: 3rem;
+}
+
+@media (max-width: 380px) {
+  .phone-input__country {
+    padding-left: 0.5rem;
+    padding-right: 0.35rem;
+    gap: 0.25rem;
+  }
+
+  .phone-input__iso,
+  .phone-input__dial {
+    font-size: 0.8125rem;
+  }
+
+  .phone-input__number {
+    padding-left: 0.625rem;
+    padding-right: 0.625rem;
+  }
+}

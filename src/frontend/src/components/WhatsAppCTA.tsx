@@ -1,3 +1,6 @@
+import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
+import { useRouterState } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "motion/react";
 import { useScrollDepth } from "../hooks/useScrollDepth";
 
@@ -19,15 +22,16 @@ interface WhatsAppCTAProps {
 }
 
 export default function WhatsAppCTA({ trekName }: WhatsAppCTAProps) {
+  const pathname = useRouterState().location.pathname;
   const { hasReached40Percent } = useScrollDepth();
 
-  const encodedMessage = trekName
-    ? encodeURIComponent(
-        `Hi, I want to know more about ${trekName} with Trekora`,
-      )
-    : encodeURIComponent("Hi, I want to book a trek with Trekora");
+  if (usesTravelSideActionRail(pathname)) return null;
 
-  const waHref = `https://wa.me/919876543210?text=${encodedMessage}`;
+  const waHref = buildWhatsAppUrl(
+    trekName
+      ? `Hi, I want to know more about ${trekName} with Trekora`
+      : "Hi, I want to book a trek with Trekora",
+  );
 
   return (
     <AnimatePresence>
@@ -42,7 +46,7 @@ export default function WhatsAppCTA({ trekName }: WhatsAppCTAProps) {
           transition={{ duration: 0.25 }}
           whileHover={{ scale: 1.12 }}
           whileTap={{ scale: 0.95 }}
-          className="fixed bottom-[6.5rem] left-5 z-40 group"
+          className="fab-above-mobile-book-left fab-above-mobile-book-left-upper fixed z-[52] group lg:bottom-8 lg:right-8 lg:left-auto"
           aria-label="Chat on WhatsApp"
           data-ocid="trek_detail.whatsapp_cta_button"
         >
@@ -54,7 +58,7 @@ export default function WhatsAppCTA({ trekName }: WhatsAppCTAProps) {
           </div>
           {/* Tooltip */}
           <span
-            className="absolute left-16 top-1/2 -translate-y-1/2 whitespace-nowrap text-xs font-semibold px-2.5 py-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+            className="absolute left-16 top-1/2 -translate-y-1/2 whitespace-nowrap text-xs font-semibold px-2.5 py-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-lg:hidden"
             style={{
               background: "#25D366",
               color: "#fff",

@@ -1,12 +1,16 @@
+import PhoneInput from "@/components/ui/PhoneInput";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import {
+  normalizeIndianPhoneDigits,
+  validateNationalPhone,
+} from "@/lib/phone-countries";
 import { SITE_EMAIL, WHATSAPP_CHAT_URL } from "@/lib/site-contact";
+import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-
-/** Swap after creating your form at https://formspree.io */
-export const FORMSPREE_ENDPOINT =
-  "https://formspree.io/f/REPLACE_WITH_CLIENT_FORM_ID";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 const INTERESTED_OPTIONS = [
   "Select a trek or yatra",
@@ -61,10 +65,13 @@ export default function EnquiryModal({
   onClose,
   presetTrekLabel,
 }: EnquiryModalProps) {
+  const [phoneCountry, setPhoneCountry] = useState("IN");
+
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<EnquiryFormValues>({
     defaultValues: {
@@ -79,7 +86,6 @@ export default function EnquiryModal({
   });
 
   const [phase, setPhase] = useState<"form" | "success" | "error">("form");
-  const [submitting, setSubmitting] = useState(false);
   const [successPhone, setSuccessPhone] = useState("");
 
   useEffect(() => {
@@ -111,40 +117,41 @@ export default function EnquiryModal({
     }
   }, [isOpen, presetTrekLabel, reset]);
 
-  const onValid = async (data: EnquiryFormValues) => {
-    setSubmitting(true);
-    setPhase("form");
-    setPhase("form");
-    try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          phone: data.phone,
-          email: data.email || SITE_EMAIL,
-          interested: data.interested,
-          preferred_date: data.preferred_date || "",
-          group_size: data.group_size,
-          message: data.message || "",
-          _subject: `Trekora enquiry — ${data.interested}`,
-          _replyto: data.email || SITE_EMAIL,
+  const onValid = (data: EnquiryFormValues) => {
+    const phoneDigits =
+      phoneCountry === "IN"
+        ? normalizeIndianPhoneDigits(data.phone)
+        : data.phone.replace(/\D/g, "");
+
+    const messageBody = [
+      data.preferred_date && `Preferred date: ${data.preferred_date}`,
+      `Group size: ${data.group_size}`,
+      data.message.trim(),
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    submitEmailOptimistic(
+      () =>
+        submitPlanTrekEmail({
+          name: data.name.trim(),
+          phone: phoneDigits,
+          phoneCountry,
+          email: data.email.trim() || SITE_EMAIL,
+          destination: "",
+          destinationLabel: data.interested,
+          message: messageBody,
+          source: "Send Query — Enquiry modal",
         }),
-      });
-      if (res.ok) {
+      () => {
         setSuccessPhone(data.phone);
         setPhase("success");
-      } else {
+      },
+      (message) => {
         setPhase("error");
-      }
-    } catch {
-      setPhase("error");
-    } finally {
-      setSubmitting(false);
-    }
+        toast.error(message);
+      },
+    );
   };
 
   const handleClose = () => {
@@ -284,21 +291,25 @@ export default function EnquiryModal({
                       </span>
                       <span className="sr-only">(required)</span>
                     </label>
-                    <input
-                      id="eq-phone"
-                      type="tel"
-                      inputMode="numeric"
-                      autoComplete="tel"
-                      placeholder="+91 XXXXX XXXXX"
-                      className={inputCls}
-                      {...register("phone", {
-                        required: true,
-                        pattern: {
-                          value: /^[6-9]\d{9}$/,
-                          message:
-                            "Enter a valid 10-digit Indian mobile number",
-                        },
-                      })}
+                    <Controller
+                      name="phone"
+                      control={control}
+                      rules={{
+                        required: "Required",
+                        validate: (v) => validateNationalPhone(v, phoneCountry),
+                      }}
+                      render={({ field }) => (
+                        <PhoneInput
+                          id="eq-phone"
+                          value={field.value}
+                          countryIso={phoneCountry}
+                          onValueChange={field.onChange}
+                          onCountryChange={(meta) => setPhoneCountry(meta.iso)}
+                          hasError={Boolean(errors.phone)}
+                          placeholder="Enter Your Mobile Number"
+                          data-ocid="enquiry.phone.input"
+                        />
+                      )}
                     />
                     {errors.phone && (
                       <p className="mt-1 text-xs text-red-400">
@@ -395,21 +406,10 @@ export default function EnquiryModal({
 
                   <button
                     type="submit"
-                    disabled={submitting}
-                    className="btn-primary flex w-full items-center justify-center gap-2 py-3 disabled:opacity-60"
+                    className="btn-primary flex w-full items-center justify-center gap-2 py-3"
                     data-ocid="enquiry.modal.submit"
                   >
-                    {submitting ? (
-                      <>
-                        <span
-                          className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
-                          aria-hidden
-                        />
-                        Sending...
-                      </>
-                    ) : (
-                      "Submit enquiry"
-                    )}
+                    Submit enquiry
                   </button>
 
                   {phase === "error" && (

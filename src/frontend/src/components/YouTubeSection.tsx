@@ -1,7 +1,7 @@
-import { Play } from "lucide-react";
-
 import { motion } from "motion/react";
-import OptimizedImage from "./media/OptimizedImage";
+
+import { HOMEPAGE_REELS } from "@/data/trek-reels";
+import ReelsShortsRow from "./ReelsShortsRow";
 
 const YOUTUBE_VIDEOS = [
   {
@@ -10,7 +10,7 @@ const YOUTUBE_VIDEOS = [
     channel: "Trekora Official",
     views: "1.2M views",
     thumb:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=640&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824303/alkvjnkapfjh5fywqzqf.jpg",
   },
   {
     id: "2Gj4Dsp3hOM",
@@ -18,7 +18,7 @@ const YOUTUBE_VIDEOS = [
     channel: "Uttarakhand Tourism",
     views: "980K views",
     thumb:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=640&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824252/osxg6q6dria3uvp5awfj.webp",
   },
   {
     id: "LfYFrYdPkF0",
@@ -26,52 +26,7 @@ const YOUTUBE_VIDEOS = [
     channel: "Dev Bhoomi Stories",
     views: "2.1M views",
     thumb:
-      "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=640&q=80",
-  },
-];
-
-const REELS = [
-  {
-    id: 1,
-    thumb:
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=300&q=80",
-    title: "5 Days at 5000m Roopkund",
-    duration: "0:58",
-  },
-  {
-    id: 2,
-    thumb:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&q=80",
-    title: "Valley of Flowers Time-lapse",
-    duration: "1:12",
-  },
-  {
-    id: 3,
-    thumb:
-      "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=300&q=80",
-    title: "Kedarnath Trek Guide",
-    duration: "2:30",
-  },
-  {
-    id: 4,
-    thumb:
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=300&q=80",
-    title: "Hampta Pass Day 3",
-    duration: "1:45",
-  },
-  {
-    id: 5,
-    thumb:
-      "https://images.unsplash.com/photo-1556296240-b6b6e89c0f9f?w=300&q=80",
-    title: "Triund Sunrise",
-    duration: "0:45",
-  },
-  {
-    id: 6,
-    thumb:
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=300&q=80",
-    title: "Chandratal Lake Drone",
-    duration: "1:20",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778824242/y3zhv11abvtf0hdevura.webp",
   },
 ];
 
@@ -95,7 +50,6 @@ export default function YouTubeSection() {
           </p>
         </motion.div>
 
-        {/* 3-column YouTube grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
           {YOUTUBE_VIDEOS.map((v, i) => (
             <motion.div
@@ -142,7 +96,6 @@ export default function YouTubeSection() {
           ))}
         </div>
 
-        {/* Reels & Shorts */}
         <div className="mb-5">
           <h3
             className="font-bold text-[17px] mb-4"
@@ -150,57 +103,9 @@ export default function YouTubeSection() {
           >
             Reels &amp; Shorts
           </h3>
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {REELS.map((r, i) => (
-              <motion.div
-                key={r.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07 }}
-                className="flex-none relative rounded-xl overflow-hidden group cursor-pointer"
-                style={{ width: 110, aspectRatio: "9/16" }}
-                data-ocid={`youtube.reel.${i + 1}`}
-              >
-                <OptimizedImage
-                  src={r.thumb}
-                  alt={r.title}
-                  fill
-                  variant="gallery-thumb"
-                  className="group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute inset-0 bg-black/30" />
-                {/* Play button */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform"
-                    style={{ background: "rgba(255,255,255,0.9)" }}
-                  >
-                    <Play
-                      size={14}
-                      className="ml-0.5"
-                      style={{ color: "#C0001C" }}
-                      fill="#C0001C"
-                    />
-                  </div>
-                </div>
-                {/* Duration badge */}
-                <span
-                  className="absolute top-2 right-2 text-[10px] font-bold px-1.5 py-0.5 rounded"
-                  style={{ background: "rgba(0,0,0,0.6)", color: "#fff" }}
-                >
-                  {r.duration}
-                </span>
-                {/* Title overlay */}
-                <p className="absolute bottom-2 left-0 right-0 text-center text-white text-[9px] font-bold px-1 leading-tight">
-                  {r.title}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+          <ReelsShortsRow reels={HOMEPAGE_REELS} ocidPrefix="youtube" />
         </div>
 
-        {/* Subscribe button */}
         <div className="flex justify-end">
           <a
             href="https://www.youtube.com/@trekora"

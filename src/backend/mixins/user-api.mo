@@ -3,9 +3,13 @@ import Principal "mo:core/Principal";
 import Common "../types/common";
 import UserTypes "../types/user";
 import UserLib "../lib/user";
+import DormantFeatures "../lib/dormant-features";
 
 mixin (profiles : Map.Map<Principal, UserLib.UserProfile>) {
   public shared ({ caller }) func saveProfile(input : UserTypes.ProfileInput) : async Common.Result<Bool, Text> {
+    if (not DormantFeatures.loginEnabled) {
+      return #err(DormantFeatures.loginDisabledMessage());
+    };
     if (caller.isAnonymous()) {
       return #err("Must be authenticated");
     };
@@ -20,6 +24,9 @@ mixin (profiles : Map.Map<Principal, UserLib.UserProfile>) {
     p : Principal,
     amount : Nat,
   ) : async Common.Result<UserTypes.UserProfile, Text> {
+    if (not DormantFeatures.loginEnabled) {
+      return #err(DormantFeatures.loginDisabledMessage());
+    };
     if (caller.isAnonymous()) {
       return #err("Must be authenticated");
     };
@@ -29,6 +36,9 @@ mixin (profiles : Map.Map<Principal, UserLib.UserProfile>) {
   public shared ({ caller }) func processReferral(
     referralCode : Text,
   ) : async Common.Result<(), Text> {
+    if (not DormantFeatures.loginEnabled) {
+      return #err(DormantFeatures.loginDisabledMessage());
+    };
     if (caller.isAnonymous()) {
       return #err("Must be authenticated");
     };

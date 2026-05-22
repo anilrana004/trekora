@@ -121,7 +121,7 @@ export default function TrekAltitudeProfilePage() {
 
   useEffect(() => {
     const name = trek?.name ?? slug;
-    document.title = `Altitude Profile — ${name} | EternaWings`;
+    document.title = `Altitude Profile — ${name} | Trekora`;
   }, [slug, trek]);
 
   const profile = useMemo(

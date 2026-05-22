@@ -1,19 +1,17 @@
-import { createActor } from "@/backend";
-import type { UgcPhoto, UgcPhotoInput } from "@/backend.d.ts";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useActor } from "@trekora/icp";
+import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
-
-import OptimizedImage from "./media/OptimizedImage";
-
-// Local enum mirror — avoids importing runtime values from a .d.ts file
-const Variant_pending_approved_rejected = {
-  pending: "pending",
-  approved: "approved",
-  rejected: "rejected",
-} as const;
+import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
+import {
+  productCloudinaryContext,
+  productCloudinaryTags,
+  productPhotoFolder,
+} from "@/lib/product-cloudinary";
+import { submitProductPhotos } from "@/lib/product-photos-api";
+import type { ProductKind } from "@/lib/reviews-api";
 
 const MONTHS = [
   "Jan",
@@ -32,91 +30,156 @@ const MONTHS = [
 
 const YEARS = Array.from({ length: 6 }, (_, i) => 2020 + i);
 
-interface Props {
+interface TrekkerPhotoWallProps {
   trekSlug: string;
+  trekName: string;
+  productType: ProductKind;
 }
 
-function useApprovedPhotos(trekSlug: string) {
-  const { actor, isFetching } = useActor(createActor);
-  return useQuery<UgcPhoto[]>({
-    queryKey: ["ugcPhotos", trekSlug],
-    queryFn: async () => {
-      if (!actor) return [];
-      const all = await actor.getUgcPhotosByTrek(trekSlug);
-      return all.filter(
-        (p) => p.status === Variant_pending_approved_rejected.approved,
-      );
-    },
-    enabled: !!actor && !isFetching,
-  });
+function TrekkerGridImage({ src, alt }: { src: string; alt: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="eager"
+      decoding="async"
+      className="w-full h-auto min-h-[120px] object-cover transition-transform duration-300 group-hover:scale-105"
+    />
+  );
 }
 
-function useSubmitPhoto() {
-  const { actor } = useActor(createActor);
-  const queryClient = useQueryClient();
-  return useMutation<UgcPhoto, Error, UgcPhotoInput>({
-    mutationFn: async (input) => {
-      if (!actor) throw new Error("Not ready");
-      const result = await actor.submitUgcPhoto(input);
-      if (result.__kind__ === "err") throw new Error(result.err);
-      return result.ok;
-    },
-    onSuccess: (_, vars) => {
-      queryClient.invalidateQueries({ queryKey: ["ugcPhotos", vars.trekSlug] });
-      toast.success("Photo submitted! It will appear after admin review.");
-    },
-    onError: (e) => toast.error(e.message ?? "Upload failed."),
-  });
-}
+export default function TrekkerPhotoWall({
+  trekSlug,
+  trekName,
+  productType,
+}: TrekkerPhotoWallProps) {
+  const normalizedSlug = trekSlug.trim().toLowerCase();
+  const { photos, loading, error, reload } = useTrekkerPhotos(
+    normalizedSlug,
+    productType,
+  );
 
-export default function TrekkerPhotoWall({ trekSlug }: Props) {
-  const { data: photos, isLoading } = useApprovedPhotos(trekSlug);
-  const submitMutation = useSubmitPhoto();
+  const productLabel = productType === "yatra" ? "Yatra" : "Trek";
+
+  const uploadOptions = useMemo(
+    () => ({
+      folder: "treks" as const,
+      folderPath: productPhotoFolder(productType, normalizedSlug),
+      tags: productCloudinaryTags(productType, normalizedSlug),
+      context: productCloudinaryContext(trekName, normalizedSlug, productType),
+    }),
+    [productType, normalizedSlug, trekName],
+  );
+
+  const {
+    items: uploadItems,
+    queueFiles,
+    uploadAllForSubmit,
+    cancel,
+    clear,
+    cloudinaryReady,
+  } = useImageUpload(uploadOptions);
 
   const [name, setName] = useState("");
   const [month, setMonth] = useState(MONTHS[0]);
   const [year, setYear] = useState(String(new Date().getFullYear()));
-  const [preview, setPreview] = useState<string | null>(null);
-  const [fileData, setFileData] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.match(/^image\/(jpeg|png)$/)) {
-      toast.error("Only JPEG and PNG files are allowed.");
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("File must be under 5MB.");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const result = ev.target?.result as string;
-      setPreview(result);
-      setFileData(result);
-    };
-    reader.readAsDataURL(file);
-  }
+  const hasReadyFiles = uploadItems.length > 0;
+  const canSubmit =
+    Boolean(normalizedSlug && trekName.trim()) &&
+    hasReadyFiles &&
+    !submitting &&
+    cloudinaryReady;
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!fileData) {
-      toast.error("Please select a photo.");
+  const handleFile = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const remaining = 5 - uploadItems.length;
+      const files = Array.from(e.target.files ?? []).slice(0, remaining);
+      if (files.length) queueFiles(files);
+      e.target.value = "";
+    },
+    [queueFiles, uploadItems.length],
+  );
+
+  async function handleShareMemory() {
+    if (!name.trim()) {
+      toast.error("Please enter your name.");
       return;
     }
-    await submitMutation.mutateAsync({
-      trekSlug,
-      trekkerName: name.trim(),
-      trekDate: `${month} ${year}`,
-      photoData: fileData,
-    });
-    setName("");
-    setPreview(null);
-    setFileData(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (!normalizedSlug) {
+      toast.error("This page is still loading. Try again in a moment.");
+      return;
+    }
+    if (!cloudinaryReady) {
+      toast.error(
+        "Cloudinary is not configured. Add VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET to src/.env",
+      );
+      return;
+    }
+    if (!hasReadyFiles) {
+      toast.error("Choose at least one photo first.");
+      return;
+    }
+    if (submitting) return;
+
+    setSubmitting(true);
+    try {
+      const { assets: uploaded, errors: uploadErrors } =
+        await uploadAllForSubmit();
+
+      if (uploaded.length === 0) {
+        const detail = uploadErrors[0] ?? "Cloudinary upload failed.";
+        toast.error(detail);
+        return;
+      }
+      if (uploadErrors.length > 0) {
+        toast.warning(
+          `${uploaded.length} photo(s) uploaded; ${uploadErrors.length} failed.`,
+        );
+      }
+
+      const folderPath = productPhotoFolder(productType, normalizedSlug);
+      const photoEntries = uploaded.map((asset) => ({
+        url: asset.secureUrl,
+        publicId: asset.publicId,
+        cloudinaryFolder: folderPath,
+        width: asset.width,
+        height: asset.height,
+      }));
+
+      const credit = `${name.trim()} · ${month} ${year}`;
+      const res = await submitProductPhotos({
+        trekSlug: normalizedSlug,
+        trekName: trekName.trim(),
+        type: productType,
+        uploadedBy: credit,
+        photos: photoEntries,
+        photoUrls: photoEntries.map((p) => p.url),
+      });
+
+      if (!res.success) {
+        toast.error(res.message ?? "Could not save photos to the gallery.");
+        return;
+      }
+
+      setName("");
+      clear();
+      await reload(true);
+      refreshTrekkerGallery(normalizedSlug, productType);
+
+      toast.success(
+        res.message ??
+          `Your photos are live on ${trekName} and in the Gallery.`,
+        { duration: 5000 },
+      );
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Upload failed.";
+      toast.error(msg);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const inputCls =
@@ -126,7 +189,6 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
 
   return (
     <div className="mt-8 space-y-6">
-      {/* Section header */}
       <div>
         <h2
           className="text-lg font-bold flex items-center gap-2"
@@ -138,9 +200,24 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
           className="h-0.5 w-16 mt-1 rounded"
           style={{ background: "var(--ew-red)" }}
         />
+        <p className="text-xs mt-2" style={{ color: "var(--ew-text-lt)" }}>
+          Photos for <strong>{trekName}</strong> ({productLabel}) — saved to
+          Cloudinary, then shown on this page and in Gallery.
+        </p>
       </div>
 
-      {/* Upload form */}
+      {!cloudinaryReady ? (
+        <p
+          className="text-sm rounded-lg px-4 py-3"
+          style={{ background: "#fff3e0", color: "var(--ew-text)" }}
+        >
+          Photo upload is unavailable: set{" "}
+          <code className="text-xs">VITE_CLOUDINARY_CLOUD_NAME</code> and{" "}
+          <code className="text-xs">VITE_CLOUDINARY_UPLOAD_PRESET</code> in{" "}
+          <code className="text-xs">src/.env</code>, then restart the dev server.
+        </p>
+      ) : null}
+
       <div
         className="rounded-2xl p-5"
         style={{
@@ -154,34 +231,29 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
         >
           Share Your Memory
         </h3>
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-3"
-          data-ocid="ugc.upload_form"
-        >
+        <div className="space-y-3" data-ocid="ugc.upload_form">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label
-                htmlFor="ugc-name"
+                htmlFor={`ugc-name-${normalizedSlug}`}
                 className={labelCls}
                 style={{ color: "var(--ew-text)" }}
               >
                 Your Name
               </label>
               <input
-                id="ugc-name"
+                id={`ugc-name-${normalizedSlug}`}
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Priya Sharma"
-                required
                 className={inputCls}
                 data-ocid="ugc.name.input"
               />
             </div>
             <div>
               <p className={labelCls} style={{ color: "var(--ew-text)" }}>
-                Trek Date
+                {productLabel} Date
               </p>
               <div className="flex gap-2">
                 <select
@@ -216,63 +288,86 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
 
           <div>
             <label
-              htmlFor="ugc-file"
+              htmlFor={`ugc-file-${normalizedSlug}`}
               className={labelCls}
               style={{ color: "var(--ew-text)" }}
             >
-              Upload Photo (JPEG / PNG, max 5 MB)
+              Choose photos (JPEG / PNG / WebP, max 5 MB each)
             </label>
             <input
-              id="ugc-file"
-              ref={fileInputRef}
+              id={`ugc-file-${normalizedSlug}`}
               type="file"
-              accept="image/jpeg,image/png"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              disabled={submitting || uploadItems.length >= 5}
               onChange={handleFile}
-              className="block w-full text-sm text-[var(--ew-text-lt)] file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-[var(--ew-red)] hover:file:bg-[var(--ew-red-lt)] cursor-pointer"
+              className="block w-full text-sm text-[var(--ew-text-lt)] file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-white file:text-[var(--ew-red)] hover:file:bg-[var(--ew-red-lt)] cursor-pointer disabled:opacity-50"
               data-ocid="ugc.photo.upload_button"
             />
           </div>
 
-          {preview && (
-            <div className="relative inline-block">
-              <OptimizedImage
-                src={preview}
-                alt="Preview"
-                variant="gallery-thumb"
-                className="h-32 w-auto rounded-xl object-cover"
-                style={{ border: "2px solid var(--ew-orange)" }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setPreview(null);
-                  setFileData(null);
-                }}
-                className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white text-xs font-bold flex items-center justify-center"
-                style={{
-                  border: "1px solid var(--ew-gray-mid)",
-                  color: "var(--ew-red)",
-                }}
-                aria-label="Remove photo"
-              >
-                ✕
-              </button>
+          {uploadItems.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {uploadItems.map((item) => (
+                <div key={item.id} className="relative">
+                  <img
+                    src={item.previewUrl}
+                    alt=""
+                    className="h-24 w-24 rounded-xl object-cover border-2 border-[var(--ew-orange)]"
+                  />
+                  {item.status === "uploading" ? (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/40">
+                      <Loader2 className="animate-spin text-white" size={18} />
+                    </div>
+                  ) : null}
+                  {item.status === "error" && item.error ? (
+                    <p className="absolute bottom-0 left-0 right-0 text-[9px] bg-red-600 text-white px-1 truncate">
+                      {item.error}
+                    </p>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={() => cancel(item.id)}
+                    disabled={submitting}
+                    className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white text-xs font-bold flex items-center justify-center border border-[var(--ew-gray-mid)] text-[var(--ew-red)]"
+                    aria-label="Remove photo"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
             </div>
-          )}
+          ) : null}
 
           <button
-            type="submit"
-            disabled={submitMutation.isPending}
-            className="btn-primary text-sm disabled:opacity-60"
+            type="button"
+            disabled={!canSubmit}
+            onClick={() => void handleShareMemory()}
+            className="btn-primary text-sm disabled:opacity-60 inline-flex items-center gap-2 min-h-11"
             data-ocid="ugc.submit_button"
           >
-            {submitMutation.isPending ? "Uploading…" : "Share Your Memory"}
+            {submitting ? (
+              <>
+                <Loader2 size={16} className="animate-spin" aria-hidden />
+                Uploading…
+              </>
+            ) : (
+              "Share Your Memory"
+            )}
           </button>
-        </form>
+        </div>
       </div>
 
-      {/* Approved photos grid */}
-      {isLoading && (
+      {error ? (
+        <p
+          className="text-sm rounded-lg px-4 py-3"
+          style={{ background: "var(--ew-gray-lt)", color: "var(--ew-red)" }}
+        >
+          {error}
+        </p>
+      ) : null}
+
+      {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {[1, 2, 3, 4].map((i) => (
             <div
@@ -282,9 +377,9 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
             />
           ))}
         </div>
-      )}
+      ) : null}
 
-      {!isLoading && (!photos || photos.length === 0) && (
+      {!loading && photos.length === 0 && !error ? (
         <div
           className="rounded-2xl p-8 text-center"
           style={{ border: "1px dashed var(--ew-gray-mid)" }}
@@ -292,49 +387,40 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
         >
           <p className="text-3xl mb-2">📷</p>
           <p className="font-semibold" style={{ color: "var(--ew-text)" }}>
-            Be the first to share a photo from this trek!
-          </p>
-          <p className="text-sm mt-1" style={{ color: "var(--ew-gray-dark)" }}>
-            Upload your trekking memories above.
+            Be the first to share a photo from {trekName}!
           </p>
         </div>
-      )}
+      ) : null}
 
-      {!isLoading && photos && photos.length > 0 && (
+      {!loading && photos.length > 0 ? (
         <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 space-y-3">
           {photos.map((photo, idx) => (
             <button
-              key={photo.id}
+              key={photo.src}
               type="button"
               onClick={() => setLightboxIdx(idx)}
               className="group relative break-inside-avoid rounded-xl overflow-hidden block w-full"
               data-ocid={`ugc.photo.item.${idx + 1}`}
             >
-              <OptimizedImage
-                src={photo.photoData}
-                alt={`${photo.trekkerName} on ${photo.trekDate}`}
-                variant="gallery-thumb"
-                className="w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              <TrekkerGridImage
+                src={photo.src}
+                alt={`${photo.trekName} — ${photo.credit}`}
               />
-              <div className="absolute bottom-0 left-0 right-0 px-2 py-2 bg-gradient-to-t from-black/70 to-transparent">
-                <p className="text-white text-xs font-semibold truncate">
-                  {photo.trekkerName}
+              <div className="absolute bottom-0 left-0 right-0 px-2 py-2 bg-gradient-to-t from-black/75 to-transparent pointer-events-none">
+                <p className="text-white text-xs font-bold truncate">
+                  {photo.trekName || trekName}
                 </p>
-                <p
-                  style={{ color: "rgba(255,255,255,0.7)" }}
-                  className="text-[10px]"
-                >
-                  {photo.trekDate}
+                <p className="text-[10px] truncate text-white/80">
+                  {productLabel} · {photo.credit}
                 </p>
               </div>
             </button>
           ))}
         </div>
-      )}
+      ) : null}
 
-      {/* Lightbox */}
       <AnimatePresence>
-        {lightboxIdx !== null && photos && (
+        {lightboxIdx !== null && photos.length > 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -349,70 +435,22 @@ export default function TrekkerPhotoWall({ trekSlug }: Props) {
               style={{ background: "rgba(255,255,255,0.15)" }}
               onClick={() => setLightboxIdx(null)}
               aria-label="Close"
-              data-ocid="ugc.lightbox.close_button"
             >
               ✕
             </button>
-            <button
-              type="button"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-white text-xl"
-              style={{ background: "rgba(255,255,255,0.15)" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setLightboxIdx(
-                  (i) => ((i ?? 0) - 1 + photos.length) % photos.length,
-                );
-              }}
-              aria-label="Previous"
-            >
-              ‹
-            </button>
             <motion.div
-              key={lightboxIdx}
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.92, opacity: 0 }}
+              key={photos[lightboxIdx]?.src}
               className="max-w-[90vw] max-h-[85vh] rounded-2xl overflow-hidden relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <OptimizedImage
-                src={photos[lightboxIdx].photoData}
-                alt={photos[lightboxIdx].trekkerName}
-                variant="gallery-full"
+              <img
+                src={photos[lightboxIdx].src}
+                alt={photos[lightboxIdx].trekName}
                 className="max-w-[90vw] max-h-[85vh] object-contain"
               />
-              <div
-                className="absolute bottom-0 left-0 right-0 px-4 py-3"
-                style={{ background: "rgba(0,0,0,0.6)" }}
-              >
-                <p className="text-white font-semibold">
-                  {photos[lightboxIdx].trekkerName}
-                </p>
-                <p
-                  style={{ color: "rgba(255,255,255,0.7)" }}
-                  className="text-sm"
-                >
-                  {photos[lightboxIdx].trekDate}
-                </p>
-              </div>
             </motion.div>
-            <button
-              type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-white text-xl"
-              style={{ background: "rgba(255,255,255,0.15)" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setLightboxIdx((i) => ((i ?? 0) + 1) % photos.length);
-              }}
-              aria-label="Next"
-            >
-              ›
-            </button>
-            <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
-              {lightboxIdx + 1} / {photos.length}
-            </p>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </div>
   );

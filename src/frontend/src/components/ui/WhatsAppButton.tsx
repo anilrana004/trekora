@@ -1,4 +1,6 @@
+import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
 import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
+import { useRouterState } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
@@ -7,11 +9,17 @@ import { useEffect, useState } from "react";
  */
 export default function WhatsAppButton() {
   const [show, setShow] = useState(false);
+  const pathname = useRouterState().location.pathname;
+
+  const onDetailPage = usesTravelSideActionRail(pathname);
 
   useEffect(() => {
+    if (onDetailPage) return;
     const t = window.setTimeout(() => setShow(true), 2000);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [onDetailPage]);
+
+  if (onDetailPage) return null;
 
   return (
     <motion.a
@@ -23,7 +31,11 @@ export default function WhatsAppButton() {
       initial={false}
       animate={show ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="group relative fixed left-5 z-[9999] flex h-14 w-14 items-center justify-center rounded-full shadow-lg bottom-[11.25rem] md:bottom-[11.5rem]"
+      className={`group fixed z-[52] flex h-14 w-14 items-center justify-center rounded-full shadow-lg max-lg:fab-above-mobile-book-left ${
+        onDetailPage
+          ? "max-lg:fab-left-stack-2 left-[max(1rem,env(safe-area-inset-left))]"
+          : "left-5 bottom-[calc(var(--mobile-nav-height,56px)+env(safe-area-inset-bottom,0px)+0.75rem)] md:bottom-[7.5rem]"
+      } lg:bottom-8 lg:left-8`}
       style={{
         background: "#25D366",
         pointerEvents: show ? "auto" : "none",

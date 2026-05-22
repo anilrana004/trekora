@@ -1,7 +1,9 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
 import { TREKS } from "../data/treks";
 import type { Trek } from "../data/treks";
 import OptimizedImage from "./media/OptimizedImage";
@@ -255,9 +257,21 @@ function ResultCard({ trek, index }: { trek: Trek; index: number }) {
   );
 }
 
+export interface TrekRecommenderQuizProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
 /* ── Main Component ──────────────────────────────────────── */
-export default function TrekRecommenderQuiz() {
-  const [open, setOpen] = useState(false);
+export default function TrekRecommenderQuiz({
+  open: openControlled,
+  onOpenChange,
+}: TrekRecommenderQuizProps = {}) {
+  const pathname = useRouterState().location.pathname;
+  const onDetailPage = usesTravelSideActionRail(pathname);
+  const [openInternal, setOpenInternal] = useState(false);
+  const open = openControlled ?? openInternal;
+  const setOpen = onOpenChange ?? setOpenInternal;
   const [step, setStep] = useState<Step>(1);
   const [answers, setAnswers] = useState<QuizAnswers>({});
   const [results, setResults] = useState<Trek[] | null>(null);
@@ -319,12 +333,22 @@ export default function TrekRecommenderQuiz() {
   }
 
   useEffect(() => {
-    const onOpen = () => setOpen(true);
+    if (onOpenChange) return;
+    const onOpen = () => setOpenInternal(true);
     window.addEventListener("open-trek-quiz", onOpen);
     return () => window.removeEventListener("open-trek-quiz", onOpen);
-  }, []);
+  }, [onOpenChange]);
 
   // Keyboard close
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -345,35 +369,38 @@ export default function TrekRecommenderQuiz() {
 
   return (
     <>
-      {/* Floating trigger button — bottom-right above WhatsApp */}
-      <motion.button
-        type="button"
-        onClick={() => setOpen(true)}
-        whileHover={{ scale: 1.06 }}
-        whileTap={{ scale: 0.96 }}
-        className="fixed bottom-[7.5rem] right-5 z-50 flex items-center gap-2 text-white text-sm font-semibold px-5 py-3 rounded-full shadow-elevated transition-[filter] hover:brightness-95"
-        style={{ backgroundColor: "var(--ew-red)" }}
-        aria-label="Open trek recommender quiz"
-        data-ocid="quiz.open_button"
-      >
-        <span>🧭</span>
-        <span>Find My Trek</span>
-      </motion.button>
+      {!onDetailPage && (
+        <motion.button
+          type="button"
+          onClick={() => setOpen(true)}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.96 }}
+          className="fixed bottom-[11.5rem] right-5 z-50 flex max-lg:bottom-[calc(var(--mobile-fab-bottom,7.5rem)+4rem)] items-center gap-2 text-white text-sm font-semibold px-5 py-3 rounded-full shadow-elevated transition-[filter] hover:brightness-95"
+          style={{ backgroundColor: "var(--ew-red)" }}
+          aria-label="Open trek recommender quiz"
+          data-ocid="quiz.open_button"
+        >
+          <span>🧭</span>
+          <span>Find My Trek</span>
+        </motion.button>
+      )}
 
-      {/* Modal */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-            style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
-            onClick={(e) => {
-              if (e.target === e.currentTarget) handleClose();
-            }}
-            data-ocid="quiz.modal"
-          >
+      {/* Modal — portaled so listing pages / side rail clicks always show on top */}
+      {typeof document !== "undefined"
+        ? createPortal(
+            <AnimatePresence>
+              {open ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[110] flex items-center justify-center p-4"
+                  style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
+                  onClick={(e) => {
+                    if (e.target === e.currentTarget) handleClose();
+                  }}
+                  data-ocid="quiz.modal"
+                >
             <motion.div
               initial={{ scale: 0.92, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -389,7 +416,7 @@ export default function TrekRecommenderQuiz() {
               >
                 <div>
                   <p className="text-white text-sm font-medium opacity-75 mb-0.5">
-                    EternaWings Trek Finder
+                    Trekora Trek Finder
                   </p>
                   <h2 className="text-white text-xl font-bold">
                     {results
@@ -537,8 +564,11 @@ export default function TrekRecommenderQuiz() {
               </div>
             </motion.div>
           </motion.div>
-        )}
-      </AnimatePresence>
+              ) : null}
+            </AnimatePresence>,
+            document.body,
+          )
+        : null}
     </>
   );
 }

@@ -34,6 +34,8 @@ export interface Trek {
   shortDesc: string;
   image: string;
   images: string[];
+  /** Extra photos for the detail Photos tab (hero uses `images` only). */
+  galleryImages?: string[];
   category: string;
   bestSeason: string;
   distance: number;
@@ -253,8 +255,9 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Panch Kedar trail to the world's highest Shiva temple — then Chandrashila's 360° Garhwal skyline",
     image:
-      "https://res.cloudinary.com/ddbcauxef/image/upload/v1778761819/yjshqdmosaynlogonssx.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779178760/trekora/treks/chopta-tungnath/izlb3tzixa6idyc2cies.jpg",
     images: [
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779178760/trekora/treks/chopta-tungnath/izlb3tzixa6idyc2cies.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778761819/yjshqdmosaynlogonssx.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778761836/rw2hjzozae9xd9ooloce.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778761847/w4uxnxm08dbffikt8ghs.jpg",
@@ -459,11 +462,6 @@ export const TREKS: Trek[] = [
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758824/ngtezosfzrgfufxgrrae.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758847/uupksocu5jlrxmcil0xe.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778758916/uvmfnig1yu1asdfi2qau.jpg",
-      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
     ],
     bestSeason: "Dec-Apr",
     distance: 20,
@@ -563,13 +561,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "A hidden gem bugyal trek with close-up views of Kedarnath and Chaukhamba",
     image:
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115062/mplmclwjsdtbinujkzxa.jpg",
     images: [
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115062/mplmclwjsdtbinujkzxa.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115069/ym3onjtrkwkujfkjrfs7.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115077/efltgvc6v5omzfphbi3h.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115087/wymbilc6x97lepeja9qs.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115094/brsfuukbq3of4gg6ejyc.jpg",
     ],
     bestSeason: "Jun-Oct",
     distance: 45,
@@ -715,13 +713,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Legendary mountaineering route — one of India's toughest glacier treks",
     image:
-      "https://images.unsplash.com/photo-1589182337358-2cb63099350c?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096640/cami1uct7alkbydbadir.jpg",
     images: [
-      "https://images.unsplash.com/photo-1589182337358-2cb63099350c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096640/cami1uct7alkbydbadir.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096648/qcfzu06o491oxtomsoga.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096657/jjwjw7sw761m98erh8h1.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096665/nrr2za078guy1tf9547b.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096674/iqyguk8wqm1rlwuojqmj.jpg",
     ],
     bestSeason: "Jun-Sep",
     distance: 75,
@@ -758,13 +756,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Trek to the base of India's second highest peak in Nanda Devi Biosphere Reserve",
     image:
-      "https://images.unsplash.com/photo-1579830341096-723952f0b92a?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097836/kzo7ijiiujxoagmx7u5c.jpg",
     images: [
-      "https://images.unsplash.com/photo-1579830341096-723952f0b92a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097836/kzo7ijiiujxoagmx7u5c.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097850/n3ttshpwy2kjuvzy8gac.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097872/yqekv7tqs9us7ixmnirx.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097912/n9kf9gsfs7i9uzjd4g36.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097936/cxbug5qjocyjhkaehghm.jpg",
     ],
     bestSeason: "May-Jun, Sep-Oct",
     distance: 58,
@@ -801,13 +799,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Accessible glacier trek in the Kumaon Himalayas — a perfect first glacier experience",
     image:
-      "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119988/upzwe0tsn1utgkoqx7tb.jpg",
     images: [
-      "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119988/upzwe0tsn1utgkoqx7tb.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119999/leep9sd5juwxiyy7sarl.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120011/kdeyn3t4orqtpih1h9h8.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120029/kptm4b6gorryd83mu46i.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120040/rsybewjl2o02cfbryvxn.jpg",
     ],
     bestSeason: "May-Jun, Sep-Oct",
     distance: 40,
@@ -844,13 +842,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Twin glacier trek pairing with Pindari — wilder and less crowded",
     image:
-      "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120345/swria67f2m6u7dxsiy0u.webp",
     images: [
-      "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120345/swria67f2m6u7dxsiy0u.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120353/isqhfrcgpneoawza4aja.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120363/xq19y23ojhl0olpmmych.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120371/hbnz1sx6lamluyyibbgh.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120379/oy8ogvswjxjt7820eso1.webp",
     ],
     bestSeason: "May-Jun, Sep-Oct",
     distance: 45,
@@ -887,13 +885,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Historic Johar Valley trade route to one of the longest glaciers in the Himalayas",
     image:
-      "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115319/a25yuo9zcohvm3ugfxid.webp",
     images: [
-      "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115319/a25yuo9zcohvm3ugfxid.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115331/l6fexdbpmqyzlp7gvpdz.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115339/ij0uhlt5jf6jfgp215qo.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115346/ekuccsl5s5pe5qbbntz1.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115354/masglgzjqsevr3gztpti.webp",
     ],
     bestSeason: "Jun-Oct",
     distance: 95,
@@ -973,13 +971,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Magical lake reflecting snow peaks followed by a stunning summit ascent",
     image:
-      "https://images.unsplash.com/photo-1609766418204-94aaeaf0f4b7?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098235/sytzfdbqwe4slnrblzgl.jpg",
     images: [
-      "https://images.unsplash.com/photo-1609766418204-94aaeaf0f4b7?w=1200&q=80",
-      "https://images.unsplash.com/photo-1473445730015-841f29a9490b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098235/sytzfdbqwe4slnrblzgl.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098245/jgcpi7n3zjxwxln0carr.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098255/ga8ronscnuxoepezv9vg.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098266/pzo38odcjwnn1l85jymg.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779098273/kosmewn9tqlelq65n1v8.jpg",
     ],
     bestSeason: "Feb-Jun, Sep-Nov",
     distance: 18,
@@ -1016,13 +1014,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "A spectacular summit climb with panoramic views of Nanda Devi and Dronagiri",
     image:
-      "https://images.unsplash.com/photo-1464278533981-50106e6176b1?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110196/zicesdvggif1pxye65kq.webp",
     images: [
-      "https://images.unsplash.com/photo-1464278533981-50106e6176b1?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110196/zicesdvggif1pxye65kq.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110209/fyrqdf7p6046myyvth2z.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110218/xja7mgekq6jjbwgxobpc.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110226/rui1j6fpf44kgxhcz273.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110234/upx7hmp4yubpldnfxyzk.webp",
     ],
     bestSeason: "Mar-Jun",
     distance: 40,
@@ -1059,13 +1057,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Lord Shiva's lake — a hidden glacial tarn in the Gangotri National Park",
     image:
-      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094566/y7ly2faaw5i510f1rqml.webp",
     images: [
-      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094566/y7ly2faaw5i510f1rqml.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094557/mlusmmphrcf67pgjswzl.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094548/bfy8gtldowajcx14as34.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094534/keupqfxnevciufwajlzd.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779094526/smfl5cftr4io2eg4sqca.webp",
     ],
     bestSeason: "Jun-Oct",
     distance: 36,
@@ -1166,11 +1164,6 @@ export const TREKS: Trek[] = [
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763406/yd8ruvk6pff92duunugb.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763390/tqzlqqhys5z4w94oemdg.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763381/ydf0yaorapb0aj11ygz5.jpg",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
     ],
     bestSeason: "Jun-Oct",
     distance: 35,
@@ -1236,11 +1229,6 @@ export const TREKS: Trek[] = [
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763937/gsk17paadcrmbve6cewu.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763947/sfdxfildo0mawbyauczp.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778763958/e0wqfec93qgb2510weua.jpg",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
     ],
     bestSeason: "Jun-Sep",
     distance: 28,
@@ -1291,13 +1279,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Sacred lake of Sage Bhrigu — one of Himachal's most rewarding quick treks",
     image:
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115691/vjxuz26jvmvcfxikve7l.webp",
     images: [
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1524673450801-b5aa9b621b76?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115691/vjxuz26jvmvcfxikve7l.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115699/vlkrry9fvgqdfvz588ww.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115710/dxeo9igfegdn9vbpqbx2.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115719/mhktevpbshguidocg5ck.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779115727/wtkt0x2l82kajljx5psz.webp",
     ],
     bestSeason: "Jun-Oct",
     distance: 22,
@@ -1377,13 +1365,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "One of India's most challenging crossings — from Parvati Valley to Spiti",
     image:
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779095979/lni2oa8lfrxr05syce6o.webp",
     images: [
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779095979/lni2oa8lfrxr05syce6o.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779095989/nb5fd7hgu2qrjavguk2l.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096005/ybvdzafi77gcyomj884k.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096017/ahiud7htfgg5tz0p3nso.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779096034/gewqqkmgiovc3mrnq6bm.webp",
     ],
     bestSeason: "Aug-Sep",
     distance: 110,
@@ -1443,13 +1431,12 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Hot springs in the mountains — most popular trail in Parvati Valley",
     image:
-      "https://images.unsplash.com/photo-1521336575822-6da63fb45455?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120714/gj2nnjdyiz4n2g5uvpfi.webp",
     images: [
-      "https://images.unsplash.com/photo-1521336575822-6da63fb45455?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80",
-      "https://images.unsplash.com/photo-1524673450801-b5aa9b621b76?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120714/gj2nnjdyiz4n2g5uvpfi.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120731/jqmp7litoxnzetdm6qmi.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120739/uy0wdswyscjvthwic4am.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779120779/gfh3bgt3e304buvtnjcs.webp",
     ],
     bestSeason: "Jun-Sep",
     distance: 12,
@@ -1511,11 +1498,6 @@ export const TREKS: Trek[] = [
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771143/mjzlnjt5d3dyh1smrbga.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771109/osdmrxevxuxxrjgodlyq.jpg",
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1778771088/oip9aatnxewaa77hrlrh.jpg",
-      "https://images.unsplash.com/photo-1542224566-6e85f2e6772f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1524673450801-b5aa9b621b76?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
     ],
     bestSeason: "May-Jun, Sep-Oct",
     distance: 30,
@@ -1569,13 +1551,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "The easiest 5,000m+ mountaineering peak near Manali — true summit glory",
     image:
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110682/cqo5betocitxbydabhvn.jpg",
     images: [
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110682/cqo5betocitxbydabhvn.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110691/hgmsy6tqnqex3qje4mtb.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110702/zx4bry9uwxk4u1y4w2do.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110721/hwkwomffook87xyk7qer.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779110736/zz9hhix4t8s6ux1esn9n.webp",
     ],
     bestSeason: "May-Jun, Sep-Oct",
     distance: 40,
@@ -1612,13 +1594,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Trek to the base of the majestic Deo Tibba peak through pristine Himachal valleys",
     image:
-      "https://images.unsplash.com/photo-1553481187-be93c21490a9?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779117406/ideuhqsda8ktnajmwciv.jpg",
     images: [
-      "https://images.unsplash.com/photo-1553481187-be93c21490a9?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1524673450801-b5aa9b621b76?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779117406/ideuhqsda8ktnajmwciv.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779117385/aaislaatqkkywcepypwm.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779117392/ggu8geocwd0rja8nf7hl.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779117417/lxtdtutexkjkteuyxapa.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779117428/owkr6iisj6qvrwxjg3h2.jpg",
     ],
     bestSeason: "Jun-Oct",
     distance: 50,
@@ -1655,13 +1637,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Remote Himalayan adventure — isolated village cut off from the world in winter",
     image:
-      "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112246/ufcyc0dqordjiuahmhmi.jpg",
     images: [
-      "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112246/ufcyc0dqordjiuahmhmi.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112253/yieldkktqptv4cyifgas.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112264/mswge9qvt9ri3quvuj9k.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112274/dhegqkaso1p5pu9csdiw.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112293/kfv8uuig9ajxpyciwr8m.jpg",
     ],
     bestSeason: "Jun-Sep",
     distance: 75,
@@ -1698,13 +1680,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Epic high-altitude desert traverse connecting two iconic Lahaul landmarks",
     image:
-      "https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112672/egthybrrploazlqh5vn2.jpg",
     images: [
-      "https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112672/egthybrrploazlqh5vn2.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112666/xzgkslub1puikmokrhc5.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112681/vp1fiypgu9nmt6cbw4en.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112694/usggmffyqyqzf9kpg76o.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112706/xy3ghrefgb8vuhmlwhjg.jpg",
     ],
     bestSeason: "Jun-Sep",
     distance: 65,
@@ -1741,13 +1723,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Complete Spiti Valley exploration — monasteries, lakes, villages, and moonscapes",
     image:
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097189/gcfek7p9w7hzfx0qf2m.jpg",
     images: [
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c7f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097189/gcfek7p9w7hzfx0qf2m.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097196/x95zfk6bprjguerez7jr.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097210/xz47lpwtf9gxi1n8rg9i.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097217/xgstsxm3alodgktofgjw.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779097231/pvyk94ns57xeetcnmo5v.jpg",
     ],
     bestSeason: "Jun-Sep",
     distance: 80,
@@ -1784,13 +1766,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Circumambulation of the sacred Kinnaur Kailash peak — a divine Himalayan journey",
     image:
-      "https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112915/s2m5byywgouqfpetz7zp.jpg",
     images: [
-      "https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112915/s2m5byywgouqfpetz7zp.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112901/xogx6tebscerstgcum1j.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779112923/rxc5phpzbpp7a8yv8qsv.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113001/acvhtsvkfaezcooowlis.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113008/abxup6mqv1bgstfpwx7q.jpg",
     ],
     bestSeason: "Aug-Sep",
     distance: 35,
@@ -1827,13 +1809,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Sacred temple summit trek in Mandi district with panoramic valley views",
     image:
-      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779122363/lflhgrpks3dqnbhyi0ui.webp",
     images: [
-      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1524673450801-b5aa9b621b76?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779122363/lflhgrpks3dqnbhyi0ui.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779122372/sqwqgzr3lflpipqff4tm.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779122381/jkabludvnrzxph8qbons.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779122391/tbfy5a1jc1h7ssqnwtis.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779122403/tr7mqz3swoaoctdv8mp4.webp",
     ],
     bestSeason: "Mar-Jun, Sep-Nov",
     distance: 12,
@@ -1870,13 +1852,16 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Sacred lake of Goddess Budhi Nagin near Jalori Pass in the Kullu region",
     image:
-      "https://images.unsplash.com/photo-1445307806294-bff7f67ff225?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121148/kceclvy7nrmo0eyfives.jpg",
     images: [
-      "https://images.unsplash.com/photo-1445307806294-bff7f67ff225?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1524673450801-b5aa9b621b76?w=1200&q=80",
-      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121148/kceclvy7nrmo0eyfives.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121136/gj7qmuvewp4opiap4bbg.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121159/x60uwpaqlcump65zjli9.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121170/czckz9keb7rx7ammn6bi.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121182/fjornppzj1fxzrpnjlj6.jpg",
+    ],
+    galleryImages: [
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121206/eyxwweks29y0widm5yk0.jpg",
     ],
     bestSeason: "Apr-Nov",
     distance: 10,
@@ -1913,13 +1898,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Challenging high-altitude pass trek connecting Kullu to the remote Bara Bhangal",
     image:
-      "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113267/ikjdtbh4m6wstwigp6dj.webp",
     images: [
-      "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113267/ikjdtbh4m6wstwigp6dj.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113276/sxxuvmm8msyyaqsuoefi.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113283/xcazeaduhzjlj6s0twna.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113292/j8ivhbhocyz1uvjg8ie3.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779113300/zfwuic4tijjtptgoxfdh.webp",
     ],
     bestSeason: "Jun-Sep",
     distance: 55,
@@ -1956,13 +1941,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Remote high-altitude pass crossing in the Dhauladhar range — true wilderness",
     image:
-      "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779114714/qstizkv70on0sdsgemyz.webp",
     images: [
-      "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779114714/qstizkv70on0sdsgemyz.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779114721/s6irbkrkxdozblhufmnd.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779114729/kgcm3gqbk1kx4d2qdi24.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779114736/rwepoh538ebsdra1jptn.webp",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779114744/hig8dmkxcsshpmc9l9dc.webp",
     ],
     bestSeason: "Jun-Sep",
     distance: 58,
@@ -1999,13 +1984,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Scenic valley trek through hidden meadows and dense forests of Kullu",
     image:
-      "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121761/c41ggkfxtty4zye8evhu.jpg",
     images: [
-      "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
-      "https://images.unsplash.com/photo-1553789269-c1ae659cef44?w=1200&q=80",
-      "https://images.unsplash.com/photo-1524673450801-b5aa9b621b76?w=1200&q=80",
-      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121761/c41ggkfxtty4zye8evhu.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121771/ousfqijuuxxyowijdtd2.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121782/hp1s5oghy6uiiyduaxno.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121793/uyga6cmx3h0yl4a22nts.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779121803/vy5lnddf1jwehkgvc949.jpg",
     ],
     bestSeason: "May-Oct",
     distance: 32,
@@ -2042,13 +2027,13 @@ export const TREKS: Trek[] = [
     shortDesc:
       "Remote and challenging pass trek in the Kinnaur district with Kailash views",
     image:
-      "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119353/s0othi5mfaomyobutenk.jpg",
     images: [
-      "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80",
-      "https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?w=1200&q=80",
-      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1200&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1200&q=80",
-      "https://images.unsplash.com/photo-1536086759-b94ed3e9e35a?w=1200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119353/s0othi5mfaomyobutenk.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119362/hwhvj62sng9djy0whc72.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119376/hn80wrppyd1h3ardbxen.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119390/lr4tjgukxdrs8tixegmb.jpg",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779119410/xafcf6sebc9w3dvktebi.jpg",
     ],
     bestSeason: "Jun-Sep",
     distance: 42,

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { hasOpenWeatherApiKey } from "@/lib/openweather";
 import { useWeather } from "../hooks/useWeather";
 
 import OptimizedImage from "./media/OptimizedImage";
@@ -92,10 +93,7 @@ const CONDITION_EMOJI: Record<string, string> = {
   "Partly Cloudy": "⛅",
 };
 
-const HAS_API_KEY = !!(
-  import.meta.env.VITE_OPENWEATHER_API_KEY ??
-  import.meta.env.VITE_OPENWEATHERMAP_KEY
-);
+const HAS_API_KEY = hasOpenWeatherApiKey();
 
 function WeatherIcon({
   icon,
@@ -175,7 +173,7 @@ export default function WeatherWidget({
   trekName,
   location,
 }: WeatherWidgetProps) {
-  const { data: liveData, isLoading, error } = useWeather(location);
+  const { data: liveData, isLoading, error, refetch } = useWeather(location);
   const [expanded, setExpanded] = useState(false);
   const [lastUpdatedMin, setLastUpdatedMin] = useState(0);
   const [showSkeleton, setShowSkeleton] = useState(true);
@@ -204,9 +202,34 @@ export default function WeatherWidget({
 
   if (showSkeleton || isLoading) return <SkeletonLoader />;
 
-  // Use mock data if no API key or API errors
-  const data = liveData && !error ? liveData : MOCK_WEATHER;
-  const isMock = !liveData || !!error;
+  if (HAS_API_KEY && error && !liveData) {
+    return (
+      <div
+        className="rounded-2xl p-6 text-center space-y-3"
+        style={{ background: "#1A2340" }}
+        data-ocid="weather_widget.error_state"
+      >
+        <p className="text-white/80 text-sm">
+          Could not load live weather for {location}. Try again in a moment.
+        </p>
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-full"
+          style={{
+            backgroundColor: "var(--ew-red)",
+            color: "#fff",
+          }}
+        >
+          <RefreshCw size={14} />
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  const data = liveData ?? MOCK_WEATHER;
+  const isMock = !HAS_API_KEY || !liveData;
 
   const { current, forecast } = data;
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -413,8 +436,9 @@ export default function WeatherWidget({
             <>
               🔑 Live weather requires{" "}
               <code className="bg-white/10 px-1 rounded text-[9px]">
-                VITE_OPENWEATHERMAP_KEY
-              </code>
+                VITE_OPENWEATHER_API_KEY
+              </code>{" "}
+              in <code className="bg-white/10 px-1 rounded text-[9px]">src/.env</code>
             </>
           ) : (
             "Powered by OpenWeatherMap · Updates every 30 min"

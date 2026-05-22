@@ -12,7 +12,7 @@ const INCLUSIONS = [
   "Pujari services for personal abhishek/havan (premium packages)",
   "Medical support — first-aid kit and portable oxygen cylinder",
   "Welcome and farewell ceremonies with spiritual blessings",
-  "EternaWings yatra kit — bag, photo ID card, lanyard, guidebook",
+  "Trekora yatra kit — bag, photo ID card, lanyard, guidebook",
   "All permits and entry fees for temples and national parks",
   "Helicopter booking assistance (for applicable yatras)",
 ];
@@ -54,7 +54,7 @@ const CANCELLATION = [
     color: "var(--ew-red)",
   },
   {
-    range: "Cancelled by EternaWings (weather / force majeure)",
+    range: "Cancelled by Trekora (weather / force majeure)",
     refund: "Full refund or free reschedule",
     color: "var(--ew-green)",
   },

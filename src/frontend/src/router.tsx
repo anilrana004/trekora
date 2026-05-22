@@ -6,7 +6,9 @@ import {
 } from "@tanstack/react-router";
 import { Suspense, lazy } from "react";
 import AdminLayout from "./components/AdminLayout";
+import DormantFeatureRoute from "./components/DormantFeatureRoute";
 import Layout from "./components/Layout";
+import { validateBookSearch } from "./lib/book-route-search";
 import ErrorPage from "./pages/ErrorPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -242,12 +244,7 @@ const galleryRoute = createRoute({
 const bookRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/book",
-  validateSearch: (raw: Record<string, unknown>) => ({
-    trek:
-      typeof raw.trek === "string" && raw.trek.length > 0
-        ? raw.trek
-        : undefined,
-  }),
+  validateSearch: validateBookSearch,
   component: () => (
     <Suspense fallback={<PageLoader />}>
       <BookingPage />
@@ -259,9 +256,11 @@ const dashboardRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/dashboard",
   component: () => (
-    <Suspense fallback={<PageLoader />}>
-      <DashboardPage />
-    </Suspense>
+    <DormantFeatureRoute feature="login">
+      <Suspense fallback={<PageLoader />}>
+        <DashboardPage />
+      </Suspense>
+    </DormantFeatureRoute>
   ),
 });
 

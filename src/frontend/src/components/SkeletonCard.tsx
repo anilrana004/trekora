@@ -10,7 +10,7 @@ export default function SkeletonCard() {
       data-ocid="skeleton.card"
     >
       {/* Image area — matches TrekCard h-52 */}
-      <div className="skeleton w-full h-52 shrink-0" />
+      <div className="skeleton listing-card-media w-full shrink-0" />
 
       {/* Content */}
       <div className="p-5 space-y-2">

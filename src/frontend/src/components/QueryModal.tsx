@@ -1,13 +1,25 @@
-import { X } from "lucide-react";
+import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import { submitPlanTrekEmail } from "@/services/query-email-api";
+import { Clock, ShieldCheck, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { createPortal } from "react-dom";
+import PhoneInput from "@/components/ui/PhoneInput";
+import {
+  isNationalPhoneValid,
+  normalizeIndianPhoneDigits,
+  validateNationalPhone,
+} from "@/lib/phone-countries";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
 
 interface QueryFormValues {
   name: string;
   phone: string;
+  phoneCountry: string;
   email: string;
   destination: string;
   message: string;
@@ -18,17 +30,23 @@ interface QueryModalProps {
   onClose: () => void;
 }
 
-// All destinations combined for the dropdown
 const ALL_TREKS_OPTS = TREKS.map((t) => ({
   value: t.slug,
   label: t.name,
-  group: "Treks",
 }));
 const ALL_YATRA_OPTS = YATRAS.map((y) => ({
   value: y.slug,
   label: y.name,
-  group: "Yatras",
 }));
+
+function destinationLabel(slug: string): string {
+  if (!slug) return "Not specified";
+  const trek = TREKS.find((t) => t.slug === slug);
+  if (trek) return trek.name;
+  const yatra = YATRAS.find((y) => y.slug === slug);
+  if (yatra) return yatra.name;
+  return slug;
+}
 
 export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
   const [submitted, setSubmitted] = useState(false);
@@ -38,16 +56,28 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isSubmitting },
-  } = useForm<QueryFormValues>();
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm<QueryFormValues>({
+    defaultValues: {
+      name: "",
+      phone: "",
+      phoneCountry: "IN",
+      email: "",
+      destination: "",
+      message: "",
+    },
+  });
 
   const watchedName = watch("name", "");
   const watchedPhone = watch("phone", "");
+  const watchedPhoneCountry = watch("phoneCountry", "IN");
   const watchedEmail = watch("email", "");
   const isValid =
-    (watchedName?.length ?? 0) >= 2 &&
-    /^\d{10}$/.test(watchedPhone ?? "") &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watchedEmail ?? "");
+    watchedName.trim().length >= 2 &&
+    isNationalPhoneValid(watchedPhone, watchedPhoneCountry) &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(watchedEmail.trim());
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -63,8 +93,33 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
     };
   }, [isOpen, onClose]);
 
-  const onSubmit = (_data: QueryFormValues) => {
-    setSubmitted(true);
+  const onSubmit = (data: QueryFormValues) => {
+    const phoneDigits =
+      data.phoneCountry === "IN"
+        ? normalizeIndianPhoneDigits(data.phone)
+        : data.phone.replace(/\D/g, "");
+
+    submitEmailOptimistic(
+      () =>
+        submitPlanTrekEmail({
+          name: data.name.trim(),
+          phone: phoneDigits,
+          phoneCountry: data.phoneCountry,
+          email: data.email.trim(),
+          destination: data.destination,
+          destinationLabel: destinationLabel(data.destination),
+          message: data.message.trim(),
+          source: "Plan My Trek",
+        }),
+      () => {
+        setSubmitted(true);
+        toast.success("Request sent! We'll contact you within 1 hour.");
+      },
+      (message) => {
+        setSubmitted(false);
+        toast.error(message);
+      },
+    );
   };
 
   const handleClose = () => {
@@ -75,69 +130,65 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
     }, 300);
   };
 
-  const inputCls =
-    "w-full px-3 py-2.5 border rounded-lg text-sm outline-none transition-colors focus:ring-2";
-  const inputStyle = {
-    borderColor: "var(--ew-gray-mid)",
-    color: "var(--ew-text)",
-  };
+  const fieldError = (hasError: boolean) =>
+    `plan-trek-modal__input ${hasError ? "plan-trek-modal__input--error" : ""}`;
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.65)" }}
+          className="plan-trek-modal__backdrop fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6"
           onClick={handleClose}
           data-ocid="query.dialog"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 16 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-            className="bg-white rounded-2xl w-full max-w-[480px] overflow-hidden shadow-deep"
+            exit={{ opacity: 0, scale: 0.96, y: 16 }}
+            transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+            className="plan-trek-modal__panel bg-white"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="plan-trek-modal-title"
           >
-            {/* Modal Header */}
-            <div
-              className="relative px-6 py-5 flex items-center justify-between"
-              style={{ background: "var(--ew-red)" }}
-            >
-              <div>
+            <div className="plan-trek-modal__header relative flex items-start justify-between gap-3">
+              <div className="min-w-0 pr-2">
                 <h2
-                  className="text-white font-bold text-lg leading-tight"
+                  id="plan-trek-modal-title"
+                  className="text-white font-bold text-lg sm:text-xl leading-tight"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   Plan Your Trek with Trekora
                 </h2>
-                <p className="text-white/75 text-xs mt-0.5">
+                <p className="text-white/80 text-xs sm:text-sm mt-1 flex items-center gap-1.5">
+                  <Clock size={14} className="shrink-0 opacity-90" aria-hidden />
                   Our expert will contact you within 1 hour
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handleClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full transition-colors shrink-0"
+                className="w-9 h-9 flex items-center justify-center rounded-full shrink-0 transition-colors hover:bg-white/25"
                 style={{ background: "rgba(255,255,255,0.18)" }}
                 aria-label="Close modal"
                 data-ocid="query.close_button"
               >
-                <X size={16} color="#fff" />
+                <X size={18} color="#fff" strokeWidth={2.25} />
               </button>
             </div>
 
-            {/* Body */}
-            <div className="px-6 py-6 max-h-[75vh] overflow-y-auto">
+            <div className="plan-trek-modal__body">
               {submitted ? (
-                /* Success State */
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-8"
+                  className="text-center py-6 sm:py-8"
                   data-ocid="query.success_state"
                 >
                   <div
@@ -153,7 +204,7 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                       strokeWidth="2.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      aria-hidden="true"
+                      aria-hidden
                     >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
@@ -185,46 +236,35 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                   <button
                     type="button"
                     onClick={handleClose}
-                    className="btn-secondary mt-6"
+                    className="btn-secondary mt-6 min-h-[3rem] px-8"
                     data-ocid="query.success.close_button"
                   >
                     Close
                   </button>
                 </motion.div>
               ) : (
-                /* Form */
                 <form
+                  id="plan-trek-form"
                   onSubmit={handleSubmit(onSubmit)}
                   className="space-y-4"
                   noValidate
                 >
-                  {/* Full Name */}
-                  <div>
-                    <label
-                      htmlFor="qm-name"
-                      className="block text-sm font-medium mb-1"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Full Name{" "}
-                      <span style={{ color: "var(--ew-red)" }}>*</span>
+                  <div className="plan-trek-modal__field">
+                    <label htmlFor="qm-name">
+                      Full Name <span className="plan-trek-modal__req">*</span>
                     </label>
                     <input
                       id="qm-name"
                       type="text"
+                      autoComplete="name"
                       placeholder="Enter your full name"
                       {...register("name", { required: "Name is required" })}
-                      className={inputCls}
-                      style={{
-                        ...inputStyle,
-                        borderColor: errors.name
-                          ? "var(--ew-red)"
-                          : "var(--ew-gray-mid)",
-                      }}
+                      className={fieldError(Boolean(errors.name))}
                       data-ocid="query.name.input"
                     />
                     {errors.name && (
                       <p
-                        className="text-xs mt-1"
+                        className="text-xs mt-1.5"
                         style={{ color: "var(--ew-red)" }}
                         data-ocid="query.name.field_error"
                       >
@@ -233,39 +273,37 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                     )}
                   </div>
 
-                  {/* Mobile */}
-                  <div>
-                    <label
-                      htmlFor="qm-phone"
-                      className="block text-sm font-medium mb-1"
-                      style={{ color: "var(--ew-text)" }}
-                    >
+                  <div className="plan-trek-modal__field">
+                    <label htmlFor="qm-phone">
                       Mobile Number{" "}
-                      <span style={{ color: "var(--ew-red)" }}>*</span>
+                      <span className="plan-trek-modal__req">*</span>
                     </label>
-                    <input
-                      id="qm-phone"
-                      type="tel"
-                      placeholder="+91 XXXXX XXXXX"
-                      {...register("phone", {
-                        required: "Mobile number is required",
-                        pattern: {
-                          value: /^\d{10}$/,
-                          message: "Enter valid 10-digit mobile number",
-                        },
-                      })}
-                      className={inputCls}
-                      style={{
-                        ...inputStyle,
-                        borderColor: errors.phone
-                          ? "var(--ew-red)"
-                          : "var(--ew-gray-mid)",
+                    <Controller
+                      name="phone"
+                      control={control}
+                      rules={{
+                        validate: (v) =>
+                          validateNationalPhone(v, watchedPhoneCountry),
                       }}
-                      data-ocid="query.phone.input"
+                      render={({ field }) => (
+                        <PhoneInput
+                          id="qm-phone"
+                          value={field.value}
+                          countryIso={watchedPhoneCountry}
+                          onValueChange={field.onChange}
+                          onCountryChange={(meta) => {
+                            setValue("phoneCountry", meta.iso, {
+                              shouldValidate: true,
+                            });
+                          }}
+                          hasError={Boolean(errors.phone)}
+                          data-ocid="query.phone.input"
+                        />
+                      )}
                     />
                     {errors.phone && (
                       <p
-                        className="text-xs mt-1"
+                        className="text-xs mt-1.5"
                         style={{ color: "var(--ew-red)" }}
                         data-ocid="query.phone.field_error"
                       >
@@ -274,19 +312,15 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                     )}
                   </div>
 
-                  {/* Email */}
-                  <div>
-                    <label
-                      htmlFor="qm-email"
-                      className="block text-sm font-medium mb-1"
-                      style={{ color: "var(--ew-text)" }}
-                    >
+                  <div className="plan-trek-modal__field">
+                    <label htmlFor="qm-email">
                       Email Address{" "}
-                      <span style={{ color: "var(--ew-red)" }}>*</span>
+                      <span className="plan-trek-modal__req">*</span>
                     </label>
                     <input
                       id="qm-email"
                       type="email"
+                      autoComplete="email"
                       placeholder="your@email.com"
                       {...register("email", {
                         required: "Email is required",
@@ -295,18 +329,12 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                           message: "Invalid email address",
                         },
                       })}
-                      className={inputCls}
-                      style={{
-                        ...inputStyle,
-                        borderColor: errors.email
-                          ? "var(--ew-red)"
-                          : "var(--ew-gray-mid)",
-                      }}
+                      className={fieldError(Boolean(errors.email))}
                       data-ocid="query.email.input"
                     />
                     {errors.email && (
                       <p
-                        className="text-xs mt-1"
+                        className="text-xs mt-1.5"
                         style={{ color: "var(--ew-red)" }}
                         data-ocid="query.email.field_error"
                       >
@@ -315,20 +343,13 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                     )}
                   </div>
 
-                  {/* Select Destination */}
-                  <div>
-                    <label
-                      htmlFor="qm-destination"
-                      className="block text-sm font-medium mb-1"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Select Destination
-                    </label>
+                  <div className="plan-trek-modal__field">
+                    <label htmlFor="qm-destination">Select Destination</label>
                     <select
                       id="qm-destination"
                       {...register("destination")}
-                      className={inputCls}
-                      style={{ ...inputStyle, background: "#fff" }}
+                      className={fieldError(false)}
+                      style={{ background: "#fff" }}
                       data-ocid="query.destination.select"
                     >
                       <option value="">— Choose a Trek or Yatra —</option>
@@ -349,13 +370,8 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                     </select>
                   </div>
 
-                  {/* Message */}
-                  <div>
-                    <label
-                      htmlFor="qm-message"
-                      className="block text-sm font-medium mb-1"
-                      style={{ color: "var(--ew-text)" }}
-                    >
+                  <div className="plan-trek-modal__field">
+                    <label htmlFor="qm-message">
                       Message / Special Requirements
                     </label>
                     <textarea
@@ -363,53 +379,62 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                       rows={3}
                       placeholder="Tell us about your travel plans, preferred dates, group size..."
                       {...register("message")}
-                      className={inputCls}
-                      style={{ ...inputStyle, resize: "none" }}
+                      className={`${fieldError(false)} plan-trek-modal__textarea`}
                       data-ocid="query.message.textarea"
                     />
                   </div>
-
-                  {/* Submit */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || !isValid}
-                    className="btn-primary w-full justify-center text-base py-3"
-                    style={{
-                      borderRadius: 10,
-                      opacity: isValid ? 1 : 0.55,
-                      cursor: isValid ? "pointer" : "not-allowed",
-                    }}
-                    data-ocid="query.submit_button"
-                  >
-                    {isSubmitting ? "Sending..." : "Submit Request"}
-                  </button>
-
-                  {/* WhatsApp alternative */}
-                  <p
-                    className="text-center text-xs"
-                    style={{ color: "var(--ew-gray-dark)" }}
-                  >
-                    Or{" "}
-                    <a
-                      href="https://wa.me/919876543210?text=Hi%20Trekora%2C%20I%27d%20like%20to%20plan%20a%20trek"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#25D366",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                      }}
-                    >
-                      chat directly on WhatsApp
-                    </a>{" "}
-                    for instant reply
-                  </p>
                 </form>
               )}
             </div>
+
+            {!submitted && (
+              <div className="plan-trek-modal__footer">
+                <button
+                  type="submit"
+                  form="plan-trek-form"
+                  disabled={!isValid}
+                  className="plan-trek-modal__submit btn-primary justify-center"
+                  style={{
+                    opacity: isValid ? 1 : 0.55,
+                    cursor: isValid ? "pointer" : "not-allowed",
+                  }}
+                  data-ocid="query.submit_button"
+                >
+                  Submit Request
+                </button>
+                <p className="plan-trek-modal__trust">
+                  <ShieldCheck
+                    size={14}
+                    style={{ color: "var(--ew-green)" }}
+                    aria-hidden
+                  />
+                  Your details are shared only with Trekora. No spam.
+                </p>
+                <p
+                  className="text-center text-xs mt-2"
+                  style={{ color: "var(--ew-gray-dark)" }}
+                >
+                  Or{" "}
+                  <a
+                    href={WHATSAPP_CHAT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      color: "#25D366",
+                      fontWeight: 600,
+                      textDecoration: "none",
+                    }}
+                  >
+                    chat directly on WhatsApp
+                  </a>{" "}
+                  for instant reply
+                </p>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

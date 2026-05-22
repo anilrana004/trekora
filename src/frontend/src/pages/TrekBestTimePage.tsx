@@ -125,7 +125,7 @@ const BEST_TIME_FAQS = [
   },
   {
     q: "What is the ideal group size for off-season treks?",
-    a: "Smaller groups (4–6 people) are ideal for off-season when facilities may be limited. EternaWings caps batches at 12 for all seasons.",
+    a: "Smaller groups (4–6 people) are ideal for off-season when facilities may be limited. Trekora caps batches at 12 for all seasons.",
   },
 ];
 
@@ -141,7 +141,7 @@ export default function TrekBestTimePage() {
 
   useEffect(() => {
     const name = trek?.name ?? slug;
-    document.title = `Best Time to Trek ${name} | EternaWings`;
+    document.title = `Best Time to Trek ${name} | Trekora`;
   }, [slug, trek]);
 
   if (!trek) {

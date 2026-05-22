@@ -1,3 +1,6 @@
+import { isFeatureLive } from "@/lib/dormant-features";
+import { bookSearch } from "@/lib/book-search";
+import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
@@ -5,6 +8,9 @@ import { useState } from "react";
 interface EMICalculatorProps {
   price: number;
   trekName: string;
+  /** Deep-link prefill on `/book` when opened from a trek or yatra page. */
+  bookTrekSlug?: string;
+  bookYatraSlug?: string;
 }
 
 const RAZORPAY_LOGO = (
@@ -25,10 +31,21 @@ const RAZORPAY_LOGO = (
   </svg>
 );
 
-export default function EMICalculator({ price, trekName }: EMICalculatorProps) {
+export default function EMICalculator({
+  price,
+  trekName,
+  bookTrekSlug,
+  bookYatraSlug,
+}: EMICalculatorProps) {
   const [open, setOpen] = useState(false);
+  const bookLinkSearch = bookSearch({
+    trek: bookTrekSlug,
+    yatra: bookYatraSlug,
+  });
 
-  if (price <= 8000) return null;
+  if (!isFeatureLive("emi") || price <= 8000) {
+    return null;
+  }
 
   const emi3 = Math.ceil(price / 3);
   const emi6 = Math.ceil(price / 6);
@@ -111,8 +128,9 @@ export default function EMICalculator({ price, trekName }: EMICalculatorProps) {
                       ₹{plan.emi.toLocaleString("en-IN")}/month
                     </span>
                   </div>
-                  <a
-                    href="/book"
+                  <Link
+                    to="/book"
+                    search={bookLinkSearch}
                     className="text-xs font-semibold px-3 py-1 rounded-full transition-colors"
                     style={{
                       backgroundColor: "var(--ew-orange)",
@@ -121,19 +139,20 @@ export default function EMICalculator({ price, trekName }: EMICalculatorProps) {
                     data-ocid={`trek_detail.emi_book_button.${plan.months}`}
                   >
                     Book
-                  </a>
+                  </Link>
                 </div>
               ))}
 
               {/* Book with EMI CTA */}
-              <button
-                type="button"
+              <Link
+                to="/book"
+                search={bookLinkSearch}
                 className="btn-primary w-full justify-center text-sm py-2.5"
                 style={{ borderRadius: "0.5rem" }}
                 data-ocid="trek_detail.emi_book_button"
               >
                 Book {trekName} with EMI
-              </button>
+              </Link>
 
               <p
                 className="text-[11px] text-center"

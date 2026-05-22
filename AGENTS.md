@@ -2,7 +2,20 @@
 
 ## User Preferences
 
-[No preferences yet]
+- **Quality bar**: Production-grade, world-class travel platform — premium UI/UX, scalable architecture, security, performance, SEO, and accessibility. Think like a senior full-stack engineer + architect + UX + DevOps + security combined.
+- **Before any change**: Analyze dependencies; never break existing behavior; prefer minimal, focused diffs; reuse existing patterns and components.
+- **While implementing**: Mobile-first responsive design; smooth animations and spacing; robust validation and error handling on backend; clean modular code; run typecheck/lint when touching code.
+- **After implementing**: Polished, deployment-ready result; verify related flows still work.
+
+## Engineering Standards
+
+When implementing features, fixes, or UI updates:
+
+1. **Think first** — Understand the system and dependencies before editing.
+2. **Production mindset** — Validation, auth, rate limits, error handling, and security on backend; performance and maintainability everywhere.
+3. **UI/UX** — Premium, modern, accessible; consistent spacing, motion, and responsiveness; reusable components.
+4. **Safety** — Do not regress existing functionality; keep folder structure and conventions consistent with the codebase.
+5. **Verify** — Use verified commands below (typecheck, build) after substantive frontend/backend changes.
 
 ## Verified Commands
 
@@ -23,6 +36,11 @@
 
 - **generate bindings**: `pnpm bindgen` This step is necessary to ensure the frontend can call the backend methods.
 
+**Security** (from repo root):
+
+- **secret scan**: `pnpm security:check` — fails if tracked files match secret patterns (no values printed). See `SECURITY.md`.
+
 ## Learnings
 
-[No learnings yet]
+- Production deploy docs live in `docs/` (Vercel + Railway + Cloudflare). Frontend stays Vite SPA at `src/frontend/`; Mongo API at `backend/`.
+- Run `pnpm ensure-indexes` after MongoDB schema changes. API routes are mirrored at `/api/v1/*`.

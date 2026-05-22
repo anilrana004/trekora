@@ -1,5 +1,6 @@
 import { RESPONSIVE_IMAGE_WIDTHS } from "./breakpoints";
 import { getCloudinaryCloudName } from "./cloudinary-config";
+import { aspectRatioFromCrop } from "./variant-delivery";
 
 export type ImageDeliveryOptions = {
   /** Target width in px (`w_` transformation). */
@@ -11,6 +12,10 @@ export type ImageDeliveryOptions = {
   crop?: string;
   /** Effect chain segment, e.g. `e_blur:1200` for LQIP placeholders. */
   effects?: string;
+  /** Override default `f_auto` (brand logos use `f_png` for crisp type). */
+  format?: string;
+  /** Override default `q_auto` (brand logos use `q_95`). */
+  quality?: string;
 };
 
 function isHttpUrl(s: string): boolean {
@@ -59,7 +64,7 @@ const DEFAULT_GEOMETRY = "c_limit";
 function buildTransformChain(opts: ImageDeliveryOptions): string {
   const parts = [opts.crop ?? DEFAULT_GEOMETRY];
   if (opts.effects) parts.push(opts.effects);
-  parts.push("f_auto", "q_auto");
+  parts.push(opts.format ?? "f_auto", opts.quality ?? "q_auto");
   if (opts.width) parts.push(`w_${opts.width}`);
   return parts.join(",");
 }
@@ -83,10 +88,20 @@ function fallbackTuneRemoteUrl(
   try {
     const u = new URL(src);
     if (u.hostname.includes("images.unsplash.com")) {
-      if (opts.width) u.searchParams.set("w", String(opts.width));
-      u.searchParams.set("q", "80");
+      const ar = aspectRatioFromCrop(opts.crop);
+      if (opts.width && ar) {
+        const h = Math.round((opts.width * ar.h) / ar.w);
+        u.searchParams.set("w", String(opts.width));
+        u.searchParams.set("h", String(h));
+        u.searchParams.set("fit", "crop");
+        u.searchParams.set("crop", "entropy");
+      } else if (opts.width) {
+        u.searchParams.set("w", String(opts.width));
+        u.searchParams.set("fit", "max");
+      }
+      u.searchParams.set("q", opts.quality?.replace("q_", "") ?? "90");
       u.searchParams.set("fm", "webp");
-      u.searchParams.set("fit", "max");
+      u.searchParams.set("auto", "format");
       return u.toString();
     }
   } catch {
@@ -138,10 +153,13 @@ export function buildOptimizedImageUrl(
 export function buildResponsiveSrcSet(
   src: string,
   widths: readonly number[] = RESPONSIVE_IMAGE_WIDTHS,
+  baseOpts: ImageDeliveryOptions = {},
 ): string {
   const parts: string[] = [];
   for (const w of widths) {
-    parts.push(`${buildOptimizedImageUrl(src, { width: w })} ${w}w`);
+    parts.push(
+      `${buildOptimizedImageUrl(src, { ...baseOpts, width: w })} ${w}w`,
+    );
   }
   return parts.join(", ");
 }

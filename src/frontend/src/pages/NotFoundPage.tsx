@@ -1,7 +1,9 @@
+import { SEOHead } from "@/components/SEOHead";
+import { NOT_FOUND_SEO } from "@/lib/route-seo";
 import { Link } from "@tanstack/react-router";
 import { Home, MapPin, Mountain } from "lucide-react";
 import { motion } from "motion/react";
-import OptimizedImage from "../components/media/OptimizedImage";
+import ListingCardMedia from "../components/media/ListingCardMedia";
 import { TREKS } from "../data/treks";
 
 const featuredTreks = TREKS.filter((t) => t.isFeatured).slice(0, 4);
@@ -29,6 +31,12 @@ function MountainSVG() {
 export default function NotFoundPage() {
   return (
     <main id="main-content">
+      <SEOHead
+        title={NOT_FOUND_SEO.title}
+        description={NOT_FOUND_SEO.description}
+        canonical={NOT_FOUND_SEO.canonical}
+        noindex={NOT_FOUND_SEO.noindex}
+      />
       {/* Hero 404 section */}
       <section
         className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-20"
@@ -99,15 +107,12 @@ export default function NotFoundPage() {
                 className="trek-card block group"
                 data-ocid={`not-found.suggested.item.${idx + 1}`}
               >
-                <div className="trek-card-img relative" style={{ height: 160 }}>
-                  <OptimizedImage
-                    src={trek.image}
-                    alt={trek.name}
-                    fill
-                    variant="trek-card"
-                    className="transition-transform duration-400 group-hover:scale-105"
-                  />
-                </div>
+                <ListingCardMedia
+                  src={trek.image}
+                  alt={trek.name}
+                  variant="trek-card"
+                  className="group-hover:[&_.listing-card-media__img]:scale-[1.04]"
+                />
                 <div className="p-4">
                   <div className="flex items-center gap-1 mb-1">
                     <MapPin size={12} style={{ color: "var(--ew-red)" }} />

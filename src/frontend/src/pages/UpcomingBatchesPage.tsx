@@ -1,3 +1,4 @@
+import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useState } from "react";
@@ -210,7 +211,7 @@ export default function UpcomingBatchesPage() {
       </div>
 
       {/* Tab filters */}
-      <div className="bg-white py-4 shadow-sm sticky top-16 z-20">
+      <div className="listing-sticky-toolbar bg-white py-3 shadow-sm">
         <div className="container mx-auto px-4 flex gap-3 flex-wrap justify-center">
           {TABS.map((t) => (
             <button
@@ -400,7 +401,9 @@ export default function UpcomingBatchesPage() {
         {/* WhatsApp CTA */}
         <div className="mt-8 text-center">
           <a
-            href="https://wa.me/919999999999?text=Hi%20EternaWings%2C%20I%27d%20like%20to%20book%20a%20trek%20batch"
+            href={buildWhatsAppUrl(
+              "Hi Trekora, I'd like to book a trek batch",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full text-white transition-opacity hover:opacity-90"

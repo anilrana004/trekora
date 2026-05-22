@@ -1,0 +1,91 @@
+/* Homepage offer banners (BOGO + Char Dham) */
+
+.offer-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 8.75rem;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.offer-banner--orange {
+  background: linear-gradient(
+    135deg,
+    var(--ew-orange) 0%,
+    #d96a1a 55%,
+    #c45f15 100%
+  );
+}
+
+.offer-banner--red {
+  background: linear-gradient(
+    135deg,
+    var(--ew-red) 0%,
+    #a8001a 55%,
+    #8f0016 100%
+  );
+}
+
+.offer-banner__media-wrap {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 38%;
+  max-width: 12rem;
+  opacity: 0.35;
+  overflow: hidden;
+}
+
+.offer-banner__media-wrap img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.offer-banner__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .offer-banner__content {
+    max-width: 72%;
+  }
+}
+
+.offer-banner__eyebrow {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.offer-banner__title {
+  margin-bottom: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+}
+
+.offer-banner__desc {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.offer-banner .btn-white {
+  text-decoration: none;
+}

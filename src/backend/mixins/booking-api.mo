@@ -4,6 +4,7 @@ import Principal "mo:core/Principal";
 import Common "../types/common";
 import BookingTypes "../types/booking";
 import BookingLib "../lib/booking";
+import DormantFeatures "../lib/dormant-features";
 
 mixin (
   bookings : List.List<BookingLib.Booking>,
@@ -11,7 +12,7 @@ mixin (
   admins : List.List<Principal>,
 ) {
   public shared ({ caller }) func createBooking(input : BookingTypes.BookingInput) : async Common.Result<Nat, Text> {
-    if (caller.isAnonymous()) {
+    if (DormantFeatures.loginEnabled and caller.isAnonymous()) {
       return #err("Must be authenticated to book");
     };
     let id = bookingCounter.value;
@@ -21,10 +22,16 @@ mixin (
   };
 
   public shared query ({ caller }) func getUserBookings() : async [BookingTypes.Booking] {
+    if (not DormantFeatures.loginEnabled) {
+      return [];
+    };
     BookingLib.getByUser(bookings, caller)
   };
 
   public shared ({ caller }) func cancelBooking(id : Nat) : async Common.Result<Bool, Text> {
+    if (not DormantFeatures.loginEnabled) {
+      return #err(DormantFeatures.loginDisabledMessage());
+    };
     BookingLib.cancel(bookings, id, caller)
   };
 
@@ -49,6 +56,9 @@ mixin (
   // Returns Ok(orderId) — the frontend passes this to the Razorpay checkout modal.
   // TODO(production): This will delegate to a real Razorpay order creation HTTP outcall.
   public shared ({ caller }) func initPayment(bookingId : Nat, amount : Nat, currency : Text) : async Common.Result<Text, Text> {
+    if (not DormantFeatures.paymentEnabled) {
+      return #err(DormantFeatures.paymentDisabledMessage());
+    };
     if (caller.isAnonymous()) {
       return #err("Must be authenticated");
     };
@@ -61,6 +71,9 @@ mixin (
   // TODO(production): Real HMAC-SHA256 verification must be added in BookingLib.verifyPayment
   // before this is used in production. See lib/booking.mo for details.
   public shared ({ caller }) func verifyPayment(bookingId : Nat, paymentId : Text, signature : Text) : async Common.Result<BookingTypes.Booking, Text> {
+    if (not DormantFeatures.paymentEnabled) {
+      return #err(DormantFeatures.paymentDisabledMessage());
+    };
     if (caller.isAnonymous()) {
       return #err("Must be authenticated");
     };

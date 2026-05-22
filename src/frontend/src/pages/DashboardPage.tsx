@@ -1,3 +1,4 @@
+import { WHATSAPP_CHAT_URL, buildWhatsAppUrl } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
 import {
   BookOpen,
@@ -525,7 +526,7 @@ export default function DashboardPage() {
                   </p>
                   {activeTab === "support" ? (
                     <a
-                      href="https://wa.me/919999999999"
+                      href={WHATSAPP_CHAT_URL}
                       className="btn-primary"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -794,9 +795,9 @@ export default function DashboardPage() {
 
                   {/* WhatsApp share */}
                   <a
-                    href={`https://wa.me/?text=${encodeURIComponent(
+                    href={buildWhatsAppUrl(
                       `Join me on Trekora! Use my referral code TK-RAHUL42 for your first trek: ${typeof window !== "undefined" ? `${window.location.origin}?ref=TK-RAHUL42` : ""}`,
-                    )}`}
+                    )}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full rounded-xl py-3 text-sm font-semibold"

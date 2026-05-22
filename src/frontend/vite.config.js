@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from "url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import environment from "vite-plugin-environment";
+import { emailApiPlugin } from "./vite-plugin-email-api.mjs";
 
 const ii_url =
   process.env.DFX_NETWORK === "local"
@@ -20,16 +21,18 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     sourcemap: false,
-    minify: false,
+    minify: "esbuild",
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
           router: ['@tanstack/react-router'],
+          query: ['@tanstack/react-query'],
           motion: ['motion'],
           icons: ['lucide-react'],
           charts: ['recharts'],
+          maps: ['leaflet'],
         },
       },
     },
@@ -52,7 +55,8 @@ export default defineConfig({
     strictPort: false,
     open: true,
     proxy: {
-      "/api": {
+      // ICP canister API only — email routes handled by vite-plugin-email-api
+      "^/api/(?!booking|callback|corporate-quote|query|vouchers|giftcards|reviews|gallery|product-photos)": {
         target: "http://127.0.0.1:4943",
         changeOrigin: true,
       },
@@ -63,6 +67,7 @@ export default defineConfig({
     environment("all", { prefix: "DFX_" }),
     environment(["II_URL"]),
     environment(["STORAGE_GATEWAY_URL"]),
+    emailApiPlugin(),
     react(),
   ],
   resolve: {

@@ -2,8 +2,7 @@
 
 Please provide the following details to complete your website setup:
 
-1. **Phone Number** — Replace all instances of `+91 98765 43210` / `919876543210` in the codebase  
-   - Central file: `src/lib/site-contact.ts` (`SITE_PHONE_*`, `SITE_PHONE_WA_DIGITS`)
+1. **Phone Number** — Canonical: `+91 99977 13364` / `919997713364` in `src/frontend/src/lib/site-contact.ts` (`SITE_PHONE_*`, `SITE_PHONE_WA_DIGITS`). Update there if your live number differs.
 
 2. **Formspree Form ID** — Sign up at [formspree.io](https://formspree.io), create a form, and replace `REPLACE_WITH_CLIENT_FORM_ID` in `src/components/ui/EnquiryModal.tsx` (`FORMSPREE_ENDPOINT`).
 

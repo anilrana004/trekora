@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { Scale, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -8,7 +8,13 @@ import {
   useEffect,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
+import { TREKS } from "../data/treks";
+import {
+  compareKeysEqual,
+  normalizeCompareKey,
+} from "../lib/compare-treks";
 
 /* ─────────────── Context ─────────────── */
 
@@ -44,25 +50,31 @@ function readList(): string[] {
 }
 
 export function CompareProvider({ children }: { children: React.ReactNode }) {
-  const [compareTreks, setCompareTreks] = useState<string[]>(readList);
+  const [compareTreks, setCompareTreks] = useState<string[]>(() =>
+    [...new Set(readList().map(normalizeCompareKey))].filter((slug) =>
+      TREKS.some((t) => t.slug === slug),
+    ),
+  );
 
   useEffect(() => {
     localStorage.setItem(COMPARE_KEY, JSON.stringify(compareTreks));
   }, [compareTreks]);
 
-  const addToCompare = useCallback((id: string) => {
+  const addToCompare = useCallback((idOrSlug: string) => {
+    const slug = normalizeCompareKey(idOrSlug);
     setCompareTreks((prev) => {
-      if (prev.includes(id)) return prev;
+      if (prev.some((k) => compareKeysEqual(k, slug))) return prev;
       if (prev.length >= 3) {
         toast.warning("Maximum 3 treks to compare", { duration: 2000 });
         return prev;
       }
-      return [...prev, id];
+      return [...prev, slug];
     });
   }, []);
 
-  const removeFromCompare = useCallback((id: string) => {
-    setCompareTreks((prev) => prev.filter((t) => t !== id));
+  const removeFromCompare = useCallback((idOrSlug: string) => {
+    const slug = normalizeCompareKey(idOrSlug);
+    setCompareTreks((prev) => prev.filter((k) => !compareKeysEqual(k, slug)));
   }, []);
 
   const clearCompare = useCallback(() => {
@@ -70,7 +82,8 @@ export function CompareProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const isInCompare = useCallback(
-    (id: string) => compareTreks.includes(id),
+    (idOrSlug: string) =>
+      compareTreks.some((k) => compareKeysEqual(k, idOrSlug)),
     [compareTreks],
   );
 
@@ -135,56 +148,77 @@ export function CompareButton({ trekId }: { trekId: string }) {
 
 export function CompareBar() {
   const { compareTreks, clearCompare } = useCompare();
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isVisible = compareTreks.length >= 1 && pathname !== "/compare";
 
-  return (
+  useEffect(() => {
+    document.body.classList.toggle("compare-bar-visible", isVisible);
+    return () => document.body.classList.remove("compare-bar-visible");
+  }, [isVisible]);
+
+  const bar = (
     <AnimatePresence>
-      {compareTreks.length >= 1 && (
-        <motion.div
-          initial={{ y: 80, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 80, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 340, damping: 26 }}
-          className="fixed bottom-16 md:bottom-4 left-1/2 z-50"
-          style={{ transform: "translateX(-50%)" }}
-        >
-          <div
-            className="flex items-center gap-3 rounded-2xl px-5 py-3 shadow-elevated"
-            style={{
-              backgroundColor: "var(--ew-footer)",
-              color: "#fff",
-              border: "1px solid rgba(255,255,255,0.1)",
-              backdropFilter: "blur(8px)",
-            }}
+      {isVisible && (
+        /* Anchor is fixed + centered; motion only animates inner shell (avoids transform clash). */
+        <div className="compare-bar-anchor" role="presentation">
+          <motion.div
+            role="region"
+            aria-label="Trek comparison"
+            className="compare-bar"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 340, damping: 26 }}
           >
-            <Scale size={16} style={{ color: "var(--ew-orange)" }} />
-            <span className="text-sm font-medium">
-              Comparing{" "}
-              <span style={{ color: "var(--ew-orange)" }}>
-                {compareTreks.length}
-              </span>{" "}
-              {compareTreks.length === 1 ? "trek" : "treks"}
-            </span>
-            <Link
-              to="/compare"
-              className="text-sm font-bold px-3 py-1.5 rounded-lg transition-colors"
-              style={{ backgroundColor: "var(--ew-red)", color: "#fff" }}
-              data-ocid="compare_bar.view_comparison"
-            >
-              View Comparison
-            </Link>
-            <button
-              type="button"
-              onClick={clearCompare}
-              className="flex items-center gap-1 text-xs font-medium opacity-70 hover:opacity-100 transition-opacity"
-              data-ocid="compare_bar.clear_button"
-              aria-label="Clear comparison list"
-            >
-              <X size={14} />
-              Clear
-            </button>
-          </div>
-        </motion.div>
+            <div className="compare-bar__panel">
+              <div className="compare-bar__summary">
+                <Scale
+                  size={16}
+                  className="shrink-0"
+                  style={{ color: "var(--ew-orange)" }}
+                  aria-hidden
+                />
+                <span className="text-sm font-medium">
+                  Comparing{" "}
+                  <span style={{ color: "var(--ew-orange)" }}>
+                    {compareTreks.length}
+                  </span>{" "}
+                  {compareTreks.length === 1 ? "trek" : "treks"}
+                </span>
+              </div>
+              <div className="compare-bar__actions">
+                <button
+                  type="button"
+                  className="btn-primary compare-bar__cta"
+                  data-ocid="compare_bar.view_comparison"
+                  onClick={() => navigate({ to: "/compare" })}
+                >
+                  <span className="compare-bar__cta-label compare-bar__cta-label--long">
+                    View comparison
+                  </span>
+                  <span className="compare-bar__cta-label compare-bar__cta-label--short">
+                    Compare
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={clearCompare}
+                  className="compare-bar__clear"
+                  data-ocid="compare_bar.clear_button"
+                  aria-label="Clear comparison list"
+                >
+                  <X size={14} aria-hidden />
+                  Clear
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
+
+  if (typeof document === "undefined") return bar;
+  return createPortal(bar, document.body);
 }

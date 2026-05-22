@@ -1,3 +1,4 @@
+import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { Link, useParams } from "@tanstack/react-router";
 import {
   Calendar,
@@ -12,10 +13,14 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import OptimizedImage from "../components/media/OptimizedImage";
 import { BLOGS } from "../data/blogs";
+import { resolveBlogCardImage } from "../lib/blog-product-images";
 
 export default function BlogDetailPage() {
   const { slug } = useParams({ from: "/layout/blog/$slug" });
-  const blog = BLOGS.find((b) => b.slug === slug);
+  const rawBlog = BLOGS.find((b) => b.slug === slug);
+  const blog = rawBlog
+    ? { ...rawBlog, heroImage: resolveBlogCardImage(rawBlog) }
+    : undefined;
   // Related: same tags first, then most recent
   const related = BLOGS.filter((b) => b.slug !== slug)
     .map((b) => ({
@@ -45,15 +50,20 @@ export default function BlogDetailPage() {
           >
             Article not found
           </h1>
-          <Link to="/blog" className="btn-primary">
-            Browse Blog
+          <Link
+            to="/blog"
+            className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] hover:bg-[var(--ew-red)] hover:text-white transition-colors"
+          >
+            Browse Blog <ChevronRight size={14} aria-hidden />
           </Link>
         </div>
       </div>
     );
   }
 
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`${blog.title} — ${window.location.href}`)}`;
+  const whatsappUrl = buildWhatsAppUrl(
+    `${blog.title} — ${typeof window !== "undefined" ? window.location.href : ""}`,
+  );
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(blog.title)}&url=${encodeURIComponent(window.location.href)}`;
   const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
 
@@ -181,43 +191,36 @@ export default function BlogDetailPage() {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold transition-opacity hover:opacity-90"
-              style={{ background: "#25D366" }}
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors"
               data-ocid="blog.share.whatsapp"
             >
-              💬 WhatsApp
+              WhatsApp
             </a>
             <a
               href={twitterUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold transition-opacity hover:opacity-90"
-              style={{ background: "#1D9BF0" }}
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[#1D9BF0] text-[#1D9BF0] hover:bg-[#1D9BF0] hover:text-white transition-colors"
               data-ocid="blog.share.twitter"
             >
-              <Twitter size={14} /> Twitter
+              <Twitter size={14} aria-hidden /> Twitter
             </a>
             <a
               href={facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold transition-opacity hover:opacity-90"
-              style={{ background: "#1877F2" }}
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[#1877F2] text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors"
               data-ocid="blog.share.facebook"
             >
-              <Facebook size={14} /> Facebook
+              <Facebook size={14} aria-hidden /> Facebook
             </a>
             <button
               type="button"
               onClick={copyLink}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all"
-              style={{
-                background: "var(--ew-gray-lt)",
-                color: "var(--ew-text-lt)",
-              }}
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] hover:bg-[var(--ew-red)] hover:text-white transition-colors"
               data-ocid="blog.share.copy_link"
             >
-              <Copy size={14} />
+              <Copy size={14} aria-hidden />
               {copied ? "Copied!" : "Copy Link"}
             </button>
           </div>
@@ -245,7 +248,7 @@ export default function BlogDetailPage() {
                 className="text-xs font-semibold mb-1"
                 style={{ color: "var(--ew-red)" }}
               >
-                EternaWings Trek Expert
+                Trekora Trek Expert
               </p>
               <p className="text-sm" style={{ color: "var(--ew-text-lt)" }}>
                 {blog.authorBio}
@@ -269,7 +272,7 @@ export default function BlogDetailPage() {
                 >
                   <div className="relative h-36 overflow-hidden">
                     <OptimizedImage
-                      src={b.heroImage}
+                      src={resolveBlogCardImage(b)}
                       alt={b.title}
                       fill
                       variant="blog-card"
@@ -298,11 +301,8 @@ export default function BlogDetailPage() {
                     >
                       {b.excerpt.slice(0, 80)}…
                     </p>
-                    <span
-                      className="inline-block mt-2 text-xs font-semibold"
-                      style={{ color: "var(--ew-red)" }}
-                    >
-                      Read More →
+                    <span className="inline-flex items-center justify-center gap-1 mt-2 text-[11px] font-semibold py-1.5 px-3 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] group-hover:bg-[var(--ew-red)] group-hover:text-white transition-colors">
+                      Read More <ChevronRight size={12} aria-hidden />
                     </span>
                   </div>
                 </Link>

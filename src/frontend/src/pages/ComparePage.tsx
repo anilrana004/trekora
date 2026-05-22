@@ -1,10 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, CheckCircle2, Scale, Trash2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronRight, Scale, Trash2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import CompareTrekActions from "../components/CompareTrekActions";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import { useCompare } from "../components/TrekCompare";
 import OptimizedImage from "../components/media/OptimizedImage";
-import { EnquiryButton } from "../components/ui/EnquiryButton";
-import { TREKS } from "../data/treks";
+import { TREKS, type Trek } from "../data/treks";
+import { resolveCompareTreks } from "../lib/compare-treks";
 
 function DifficultyStars({ level }: { level: string }) {
   const score: Record<string, number> = {
@@ -64,17 +68,39 @@ function formatValue(trek: (typeof TREKS)[0], key: string): React.ReactNode {
   return String(val ?? "—");
 }
 
+const DEFAULT_HIGHLIGHTS = [
+  "Expert NCISM-certified guides",
+  "Small groups (max 12)",
+  "Full meals included",
+  "Emergency oxygen on high-altitude treks",
+] as const;
+
+function trekHighlights(trek: Trek): string[] {
+  if (trek.tags && trek.tags.length > 0) {
+    return trek.tags.slice(0, 4);
+  }
+  if (trek.shortDesc?.trim()) {
+    return [trek.shortDesc.trim(), ...DEFAULT_HIGHLIGHTS.slice(0, 3)];
+  }
+  return [...DEFAULT_HIGHLIGHTS];
+}
+
 export default function ComparePage() {
   const { compareTreks, removeFromCompare, clearCompare } = useCompare();
-  const selectedTreks = compareTreks
-    .map((id) => TREKS.find((t) => String(t.id) === id))
-    .filter(Boolean) as (typeof TREKS)[0][];
+  const selectedTreks = resolveCompareTreks(compareTreks);
+  const compareRailContext =
+    selectedTreks.length > 0
+      ? selectedTreks.map((t) => t.name).join(" vs ")
+      : undefined;
+
+  const emptySlots = Math.max(0, 3 - selectedTreks.length);
 
   return (
     <div
-      className="min-h-screen pt-20"
+      className="compare-page min-h-screen pt-20"
       style={{ backgroundColor: "var(--ew-gray-lt)" }}
     >
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8 flex-wrap">
@@ -142,7 +168,7 @@ export default function ComparePage() {
         ) : (
           <>
             {/* ── Desktop comparison table ── */}
-            <div className="hidden md:block overflow-x-auto">
+            <div className="compare-page__table-wrap hidden md:block overflow-x-auto">
               <div
                 className="bg-white rounded-2xl shadow-card overflow-hidden"
                 style={{ border: "1px solid var(--ew-gray-mid)" }}
@@ -168,23 +194,33 @@ export default function ComparePage() {
                           style={{ minWidth: 220 }}
                         >
                           <div className="flex flex-col items-center gap-2">
-                            <OptimizedImage
-                              src={t.image}
-                              alt={t.name}
-                              width={96}
-                              height={64}
-                              variant="thumbnail"
-                              className="w-24 h-16 object-cover rounded-lg"
-                            />
-                            <span
-                              className="text-sm font-bold leading-snug"
-                              style={{ color: "var(--ew-text)" }}
+                            <Link
+                              to="/treks/$slug"
+                              params={{ slug: t.slug }}
+                              className="group flex flex-col items-center gap-2 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                              style={{
+                                outlineColor: "var(--ew-red)",
+                              }}
+                              data-ocid={`compare.trek_link.${t.slug}`}
                             >
-                              {t.name}
-                            </span>
+                              <OptimizedImage
+                                src={t.image}
+                                alt={t.name}
+                                width={96}
+                                height={64}
+                                variant="thumbnail"
+                                className="w-24 h-16 object-cover rounded-lg transition-opacity group-hover:opacity-90"
+                              />
+                              <span
+                                className="text-sm font-bold leading-snug group-hover:underline"
+                                style={{ color: "var(--ew-text)" }}
+                              >
+                                {t.name}
+                              </span>
+                            </Link>
                             <button
                               type="button"
-                              onClick={() => removeFromCompare(String(t.id))}
+                              onClick={() => removeFromCompare(t.slug)}
                               className="text-[11px] font-medium transition-colors"
                               style={{ color: "var(--ew-gray-dark)" }}
                               aria-label={`Remove ${t.name}`}
@@ -261,14 +297,12 @@ export default function ComparePage() {
                       </td>
                       {selectedTreks.map((t) => (
                         <td key={t.id} className="px-4 py-4 text-center">
-                          <EnquiryButton
-                            type="button"
-                            trekName={t.name}
-                            className="btn-primary text-xs"
-                            data-ocid="compare.book_button"
-                          >
-                            Book Now
-                          </EnquiryButton>
+                          <CompareTrekActions
+                            trek={t}
+                            layout="stack"
+                            bookOcid={`compare.book_button.${t.slug}`}
+                            detailsOcid={`compare.details_button.${t.slug}`}
+                          />
                         </td>
                       ))}
                       {Array.from(
@@ -283,22 +317,21 @@ export default function ComparePage() {
               </div>
             </div>
 
-            {/* ── Mobile: swipeable cards ── */}
-            <div className="md:hidden flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+            {/* ── Mobile: swipeable cards (parity with desktop table) ── */}
+            <p className="compare-page__swipe-hint md:hidden">
+              Swipe to compare up to 3 treks side by side
+            </p>
+            <div className="compare-page__mobile-strip md:hidden">
               <AnimatePresence>
                 {selectedTreks.map((t, i) => (
                   <motion.div
-                    key={t.id}
+                    key={t.slug}
                     initial={{ opacity: 0, x: 40 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -40 }}
                     transition={{ delay: i * 0.07 }}
-                    className="flex-shrink-0 snap-start bg-white rounded-2xl shadow-card overflow-hidden"
-                    style={{
-                      width: "80vw",
-                      maxWidth: 320,
-                      border: "1px solid var(--ew-gray-mid)",
-                    }}
+                    className="compare-page__mobile-card bg-white rounded-2xl shadow-card overflow-hidden"
+                    style={{ border: "1px solid var(--ew-gray-mid)" }}
                   >
                     <div className="relative h-40 w-full">
                       <OptimizedImage
@@ -310,12 +343,16 @@ export default function ComparePage() {
                       />
                     </div>
                     <div className="p-4">
-                      <h3
-                        className="font-bold text-base mb-3"
+                      <Link
+                        to="/treks/$slug"
+                        params={{ slug: t.slug }}
+                        className="font-bold text-base mb-3 inline-flex items-center gap-1 hover:underline"
                         style={{ color: "var(--ew-text)" }}
+                        data-ocid={`compare.mobile.trek_link.${t.slug}`}
                       >
                         {t.name}
-                      </h3>
+                        <ChevronRight size={16} aria-hidden />
+                      </Link>
                       <ul className="space-y-2 mb-4">
                         {ROWS.map((row) => (
                           <li
@@ -334,18 +371,18 @@ export default function ComparePage() {
                           </li>
                         ))}
                       </ul>
-                      <div className="flex gap-2">
-                        <EnquiryButton
-                          type="button"
-                          trekName={t.name}
-                          className="btn-primary flex-1 text-center text-xs"
-                          data-ocid="compare.mobile.book_button"
-                        >
-                          Book Now
-                        </EnquiryButton>
+                      <div className="flex gap-2 items-stretch">
+                        <div className="flex-1 min-w-0">
+                          <CompareTrekActions
+                            trek={t}
+                            layout="stack"
+                            bookOcid={`compare.mobile.book_button.${t.slug}`}
+                            detailsOcid={`compare.mobile.details_button.${t.slug}`}
+                          />
+                        </div>
                         <button
                           type="button"
-                          onClick={() => removeFromCompare(String(t.id))}
+                          onClick={() => removeFromCompare(t.slug)}
                           className="flex items-center justify-center w-10 h-10 rounded-lg"
                           style={{
                             border: "1px solid var(--ew-gray-mid)",
@@ -358,6 +395,20 @@ export default function ComparePage() {
                       </div>
                     </div>
                   </motion.div>
+                ))}
+                {Array.from({ length: emptySlots }).map((_, i) => (
+                  <div
+                    key={`mobile-add-slot-${i}`}
+                    className="compare-page__mobile-add"
+                  >
+                    <Link
+                      to="/treks"
+                      className="inline-flex items-center gap-1"
+                      data-ocid={`compare.mobile.add_trek_slot.${i + 1}`}
+                    >
+                      + Add trek
+                    </Link>
+                  </div>
                 ))}
               </AnimatePresence>
             </div>
@@ -376,35 +427,39 @@ export default function ComparePage() {
               >
                 Key Highlights
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="compare-page__highlights">
                 {selectedTreks.map((t) => (
-                  <div key={t.id}>
-                    <p
-                      className="font-semibold text-sm mb-2"
+                  <div key={t.slug} className="compare-page__highlight-card">
+                    <Link
+                      to="/treks/$slug"
+                      params={{ slug: t.slug }}
+                      className="font-semibold text-sm mb-3 hover:underline"
                       style={{ color: "var(--ew-red)" }}
+                      data-ocid={`compare.highlights.trek_link.${t.slug}`}
                     >
                       {t.name}
-                    </p>
-                    <ul className="space-y-1.5">
-                      {[
-                        "NCISM-Certified Guides",
-                        "Small groups (max 12)",
-                        "Full meals included",
-                        "Emergency oxygen carried",
-                      ].map((h) => (
+                    </Link>
+                    <ul className="space-y-1.5 mb-4 flex-1">
+                      {trekHighlights(t).map((h) => (
                         <li
                           key={h}
-                          className="flex items-center gap-2 text-xs"
+                          className="flex items-start gap-2 text-xs"
                           style={{ color: "var(--ew-text-lt)" }}
                         >
                           <CheckCircle2
                             size={13}
+                            className="shrink-0 mt-0.5"
                             style={{ color: "var(--ew-green)" }}
                           />
                           {h}
                         </li>
                       ))}
                     </ul>
+                    <CompareTrekActions
+                      trek={t}
+                      bookOcid={`compare.highlights.book_button.${t.slug}`}
+                      detailsOcid={`compare.highlights.details_button.${t.slug}`}
+                    />
                   </div>
                 ))}
               </div>
@@ -412,6 +467,11 @@ export default function ComparePage() {
           </>
         )}
       </div>
+
+      <TravelSideActionRail
+        variant="listing-compare"
+        productName={compareRailContext}
+      />
     </div>
   );
 }

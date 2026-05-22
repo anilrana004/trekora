@@ -1,12 +1,31 @@
+import PhoneInput from "@/components/ui/PhoneInput";
+import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
+import { validateNationalPhone } from "@/lib/phone-countries";
+import { useSearch } from "@tanstack/react-router";
 import { AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import ListingRegionFilterPills, {
+  type ListingRegionTab,
+} from "../components/ListingRegionFilterPills";
+import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import { SEOHead } from "../components/SEOHead";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import YatraCard from "../components/YatraCard";
 import { HIMACHAL_YATRAS, UTTARAKHAND_YATRAS, YATRAS } from "../data/yatras";
 
 export default function YatrasPage() {
-  const [tab, setTab] = useState<"all" | "uttarakhand" | "himachal">("all");
+  const { tag, filter, q } = useSearch({ strict: false }) as {
+    tag?: string;
+    filter?: string;
+    q?: string;
+  };
+  const seoTagQuery = tag ?? filter ?? q;
+  const [tab, setTab] = useState<ListingRegionTab>("all");
+  const [phoneCountry, setPhoneCountry] = useState("IN");
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -14,27 +33,40 @@ export default function YatrasPage() {
     yatra: "",
     message: "",
   });
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
-  const list =
-    tab === "uttarakhand"
-      ? UTTARAKHAND_YATRAS
-      : tab === "himachal"
-        ? HIMACHAL_YATRAS
-        : YATRAS;
+  const yatrasListingSeo = buildListingSEO("yatra");
+
+  const list = useMemo(() => {
+    const base =
+      tab === "uttarakhand"
+        ? UTTARAKHAND_YATRAS
+        : tab === "himachal"
+          ? HIMACHAL_YATRAS
+          : YATRAS;
+    if (!seoTagQuery) return base;
+    return base.filter((y) => matchesSeoTag(y, seoTagQuery, "yatra"));
+  }, [tab, seoTagQuery]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const phoneCheck = validateNationalPhone(formState.phone, phoneCountry);
+    if (phoneCheck !== true) {
+      setPhoneError(phoneCheck);
+      return;
+    }
+    setPhoneError(null);
     setSubmitted(true);
   };
 
   return (
     <div className="pt-16 min-h-screen">
       <SEOHead
-        title="Himalayan Yatras 2025 — Sacred Pilgrimage Packages | Trekora"
-        description="Book Char Dham, Panch Kedar, Panch Badri, Mani Mahesh and other sacred Himalayan yatras. Expert spiritual guides, all-inclusive packages with Trekora."
-        keywords="Char Dham yatra, Panch Kedar, Himalayan pilgrimage, sacred yatra India, Trekora yatra"
-        canonical="https://www.trekora.com/yatras"
+        title={yatrasListingSeo.title}
+        description={yatrasListingSeo.description}
+        keywords={yatrasListingSeo.keywords}
+        canonical={yatrasListingSeo.canonical}
       />
       {/* ── Hero Banner ── */}
       <div
@@ -133,41 +165,26 @@ export default function YatrasPage() {
         </div>
       </div>
 
-      {/* ── State Filter Tabs ── */}
       <div
-        className="bg-white shadow-sm py-3 sticky top-16 z-20 border-b"
+        id={TRAVEL_HERO_SENTINEL_ID}
+        className="h-0 w-full"
+        aria-hidden
+      />
+      <TravelSideActionRail variant="listing-yatras" />
+
+      {/* ── State Filter Tabs ── */}
+      <ListingStickyToolbar
+        className="bg-white shadow-sm border-b"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="container mx-auto px-4 flex items-center gap-3 justify-center flex-wrap">
-          {(["all", "uttarakhand", "himachal"] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              className={`px-6 py-2 rounded-full text-sm font-semibold transition-all border-2 ${
-                tab === t
-                  ? "text-white border-transparent"
-                  : "bg-transparent border-current hover:opacity-80"
-              }`}
-              style={
-                tab === t
-                  ? {
-                      backgroundColor: "var(--ew-red)",
-                      borderColor: "var(--ew-red)",
-                    }
-                  : { color: "var(--ew-gray-dark)" }
-              }
-              data-ocid={`yatras.filter.${t}`}
-            >
-              {t === "all"
-                ? "All Yatras"
-                : t === "uttarakhand"
-                  ? "Uttarakhand"
-                  : "Himachal Pradesh"}
-            </button>
-          ))}
+        <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+          <ListingRegionFilterPills
+            kind="yatras"
+            active={tab}
+            onChange={setTab}
+          />
         </div>
-      </div>
+      </ListingStickyToolbar>
 
       {/* ── Urgency Note ── */}
       <div className="py-2" style={{ backgroundColor: "var(--ew-red-lt)" }}>
@@ -191,6 +208,7 @@ export default function YatrasPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.07 }}
                 className="card"
+                style={{ pointerEvents: "auto" }}
                 data-ocid={`yatra.card.${i + 1}`}
               >
                 <YatraCard yatra={yatra} index={i} variant="listing" />
@@ -278,7 +296,9 @@ export default function YatrasPage() {
                 Our yatra specialists will contact you within 24 hours.
               </p>
               <a
-                href="https://wa.me/919999999999?text=Hi%20I%20am%20interested%20in%20a%20yatra%20package"
+                href={buildWhatsAppUrl(
+                  "Hi, I am interested in a yatra package",
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary"
@@ -353,25 +373,26 @@ export default function YatrasPage() {
                     className="block text-sm font-medium mb-1"
                     style={{ color: "var(--ew-text)" }}
                   >
-                    Phone Number *
+                    Mobile Number *
                   </label>
-                  <input
+                  <PhoneInput
                     id="yatra-phone"
-                    type="tel"
-                    required
                     value={formState.phone}
-                    onChange={(e) =>
-                      setFormState((s) => ({ ...s, phone: e.target.value }))
-                    }
-                    placeholder="+91 XXXXX XXXXX"
-                    className="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
-                    style={
-                      {
-                        borderColor: "var(--ew-gray-mid)",
-                      } as React.CSSProperties
-                    }
+                    countryIso={phoneCountry}
+                    onValueChange={(phone) => {
+                      setFormState((s) => ({ ...s, phone }));
+                      if (phoneError) setPhoneError(null);
+                    }}
+                    onCountryChange={(meta) => setPhoneCountry(meta.iso)}
+                    hasError={Boolean(phoneError)}
+                    placeholder="Enter Your Mobile Number"
                     data-ocid="yatras.phone.input"
                   />
+                  {phoneError && (
+                    <p className="text-xs mt-1" style={{ color: "var(--ew-red)" }}>
+                      {phoneError}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label
@@ -444,7 +465,7 @@ export default function YatrasPage() {
                   Send Inquiry
                 </button>
                 <a
-                  href="https://wa.me/919999999999?text=Hi%20I%20am%20interested%20in%20yatra"
+                  href={buildWhatsAppUrl("Hi, I am interested in yatra")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold py-2.5 rounded-full hover:bg-green-600 transition-colors text-sm"

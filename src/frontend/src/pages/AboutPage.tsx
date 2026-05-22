@@ -1,7 +1,19 @@
+import { CTA_OUTLINE_RED, CTA_OUTLINE_WHITE } from "@/lib/cta-buttons";
+import type { ImageDeliveryOptions } from "@/lib/images/cloudinary-url";
+import { ABOUT_STORY_WATERMARK_URL } from "@/lib/site-brand";
 import { Link } from "@tanstack/react-router";
-
+import {
+  CERTIFICATION_LOGOS,
+  FEATURED_PRESS_MEDIA,
+} from "@/lib/press-media-logos";
+import { ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
+import FeaturedInMedia from "../components/FeaturedInMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
+import { SEOHead } from "../components/SEOHead";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 
 const TEAM = [
   {
@@ -89,93 +101,144 @@ const TIMELINE = [
 
 const CERTS = [
   {
-    icon: "🏆",
     name: "NCISM Certified",
     desc: "National Council of Instruction & Scientific Management",
+    imageSrc: CERTIFICATION_LOGOS["NCISM Certified"],
   },
   {
-    icon: "🏔️",
     name: "IMF Approved",
     desc: "Indian Mountaineering Foundation authorised operator",
+    imageSrc: CERTIFICATION_LOGOS["IMF Approved"],
   },
   {
-    icon: "🩺",
     name: "Wilderness First Aid",
     desc: "IMA wilderness & high-altitude emergency certified",
+    imageSrc: CERTIFICATION_LOGOS["Wilderness First Aid"],
   },
   {
-    icon: "🌿",
     name: "Eco-Tourism",
     desc: "Ministry of Tourism eco-responsible travel certified",
+    imageSrc: CERTIFICATION_LOGOS["Eco-Tourism"],
   },
 ];
 
 const VALUES = [
   {
-    icon: "🛡️",
     color: "var(--ew-red)",
     bg: "var(--ew-red-lt)",
     title: "Safety First",
     desc: "Every route is risk-assessed. Our guides carry oxygen, defibrillators, and satellite phones.",
+    imageSrc:
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779187847/bmvejdpd7mcz5bmr6fxh.jpg",
   },
   {
-    icon: "🌱",
     color: "var(--ew-green)",
     bg: "#e8f5e9",
     title: "Eco-Responsible",
     desc: "Zero plastic policy on all treks. We partner with local communities and offset our carbon footprint.",
+    imageSrc:
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779188004/ag7ytxa8ljuaxifhvehb.jpg",
+    imageDelivery: {
+      crop: "c_limit",
+      effects:
+        "e_background_removal,e_make_transparent:40:FFFFFF,e_make_transparent:40:C0C0C0,e_trim",
+      format: "f_png",
+      quality: "q_92",
+    },
   },
   {
-    icon: "🤝",
     color: "var(--ew-orange)",
     bg: "var(--ew-orange-lt)",
     title: "Community Uplift",
     desc: "30% of our guides are from local Himalayan villages. We support mountain schools and sanitation.",
+    imageSrc:
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1779188101/jn5m3b6yt4pz3ynmihru.webp",
   },
 ];
 
-const MEDIA = [
-  "Times of India",
-  "NDTV",
-  "Outlook Traveller",
-  "Hindustan Times",
-  "India Today",
-];
+const MEDIA = FEATURED_PRESS_MEDIA;
 
 export default function AboutPage() {
   return (
     <div className="pt-16 min-h-screen">
-      {/* Hero */}
-      <div className="relative h-96">
+      <SEOHead
+        title="About Trekora | Himalayan Trekking & Yatra Experts"
+        description="Learn about Trekora — founded in 2009, 10,000+ trekkers, IMF-certified guides, and responsible Himalayan adventures across Uttarakhand and Himachal."
+        keywords="about Trekora, Himalayan trekking company, certified trek guides India"
+        canonical="https://www.trekora.in/about"
+      />
+
+      {/* Hero — Our Story watermark background */}
+      <section
+        className="about-hero relative flex min-h-[24rem] items-center justify-center overflow-hidden md:min-h-[28rem]"
+        data-travel-image-section
+        data-ocid="about.hero"
+      >
         <OptimizedImage
-          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80"
-          alt="Trekora team in the mountains"
+          src={ABOUT_STORY_WATERMARK_URL}
+          alt=""
           fill
           variant="hero"
           priority
+          sizes="100vw"
+          delivery={{
+            crop: "c_fill,g_center",
+            format: "f_png",
+            quality: "q_100",
+          }}
+          className="about-hero__watermark pointer-events-none select-none"
+          aria-hidden
         />
         <div
-          className="absolute inset-0"
-          style={{ background: "rgba(26,26,46,0.75)" }}
+          className="about-hero__veil pointer-events-none absolute inset-0"
+          aria-hidden
         />
-        <div className="absolute inset-0 flex items-center justify-center text-center text-white p-4">
+        <div className="relative z-10 w-full px-4 py-14 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55 }}
+            className="mx-auto max-w-2xl"
           >
-            <span className="text-xs font-bold uppercase tracking-widest opacity-70">
+            <span
+              className="mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest"
+              style={{
+                color: "var(--ew-red)",
+                background: "var(--ew-red-lt)",
+                border: "1px solid rgba(192,0,28,0.12)",
+              }}
+            >
               Our Story
             </span>
-            <h1 className="text-5xl font-bold mt-2 mb-3 text-shadow">
+            <h1 className="about-hero__title mt-2 mb-3 text-4xl font-bold md:text-5xl">
               About Trekora
             </h1>
-            <p className="text-lg max-w-2xl opacity-80">
+            <p className="about-hero__lead mx-auto mb-6 max-w-2xl text-base md:text-lg">
               Founded in 2009 with a single Kedarnath trek, we now lead 150+
               expeditions per year across the Himalayas.
             </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/treks"
+                className={CTA_OUTLINE_RED}
+                data-ocid="about.hero.explore_button"
+              >
+                Explore Treks <ChevronRight size={14} aria-hidden />
+              </Link>
+              <Link
+                to="/contact"
+                className={CTA_OUTLINE_RED}
+                data-ocid="about.hero.contact_button"
+              >
+                Talk to Us <ChevronRight size={14} aria-hidden />
+              </Link>
+            </div>
           </motion.div>
         </div>
-      </div>
+      </section>
+
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail variant="listing-about" />
 
       {/* Mission */}
       <section className="py-16 bg-white">
@@ -352,7 +415,7 @@ export default function AboutPage() {
           <div className="text-center mb-12">
             <h2 className="section-title mx-auto block">Our Values</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             {VALUES.map((v, i) => (
               <motion.div
                 key={v.title}
@@ -360,21 +423,40 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-6 shadow-card text-center"
+                className={`bg-white text-center p-5 rounded-2xl shadow-card border border-[var(--ew-gray-mid)] transition-all hover:-translate-y-1 ${
+                  i === 2
+                    ? "col-span-2 max-w-[11.5rem] justify-self-center md:col-span-1 md:max-w-none"
+                    : ""
+                }`}
               >
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
-                  style={{ background: v.bg }}
-                >
-                  {v.icon}
+                <div className="mb-3 flex items-center justify-center leading-none">
+                  <OptimizedImage
+                    src={v.imageSrc}
+                    alt={v.title}
+                    width={120}
+                    height={64}
+                    variant={
+                      "imageDelivery" in v && v.imageDelivery?.format === "f_png"
+                        ? "brand-logo"
+                        : "blog-card"
+                    }
+                    delivery={
+                      ("imageDelivery" in v && v.imageDelivery) ||
+                      ({ crop: "e_trim", quality: "q_90" } satisfies ImageDeliveryOptions)
+                    }
+                    className="block h-14 w-auto max-h-14 max-w-[5.5rem] object-contain"
+                  />
                 </div>
-                <h3
-                  className="font-bold text-lg mb-2"
+                <p
+                  className="font-bold text-sm"
                   style={{ color: "var(--ew-text)" }}
                 >
                   {v.title}
-                </h3>
-                <p className="text-sm" style={{ color: "var(--ew-text-lt)" }}>
+                </p>
+                <p
+                  className="text-xs mt-1 leading-snug"
+                  style={{ color: "var(--ew-gray-dark)" }}
+                >
                   {v.desc}
                 </p>
               </motion.div>
@@ -405,9 +487,18 @@ export default function AboutPage() {
                   border: "1px solid var(--ew-gray-mid)",
                 }}
               >
-                <span className="text-3xl">{cert.icon}</span>
+                <div className="relative h-16 w-full mb-3 flex items-center justify-center">
+                  <OptimizedImage
+                    src={cert.imageSrc}
+                    alt={cert.name}
+                    width={120}
+                    height={64}
+                    variant="blog-card"
+                    className="h-14 w-auto max-w-full object-contain mx-auto"
+                  />
+                </div>
                 <p
-                  className="font-bold text-sm mt-2"
+                  className="font-bold text-sm"
                   style={{ color: "var(--ew-text)" }}
                 >
                   {cert.name}
@@ -432,16 +523,11 @@ export default function AboutPage() {
             </h3>
             <div className="flex flex-wrap justify-center gap-8 items-center">
               {MEDIA.map((m) => (
-                <span
-                  key={m}
-                  className="font-bold text-lg"
-                  style={{
-                    color: "var(--ew-gray-dark)",
-                    filter: "grayscale(1)",
-                  }}
-                >
-                  {m}
-                </span>
+                <FeaturedInMedia
+                  key={m.name}
+                  item={m}
+                  className="h-10 w-auto max-w-[160px] object-contain opacity-80"
+                />
               ))}
             </div>
           </div>
@@ -459,22 +545,22 @@ export default function AboutPage() {
           </h2>
           <p className="mb-8 opacity-75">
             Join 10,000+ trekkers who have discovered the Himalayas with
-            EternaWings.
+            Trekora.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/treks"
-              className="btn-primary"
+              className={CTA_OUTLINE_WHITE}
               data-ocid="about.explore_button"
             >
-              Explore Treks
+              Explore Treks <ChevronRight size={14} aria-hidden />
             </Link>
             <Link
               to="/contact"
-              className="btn-white"
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-[var(--ew-orange)] text-[var(--ew-orange)] bg-white hover:bg-[var(--ew-orange)] hover:text-white transition-colors"
               data-ocid="about.contact_button"
             >
-              Talk to Us
+              Talk to Us <ChevronRight size={14} aria-hidden />
             </Link>
           </div>
         </div>

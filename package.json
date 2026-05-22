@@ -13,9 +13,18 @@
         "typecheck": "pnpm -r --if-present run typecheck",
         "check": "pnpm -r --if-present run check",
         "fix": "pnpm -r --if-present run fix",
-        "bindgen": "node ./scripts/generate-actor-bindings.mjs"
+        "bindgen": "node ./scripts/generate-actor-bindings.mjs",
+        "discount-api": "pnpm -C backend start",
+        "discount-api:prod": "pnpm -C backend start",
+        "ensure-indexes": "node backend/scripts/ensure-indexes.mjs",
+        "deploy:preflight": "node scripts/deploy-preflight.mjs",
+        "seed": "node scripts/seed-discounts.mjs",
+        "seed:reviews": "node scripts/seed-reviews.mjs",
+        "seed:all": "node scripts/seed-discounts.mjs && node scripts/seed-reviews.mjs",
+        "security:check": "node scripts/check-secrets.mjs"
     },
     "devDependencies": {
+        "dotenv": "^16.5.0",
         "sharp": "^0.34.4"
     },
     "dependencies": {

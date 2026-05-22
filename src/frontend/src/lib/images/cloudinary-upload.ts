@@ -91,6 +91,7 @@ function inferResourceType(file: File): CloudinaryResourceKind {
 export async function uploadToCloudinary({
   file,
   folder = "gallery",
+  folderPath,
   resourceType: resourceTypeArg,
   tags,
   context,
@@ -113,11 +114,17 @@ export async function uploadToCloudinary({
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", uploadPreset);
-  formData.append("folder", CLOUDINARY_FOLDERS[folder]);
+  formData.append(
+    "folder",
+    folderPath?.trim() || CLOUDINARY_FOLDERS[folder],
+  );
   if (tags?.length) formData.append("tags", tags.join(","));
   if (context && Object.keys(context).length > 0) {
     const contextStr = Object.entries(context)
-      .map(([k, v]) => `${k}=${v}`)
+      .map(([k, v]) => {
+        const safe = String(v).replace(/[|=]/g, " ").trim();
+        return `${k}=${safe}`;
+      })
       .join("|");
     formData.append("context", contextStr);
   }
