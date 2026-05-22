@@ -22,7 +22,10 @@ loadEnv({ path: join(__dirname, "../src/.env") });
 loadEnv({ path: join(__dirname, "../src/.env.local"), override: true });
 
 const app = express();
-const PORT = Number(process.env.DISCOUNT_API_PORT) || 3001;
+const PORT =
+  Number(process.env.PORT) ||
+  Number(process.env.DISCOUNT_API_PORT) ||
+  3001;
 
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
