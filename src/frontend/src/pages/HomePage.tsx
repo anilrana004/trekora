@@ -1600,7 +1600,7 @@ function HeroBannerGrid() {
         </p>
         <HeroRightPromoCta
           ctaLink={set.left.ctaLink}
-          className="btn-primary text-sm"
+          className="btn-primary home-hero__cta home-hero__cta--featured text-sm"
           data-ocid="hero.left_cta"
         >
           {set.left.cta}
@@ -1660,8 +1660,7 @@ function HeroBannerGrid() {
                   <HeroRightPromoCta
                     ctaLink={b.ctaLink}
                     ctaBookSearch={b.ctaBookSearch}
-                    className="btn-primary text-xs py-1 px-3"
-                    style={{ width: "fit-content" }}
+                    className="btn-primary home-hero__cta home-hero__cta--strip"
                     data-ocid={`hero.right_cta.${i + 1}`}
                   >
                     {b.cta}
@@ -3094,17 +3093,17 @@ export default function HomePage() {
                   </div>
                 </motion.div>
               ) : null}
-              <div className="flex gap-3 mt-6">
+              <div className="flex flex-wrap gap-3 mt-6">
                 <Link
                   to="/treks"
-                  className="btn-primary"
+                  className="btn-primary home-section-cta home-section-cta--primary"
                   data-ocid="uttarakhand.view_all_button"
                 >
                   View All Packages
                 </Link>
                 <Link
                   to="/destinations"
-                  className="btn-secondary"
+                  className="btn-secondary home-section-cta home-section-cta--secondary"
                   data-ocid="uttarakhand.destinations_button"
                 >
                   Explore Destinations
@@ -3305,14 +3304,14 @@ export default function HomePage() {
               <div className="flex gap-3 mt-6">
                 <Link
                   to="/treks"
-                  className="btn-primary"
+                  className="btn-primary home-section-cta home-section-cta--primary"
                   data-ocid="himachal.view_all_button"
                 >
                   View All Packages
                 </Link>
                 <Link
                   to="/destinations"
-                  className="btn-secondary"
+                  className="btn-secondary home-section-cta home-section-cta--secondary"
                   data-ocid="himachal.destinations_button"
                 >
                   Explore Destinations

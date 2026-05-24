@@ -124,7 +124,12 @@ export default function TrekkerPhotoWall({
     }
     if (submitting) return;
 
+    const credit = `${name.trim()} · ${month} ${year}`;
     setSubmitting(true);
+    setName("");
+    clear();
+    toast.success("Photos submitted! Adding to gallery…", { duration: 4000 });
+
     try {
       const { assets: uploaded, errors: uploadErrors } =
         await uploadAllForSubmit();
@@ -149,7 +154,6 @@ export default function TrekkerPhotoWall({
         height: asset.height,
       }));
 
-      const credit = `${name.trim()} · ${month} ${year}`;
       const res = await submitProductPhotos({
         trekSlug: normalizedSlug,
         trekName: trekName.trim(),
@@ -164,8 +168,6 @@ export default function TrekkerPhotoWall({
         return;
       }
 
-      setName("");
-      clear();
       await reload(true);
       refreshTrekkerGallery(normalizedSlug, productType);
 

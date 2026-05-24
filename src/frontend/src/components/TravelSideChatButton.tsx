@@ -1,7 +1,6 @@
 import LiveChatPanel from "@/components/LiveChatPanel";
 import { useTravelSideRailMobile } from "@/lib/travel-side-rail";
 import { MessageCircle, X } from "lucide-react";
-import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 interface TravelSideChatButtonProps {
@@ -9,7 +8,7 @@ interface TravelSideChatButtonProps {
   floatingOverImage?: boolean;
 }
 
-/** Red circular chat FAB — stacks above WhatsApp on the left travel rail */
+/** Red circular chat FAB — stacks above WhatsApp on the left travel rail (no ping/glow) */
 export default function TravelSideChatButton({
   floatingOverImage = false,
 }: TravelSideChatButtonProps) {
@@ -40,38 +39,24 @@ export default function TravelSideChatButton({
         onClose={() => setOpen(false)}
         placement={panelPlacement}
       />
-      <div className="relative flex justify-center">
-        {!open && (
-          <span
-            className="travel-side-chat-btn__ping absolute -inset-1 rounded-full animate-ping pointer-events-none"
-            style={{
-              backgroundColor: "var(--ew-red)",
-              opacity: 0.28,
-              animationDuration: "2s",
-            }}
-            aria-hidden
-          />
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((o) => !o);
+        }}
+        className="travel-side-chat-btn relative"
+        aria-label={open ? "Close chat" : "Open chat with Priya"}
+        aria-expanded={open}
+        data-ocid="travel_rail.chat"
+      >
+        {open ? (
+          <X size={18} strokeWidth={2} aria-hidden />
+        ) : (
+          <MessageCircle size={18} strokeWidth={2} aria-hidden />
         )}
-        <motion.button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setOpen((o) => !o);
-          }}
-          className="travel-side-chat-btn relative"
-          whileTap={{ scale: 0.94 }}
-          aria-label={open ? "Close chat" : "Open chat with Priya"}
-          aria-expanded={open}
-          data-ocid="travel_rail.chat"
-        >
-          {open ? (
-            <X size={18} strokeWidth={2} aria-hidden />
-          ) : (
-            <MessageCircle size={18} strokeWidth={2} aria-hidden />
-          )}
-        </motion.button>
-      </div>
+      </button>
     </div>
   );
 }

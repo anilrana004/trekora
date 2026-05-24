@@ -58,6 +58,7 @@ import {  type CoTraveler,
   COMPANION_RELATIONSHIPS,
   DAYS_OF_WEEK,
   MEDICAL_CONDITIONS,
+  bookingCheckRow,
   bookingChoicePill,
   calcPrices,
   countFutureAvailableSlotsInMonth,
@@ -351,19 +352,13 @@ function Step1({
             return (
               <label
                 key={addon.id}
-                className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
+                className={bookingCheckRow(checked)}
                 data-ocid={`booking.addon.${addon.id}`}
-                style={{
-                  border: `2px solid ${checked ? "#C0001C" : "var(--ew-gray-mid)"}`,
-                  background: checked ? "#FFF5F5" : "#fff",
-                }}
               >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => toggleAddOn(addon.id)}
-                  style={{ accentColor: "#C0001C" }}
-                  className="w-4 h-4 flex-shrink-0"
                 />
                 <span className="text-xl flex-shrink-0">{addon.icon}</span>
                 <div className="flex-1 min-w-0">

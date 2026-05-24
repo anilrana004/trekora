@@ -58,6 +58,9 @@ import {  type CoTraveler,
   COMPANION_RELATIONSHIPS,
   DAYS_OF_WEEK,
   MEDICAL_CONDITIONS,
+  BOOKING_CHOICE_ROW,
+  BOOKING_CONTACT_GRID,
+  bookingCheckRow,
   bookingChoicePill,
   calcPrices,
   countFutureAvailableSlotsInMonth,
@@ -148,19 +151,13 @@ function Step5({
             return (
               <label
                 key={d.id}
-                className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
-                style={{
-                  border: `2px solid ${checked ? "#C0001C" : "var(--ew-gray-mid)"}`,
-                  background: checked ? "#FFF5F5" : "#fff",
-                }}
+                className={bookingCheckRow(checked)}
                 data-ocid={`booking.dietary.${d.id}`}
               >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => toggleDietary(d.id)}
-                  style={{ accentColor: "#C0001C" }}
-                  className="w-4 h-4"
                 />
                 <span>{d.icon}</span>
                 <div>
@@ -212,7 +209,7 @@ function Step5({
         <p className={lbl} style={{ color: "var(--ew-text)" }}>
           Arrange transport from your city?
         </p>
-        <div className="flex gap-3">
+        <div className={BOOKING_CHOICE_ROW}>
           {[
             { val: true, l: "Yes" },
             { val: false, l: "No" },
@@ -279,13 +276,13 @@ function Step5({
         <p className={lbl} style={{ color: "var(--ew-text)" }}>
           Preferred contact mode for updates
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className={BOOKING_CONTACT_GRID}>
           {["SMS", "WhatsApp", "Email", "All"].map((m) => (
             <button
               key={m}
               type="button"
               onClick={() => toggleContact(m)}
-              className={bookingChoicePill(fd.contactMode.includes(m), true)}
+              className={bookingChoicePill(fd.contactMode.includes(m))}
               data-ocid={`booking.contact_mode.${m.toLowerCase()}`}
             >
               {m}

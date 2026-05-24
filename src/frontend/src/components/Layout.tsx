@@ -4,6 +4,7 @@ import { registerLayoutModalOpeners } from "@/lib/layout-modals";
 import { useEffect, useState } from "react";
 import AnimatedOutlet from "./AnimatedOutlet";
 import FloatingCTA from "./FloatingCTA";
+import ExploreTagsSection from "./ExploreTagsSection";
 import Footer from "./Footer";
 import LanguageBanner from "./LanguageBanner";
 import LiveChatWidget from "./LiveChatWidget";
@@ -69,6 +70,7 @@ export default function Layout() {
         >
           <AnimatedOutlet />
         </main>
+        <ExploreTagsSection />
         <Footer />
         <FloatingCTA onOpenModal={() => setIsQueryModalOpen(true)} />
         <QueryModal

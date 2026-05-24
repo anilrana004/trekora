@@ -1,11 +1,10 @@
 import { Outlet, useRouterState } from "@tanstack/react-router";
-import { useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
 
 /**
- * Renders the matched route and scrolls to top on pathname changes.
- * (Route transitions previously used `motion` + `AnimatePresence`; that led to
- * an all-white viewport on some setups when the enter animation never completed.)
+ * Route outlet with a short cross-fade (standard SPA feel).
+ * Avoids layout animations that previously caused white-screen flashes.
  */
 export default function AnimatedOutlet() {
   const pathname = useRouterState({
@@ -19,12 +18,31 @@ export default function AnimatedOutlet() {
       isFirstPath.current = false;
       return;
     }
-    void pathname;
     const id = window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+      window.scrollTo({
+        top: 0,
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
     });
     return () => window.cancelAnimationFrame(id);
   }, [pathname, reduceMotion]);
 
-  return <Outlet />;
+  if (reduceMotion) {
+    return <Outlet />;
+  }
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={pathname}
+        className="route-transition-root"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+      >
+        <Outlet />
+      </motion.div>
+    </AnimatePresence>
+  );
 }

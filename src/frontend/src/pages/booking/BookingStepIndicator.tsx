@@ -3,7 +3,7 @@ import { STEP_LABELS } from "./booking-form-shared";
 
 function StepIndicator({ current }: { current: number }) {
   return (
-    <div className="flex items-center overflow-x-auto pb-1">
+    <div className="booking-step-indicator flex items-center overflow-x-auto pb-1">
       {STEP_LABELS.map((label, i) => (
         <div key={label} className="flex items-center flex-shrink-0">
           <div className="flex flex-col items-center">

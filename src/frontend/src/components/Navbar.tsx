@@ -734,11 +734,11 @@ export default function Navbar() {
             style={{ background: "#fff" }}
             data-ocid="nav.mobile_drawer"
           >
-            {/* Drawer header — ew-red bg, 60px */}
+            {/* Drawer header — brand orange on phone */}
             <div
               className="flex items-center justify-between px-5"
               style={{
-                background: "var(--ew-red)",
+                background: "var(--ew-orange)",
                 height: 60,
                 flexShrink: 0,
               }}

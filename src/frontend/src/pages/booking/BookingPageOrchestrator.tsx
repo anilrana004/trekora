@@ -158,7 +158,7 @@ export default function BookingPageOrchestrator() {
   const [prefilledVoucherResult, setPrefilledVoucherResult] =
     useState<DiscountValidationSuccess | null>(null);
   const draftRestored = useRef(false);
-  const bookingSendInFlight = useRef(false);
+  const [bookingSending, setBookingSending] = useState(false);
   const preparedSubmitRef = useRef<BookingBackgroundJob | null>(null);
   const voucherAutoApplyInFlight = useRef(false);
   const addonsPrefilledFromUrl = useRef(false);
@@ -715,7 +715,7 @@ export default function BookingPageOrchestrator() {
   }, [step, fd, selectionKey, product, selectedBatch, maxPartySlots]);
 
   const handleNext = () => {
-    if (bookingSendInFlight.current) return;
+    if (bookingSending) return;
     if (!canGoNext()) return;
     flushSync(() => setStep((s) => Math.min(s + 1, 5)));
   };
@@ -729,7 +729,7 @@ export default function BookingPageOrchestrator() {
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      if (bookingSendInFlight.current || successRef) return;
+      if (bookingSending || successRef) return;
       if (!fd.termsAccepted) {
         toast.error("Please accept the terms and conditions.");
         return;
@@ -779,9 +779,18 @@ export default function BookingPageOrchestrator() {
       }
 
       const ref = generateRef();
-      bookingSendInFlight.current = true;
+      setBookingSending(true);
 
       flushSync(() => {
+        setFd((p) => ({
+          ...p,
+          fullName: normalized.fullName,
+          email: normalized.email,
+          mobile: normalized.mobile,
+          whatsapp: normalized.whatsapp,
+          emergencyName: normalized.emergencyName,
+          emergencyPhone: normalized.emergencyPhone,
+        }));
         setSuccessEmail(normalized.email);
         setEmailDelivery("sending");
         setSuccessRef(ref);
@@ -793,13 +802,13 @@ export default function BookingPageOrchestrator() {
       }
 
       const runBackgroundSubmit = () => {
-        const base = preparedSubmitRef.current ?? buildSubmitJob();
+        const base = buildSubmitJob();
         if (!base) {
           flushSync(() => {
             setSuccessRef(null);
             setEmailDelivery("delivered");
           });
-          bookingSendInFlight.current = false;
+          setBookingSending(false);
           toast.error(
             "Could not prepare your booking. Please review the form and submit again.",
           );
@@ -809,6 +818,9 @@ export default function BookingPageOrchestrator() {
         const emailPayload = {
           ...base.emailPayload,
           bookingRef: ref,
+          email: normalized.email,
+          travelerName: normalized.fullName,
+          phone: normalized.mobile,
         };
 
         submitBookingOptimistic(
@@ -823,7 +835,7 @@ export default function BookingPageOrchestrator() {
           {
             onSendSucceeded: () => {
               setEmailDelivery("delivered");
-              bookingSendInFlight.current = false;
+              setBookingSending(false);
               if (appliedCodeDiscount && normalized.email.trim()) {
                 void (async () => {
                   try {
@@ -848,7 +860,7 @@ export default function BookingPageOrchestrator() {
             },
             onSendFailed: (message) => {
               setEmailDelivery("failed");
-              bookingSendInFlight.current = false;
+              setBookingSending(false);
               toast.error(
                 `${message} Reference ${ref} — WhatsApp us if you need help.`,
               );
@@ -857,11 +869,7 @@ export default function BookingPageOrchestrator() {
         );
       };
 
-      if (typeof queueMicrotask === "function") {
-        queueMicrotask(runBackgroundSubmit);
-      } else {
-        runBackgroundSubmit();
-      }
+      runBackgroundSubmit();
     },
     [
       fd,
@@ -871,6 +879,7 @@ export default function BookingPageOrchestrator() {
       maxPartySlots,
       appliedCodeDiscount,
       successRef,
+      bookingSending,
       buildSubmitJob,
     ],
   );
@@ -1011,7 +1020,7 @@ export default function BookingPageOrchestrator() {
           noValidate
         >
           <div
-            className="bg-white rounded-2xl shadow-lg p-6 sm:p-8"
+            className="booking-form-card bg-white rounded-2xl shadow-lg p-6 sm:p-8"
             data-ocid="booking.form_card"
           >
             {/* Step title */}
@@ -1212,7 +1221,7 @@ export default function BookingPageOrchestrator() {
                 {step < 5 ? (
                   <button
                     type="submit"
-                    disabled={bookingSendInFlight.current}
+                    disabled={bookingSending}
                     className={ctaMerge(
                       CTA_NAV_PRIMARY,
                       step === 0
@@ -1228,12 +1237,12 @@ export default function BookingPageOrchestrator() {
                 ) : (
                   <button
                     type="submit"
-                    disabled={!fd.termsAccepted || bookingSendInFlight.current}
+                    disabled={!fd.termsAccepted || bookingSending}
                     className={ctaMerge(CTA_NAV_PRIMARY_GROW, "sm:w-auto")}
                     data-ocid="booking.submit_button"
-                    aria-busy={bookingSendInFlight.current}
+                    aria-busy={bookingSending}
                   >
-                    Submit Booking
+                    {bookingSending ? "Submitting…" : "Submit Booking"}
                     <ChevronRight size={18} aria-hidden />
                   </button>
                 )}

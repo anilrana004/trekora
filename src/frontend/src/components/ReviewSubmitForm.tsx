@@ -137,7 +137,20 @@ export default function ReviewSubmitForm({
     e.preventDefault();
     if (!validate() || submitting) return;
 
+    const failedUpload = uploadItems.some((i) => i.status === "error");
+    if (failedUpload && uploadItems.length > 0) {
+      toast.error("Some photos failed to upload. Remove them or try again.");
+      return;
+    }
+
+    const snapshot = { ...form };
     setSubmitting(true);
+    setSubmitted(true);
+    setForm({ rating: 0, title: "", text: "", name: "", city: "" });
+    clear();
+    setErrors({});
+    toast.success("Review submitted! Publishing to the page…", { duration: 4000 });
+
     try {
       const uploaded = await uploadQueued();
       const folderPath = reviewCloudinaryFolder(productType, trekSlug);
@@ -149,37 +162,25 @@ export default function ReviewSubmitForm({
         height: asset.height,
       }));
       const photoUrls = photos.map((p) => p.url);
-
-      const failedUpload = uploadItems.some((i) => i.status === "error");
-      if (failedUpload && uploadItems.length > 0) {
-        toast.error("Some photos failed to upload. Remove them or try again.");
-        setSubmitting(false);
-        return;
-      }
-
-      const tags = form.title.trim() ? [form.title.trim()] : [];
-      const reviewText = form.text.trim();
+      const tags = snapshot.title.trim() ? [snapshot.title.trim()] : [];
       const res = await submitReview({
         trekSlug,
         trekName,
         type: productType,
-        userName: form.name.trim(),
-        rating: form.rating,
-        reviewText,
+        userName: snapshot.name.trim(),
+        rating: snapshot.rating,
+        reviewText: snapshot.text.trim(),
         photos,
         photoUrls,
         tags,
       });
 
       if (!res.success) {
+        setSubmitted(false);
         toast.error(res.message ?? "Could not submit review. Please try again.");
         return;
       }
 
-      setSubmitted(true);
-      setForm({ rating: 0, title: "", text: "", name: "", city: "" });
-      clear();
-      setErrors({});
       onSubmitted?.(res.review);
       toast.success(
         res.message ?? "Your review and photos are live on this page!",
@@ -187,6 +188,7 @@ export default function ReviewSubmitForm({
       );
       setTimeout(() => setSubmitted(false), 6000);
     } catch {
+      setSubmitted(false);
       toast.error("Could not submit review. Please check your connection.");
     } finally {
       setSubmitting(false);

@@ -98,17 +98,9 @@ function Step4({
         >
           Upload Government ID Proof *
         </p>
-        <div className="flex gap-3 mb-3">
+        <div className="booking-doc-chip-grid">
           {["Aadhaar", "Passport", "Driving License", "Voter ID"].map((doc) => (
-            <span
-              key={doc}
-              className="text-xs px-2 py-1 rounded-lg border font-medium"
-              style={{
-                borderColor: "var(--ew-gray-mid)",
-                color: "var(--ew-gray-dark)",
-                background: "var(--ew-gray-lt)",
-              }}
-            >
+            <span key={doc} className="booking-doc-chip">
               {doc}
             </span>
           ))}

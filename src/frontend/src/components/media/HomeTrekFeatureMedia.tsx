@@ -31,7 +31,6 @@ export default function HomeTrekFeatureMedia({
       <>
         <OptimizedVideo
           src={reelVideo}
-          poster={image}
           fill
           muted
           loop

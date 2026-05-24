@@ -58,6 +58,9 @@ import {  type CoTraveler,
   COMPANION_RELATIONSHIPS,
   DAYS_OF_WEEK,
   MEDICAL_CONDITIONS,
+  BOOKING_CHOICE_ROW,
+  bookingChoiceCard,
+  bookingCheckRow,
   bookingChoicePill,
   calcPrices,
   countFutureAvailableSlotsInMonth,
@@ -155,19 +158,13 @@ function Step3({
             return (
               <label
                 key={c.id}
-                className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
-                style={{
-                  border: `2px solid ${checked ? "#C0001C" : "var(--ew-gray-mid)"}`,
-                  background: checked ? "#FFF5F5" : "#fff",
-                }}
+                className={bookingCheckRow(checked)}
                 data-ocid={`booking.condition.${c.id}`}
               >
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => toggleCondition(c.id)}
-                  style={{ accentColor: "#C0001C" }}
-                  className="w-4 h-4"
                 />
                 <span>{c.icon}</span>
                 <span className="text-sm" style={{ color: "var(--ew-text)" }}>
@@ -244,7 +241,7 @@ function Step3({
               key={f.id}
               type="button"
               onClick={() => setFd((p) => ({ ...p, fitnessLevel: f.id }))}
-              className={`booking-choice-card${fd.fitnessLevel === f.id ? " booking-choice-card--active" : ""}`}
+              className={bookingChoiceCard(fd.fitnessLevel === f.id)}
               data-ocid={`booking.fitness.${f.id}`}
             >
               <span className="text-xl">{f.icon}</span>
@@ -269,7 +266,7 @@ function Step3({
         <p className={lbl} style={{ color: "var(--ew-text)" }}>
           Have you done any trekking before?
         </p>
-        <div className="flex gap-3">
+        <div className={BOOKING_CHOICE_ROW}>
           {[
             { val: true, l: "Yes" },
             { val: false, l: "No" },

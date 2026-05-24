@@ -8,20 +8,13 @@ export function submitEmailOptimistic(
   onSendSucceeded?: () => void,
 ): void {
   onInstantSuccess();
-  const run = () => {
-    void submit().then((result) => {
-      if (!result.ok) {
-        onSendFailed(
-          result.error || "Could not send your request. Please try again.",
-        );
-        return;
-      }
-      onSendSucceeded?.();
-    });
-  };
-  if (typeof queueMicrotask === "function") {
-    queueMicrotask(run);
-  } else {
-    void Promise.resolve().then(run);
-  }
+  void submit().then((result) => {
+    if (!result.ok) {
+      onSendFailed(
+        result.error || "Could not send your request. Please try again.",
+      );
+      return;
+    }
+    onSendSucceeded?.();
+  });
 }

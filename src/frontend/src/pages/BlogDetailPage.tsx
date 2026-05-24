@@ -12,6 +12,9 @@ import {
 import { motion } from "motion/react";
 import { useState } from "react";
 import OptimizedImage from "../components/media/OptimizedImage";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import { BLOGS } from "../data/blogs";
 import { resolveBlogCardImage } from "../lib/blog-product-images";
 
@@ -72,8 +75,13 @@ export default function BlogDetailPage() {
       className="pt-16 min-h-screen"
       style={{ background: "var(--ew-gray-lt)" }}
     >
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail variant="listing-gallery" />
       {/* Hero */}
-      <div className="relative h-80 md:h-[420px] overflow-hidden">
+      <div
+        className="relative h-80 md:h-[420px] overflow-hidden"
+        data-travel-image-section
+      >
         <OptimizedImage
           src={blog.heroImage}
           alt={blog.title}

@@ -104,7 +104,7 @@ export default function DestinationCard({
         dataOcid={`destination.card_image.${index + 1}`}
       >
         <motion.div
-          className={`h-[200px] overflow-hidden relative ${isContain ? "bg-[#f4efe6]" : ""}`}
+          className={`h-[200px] sm:h-[220px] overflow-hidden relative ${isContain ? "bg-[#f4efe6]" : "bg-[#e8e4dc]"}`}
           whileHover={isContain ? undefined : { scale: 1.02 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
         >
@@ -114,7 +114,11 @@ export default function DestinationCard({
             fill
             variant="destination"
             priority={index < 8}
-            className={isContain ? "!object-contain p-2" : "!object-cover"}
+            className={
+              isContain
+                ? "!object-contain p-3 sm:p-4"
+                : "!object-cover object-center"
+            }
           />
           {!isContain ? (
             <motion.div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />

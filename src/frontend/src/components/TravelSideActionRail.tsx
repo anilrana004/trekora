@@ -102,12 +102,6 @@ function renderTabs(tabs: SideTab[], side: "left" | "right") {
           e.stopPropagation();
           fire();
         }}
-        onPointerDown={(e) => {
-          if (e.pointerType === "touch") {
-            e.stopPropagation();
-            fire();
-          }
-        }}
         className={className}
         aria-label={tab.ariaLabel}
         data-ocid={tab.ocid}

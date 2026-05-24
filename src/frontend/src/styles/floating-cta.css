@@ -57,4 +57,11 @@
     left: max(1rem, env(safe-area-inset-left, 0px)) !important;
     right: auto !important;
   }
+
+  body.cookie-consent-visible .floating-cta-tray,
+  body.cookie-consent-visible .floating-cta-callback {
+    bottom: calc(
+      var(--mobile-fab-bottom) + var(--cookie-bar-height, 5.5rem)
+    ) !important;
+  }
 }

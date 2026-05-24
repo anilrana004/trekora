@@ -8,6 +8,7 @@ import type { DiscountKind } from "@/lib/discount-api";
 import { BOOKING_ADD_ONS } from "@/lib/booking-addons";
 import { normalizeIndianPhoneDigits } from "@/lib/phone-countries";
 import type { BookingFilePayload } from "@/lib/booking-documents";
+import { cn } from "@/lib/utils";
 
 export type AppliedCodeDiscount = {
   kind: DiscountKind;
@@ -15,14 +16,38 @@ export type AppliedCodeDiscount = {
   amount: number;
 };
 
+/** 2×2 tap-friendly grid for gender (always boxed, never a single text row). */
+export const BOOKING_GENDER_GRID =
+  "grid grid-cols-2 gap-2.5 w-full mt-2";
+
+/** Equal-width Yes / No row */
+export const BOOKING_CHOICE_ROW = "grid grid-cols-2 gap-2.5 w-full";
+
+/** Contact mode — 2×2 on mobile */
+export const BOOKING_CONTACT_GRID =
+  "grid grid-cols-2 gap-2.5 w-full sm:flex sm:flex-wrap sm:gap-2";
+
 export function bookingChoicePill(active: boolean, compact = false) {
-  return [
-    "booking-choice-pill",
-    compact ? "booking-choice-pill--compact" : "",
-    active ? "booking-choice-pill--active" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
+  return cn(
+    "booking-choice-pill inline-flex items-center justify-center w-full min-h-[52px] rounded-xl border-2 px-3 py-2.5 text-center text-[15px] font-medium leading-snug transition-colors duration-150 touch-manipulation cursor-pointer select-none appearance-none bg-white text-[var(--ew-text)] border-[var(--ew-gray-mid)]",
+    active &&
+      "border-[#C0001C] bg-[#FFF5F5] text-[#C0001C] font-semibold shadow-sm",
+    compact && "min-h-[48px] text-sm px-2 py-2",
+  );
+}
+
+export function bookingChoiceCard(active: boolean) {
+  return cn(
+    "booking-choice-card flex w-full gap-3.5 items-start rounded-xl border-2 p-4 text-left min-h-[52px] transition-colors duration-150 touch-manipulation cursor-pointer appearance-none bg-white border-[var(--ew-gray-mid)]",
+    active && "border-[#C0001C] bg-[#FFF5F5]",
+  );
+}
+
+export function bookingCheckRow(active: boolean) {
+  return cn(
+    "booking-check-row flex w-full items-start gap-3 rounded-xl border-2 p-4 min-h-[52px] cursor-pointer touch-manipulation bg-white border-[var(--ew-gray-mid)]",
+    active && "border-[#C0001C] bg-[#FFF5F5]",
+  );
 }
 
 // ── Types ──────────────────────────────────────────────────────────────────

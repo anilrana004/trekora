@@ -38,6 +38,8 @@
     --ew-badge-red: #c0001c;
 
     --site-header-height: 4rem;
+    --booking-nav-height: 5.75rem;
+    --cookie-bar-height: 5.5rem;
     --site-sticky-top: var(--site-header-height);
 
     /* ── Tailwind semantic tokens (OKLCH) mapped to EternaWings palette ── */
@@ -1200,6 +1202,27 @@ img[loading="lazy"].loaded {
 /* ── Tap highlight suppression ── */
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+.route-transition-root {
+  min-height: 1px;
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .btn-primary:not(.live-chat-fab):not(.travel-side-chat-btn):not(
+      .home-hero__cta
+    ):not(.home-section-cta) {
+    min-height: 48px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .btn-secondary:not(.travel-side-chat-btn):not(.home-section-cta) {
+    min-height: 48px;
+    padding: 0.65rem 1.35rem;
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 768px) {

@@ -572,25 +572,28 @@ export default function PackagesPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap">
             <Link
-              to="/treks"
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-white text-white hover:bg-white hover:text-[var(--ew-footer)] transition-colors"
-              data-ocid="packages.explore_treks_button"
-            >
-              Browse Treks <ChevronRight size={14} aria-hidden />
-            </Link>
-            <Link
-              to="/yatras"
+              to="/corporate"
+              search={{ org: "corporate" }}
               className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-[var(--ew-orange)] text-[var(--ew-orange)] bg-white hover:bg-[var(--ew-orange)] hover:text-white transition-colors"
-              data-ocid="packages.explore_yatras_button"
+              data-ocid="packages.corporate_quote_button"
             >
-              Browse Yatras <ChevronRight size={14} aria-hidden />
+              Corporate Quote <ChevronRight size={14} aria-hidden />
             </Link>
             <Link
-              to="/contact"
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-white/60 text-white hover:border-white transition-colors"
-              data-ocid="packages.contact_button"
+              to="/corporate"
+              search={{ org: "school" }}
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-white text-white hover:bg-white hover:text-[var(--ew-footer)] transition-colors"
+              data-ocid="packages.school_quote_button"
             >
-              Custom Quote <ChevronRight size={14} aria-hidden />
+              School Quote <ChevronRight size={14} aria-hidden />
+            </Link>
+            <Link
+              to="/corporate"
+              search={{ org: "college" }}
+              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-white/60 text-white hover:border-white transition-colors"
+              data-ocid="packages.college_quote_button"
+            >
+              College Quote <ChevronRight size={14} aria-hidden />
             </Link>
           </div>
         </div>

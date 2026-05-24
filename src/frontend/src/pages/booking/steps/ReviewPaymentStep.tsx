@@ -299,7 +299,7 @@ function Step6({
 
       {/* Terms */}
       <label
-        className="flex items-start gap-3 cursor-pointer"
+        className="booking-terms-label"
         data-ocid="booking.terms.checkbox"
       >
         <input
@@ -308,8 +308,6 @@ function Step6({
           onChange={(e) =>
             setFd((p) => ({ ...p, termsAccepted: e.target.checked }))
           }
-          style={{ accentColor: "#C0001C", marginTop: 2 }}
-          className="w-5 h-5 flex-shrink-0"
         />
         <span className="text-sm" style={{ color: "var(--ew-text)" }}>
           I confirm that the above details are accurate and I agree to Trekora{" "}

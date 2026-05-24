@@ -160,9 +160,11 @@ function Step2({
           </label>
           <input
             id="s2-email"
+            name="email"
             type="email"
             inputMode="email"
             autoComplete="email"
+            enterKeyHint="next"
             className={inp}
             style={{ minHeight: 48 }}
             value={fd.email}
@@ -250,7 +252,7 @@ function Step2({
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-5">
         <div data-booking-field="city">
           <label
             htmlFor="s2-city"
@@ -307,26 +309,32 @@ function Step2({
         </div>
       </div>
 
-      <div data-booking-field="gender">
-        <p className={lbl} style={{ color: "var(--ew-text)" }}>
+      <div data-booking-field="gender" className="mt-5">
+        <label
+          htmlFor="s2-gender"
+          className={lbl}
+          style={{ color: "var(--ew-text)" }}
+        >
           Gender *
-        </p>
-        <div className="flex flex-wrap gap-2">
+        </label>
+        <select
+          id="s2-gender"
+          value={fd.gender}
+          onChange={(e) => {
+            setFd((p) => ({ ...p, gender: e.target.value }));
+            onFieldChange("gender");
+          }}
+          className={`${inp} booking-gender-select`}
+          style={{ minHeight: 48 }}
+          data-ocid="booking.gender.select"
+        >
+          <option value="">Select gender</option>
           {["Male", "Female", "Non-binary", "Prefer not to say"].map((g) => (
-            <button
-              key={g}
-              type="button"
-              onClick={() => {
-                setFd((p) => ({ ...p, gender: g }));
-                onFieldChange("gender");
-              }}
-              className={bookingChoicePill(fd.gender === g, true)}
-              data-ocid={`booking.gender.${g.toLowerCase().replace(/ /g, "_")}`}
-            >
+            <option key={g} value={g}>
               {g}
-            </button>
+            </option>
           ))}
-        </div>
+        </select>
         {err("gender")}
       </div>
 

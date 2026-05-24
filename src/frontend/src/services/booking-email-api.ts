@@ -45,16 +45,21 @@ export async function submitBookingEmail(
       error?: string;
     };
     if (!res.ok || !data.ok) {
+      const hint =
+        res.status === 500
+          ? " Email could not be sent — check SMTP settings or try WhatsApp."
+          : "";
       return {
         ok: false,
-        error: data.error || "Could not send booking email. Please try again.",
+        error: `${data.error || "Could not send booking email. Please try again."}${hint}`,
       };
     }
     return { ok: true };
   } catch {
     return {
       ok: false,
-      error: "Network error. Check your connection and try again.",
+      error:
+        "Network error sending confirmation. Check your connection, or contact us on WhatsApp with your booking reference.",
     };
   }
 }

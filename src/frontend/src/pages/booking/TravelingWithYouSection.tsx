@@ -14,6 +14,13 @@ import {
   syncPartyGroupSize,
 } from "./booking-form-shared";
 
+const COMPANION_GENDERS = [
+  "Male",
+  "Female",
+  "Non-binary",
+  "Prefer not to say",
+] as const;
+
 
 export default function TravelingWithYouSection({
   fd,
@@ -262,7 +269,7 @@ export default function TravelingWithYouSection({
                   />
                   {companionErr(i, "age")}
                 </div>
-                <div>
+                <div data-booking-field={`companion-gender-${i}`}>
                   <label
                     htmlFor={`cmp-gender-${i}`}
                     className={lbl}
@@ -273,19 +280,15 @@ export default function TravelingWithYouSection({
                   <select
                     id={`cmp-gender-${i}`}
                     value={ct.gender}
-                    onChange={(e) =>
-                      updateCompanion(i, "gender", e.target.value)
-                    }
-                    className={inp}
+                    onChange={(e) => {
+                      updateCompanion(i, "gender", e.target.value);
+                      onCompanionFieldChange(i);
+                    }}
+                    className={`${inp} booking-gender-select`}
                     data-ocid={`booking.companion.gender.${i + 1}`}
                   >
-                    <option value="">Select</option>
-                    {[
-                      "Male",
-                      "Female",
-                      "Non-binary",
-                      "Prefer not to say",
-                    ].map((g) => (
+                    <option value="">Select gender</option>
+                    {COMPANION_GENDERS.map((g) => (
                       <option key={g} value={g}>
                         {g}
                       </option>

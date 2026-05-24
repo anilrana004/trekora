@@ -9,6 +9,7 @@ import AdminLayout from "./components/AdminLayout";
 import DormantFeatureRoute from "./components/DormantFeatureRoute";
 import Layout from "./components/Layout";
 import { validateBookSearch } from "./lib/book-route-search";
+import PageLoader from "./components/PageLoader";
 import ErrorPage from "./pages/ErrorPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -61,12 +62,6 @@ const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminPromosPage = lazy(() => import("./pages/admin/AdminPromosPage"));
 const AdminAnalyticsPage = lazy(
   () => import("./pages/admin/AdminAnalyticsPage"),
-);
-
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="w-12 h-12 border-4 border-[#E87722] border-t-transparent rounded-full animate-spin" />
-  </div>
 );
 
 // Root route
@@ -287,6 +282,15 @@ const aboutRoute = createRoute({
 const corporateRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/corporate",
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { org?: "corporate" | "school" | "college" } => {
+    const org = search.org;
+    if (org === "school" || org === "college" || org === "corporate") {
+      return { org };
+    }
+    return {};
+  },
   component: () => (
     <Suspense fallback={<PageLoader />}>
       <CorporatePage />
@@ -518,6 +522,9 @@ export const router = createRouter({
   // Preload lazy route chunks on hover/focus — trek & yatra detail pages open faster.
   defaultPreload: "intent",
   defaultPreloadDelay: 60,
+  defaultPendingComponent: PageLoader,
+  defaultPendingMinMs: 180,
+  defaultPendingMs: 0,
 });
 
 declare module "@tanstack/react-router" {

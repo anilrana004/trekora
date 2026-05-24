@@ -5,6 +5,7 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import "./styles/booking-mobile.css";
 import "leaflet/dist/leaflet.css";
 
 BigInt.prototype.toJSON = function () {

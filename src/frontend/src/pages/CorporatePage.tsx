@@ -6,6 +6,7 @@ import { validateNationalPhone } from "@/lib/phone-countries";
 import FormSuccessMessage from "@/components/FormSuccessMessage";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { submitCorporateQuoteEmail } from "@/services/corporate-quote-email-api";
+import { useSearch } from "@tanstack/react-router";
 import { ChevronRight, MessageCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -208,12 +209,16 @@ export default function CorporatePage() {
     formState: { errors },
   } = useForm<CorporateForm>({ defaultValues: { phone: "" } });
 
+  const orgFromUrl = useSearch({
+    from: "/layout/corporate",
+    select: (s) => s.org,
+  });
+
   useEffect(() => {
-    const org = new URLSearchParams(window.location.search).get("org");
-    if (org === "school" || org === "college" || org === "corporate") {
-      setOrgType(org);
+    if (orgFromUrl === "school" || orgFromUrl === "college" || orgFromUrl === "corporate") {
+      setOrgType(orgFromUrl);
     }
-  }, []);
+  }, [orgFromUrl]);
 
   const onSubmit = (data: CorporateForm) => {
     const payload = {

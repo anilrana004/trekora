@@ -1,0 +1,426 @@
+/**
+ * Booking flow — loaded after index.css / Tailwind so preflight does not strip button styles.
+ * All rules scoped under .booking-page where possible.
+ */
+
+:root {
+  --booking-nav-height: 5.75rem;
+}
+
+/* ── Choice pills (gender, yes/no, contact mode) ── */
+.booking-page button.booking-choice-pill,
+.booking-page .booking-choice-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 50px;
+  min-width: 48px;
+  padding: 0.625rem 1.125rem;
+  border-radius: 9999px;
+  border: 2px solid var(--ew-gray-mid);
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ew-text);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease;
+  text-align: center;
+}
+
+.booking-page button.booking-choice-pill--compact,
+.booking-page .booking-choice-pill--compact {
+  min-height: 48px;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+}
+
+.booking-page button.booking-choice-pill--active,
+.booking-page .booking-choice-pill--active {
+  border-color: var(--ew-red);
+  background: var(--ew-red-lt);
+  color: var(--ew-red);
+  font-weight: 600;
+}
+
+/* Yes / No — equal columns */
+.booking-page .booking-choice-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+  width: 100%;
+}
+
+.booking-page .booking-choice-row .booking-choice-pill,
+.booking-page .booking-choice-row button.booking-choice-pill {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Contact mode — 2×2 mobile */
+.booking-page .booking-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+  width: 100%;
+}
+
+.booking-page .booking-contact-grid .booking-choice-pill,
+.booking-page .booking-contact-grid button.booking-choice-pill {
+  width: 100%;
+  min-width: 0;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+@media (min-width: 520px) {
+  .booking-page .booking-contact-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .booking-page .booking-contact-grid .booking-choice-pill,
+  .booking-page .booking-contact-grid button.booking-choice-pill {
+    width: auto;
+    flex: 0 1 auto;
+  }
+}
+
+/* Fitness level cards */
+.booking-page button.booking-choice-card,
+.booking-page .booking-choice-card {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--ew-gray-mid);
+  background: #fff;
+  text-align: left;
+  min-height: 52px;
+  font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  appearance: none;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.booking-page .booking-choice-card--active,
+.booking-page button.booking-choice-card--active {
+  border-color: var(--ew-red);
+  background: var(--ew-red-lt);
+}
+
+/* Gender — 2×2 */
+.booking-page .booking-gender-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+  width: 100%;
+}
+
+.booking-page .booking-gender-grid .booking-choice-pill,
+.booking-page .booking-gender-grid button.booking-choice-pill {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  padding: 0.625rem 0.5rem;
+  white-space: normal;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+@media (min-width: 640px) {
+  .booking-page .booking-gender-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .booking-page .booking-gender-grid .booking-choice-pill,
+  .booking-page .booking-gender-grid button.booking-choice-pill {
+    width: auto;
+    white-space: nowrap;
+  }
+}
+
+/* Dietary / medical / add-on selectable rows */
+.booking-page .booking-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--ew-gray-mid);
+  background: #fff;
+  cursor: pointer;
+  touch-action: manipulation;
+  min-height: 52px;
+  box-sizing: border-box;
+}
+
+.booking-page .booking-check-row--active {
+  border-color: var(--ew-red);
+  background: var(--ew-red-lt);
+}
+
+.booking-page .booking-check-row input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+  accent-color: var(--ew-red);
+}
+
+/* Document type hints */
+.booking-page .booking-doc-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.booking-page .booking-doc-chip {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 8px;
+  border: 1px solid var(--ew-gray-mid);
+  background: var(--ew-gray-lt);
+  color: var(--ew-gray-dark);
+  font-weight: 500;
+}
+
+/* Help actions */
+.booking-page .booking-help-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.booking-page .booking-help-actions a,
+.booking-page .booking-help-actions button {
+  min-height: 44px;
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+@media (max-width: 1023px) {
+  .booking-page .booking-help-actions {
+    flex-direction: column;
+  }
+
+  .booking-page .booking-help-actions a,
+  .booking-page .booking-help-actions button {
+    width: 100%;
+  }
+}
+
+/* Step indicator */
+.booking-page .booking-step-indicator {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.25rem;
+}
+
+.booking-page .booking-step-indicator::-webkit-scrollbar {
+  display: none;
+}
+
+/* Date input + native fields (avoid iOS zoom, consistent tap height) */
+.booking-page .booking-departure-date-input,
+.booking-page select,
+.booking-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+  min-height: 48px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.booking-page select {
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--ew-gray-mid);
+  background: #fff;
+  appearance: auto;
+}
+
+.booking-page .booking-gender-select {
+  width: 100%;
+  cursor: pointer;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.25rem;
+}
+
+.booking-page .booking-gender-select:focus {
+  outline: none;
+  border-color: #c0001c;
+  box-shadow: 0 0 0 2px rgba(192, 0, 28, 0.15);
+}
+
+/* Sticky nav + CTA touch targets */
+.booking-page .booking-nav-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ew-gray-mid);
+}
+
+.booking-page .booking-nav-bar--split > button {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.booking-page .booking-nav-bar .btn-primary,
+.booking-page .booking-nav-bar .btn-secondary {
+  min-height: 52px;
+  font-size: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  width: 100%;
+}
+
+.booking-page .ew-cta-touch--grow,
+.booking-page .ew-cta-touch--solo {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.booking-page .ew-cta-touch--flex {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Terms row — large tap area */
+.booking-page .booking-terms-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  min-height: 48px;
+}
+
+.booking-page .booking-terms-label input[type="checkbox"] {
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+  accent-color: var(--ew-red);
+}
+
+.booking-page {
+  -webkit-overflow-scrolling: touch;
+}
+
+.booking-page .booking-form-card {
+  margin-bottom: 0.25rem;
+}
+
+/* Hide duplicate floating CTAs on booking */
+body:has(.booking-page) .floating-cta-tray,
+body:has(.booking-page) .floating-cta-callback {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
+  .booking-page {
+    padding-bottom: calc(
+      var(--booking-nav-height, 5.75rem) + env(safe-area-inset-bottom, 0px) + 1.25rem
+    );
+  }
+
+  body.cookie-consent-visible .booking-page {
+    padding-bottom: calc(
+      var(--booking-nav-height, 5.75rem) + var(--cookie-bar-height, 5.5rem) +
+        env(safe-area-inset-bottom, 0px) + 1.25rem
+    );
+  }
+
+  .booking-page .booking-form-card {
+    padding: 1rem !important;
+    border-radius: 1rem;
+  }
+
+  .booking-page button.booking-choice-pill,
+  .booking-page .booking-choice-pill {
+    min-height: 52px;
+    font-size: 1rem;
+  }
+
+  .booking-page button.booking-choice-card,
+  .booking-page .booking-choice-card {
+    min-height: 56px;
+    padding: 1rem 1.125rem;
+  }
+
+  .booking-page .booking-nav-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 46;
+    margin-top: 0;
+    padding: 0.875rem 1rem;
+    padding-bottom: calc(0.875rem + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top: 1px solid var(--ew-gray-mid);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  body.cookie-consent-visible .booking-page .booking-nav-bar {
+    bottom: calc(var(--cookie-bar-height, 5.5rem) + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Side rail above sticky nav, below cookie */
+  body:has(.booking-page) .travel-side-rail--left,
+  body:has(.booking-page) .travel-side-rail--right {
+    bottom: calc(
+      var(--booking-nav-height, 5.75rem) + env(safe-area-inset-bottom, 0px) + 0.35rem
+    );
+    z-index: 44;
+  }
+
+  body.cookie-consent-visible:has(.booking-page) .travel-side-rail--left,
+  body.cookie-consent-visible:has(.booking-page) .travel-side-rail--right {
+    bottom: calc(
+      var(--booking-nav-height, 5.75rem) + var(--cookie-bar-height, 5.5rem) +
+        env(safe-area-inset-bottom, 0px) + 0.35rem
+    );
+  }
+
+  .booking-page .booking-step-indicator .w-8 {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.8125rem;
+  }
+
+  .booking-page .booking-step-indicator span.text-\[10px\] {
+    font-size: 0.6875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .booking-page .booking-form-card {
+    padding: 2rem;
+  }
+}
