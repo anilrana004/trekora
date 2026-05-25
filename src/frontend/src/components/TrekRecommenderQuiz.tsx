@@ -7,7 +7,7 @@ import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
 import { TREKS } from "../data/treks";
 import type { Trek } from "../data/treks";
 import OptimizedImage from "./media/OptimizedImage";
-import { EnquiryButton } from "./ui/EnquiryButton";
+import { bookSearch } from "@/lib/book-search";
 
 /* ── Types ────────────────────────────────────────────────── */
 type Fitness = "beginner" | "moderate" | "fit" | "veryfit";
@@ -240,18 +240,16 @@ function ResultCard({ trek, index }: { trek: Trek; index: number }) {
         >
           ₹{trek.price.toLocaleString("en-IN")}
         </p>
-        <EnquiryButton
-          type="button"
-          trekName={trek.name}
-          className="text-xs font-semibold px-3 py-1 rounded-full inline-block"
-          style={{
-            backgroundColor: "var(--ew-orange)",
-            color: "#fff",
-          }}
+        <Link
+          to="/book"
+          search={bookSearch({ trek: trek.slug })}
+          preload="intent"
+          className="text-xs font-semibold px-3 py-1.5 rounded-full inline-block text-white transition-opacity hover:opacity-90"
+          style={{ backgroundColor: "var(--ew-orange)" }}
           data-ocid={`quiz.result_book_button.${index + 1}`}
         >
           Book Now
-        </EnquiryButton>
+        </Link>
       </div>
     </motion.div>
   );

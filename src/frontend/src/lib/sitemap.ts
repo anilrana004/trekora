@@ -41,6 +41,7 @@ export function generateSitemapData(): SitemapEntry[] {
     { url: "/contact", priority: 0.6, changefreq: "monthly" },
     { url: "/corporate", priority: 0.6, changefreq: "monthly" },
     { url: "/packages", priority: 0.7, changefreq: "weekly" },
+    { url: "/book", priority: 0.85, changefreq: "weekly" },
     { url: "/upcoming-batches", priority: 0.8, changefreq: "daily" },
     { url: "/press", priority: 0.5, changefreq: "monthly" },
     { url: "/compare", priority: 0.6, changefreq: "weekly" },

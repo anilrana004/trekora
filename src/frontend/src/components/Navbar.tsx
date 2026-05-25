@@ -111,7 +111,7 @@ function TrekoraLogo() {
         priority
         variant="blog-card"
         sizes="(max-width: 768px) 46vw, 220px"
-        className="h-9 w-auto max-w-[min(200px,46vw)] object-contain object-left md:h-10 md:max-w-[220px] transition-opacity group-hover:opacity-90"
+        className="h-10 w-auto max-w-[min(220px,48vw)] object-contain object-left md:h-11 md:max-w-[240px] transition-opacity group-hover:opacity-90 drop-shadow-sm"
       />
     </Link>
   );

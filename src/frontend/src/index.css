@@ -1256,3 +1256,43 @@ textarea {
 .phone-input__country-select {
   font-size: 16px !important;
 }
+
+/* Corporate client logo strip */
+.corporate-client-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem 2rem;
+  max-width: 56rem;
+  margin-inline: auto;
+}
+
+.corporate-client-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 5.5rem;
+  min-height: 3rem;
+  padding: 0.35rem 0.5rem;
+  opacity: 0.92;
+  transition: opacity 0.18s ease;
+}
+
+.corporate-client-logo:hover {
+  opacity: 1;
+}
+
+.corporate-client-logo__img {
+  max-height: 2.75rem;
+  width: auto;
+  max-width: 8.5rem;
+  object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .corporate-client-logo__img {
+    max-height: 3rem;
+    max-width: 9.5rem;
+  }
+}

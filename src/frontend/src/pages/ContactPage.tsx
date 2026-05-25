@@ -119,6 +119,7 @@ export default function ContactPage() {
       () => {
         setContactSent(true);
         reset();
+        toast.success("Message sent! We'll reply within 24 hours.");
       },
       (message) => {
         setContactSent(false);
@@ -145,6 +146,7 @@ export default function ContactPage() {
       () => {
         setCallbackSent(true);
         resetCb();
+        toast.success("Callback requested! We'll call you within 2 hours.");
       },
       (message) => {
         setCallbackSent(false);

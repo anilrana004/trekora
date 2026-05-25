@@ -114,7 +114,7 @@ export default function TrekkerPhotoWall({
     }
     if (!cloudinaryReady) {
       toast.error(
-        "Cloudinary is not configured. Add VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET to src/.env",
+        "Photo upload is temporarily unavailable. Please try again later or contact us on WhatsApp.",
       );
       return;
     }
@@ -135,7 +135,7 @@ export default function TrekkerPhotoWall({
         await uploadAllForSubmit();
 
       if (uploaded.length === 0) {
-        const detail = uploadErrors[0] ?? "Cloudinary upload failed.";
+        const detail = uploadErrors[0] ?? "Photo upload failed. Please try again.";
         toast.error(detail);
         return;
       }
@@ -159,6 +159,7 @@ export default function TrekkerPhotoWall({
         trekName: trekName.trim(),
         type: productType,
         uploadedBy: credit,
+        tags: [trekName.trim(), normalizedSlug, productType],
         photos: photoEntries,
         photoUrls: photoEntries.map((p) => p.url),
       });
@@ -203,8 +204,8 @@ export default function TrekkerPhotoWall({
           style={{ background: "var(--ew-red)" }}
         />
         <p className="text-xs mt-2" style={{ color: "var(--ew-text-lt)" }}>
-          Photos for <strong>{trekName}</strong> ({productLabel}) — saved to
-          Cloudinary, then shown on this page and in Gallery.
+          Share your moments from <strong>{trekName}</strong>. Approved photos
+          appear here and in the site Gallery, tagged with this {productLabel.toLowerCase()}.
         </p>
       </div>
 
@@ -213,10 +214,8 @@ export default function TrekkerPhotoWall({
           className="text-sm rounded-lg px-4 py-3"
           style={{ background: "#fff3e0", color: "var(--ew-text)" }}
         >
-          Photo upload is unavailable: set{" "}
-          <code className="text-xs">VITE_CLOUDINARY_CLOUD_NAME</code> and{" "}
-          <code className="text-xs">VITE_CLOUDINARY_UPLOAD_PRESET</code> in{" "}
-          <code className="text-xs">src/.env</code>, then restart the dev server.
+          Photo upload is temporarily unavailable. Please try again later or
+          WhatsApp us your photos with the trek name.
         </p>
       ) : null}
 

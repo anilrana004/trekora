@@ -1,8 +1,11 @@
 import { bookSearch } from "@/lib/book-search";
 import { isFeatureLive } from "@/lib/dormant-features";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { buildHomePageSEO } from "@/lib/product-seo";
 import { SITE_ORIGIN } from "@/lib/site-config";
 import { SITE_EMAIL, SITE_PHONE_TEL } from "@/lib/site-contact";
+import { submitPlanTrekEmail } from "@/services/query-email-api";
+import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -2155,7 +2158,33 @@ export default function HomePage() {
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setNewsSubmitted(true);
+    const email = newsEmail.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Enter a valid email address.");
+      return;
+    }
+    submitEmailOptimistic(
+      () =>
+        submitPlanTrekEmail({
+          name: "Newsletter subscriber",
+          email,
+          phone: "",
+          phoneCountry: "IN",
+          destination: "",
+          destinationLabel: "Free trek planning guide (PDF)",
+          message: "Requested free PDF trek planning guide from homepage.",
+          source: "Get Free Guide — Homepage",
+        }),
+      () => {
+        setNewsSubmitted(true);
+        setNewsEmail("");
+        toast.success("Guide request sent! Check your inbox shortly.");
+      },
+      (message) => {
+        setNewsSubmitted(false);
+        toast.error(message);
+      },
+    );
   };
 
   const homeSeo = buildHomePageSEO();

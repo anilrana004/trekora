@@ -72,8 +72,6 @@ export default function DestinationCard({
   dest: Destination;
   index: number;
 }) {
-  const isContain = dest.imageFit === "contain";
-
   return (
     <motion.div
       variants={itemVariants}
@@ -104,8 +102,8 @@ export default function DestinationCard({
         dataOcid={`destination.card_image.${index + 1}`}
       >
         <motion.div
-          className={`h-[200px] sm:h-[220px] overflow-hidden relative ${isContain ? "bg-[#f4efe6]" : "bg-[#e8e4dc]"}`}
-          whileHover={isContain ? undefined : { scale: 1.02 }}
+          className="h-[200px] sm:h-[220px] overflow-hidden relative bg-[#e8e4dc]"
+          whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
         >
           <OptimizedImage
@@ -114,15 +112,10 @@ export default function DestinationCard({
             fill
             variant="destination"
             priority={index < 8}
-            className={
-              isContain
-                ? "!object-contain p-3 sm:p-4"
-                : "!object-cover object-center"
-            }
+            className="!object-cover !object-center"
+            style={{ objectPosition: "center center" }}
           />
-          {!isContain ? (
-            <motion.div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-          ) : null}
+          <motion.div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
           <span
             className="absolute top-3 right-3 text-[11px] font-bold px-2 py-0.5 rounded-full"
             style={{ background: "var(--ew-red)", color: "#fff" }}

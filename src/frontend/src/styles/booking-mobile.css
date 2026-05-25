@@ -424,3 +424,63 @@ body:has(.booking-page) .floating-cta-callback {
     padding: 2rem;
   }
 }
+
+/* Fallback: choice controls work even if ancestor lacks .booking-page */
+button.booking-choice-pill,
+.booking-choice-pill {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 52px;
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--ew-gray-mid) !important;
+  background: #fff !important;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ew-text);
+  cursor: pointer;
+  touch-action: manipulation;
+  appearance: none;
+}
+
+button.booking-choice-pill--active,
+.booking-choice-pill--active {
+  border-color: #c0001c !important;
+  background: #fff5f5 !important;
+  color: #c0001c !important;
+  font-weight: 600;
+}
+
+button.booking-choice-card,
+.booking-choice-card {
+  display: flex !important;
+  width: 100%;
+  gap: 0.875rem;
+  align-items: flex-start;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--ew-gray-mid) !important;
+  background: #fff !important;
+  text-align: left;
+  min-height: 52px;
+  cursor: pointer;
+  touch-action: manipulation;
+  appearance: none;
+}
+
+.booking-choice-card--active,
+button.booking-choice-card--active {
+  border-color: #c0001c !important;
+  background: #fff5f5 !important;
+}
+
+.batches-book-btn {
+  min-height: 48px;
+  min-width: 5.5rem;
+  padding: 0.625rem 1.125rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}

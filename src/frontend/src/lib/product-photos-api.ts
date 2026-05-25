@@ -7,6 +7,7 @@ export async function submitProductPhotos(payload: {
   trekName: string;
   type: ProductKind;
   uploadedBy?: string;
+  tags?: string[];
   photos?: ReviewPhotoMeta[];
   photoUrls?: string[];
 }): Promise<{
@@ -29,7 +30,7 @@ export async function submitProductPhotos(payload: {
         success: false,
         message:
           data.message ??
-          "Could not save photos. Is pnpm discount-api running?",
+          "Could not save photos. Please try again in a moment.",
       };
     }
     return data;
@@ -37,7 +38,7 @@ export async function submitProductPhotos(payload: {
     return {
       success: false,
       message:
-        "Cannot reach the photo API. From the project root run: pnpm discount-api",
+        "Cannot reach the photo service. Check your connection and try again.",
     };
   }
 }

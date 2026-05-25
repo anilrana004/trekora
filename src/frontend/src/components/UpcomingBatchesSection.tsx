@@ -480,7 +480,7 @@ export default function UpcomingBatchesSection() {
                   <td className="py-3 px-4">
                     <button
                       type="button"
-                      className="text-[12px] font-semibold px-4 py-2 rounded-lg whitespace-nowrap text-white transition-opacity hover:opacity-90"
+                      className="batches-book-btn text-[12px] font-semibold px-4 py-2 rounded-lg whitespace-nowrap text-white transition-opacity hover:opacity-90 active:opacity-80"
                       style={{ background: "#E87722" }}
                       data-ocid={`batches2.book_button.${i + 1}`}
                       onClick={() => openBatchBook(b)}
@@ -528,7 +528,7 @@ export default function UpcomingBatchesSection() {
                 <SlotsCell slots={b.slots} />
                 <button
                   type="button"
-                  className="text-[12px] font-semibold px-4 py-1.5 rounded-lg text-white"
+                  className="batches-book-btn text-[12px] font-semibold px-4 py-2 rounded-lg text-white active:opacity-80"
                   style={{ background: "#E87722" }}
                   data-ocid={`batches2.mobile_book_button.${i + 1}`}
                   onClick={() => openBatchBook(b)}
