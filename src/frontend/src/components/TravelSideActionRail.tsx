@@ -128,15 +128,16 @@ function TravelSideActionRail({
     variant.startsWith("listing-") && variant !== "listing-booking";
   const showChat =
     !bookingRail &&
-    !blogRail &&
     (listingRail
       ? visible || inImageSection
       : pastFirstViewport && (visible || inImageSection));
-  const showWhatsapp = bookingRail
-    ? true
-    : listingRail
-      ? visible && !inImageSection
-      : pastFirstViewport && visible && !inImageSection;
+  const showWhatsapp =
+    !blogRail &&
+    (bookingRail
+      ? true
+      : listingRail
+        ? visible && !inImageSection
+        : pastFirstViewport && visible && !inImageSection);
 
   const showRightTabs = bookingRail
     ? !isContactOnlyRailVariant(variant)
@@ -145,7 +146,8 @@ function TravelSideActionRail({
         ? visible && !inImageSection
         : pastFirstViewport && visible && !inImageSection);
 
-  const showCallback = !isContactOnlyRailVariant(variant) && showRightTabs;
+  const showCallback =
+    !blogRail && !isContactOnlyRailVariant(variant) && showRightTabs;
 
   useEffect(() => {
     const el = document.getElementById(sentinelId);
