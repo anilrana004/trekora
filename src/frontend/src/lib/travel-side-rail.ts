@@ -141,6 +141,9 @@ export type TravelSideActionRailVariant =
 const CONTACT_ONLY_RAIL_VARIANTS = new Set<TravelSideActionRailVariant>([
   "listing-destinations",
   "listing-corporate",
+  // Blog: avoid circular FAB stack (chat/callback). Keep only the right-side
+  // plan/find tabs + WhatsApp icon tab for a cleaner read experience.
+  "listing-blog",
 ]);
 
 /** Listing pages: chat + WhatsApp only — destinations & corporate (no callback / plan / find side tabs) */

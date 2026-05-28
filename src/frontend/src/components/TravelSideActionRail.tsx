@@ -135,12 +135,15 @@ function TravelSideActionRail({
     : listingRail
       ? visible && !inImageSection
       : pastFirstViewport && visible && !inImageSection;
-  const showCallbackAndRight = bookingRail
+
+  const showRightTabs = bookingRail
     ? !isContactOnlyRailVariant(variant)
     : !isContactOnlyRailVariant(variant) &&
       (listingRail
         ? visible && !inImageSection
         : pastFirstViewport && visible && !inImageSection);
+
+  const showCallback = !isContactOnlyRailVariant(variant) && showRightTabs;
 
   useEffect(() => {
     const el = document.getElementById(sentinelId);
@@ -221,12 +224,12 @@ function TravelSideActionRail({
     },
   ];
 
-  if (!showChat && !showWhatsapp && !showCallbackAndRight) return null;
+  if (!showChat && !showWhatsapp && !showCallback && !showRightTabs) return null;
 
   return (
     <>
       <nav
-        className={`travel-side-rail travel-side-rail--left ${inImageSection && showChat && !showCallbackAndRight ? "travel-side-rail--chat-float" : ""}`}
+        className={`travel-side-rail travel-side-rail--left ${inImageSection && showChat && !showCallback ? "travel-side-rail--chat-float" : ""}`}
         aria-label="Contact actions"
         data-ocid="travel_rail.left"
       >
@@ -235,10 +238,10 @@ function TravelSideActionRail({
             <TravelSideChatButton floatingOverImage={inImageSection} />
           )}
           {showWhatsapp && renderTabs(leftTabs, "left")}
-          {showCallbackAndRight && <TravelSideCallbackButton />}
+          {showCallback && <TravelSideCallbackButton />}
         </div>
       </nav>
-      {showCallbackAndRight ? (
+      {showRightTabs ? (
         <nav
           className="travel-side-rail travel-side-rail--right"
           aria-label="Planning actions"
