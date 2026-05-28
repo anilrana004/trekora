@@ -5,7 +5,7 @@ import {
   SITE_PHONE_TEL,
   WHATSAPP_CHAT_URL,
 } from "@/lib/site-contact";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 import {
   Award,
@@ -367,16 +367,18 @@ function ContactColumnBody({
               Call Now
             </a>
           </div>
-          <button
-            type="button"
-            onClick={openFindMyTrekQuiz}
-            className="flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white shadow-lg transition-[filter] hover:brightness-110"
-            style={{ backgroundColor: "var(--ew-red)" }}
-            data-ocid="footer.find_my_trek"
-          >
-            <Compass size={17} strokeWidth={2.2} />
-            Find My Trek
-          </button>
+          {!onBlog ? (
+            <button
+              type="button"
+              onClick={openFindMyTrekQuiz}
+              className="flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-white shadow-lg transition-[filter] hover:brightness-110"
+              style={{ backgroundColor: "var(--ew-red)" }}
+              data-ocid="footer.find_my_trek"
+            >
+              <Compass size={17} strokeWidth={2.2} />
+              Find My Trek
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={openPlanMyTrekModal}
@@ -413,16 +415,18 @@ function ContactColumnBody({
               Call Now
             </a>
           </div>
-          <button
-            type="button"
-            onClick={openFindMyTrekQuiz}
-            className="flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold text-white shadow-md transition-[filter] hover:brightness-110"
-            style={{ backgroundColor: "var(--ew-red)" }}
-            data-ocid="footer.find_my_trek"
-          >
-            <Compass size={17} strokeWidth={2.2} />
-            Find My Trek
-          </button>
+          {!onBlog ? (
+            <button
+              type="button"
+              onClick={openFindMyTrekQuiz}
+              className="flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-semibold text-white shadow-md transition-[filter] hover:brightness-110"
+              style={{ backgroundColor: "var(--ew-red)" }}
+              data-ocid="footer.find_my_trek"
+            >
+              <Compass size={17} strokeWidth={2.2} />
+              Find My Trek
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={openPlanMyTrekModal}
@@ -452,6 +456,8 @@ function ColumnHeading({ children }: { children: ReactNode }) {
 export default function Footer() {
   const year = new Date().getFullYear();
   const isMobile = useIsMobile();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onBlog = pathname === "/blog" || pathname.startsWith("/blog/");
   const [openAccordion, setOpenAccordion] = useState<AccordionKey | null>(null);
 
   const toggleAccordion = useCallback((key: AccordionKey) => {
