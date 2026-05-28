@@ -132,11 +132,11 @@ function TravelSideActionRail({
     (listingRail
       ? visible || inImageSection
       : pastFirstViewport && (visible || inImageSection));
-  const showWhatsapp = !blogRail && (bookingRail
+  const showWhatsapp = bookingRail
     ? true
     : listingRail
       ? visible && !inImageSection
-      : pastFirstViewport && visible && !inImageSection);
+      : pastFirstViewport && visible && !inImageSection;
 
   const showRightTabs = bookingRail
     ? !isContactOnlyRailVariant(variant)
@@ -145,8 +145,7 @@ function TravelSideActionRail({
         ? visible && !inImageSection
         : pastFirstViewport && visible && !inImageSection);
 
-  const showCallback =
-    !blogRail && !isContactOnlyRailVariant(variant) && showRightTabs;
+  const showCallback = !isContactOnlyRailVariant(variant) && showRightTabs;
 
   useEffect(() => {
     const el = document.getElementById(sentinelId);
