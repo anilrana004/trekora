@@ -289,9 +289,11 @@ function WhatsAppGlyph({ className }: { className?: string }) {
 function ContactColumnBody({
   isMobile,
   denseCtas,
+  hideFindMyTrek,
 }: {
   isMobile: boolean;
   denseCtas?: boolean;
+  hideFindMyTrek?: boolean;
 }) {
   const outlineBtn =
     "inline-flex flex-1 min-w-0 items-center justify-center gap-2 rounded-full border border-white/35 bg-transparent px-3 py-2.5 text-xs font-semibold text-white transition-colors hover:border-white/60 hover:bg-white/5";
@@ -367,7 +369,7 @@ function ContactColumnBody({
               Call Now
             </a>
           </div>
-          {!onBlog ? (
+          {!hideFindMyTrek ? (
             <button
               type="button"
               onClick={openFindMyTrekQuiz}
@@ -415,7 +417,7 @@ function ContactColumnBody({
               Call Now
             </a>
           </div>
-          {!onBlog ? (
+          {!hideFindMyTrek ? (
             <button
               type="button"
               onClick={openFindMyTrekQuiz}
@@ -597,7 +599,11 @@ export default function Footer() {
             </div>
             <div className="col-span-3">
               <ColumnHeading>Contact Us</ColumnHeading>
-              <ContactColumnBody isMobile={false} denseCtas />
+              <ContactColumnBody
+                isMobile={false}
+                denseCtas
+                hideFindMyTrek={onBlog}
+              />
             </div>
           </div>
 
@@ -684,7 +690,7 @@ export default function Footer() {
                       )}
                       {section.key === "contact" && (
                         <div className="pb-4 pt-1">
-                          <ContactColumnBody isMobile />
+                          <ContactColumnBody isMobile hideFindMyTrek={onBlog} />
                         </div>
                       )}
                     </motion.div>
