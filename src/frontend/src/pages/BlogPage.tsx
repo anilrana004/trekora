@@ -3,6 +3,9 @@ import { ChevronRight, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { SEOHead } from "../components/SEOHead";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import OptimizedImage from "../components/media/OptimizedImage";
 import { BLOGS } from "../data/blogs";
 import { resolveBlogCardImage } from "../lib/blog-product-images";
@@ -123,6 +126,9 @@ export default function BlogPage() {
           </motion.div>
         </div>
       </div>
+
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail variant="listing-blog" />
 
       {/* Category tabs */}
       <div

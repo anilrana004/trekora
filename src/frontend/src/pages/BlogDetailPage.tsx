@@ -1,17 +1,15 @@
-import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { Link, useParams } from "@tanstack/react-router";
 import {
   Calendar,
   ChevronRight,
   Clock,
-  Copy,
-  Facebook,
-  Twitter,
   User,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
 import OptimizedImage from "../components/media/OptimizedImage";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import { BLOGS } from "../data/blogs";
 import { resolveBlogCardImage } from "../lib/blog-product-images";
 
@@ -29,13 +27,6 @@ export default function BlogDetailPage() {
     }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 3);
-  const [copied, setCopied] = useState(false);
-
-  const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   if (!blog) {
     return (
@@ -61,17 +52,13 @@ export default function BlogDetailPage() {
     );
   }
 
-  const whatsappUrl = buildWhatsAppUrl(
-    `${blog.title} — ${typeof window !== "undefined" ? window.location.href : ""}`,
-  );
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(blog.title)}&url=${encodeURIComponent(window.location.href)}`;
-  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
-
   return (
     <div
       className="pt-16 min-h-screen"
       style={{ background: "var(--ew-gray-lt)" }}
     >
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail variant="listing-blog" />
       {/* Hero */}
       <div
         className="relative h-80 md:h-[420px] overflow-hidden"
@@ -180,52 +167,6 @@ export default function BlogDetailPage() {
                 {tag}
               </span>
             ))}
-          </div>
-
-          {/* Social share */}
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <span
-              className="text-sm font-semibold"
-              style={{ color: "var(--ew-text)" }}
-            >
-              Share:
-            </span>
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white transition-colors"
-              data-ocid="blog.share.whatsapp"
-            >
-              WhatsApp
-            </a>
-            <a
-              href={twitterUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[#1D9BF0] text-[#1D9BF0] hover:bg-[#1D9BF0] hover:text-white transition-colors"
-              data-ocid="blog.share.twitter"
-            >
-              <Twitter size={14} aria-hidden /> Twitter
-            </a>
-            <a
-              href={facebookUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[#1877F2] text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-colors"
-              data-ocid="blog.share.facebook"
-            >
-              <Facebook size={14} aria-hidden /> Facebook
-            </a>
-            <button
-              type="button"
-              onClick={copyLink}
-              className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2 px-4 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] hover:bg-[var(--ew-red)] hover:text-white transition-colors"
-              data-ocid="blog.share.copy_link"
-            >
-              <Copy size={14} aria-hidden />
-              {copied ? "Copied!" : "Copy Link"}
-            </button>
           </div>
 
           {/* Author bio */}
