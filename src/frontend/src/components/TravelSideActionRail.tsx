@@ -132,11 +132,11 @@ function TravelSideActionRail({
     (listingRail
       ? visible || inImageSection
       : pastFirstViewport && (visible || inImageSection));
-  const showWhatsapp = bookingRail
+  const showWhatsapp = !blogRail && (bookingRail
     ? true
     : listingRail
       ? visible && !inImageSection
-      : pastFirstViewport && visible && !inImageSection;
+      : pastFirstViewport && visible && !inImageSection);
 
   const showRightTabs = bookingRail
     ? !isContactOnlyRailVariant(variant)
