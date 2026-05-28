@@ -120,7 +120,6 @@ function TravelSideActionRail({
   /** Latched on: stays visible once user has scrolled past the hero sentinel */
   const [visible, setVisible] = useState(false);
   const bookingRail = isBookingRailVariant(variant);
-  const blogRail = variant === "listing-blog";
   const pastFirstViewport = usePastFirstViewport();
   const inImageSection = useTravelImageSectionOverlap();
   /** Booking: side tabs always reachable; chat stays on other listing pages only */
@@ -132,7 +131,6 @@ function TravelSideActionRail({
       ? visible || inImageSection
       : pastFirstViewport && (visible || inImageSection));
   const showWhatsapp =
-    !blogRail &&
     (bookingRail
       ? true
       : listingRail
@@ -147,7 +145,7 @@ function TravelSideActionRail({
         : pastFirstViewport && visible && !inImageSection);
 
   const showCallback =
-    !blogRail && !isContactOnlyRailVariant(variant) && showRightTabs;
+    !isContactOnlyRailVariant(variant) && showRightTabs;
 
   useEffect(() => {
     const el = document.getElementById(sentinelId);

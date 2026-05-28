@@ -43,9 +43,10 @@ export default function BlogDetailPage() {
           </h1>
           <Link
             to="/blog"
-            className="inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-6 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] hover:bg-[var(--ew-red)] hover:text-white transition-colors"
+            className="text-sm font-semibold underline underline-offset-4 hover:opacity-80"
+            style={{ color: "var(--ew-red)" }}
           >
-            Browse Blog <ChevronRight size={14} aria-hidden />
+            Browse Blog
           </Link>
         </div>
       </div>
@@ -245,8 +246,11 @@ export default function BlogDetailPage() {
                     >
                       {b.excerpt.slice(0, 80)}…
                     </p>
-                    <span className="inline-flex items-center justify-center gap-1 mt-2 text-[11px] font-semibold py-1.5 px-3 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] group-hover:bg-[var(--ew-red)] group-hover:text-white transition-colors">
-                      Read More <ChevronRight size={12} aria-hidden />
+                    <span
+                      className="mt-2 inline-block text-[11px] font-semibold underline underline-offset-4"
+                      style={{ color: "var(--ew-red)" }}
+                    >
+                      Read More
                     </span>
                   </div>
                 </Link>

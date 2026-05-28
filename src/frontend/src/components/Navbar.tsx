@@ -9,6 +9,8 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { NAV_HP_TREKS, NAV_UK_TREKS } from "@/data/nav-trek-menu";
+import { NAV_HP_YATRAS, NAV_UK_YATRAS } from "@/data/nav-yatra-menu";
 import { useIsMobile } from "../hooks/use-mobile";
 import LanguageBanner from "./LanguageBanner";
 import MobileSearchModal from "./MobileSearchModal";
@@ -16,35 +18,9 @@ import SearchDropdown from "./SearchDropdown";
 import OptimizedImage from "./media/OptimizedImage";
 const CHAR_DHAM_YATRA_SLUG = "char-dham-yatra";
 
-const UK_TREKS = [
-  { name: "Roopkund Trek", slug: "roopkund-trek" },
-  { name: "Valley of Flowers", slug: "valley-of-flowers" },
-  { name: "Kedarnath Trek", slug: "kedarnath-trek" },
-  { name: "Brahmatal Trek", slug: "brahmatal-trek" },
-  { name: "Rupin Pass", slug: "rupin-pass" },
-  { name: "Har Ki Dun", slug: "har-ki-dun" },
-  { name: "Kedarkantha", slug: "kedarkantha-trek" },
-  { name: "Chopta Tungnath", slug: "chopta-tungnath" },
-  { name: "Nag Tibba", slug: "nag-tibba" },
-  { name: "Dayara Bugyal", slug: "dayara-bugyal" },
-  { name: "Kuari Pass", slug: "kuari-pass" },
-  { name: "Deoriatal Chandrashila", slug: "deoriatal-chandrashila" },
-];
+const UK_TREKS = NAV_UK_TREKS;
 
-const HP_TREKS = [
-  { name: "Triund Trek", slug: "triund-trek" },
-  { name: "Hampta Pass", slug: "hampta-pass" },
-  { name: "Chandratal Lake", slug: "chandratal-lake" },
-  { name: "Sar Pass", slug: "sar-pass" },
-  { name: "Pin Parvati Pass", slug: "pin-parvati-pass" },
-  { name: "Spiti Valley", slug: "spiti-valley-trek" },
-  { name: "Kheerganga", slug: "kheerganga-trek" },
-  { name: "Bhrigu Lake", slug: "bhrigu-lake" },
-  { name: "Beas Kund", slug: "beas-kund" },
-  { name: "Deo Tibba", slug: "deo-tibba" },
-  { name: "Chandra Tal", slug: "chandra-tal" },
-  { name: "Friendship Peak", slug: "friendship-peak" },
-];
+const HP_TREKS = NAV_HP_TREKS;
 
 const DIFFICULTY = [
   { label: "Easy", count: "12 Treks", color: "#2E7D32" },
@@ -60,21 +36,8 @@ const SEASONS = [
   { label: "Year-Round", months: "All Year", desc: "Open every season" },
 ];
 
-const UK_YATRAS = [
-  { name: "Char Dham Yatra", slug: "char-dham-yatra" },
-  { name: "Panch Kedar", slug: "panch-kedar" },
-  { name: "Panch Badri", slug: "panch-badri-yatra" },
-  { name: "Hemkund Sahib", slug: "hemkund-sahib-yatra" },
-  { name: "Adi Kailash", slug: "adi-kailash" },
-  { name: "Om Parvat", slug: "om-parvat" },
-];
-
-const HP_YATRAS = [
-  { name: "Mani Mahesh Yatra", slug: "mani-mahesh-yatra" },
-  { name: "Kinnaur Kailash", slug: "kinnaur-kailash" },
-  { name: "Shrikhand Mahadev", slug: "shrikhand-mahadev" },
-  { name: "Churdhar", slug: "churdhar-yatra" },
-];
+const UK_YATRAS = NAV_UK_YATRAS;
+const HP_YATRAS = NAV_HP_YATRAS;
 
 const _SEARCH_TAGS = [
   "Kedarnath",

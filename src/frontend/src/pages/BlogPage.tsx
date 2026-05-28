@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { SEOHead } from "../components/SEOHead";
@@ -10,37 +10,13 @@ import OptimizedImage from "../components/media/OptimizedImage";
 import { BLOGS } from "../data/blogs";
 import { resolveBlogCardImage } from "../lib/blog-product-images";
 
-const CATEGORIES = [
-  "All",
-  "Trek Guide",
-  "Yatra",
-  "Destination",
-  "Safety",
-  "Gear",
-];
-
-/** Outlined red pill — matches trek / packages / gallery CTAs */
-const CTA_OUTLINE_RED =
-  "inline-flex items-center justify-center gap-1.5 text-sm font-semibold py-2.5 px-5 rounded-full border-2 border-[var(--ew-red)] text-[var(--ew-red)] hover:bg-[var(--ew-red)] hover:text-white transition-colors";
-
-const FILTER_PILL_BASE =
-  "px-4 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors";
-
-function filterPillClass(active: boolean): string {
-  return active
-    ? `${FILTER_PILL_BASE} border-[var(--ew-red)] bg-[var(--ew-red)] text-white`
-    : `${FILTER_PILL_BASE} border-[var(--ew-red)] text-[var(--ew-red)] bg-transparent hover:bg-[var(--ew-red)] hover:text-white`;
-}
-
 export default function BlogPage() {
-  const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
 
   const filtered = BLOGS.filter((b) => {
-    const matchCat = category === "All" || b.category === category;
     const matchSearch =
       search === "" || b.title.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
+    return matchSearch;
   });
 
   return (
@@ -130,26 +106,6 @@ export default function BlogPage() {
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <TravelSideActionRail variant="listing-blog" />
 
-      {/* Category tabs */}
-      <div
-        className="listing-sticky-toolbar bg-white py-3 shadow-sm"
-        style={{ borderBottom: "1px solid var(--ew-gray-mid)" }}
-      >
-        <div className="container mx-auto px-4 flex flex-wrap gap-2 justify-center">
-          {CATEGORIES.map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => setCategory(c)}
-              className={filterPillClass(category === c)}
-              data-ocid={`blog.filter.${c.toLowerCase().replace(/\s+/g, "_")}`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Grid */}
       <div className="container mx-auto px-4 py-12">
         {filtered.length === 0 ? (
@@ -234,16 +190,6 @@ export default function BlogPage() {
                     </p>
                   </div>
                 </Link>
-                <div className="px-5 pb-5 pt-0">
-                  <Link
-                    to="/blog/$slug"
-                    params={{ slug: blog.slug }}
-                    className={`${CTA_OUTLINE_RED} w-full text-xs py-2`}
-                    data-ocid={`blog.read_button.${i + 1}`}
-                  >
-                    Read Article <ChevronRight size={14} aria-hidden />
-                  </Link>
-                </div>
               </motion.article>
             ))}
           </div>

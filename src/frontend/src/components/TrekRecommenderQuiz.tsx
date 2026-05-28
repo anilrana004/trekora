@@ -207,7 +207,15 @@ function OptionCard({
 }
 
 /* ── Result Card ─────────────────────────────────────────── */
-function ResultCard({ trek, index }: { trek: Trek; index: number }) {
+function ResultCard({
+  trek,
+  index,
+  onBook,
+}: {
+  trek: Trek;
+  index: number;
+  onBook: () => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -244,6 +252,18 @@ function ResultCard({ trek, index }: { trek: Trek; index: number }) {
           to="/book"
           search={bookSearch({ trek: trek.slug })}
           preload="intent"
+          onClick={(e) => {
+            // Only close for same-tab navigations (standard travel-site behavior).
+            if (
+              e.button !== 0 ||
+              e.metaKey ||
+              e.ctrlKey ||
+              e.shiftKey ||
+              e.altKey
+            )
+              return;
+            onBook();
+          }}
           className="text-xs font-semibold px-3 py-1.5 rounded-full inline-block text-white transition-opacity hover:opacity-90"
           style={{ backgroundColor: "var(--ew-orange)" }}
           data-ocid={`quiz.result_book_button.${index + 1}`}
@@ -541,7 +561,12 @@ export default function TrekRecommenderQuiz({
                       </p>
                       <div className="space-y-3 mb-5">
                         {results.map((trek, i) => (
-                          <ResultCard key={trek.id} trek={trek} index={i} />
+                          <ResultCard
+                            key={trek.id}
+                            trek={trek}
+                            index={i}
+                            onBook={handleClose}
+                          />
                         ))}
                       </div>
                       <button

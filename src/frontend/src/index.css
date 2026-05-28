@@ -278,6 +278,43 @@
     color: #ffffff;
   }
 
+  /* ── Unified field styling (used across quote forms, etc.) ── */
+  .ew-field {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--ew-gray-mid);
+    border-radius: 0.75rem;
+    background: #fff;
+    color: var(--ew-text);
+    padding: 0.75rem 0.9rem;
+    outline: none;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .ew-field::placeholder {
+    color: var(--ew-gray-dark);
+    opacity: 0.85;
+  }
+
+  .ew-field:focus {
+    border-color: var(--ew-red);
+    box-shadow: 0 0 0 3px rgba(192, 0, 28, 0.12);
+  }
+
+  .ew-field:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: var(--ew-gray-lt);
+  }
+
+  select.ew-field {
+    cursor: pointer;
+  }
+
   /* ── White button (for dark/colored backgrounds) ── */
   .btn-white {
     background-color: #ffffff;

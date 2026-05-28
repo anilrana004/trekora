@@ -77,6 +77,7 @@ export function usesTravelSideActionRail(pathname: string): boolean {
     path === "/corporate" ||
     path === "/gallery" ||
     path === "/blog" ||
+    path === "/press" ||
     path === "/about" ||
     path === "/contact" ||
     path === "/book" ||
@@ -84,7 +85,11 @@ export function usesTravelSideActionRail(pathname: string): boolean {
   )
     return true;
   if (/^\/treks\/state\/[^/]+$/.test(path)) return true;
-  return /^\/treks\/[^/]+$/.test(path) || /^\/yatras\/[^/]+$/.test(path);
+  return (
+    /^\/treks\/[^/]+$/.test(path) ||
+    /^\/yatras\/[^/]+$/.test(path) ||
+    /^\/blog\/[^/]+$/.test(path)
+  );
 }
 
 export const HOME_RAIL_WHATSAPP_MESSAGE =
@@ -111,6 +116,9 @@ export const GALLERY_LISTING_WHATSAPP_MESSAGE =
 export const BLOG_LISTING_WHATSAPP_MESSAGE =
   "Hi Trekora! I'm reading your trek guides and travel stories and have a question.";
 
+export const PRESS_LISTING_WHATSAPP_MESSAGE =
+  "Hi Trekora! I saw Trekora in the press and would like help planning a trek or yatra.";
+
 export const ABOUT_LISTING_WHATSAPP_MESSAGE =
   "Hi Trekora! I'd like to learn more about Trekora and plan a Himalayan trek.";
 
@@ -132,6 +140,7 @@ export type TravelSideActionRailVariant =
   | "listing-corporate"
   | "listing-gallery"
   | "listing-blog"
+  | "listing-press"
   | "listing-about"
   | "listing-contact"
   | "listing-booking"
@@ -178,6 +187,8 @@ export function getRailWhatsAppMessage(
       return GALLERY_LISTING_WHATSAPP_MESSAGE;
     case "listing-blog":
       return BLOG_LISTING_WHATSAPP_MESSAGE;
+    case "listing-press":
+      return PRESS_LISTING_WHATSAPP_MESSAGE;
     case "listing-about":
       return ABOUT_LISTING_WHATSAPP_MESSAGE;
     case "listing-contact":

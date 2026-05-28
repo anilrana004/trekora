@@ -1,7 +1,11 @@
 import { pressLogoForName } from "@/lib/press-media-logos";
+import { CTA_OUTLINE_RED } from "@/lib/cta-buttons";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
 import FeaturedInMedia from "../components/FeaturedInMedia";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 
 interface PressMention {
   name: string;
@@ -77,10 +81,13 @@ export default function PressPage() {
 
   return (
     <div>
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail variant="listing-press" />
       {/* Hero */}
       <section
         className="py-16 text-center"
         style={{ background: "var(--ew-red)" }}
+        data-travel-image-section
         data-ocid="press.hero"
       >
         <div className="container mx-auto px-4">
@@ -165,7 +172,7 @@ export default function PressPage() {
                 >
                   {m.headline}
                 </p>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <span
                     className="text-[12px]"
                     style={{ color: "var(--ew-gray-dark)" }}
@@ -173,10 +180,11 @@ export default function PressPage() {
                     {m.date}
                   </span>
                   <span
-                    className="flex items-center gap-1 text-[13px] font-semibold transition-colors group-hover:underline"
-                    style={{ color: "var(--ew-red)" }}
+                    className={`${CTA_OUTLINE_RED} text-xs py-2 px-4`}
+                    aria-hidden
+                    style={{ pointerEvents: "none" }}
                   >
-                    Read Article <ArrowUpRight size={13} />
+                    Read Article <ArrowUpRight size={13} aria-hidden />
                   </span>
                 </div>
               </motion.a>
@@ -242,7 +250,7 @@ export default function PressPage() {
                     {m.headline}
                   </p>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <span
                     className="text-[11px]"
                     style={{ color: "var(--ew-gray-dark)" }}
@@ -250,10 +258,11 @@ export default function PressPage() {
                     {m.date}
                   </span>
                   <span
-                    className="flex items-center gap-0.5 text-[12px] font-semibold group-hover:underline"
-                    style={{ color: "var(--ew-red)" }}
+                    className={`${CTA_OUTLINE_RED} text-[11px] py-1.5 px-3`}
+                    aria-hidden
+                    style={{ pointerEvents: "none" }}
                   >
-                    Read <ArrowUpRight size={12} />
+                    Read <ArrowUpRight size={12} aria-hidden />
                   </span>
                 </div>
               </motion.a>
