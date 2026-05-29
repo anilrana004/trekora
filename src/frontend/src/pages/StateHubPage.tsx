@@ -7,6 +7,7 @@ import ListingRegionFilterPills, {
   type ListingRegionTab,
 } from "../components/ListingRegionFilterPills";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -362,14 +363,14 @@ export default function StateHubPage() {
         className="bg-white shadow-sm border-b"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="listing-sticky-toolbar__regions container mx-auto px-4 py-2.5">
+        <ListingToolbarRegions className="py-2.5">
           <ListingRegionFilterPills
             kind="treks"
             active={config.filterKey as ListingRegionTab}
             highlightTab={config.filterKey as ListingRegionTab}
             onChange={(tab) => navigate({ to: STATE_HUB_PATHS[tab] })}
           />
-        </div>
+        </ListingToolbarRegions>
       </ListingStickyToolbar>
 
       <div className="container mx-auto px-4 py-6 max-w-6xl">

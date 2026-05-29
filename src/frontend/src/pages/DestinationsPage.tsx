@@ -12,6 +12,7 @@ import ListingRegionFilterPills, {
   type ListingRegionTab,
 } from "../components/ListingRegionFilterPills";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -161,13 +162,13 @@ export default function DestinationsPage() {
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
 
       <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
-        <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+        <ListingToolbarRegions>
           <ListingRegionFilterPills
             kind="destinations"
             active={tab}
             onChange={setTab}
           />
-        </div>
+        </ListingToolbarRegions>
       </ListingStickyToolbar>
 
       <div className="container mx-auto px-4 py-10">

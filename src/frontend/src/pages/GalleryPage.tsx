@@ -17,6 +17,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import GalleryPhotoCard from "@/components/gallery/GalleryPhotoCard";
 import ProductNameCombobox from "@/components/gallery/ProductNameCombobox";
 import ListingStickyToolbar from "@/components/ListingStickyToolbar";
+import ListingToolbarRegions from "@/components/ListingToolbarRegions";
 import { useDynamicGallery } from "@/hooks/useDynamicGallery";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import {
@@ -777,7 +778,7 @@ export default function GalleryPage() {
         <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
 
         <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
-          <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+          <ListingToolbarRegions>
             <div
               className="listing-region-pills"
               role="tablist"
@@ -797,7 +798,7 @@ export default function GalleryPage() {
                 </button>
               ))}
             </div>
-          </div>
+          </ListingToolbarRegions>
         </ListingStickyToolbar>
 
         <TravelSideActionRail variant="listing-gallery" />

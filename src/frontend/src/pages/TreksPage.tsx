@@ -6,6 +6,7 @@ import ListingRegionFilterPills, {
   type ListingRegionTab,
 } from "../components/ListingRegionFilterPills";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import TreksListingFilters, {
   type TreksSortValue,
 } from "../components/TreksListingFilters";
@@ -229,13 +230,13 @@ export default function TreksPage() {
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
         {!destinationHub && (
-          <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+          <ListingToolbarRegions>
             <ListingRegionFilterPills
               kind="treks"
               active={stateTab}
               onChange={setStateTab}
             />
-          </div>
+          </ListingToolbarRegions>
         )}
         <TreksListingFilters
           search={search}

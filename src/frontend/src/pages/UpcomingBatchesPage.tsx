@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import BookingDrawer from "../components/BookingDrawer";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import { TRAVEL_HERO_SENTINEL_ID } from "../components/TravelSideActionRail";
 import { TREKS } from "../data/treks";
 
@@ -216,27 +217,27 @@ export default function UpcomingBatchesPage() {
 
       {/* Tab filters */}
       <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
-        <div className="listing-sticky-toolbar__regions container mx-auto px-4 py-3">
+        <ListingToolbarRegions className="py-3">
           <div
             className="listing-region-pills"
             role="tablist"
             aria-label="Filter batches by time"
           >
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.key}
-              onClick={() => setTab(t.key)}
-              className={`listing-region-pill ${tab === t.key ? "listing-region-pill--active" : ""}`}
-              data-ocid={`batches.filter.${t.key}`}
-            >
-              {t.label}
-            </button>
-          ))}
+            {TABS.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.key}
+                onClick={() => setTab(t.key)}
+                className={`listing-region-pill ${tab === t.key ? "listing-region-pill--active" : ""}`}
+                data-ocid={`batches.filter.${t.key}`}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
-        </div>
+        </ListingToolbarRegions>
       </ListingStickyToolbar>
 
       <div className="container mx-auto px-4 py-10">

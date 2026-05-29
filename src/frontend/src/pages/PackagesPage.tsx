@@ -22,6 +22,7 @@ import {
 import { motion } from "motion/react";
 import { useMemo, useState } from "react";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import PackageCard from "../components/PackageCard";
 import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {
@@ -279,7 +280,7 @@ export default function PackagesPage() {
         className="bg-white shadow-sm border-b"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+        <ListingToolbarRegions>
           <div
             className="listing-region-pills"
             role="tablist"
@@ -302,7 +303,7 @@ export default function PackagesPage() {
               );
             })}
           </div>
-        </div>
+        </ListingToolbarRegions>
       </ListingStickyToolbar>
 
       {/* Curated packages grid — matches /yatras listing shell */}

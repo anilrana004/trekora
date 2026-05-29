@@ -17,6 +17,7 @@ import ListingRegionFilterPills, {
   type ListingRegionTab,
 } from "../components/ListingRegionFilterPills";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
@@ -229,13 +230,13 @@ export default function YatrasPage() {
         className="bg-white shadow-sm border-b"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+        <ListingToolbarRegions>
           <ListingRegionFilterPills
             kind="yatras"
             active={tab}
             onChange={setTab}
           />
-        </div>
+        </ListingToolbarRegions>
       </ListingStickyToolbar>
 
       {/* ── Urgency Note ── */}
