@@ -95,9 +95,9 @@ export default function TreksListingFilters({
               </span>
             ) : null}
           </button>
-          <label className="listing-filters-sort-compact shrink-0 flex flex-col gap-0.5">
+          <label className="listing-filters-sort-compact shrink-0 flex flex-col gap-0 lg:gap-0.5">
             <span
-              className="text-[10px] font-semibold leading-none lg:sr-only"
+              className="text-[9px] font-semibold leading-none lg:sr-only lg:text-[10px]"
               style={{ color: "var(--ew-gray-dark)" }}
             >
               Sort

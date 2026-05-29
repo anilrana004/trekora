@@ -3,6 +3,7 @@ import { TRAVEL_HERO_SENTINEL_ID } from "@/components/TravelSideActionRail";
 import {
 
   isListingScrollChromeRoute,
+  isListingChromeNavbarSwapRoute,
 
   LISTING_CHROME_ENGAGE_DELAY_MS,
 
@@ -67,6 +68,7 @@ export function useListingScrollChrome(): ListingScrollChromeState {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const enabled = isListingScrollChromeRoute(pathname);
+  const allowNavbarSwap = isListingChromeNavbarSwapRoute(pathname);
 
 
 
@@ -102,7 +104,7 @@ export function useListingScrollChrome(): ListingScrollChromeState {
 
 
 
-  const chromeActive = enabled && pinEnabled && chromePinned;
+  const chromeActive = allowNavbarSwap && pinEnabled && chromePinned;
 
 
 
@@ -157,6 +159,18 @@ export function useListingScrollChrome(): ListingScrollChromeState {
     return () => mq.removeEventListener("change", apply);
 
   }, []);
+
+
+
+  useEffect(() => {
+
+    if (!allowNavbarSwap) {
+
+      setPinned(false);
+
+    }
+
+  }, [allowNavbarSwap]);
 
 
 
@@ -242,10 +256,13 @@ export function useListingScrollChrome(): ListingScrollChromeState {
 
     const tryEngagePin = () => {
 
-      if (!pinEnabledRef.current || !pastHeroRef.current || chromePinnedRef.current) {
-
+      if (
+        !isListingChromeNavbarSwapRoute(pathname) ||
+        !pinEnabledRef.current ||
+        !pastHeroRef.current ||
+        chromePinnedRef.current
+      ) {
         return;
-
       }
 
       clearEngageTimer();
@@ -422,7 +439,7 @@ export function useListingScrollChrome(): ListingScrollChromeState {
 
     };
 
-  }, [enabled]);
+  }, [enabled, pathname]);
 
 
 

@@ -32,17 +32,21 @@ export default function HomeMobileSearchPanel() {
       <div className="home-search__shell">
         <button
           type="button"
-          className="home-search__toggle flex w-full min-h-11 items-center gap-2 rounded-full border-2 border-[var(--ew-gray-mid)] bg-[var(--ew-gray-lt)] px-3.5 py-2 text-sm font-semibold text-[var(--ew-text)]"
+          className="home-search__toggle"
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((o) => !o)}
           data-ocid="home.search_toggle"
         >
-          <Search size={18} className="shrink-0 text-[var(--ew-orange)]" aria-hidden />
-          <span className="font-semibold">
+          <Search size={15} className="home-search__toggle-icon shrink-0 text-[var(--ew-orange)]" aria-hidden />
+          <span className="home-search__toggle-label min-w-0 flex-1 truncate text-left font-semibold">
             {open ? "Hide trek finder" : "Find your perfect trek"}
           </span>
-          <SlidersHorizontal size={16} className="ml-auto shrink-0 opacity-60" aria-hidden />
+          <SlidersHorizontal
+            size={14}
+            className="home-search__toggle-filter shrink-0 opacity-60"
+            aria-hidden
+          />
         </button>
 
         <div

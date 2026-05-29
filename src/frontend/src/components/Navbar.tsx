@@ -20,6 +20,10 @@ import SearchDropdown from "./SearchDropdown";
 import OptimizedImage from "./media/OptimizedImage";
 const CHAR_DHAM_YATRA_SLUG = "char-dham-yatra";
 
+/** Shared easing for mobile nav drawer + accordion (smooth, no bounce). */
+const NAV_DRAWER_EASE = [0.32, 0.72, 0, 1] as const;
+const NAV_ACCORDION_EASE = [0.4, 0, 0.2, 1] as const;
+
 const UK_TREKS = NAV_UK_TREKS;
 
 const HP_TREKS = NAV_HP_TREKS;
@@ -217,8 +221,8 @@ export default function Navbar() {
           y: hideNavBar ? "-100%" : "0%",
         }}
         transition={{
-          duration: hideNavBar ? 0.22 : 0.42,
-          ease: [0.4, 0, 0.2, 1],
+          duration: hideNavBar ? 0.26 : 0.32,
+          ease: NAV_ACCORDION_EASE,
         }}
         className={`sticky top-0 z-[60] bg-white transition-shadow duration-300 will-change-transform ${scrolled ? "shadow-lg" : "shadow-sm"}`}
         style={{ height: isMobile ? 56 : 64 }}
@@ -772,15 +776,26 @@ export default function Navbar() {
       {/* Mobile Drawer — Full-screen slide-over */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 35 }}
-            className="fixed inset-0 z-[95] flex flex-col"
-            style={{ background: "#fff" }}
-            data-ocid="nav.mobile_drawer"
-          >
+          <>
+            <motion.button
+              type="button"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.28, ease: NAV_DRAWER_EASE }}
+              className="fixed inset-0 z-[94] border-0 bg-[rgba(26,26,46,0.45)]"
+              aria-label="Close menu"
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.32, ease: NAV_DRAWER_EASE }}
+              className="fixed inset-y-0 right-0 z-[95] flex w-full max-w-[100vw] flex-col shadow-2xl"
+              style={{ background: "#fff" }}
+              data-ocid="nav.mobile_drawer"
+            >
             {/* Drawer header — brand orange on phone */}
             <div
               className="flex items-center justify-between px-5"
@@ -844,7 +859,7 @@ export default function Navbar() {
                               mobileExpanded === link.key
                                 ? "rotate(180deg)"
                                 : "rotate(0deg)",
-                            transition: "transform 0.2s",
+                            transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                             color: "var(--ew-gray-dark)",
                           }}
                         />
@@ -855,7 +870,7 @@ export default function Navbar() {
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.22 }}
+                            transition={{ duration: 0.3, ease: NAV_ACCORDION_EASE }}
                             className="overflow-hidden"
                             style={{ background: "var(--ew-gray-lt)" }}
                           >
@@ -1096,6 +1111,7 @@ export default function Navbar() {
               </a>
             </div>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

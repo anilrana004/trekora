@@ -11,6 +11,13 @@ export function isListingScrollChromeRoute(pathname: string): boolean {
   return LISTING_CHROME_PATH.test(pathname);
 }
 
+/** Home uses sticky search only — no navbar swap / fixed toolbar slide-in on scroll. */
+export function isListingChromeNavbarSwapRoute(pathname: string): boolean {
+  const path = pathname.replace(/\/$/, "") || "/";
+  if (path === "/") return false;
+  return isListingScrollChromeRoute(pathname);
+}
+
 /** Reserved — all listing pages use scroll chrome; kept for API compatibility. */
 export function isListingScrollWithPageRoute(_pathname: string): boolean {
   return false;

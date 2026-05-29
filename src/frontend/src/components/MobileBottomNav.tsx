@@ -41,7 +41,7 @@ export default function MobileBottomNav() {
           >
             <span className="mobile-bottom-nav__icon" aria-hidden>
               <Icon
-                size={18}
+                size={16}
                 strokeWidth={isActive ? 2.25 : 2}
                 style={{
                   color: isActive ? "var(--ew-red)" : "var(--ew-gray-dark)",
