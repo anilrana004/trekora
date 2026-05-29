@@ -21,34 +21,38 @@
 
 @media (max-width: 1023px) {
   .home-page {
-    overflow-x: clip;
+    overflow-x: hidden;
   }
 
-  /* Social proof + trust marquees — keep horizontal scroll on phone */
+  /* Social proof + trust marquees — same speed as desktop; must keep scrolling on phone */
   .home-strip-marquee,
   .marquee-container,
   [data-ocid="social_proof.ticker"] {
     overflow: hidden;
-    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
   }
 
   .ticker-track,
   .marquee-track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: max-content !important;
     animation-play-state: running !important;
+    -webkit-animation-play-state: running !important;
+  }
+
+  .ticker-track {
+    animation: ticker-scroll 45s linear infinite !important;
+    -webkit-animation: ticker-scroll 45s linear infinite !important;
+  }
+
+  .marquee-track {
+    animation: marquee 30s linear infinite !important;
+    -webkit-animation: marquee 30s linear infinite !important;
   }
 
   .home-strip-marquee__item {
     flex-shrink: 0;
-    font-size: 0.75rem;
-    line-height: 1.2;
-  }
-
-  .ticker-track {
-    animation-duration: 28s;
-  }
-
-  .marquee-track {
-    animation-duration: 24s;
   }
 
   [data-ocid="social_proof.ticker"] .inline-flex.w-5 {

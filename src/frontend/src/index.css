@@ -420,21 +420,23 @@
     background-color: var(--ew-gray-lt);
   }
 
-  /* Mobile drawer — logo on orange header (no dark box around asset) */
+  /* Mobile drawer — logo on orange header (no white plate behind asset) */
   .mobile-drawer-logo {
     display: flex;
     align-items: center;
-    padding: 0.35rem 0.65rem;
-    border-radius: 0.5rem;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
   }
 
   .site-logo__img--drawer {
     display: block;
-    max-height: 2.25rem;
+    max-height: 2.35rem;
     width: auto;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06));
+    filter: none;
+    background: transparent;
   }
 
   /* ── Listing pages: sticky filters; pin to top while scrolling (replaces navbar) ── */
@@ -1411,24 +1413,25 @@
     width: 100%;
     max-width: 100%;
     overflow: hidden;
-    isolation: isolate;
-    contain: layout style;
   }
 
   .marquee-track,
   .ticker-track {
-    display: inline-flex;
+    display: flex;
     flex-wrap: nowrap;
     align-items: center;
     width: max-content;
-    min-width: 100%;
+    flex-shrink: 0;
     will-change: transform;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
 
   .marquee-track {
-    animation: marquee 36s linear infinite;
+    animation: marquee 30s linear infinite;
+    -webkit-animation: marquee 30s linear infinite;
   }
 
   .marquee-track:hover {
@@ -1475,7 +1478,8 @@
 
   /* ── Social proof ticker ── */
   .ticker-track {
-    animation: ticker-scroll 40s linear infinite;
+    animation: ticker-scroll 45s linear infinite;
+    -webkit-animation: ticker-scroll 45s linear infinite;
   }
 
   .ticker-track:hover {
@@ -1491,17 +1495,21 @@
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .marquee-track,
-    .ticker-track {
-      animation: none;
-      transform: none;
-      flex-wrap: wrap;
-      width: 100%;
-      min-width: 0;
-      justify-content: center;
-      row-gap: 0.35rem;
-      padding: 0.25rem 0.5rem;
+  @-webkit-keyframes ticker-scroll {
+    from {
+      -webkit-transform: translate3d(0, 0, 0);
+    }
+    to {
+      -webkit-transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @-webkit-keyframes marquee {
+    from {
+      -webkit-transform: translate3d(0, 0, 0);
+    }
+    to {
+      -webkit-transform: translate3d(-50%, 0, 0);
     }
   }
 
