@@ -61,7 +61,7 @@ function resolveCloudName(src: string): string | undefined {
 }
 
 function videoTransformChain(opts: { width?: number }): string {
-  const parts = ["c_limit", "f_auto", "q_auto:eco", "vc_h264", "fl_progressive"];
+  const parts = ["c_limit", "f_mp4", "q_auto:good", "vc_h264"];
   if (opts.width) parts.push(`w_${opts.width}`);
   return parts.join(",");
 }

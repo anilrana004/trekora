@@ -28,7 +28,7 @@ export default function HomeTrekFeatureMedia({
 
   if (reelVideo) {
     return (
-      <>
+      <div className="absolute inset-0 overflow-hidden">
         <OptimizedVideo
           src={reelVideo}
           profile="hero-mobile"
@@ -50,7 +50,7 @@ export default function HomeTrekFeatureMedia({
           sizes={sizes}
           className={`${className} hidden lg:block`}
         />
-      </>
+      </div>
     );
   }
 

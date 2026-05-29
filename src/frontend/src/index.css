@@ -800,7 +800,8 @@
     background-color: var(--ew-gray-mid);
   }
 
-  .listing-card-media__img {
+  .listing-card-media__img,
+  .listing-card-media video {
     width: 100%;
     height: 100%;
     object-fit: cover;

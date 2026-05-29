@@ -39,6 +39,8 @@ export default function ReelVideoLightbox({
   const [soundOn, setSoundOn] = useState(!defaultMuted);
   const isMobile = useIsMobile(1024);
 
+  const [useRawSrc, setUseRawSrc] = useState(false);
+
   const optimizedSrc = useMemo(
     () =>
       buildOptimizedVideoUrl(videoSrc, {
@@ -46,6 +48,8 @@ export default function ReelVideoLightbox({
       }),
     [videoSrc, isMobile],
   );
+
+  const activeSrc = useRawSrc ? videoSrc : optimizedSrc;
 
   const optimizedPoster = useMemo(
     () => poster ?? buildVideoPosterUrl(videoSrc, isMobile ? 480 : 720),
@@ -110,7 +114,7 @@ export default function ReelVideoLightbox({
         el.addEventListener("loadeddata", start, { once: true });
       }
     },
-    [playReel, optimizedSrc, reelInstanceKey(reel), soundOn],
+    [playReel, activeSrc, reelInstanceKey(reel), soundOn],
   );
 
   const enableSound = useCallback(async () => {
@@ -148,8 +152,12 @@ export default function ReelVideoLightbox({
   }, [onClose, goPrev, goNext, hasNav]);
 
   useEffect(() => {
+    setUseRawSrc(false);
+  }, [videoSrc, reelInstanceKey(reel)]);
+
+  useEffect(() => {
     setSoundOn(!defaultMuted);
-  }, [optimizedSrc, reelInstanceKey(reel), defaultMuted]);
+  }, [activeSrc, reelInstanceKey(reel), defaultMuted]);
 
   useEffect(() => {
     const el = videoRef.current;
@@ -157,7 +165,7 @@ export default function ReelVideoLightbox({
     el.pause();
     el.currentTime = 0;
     void playReel(el, soundOn);
-  }, [optimizedSrc, reelInstanceKey(reel), soundOn, playReel]);
+  }, [activeSrc, reelInstanceKey(reel), soundOn, playReel]);
 
   return (
     <motion.div
@@ -228,7 +236,8 @@ export default function ReelVideoLightbox({
       >
         <video
           ref={attachVideo}
-          src={optimizedSrc}
+          key={activeSrc}
+          src={activeSrc}
           poster={optimizedPoster}
           className="h-full w-full object-contain bg-black"
           controls
@@ -236,6 +245,9 @@ export default function ReelVideoLightbox({
           preload="auto"
           muted={!soundOn}
           aria-label={reel.title}
+          onError={() => {
+            if (!useRawSrc) setUseRawSrc(true);
+          }}
         />
 
         <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
