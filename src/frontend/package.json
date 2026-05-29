@@ -7,8 +7,9 @@
         "dev": "vite",
         "dev:clean": "vite --force",
         "generate:sitemap": "node ../../scripts/generate-sitemap.mjs",
-        "build": "pnpm generate:sitemap && vite build && pnpm copy:env",
-        "copy:env": "node -e \"const fs=require('fs');const p=require('path');const src=p.join('env.json');const dest=p.join('dist','env.json');fs.mkdirSync('dist',{recursive:true});if(fs.existsSync(src))fs.copyFileSync(src,dest);else fs.writeFileSync(dest,'{}');\"",
+        "build": "pnpm generate:sitemap && vite build && pnpm copy:env && pnpm security:bundle",
+        "copy:env": "node ../../scripts/write-public-env.mjs",
+        "security:bundle": "node ../../scripts/check-bundle-secrets.mjs",
         "typecheck": "tsc --noEmit",
         "check": "biome check src",
         "fix": "biome check --write src"

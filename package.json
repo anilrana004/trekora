@@ -21,7 +21,9 @@
         "seed": "node scripts/seed-discounts.mjs",
         "seed:reviews": "node scripts/seed-reviews.mjs",
         "seed:all": "node scripts/seed-discounts.mjs && node scripts/seed-reviews.mjs",
-        "security:check": "node scripts/check-secrets.mjs"
+        "security:check": "node scripts/check-secrets.mjs",
+        "security:bundle": "node scripts/check-bundle-secrets.mjs",
+        "security:all": "pnpm security:check && pnpm -C src/frontend security:bundle"
     },
     "devDependencies": {
         "dotenv": "^16.5.0",

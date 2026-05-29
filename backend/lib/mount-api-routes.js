@@ -2,6 +2,7 @@
  * Registers Mongo API routes at /api and /api/v1 (versioned alias).
  */
 import galleryRoutes from "../routes/gallery.routes.js";
+import weatherRoutes from "../routes/weather.routes.js";
 import productPhotoRoutes from "../routes/product-photo.routes.js";
 import giftCardRoutes from "../routes/giftcard.routes.js";
 import reviewRoutes from "../routes/review.routes.js";
@@ -40,6 +41,12 @@ export function mountApiRoutes(app) {
       router: galleryRoutes,
       limiter: apiGeneralLimiter,
       cache: cacheControlMiddleware(60, 120),
+    },
+    {
+      base: "/api/weather",
+      router: weatherRoutes,
+      limiter: apiGeneralLimiter,
+      cache: cacheControlMiddleware(30, 60),
     },
     {
       base: "/api/product-photos",

@@ -33,11 +33,22 @@ See **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** and **[docs/PRODUCTION_CHECKL
 
 ## Client-exposed keys
 
-These are visible in the built JS bundle by design:
+These may appear in the built JS bundle — treat as public and restrict in provider dashboards:
 
-- `VITE_CLOUDINARY_CLOUD_NAME`, `VITE_CLOUDINARY_UPLOAD_PRESET` (unsigned upload preset — restrict in Cloudinary dashboard)
-- `VITE_OPENWEATHER_API_KEY` (restrict by HTTP referrer in OpenWeather dashboard)
-- `VITE_RAZORPAY_KEY_ID` (public key only; never put Razorpay secret in frontend)
+- `VITE_CLOUDINARY_CLOUD_NAME`, `VITE_CLOUDINARY_UPLOAD_PRESET` (unsigned upload preset)
+- `VITE_RAZORPAY_KEY_ID` (public key only; never put Razorpay **secret** in frontend)
+
+**Do not** use `VITE_OPENWEATHER_API_KEY` in production. Set `OPENWEATHER_API_KEY` on the
+discount API (Railway) and let the browser call `/api/v1/weather` only.
+
+## Hardening checklist
+
+- Run `pnpm security:check` before every release (tracked-file secret scan).
+- Run `pnpm -C src/frontend build` — build fails if secrets appear in `dist/assets/*.js`.
+- `dist/env.json` is always `{}` — local `env.json` is never copied to production.
+- Vercel sends security headers (CSP, HSTS, frame deny) via `src/frontend/vercel.json`.
+- Express API disables `X-Powered-By` and returns minimal JSON errors in production.
+- Production JS uses hashed chunk names (no `react-vendor` labels in filenames).
 
 ## Reporting
 

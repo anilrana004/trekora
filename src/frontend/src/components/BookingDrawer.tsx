@@ -300,7 +300,7 @@ export default function BookingDrawer({
     if (paymentLive && typeof window.Razorpay !== "undefined") {
       setRzpLoading(true);
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_placeholder",
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "",
         amount: total * 100,
         currency: "INR",
         name: "Trekora",

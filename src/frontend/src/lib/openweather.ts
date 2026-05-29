@@ -1,7 +1,10 @@
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
 
-/** Resolves OpenWeather API key from Vite env (handles pasted URLs or subdomain mistakes). */
+/**
+ * Dev-only client key resolver. Production should use OPENWEATHER_API_KEY on the
+ * server (`/api/v1/weather` proxy) — never ship secrets with the VITE_ prefix.
+ */
 export function getOpenWeatherApiKey(): string | undefined {
   const raw =
     import.meta.env.VITE_OPENWEATHER_API_KEY ??
@@ -40,6 +43,7 @@ export function getOpenWeatherApiKey(): string | undefined {
   return trimmed.length <= 64 ? trimmed : undefined;
 }
 
+/** @deprecated Use isWeatherServiceConfigured from @/lib/weather-api */
 export function hasOpenWeatherApiKey(): boolean {
   return !!getOpenWeatherApiKey();
 }

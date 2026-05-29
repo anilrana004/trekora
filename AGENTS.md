@@ -45,3 +45,4 @@ When implementing features, fixes, or UI updates:
 - Production deploy docs live in `docs/` (Vercel + Railway + Cloudflare). Frontend stays Vite SPA at `src/frontend/`; Mongo API at `backend/`.
 - Run `pnpm ensure-indexes` after MongoDB schema changes. API routes are mirrored at `/api/v1/*`.
 - **Listing pages** (treks, yatras, gallery, etc.): use `components/listing/` exports — `ListingStickyToolbar` + `ListingToolbarRegions` + page-specific filters. Shared CSS lives under `.listing-sticky-toolbar*` in `index.css`. New listing routes must be registered in `lib/listing-scroll-chrome.ts` for mobile navbar swap.
+- **Security**: Never commit `.env` / `env.json`. Server secrets use `OPENWEATHER_API_KEY`, `ADMIN_API_SECRET`, etc. without `VITE_`. Run `pnpm security:check` and frontend build (bundle scan) before release. See `SECURITY.md` and `COPYRIGHT.md`.

@@ -6,13 +6,20 @@ import { isProduction } from "./env-config.js";
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function securityHeadersMiddleware(_req, res, next) {
+  res.removeHeader("X-Powered-By");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("X-DNS-Prefetch-Control", "off");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-site");
   res.setHeader(
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=()",
+  );
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'none'; frame-ancestors 'none'",
   );
   if (isProduction()) {
     res.setHeader(

@@ -25,7 +25,7 @@ export default function AdminGate() {
     return (
       <AdminShell
         title="Admin panel not configured"
-        body="Set VITE_ADMIN_SECRET before enabling VITE_ADMIN_ENABLED in your environment."
+        body="Admin access is disabled. Configure credentials in your secure deployment environment."
       />
     );
   }

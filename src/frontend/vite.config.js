@@ -25,14 +25,17 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
+        entryFileNames: "assets/[hash].js",
+        chunkFileNames: "assets/[hash].js",
+        assetFileNames: "assets/[hash][extname]",
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          router: ['@tanstack/react-router'],
-          query: ['@tanstack/react-query'],
-          motion: ['motion'],
-          icons: ['lucide-react'],
-          charts: ['recharts'],
-          maps: ['leaflet'],
+          core: ["react", "react-dom"],
+          nav: ["@tanstack/react-router"],
+          data: ["@tanstack/react-query"],
+          motion: ["motion"],
+          icons: ["lucide-react"],
+          charts: ["recharts"],
+          maps: ["leaflet"],
         },
       },
     },
@@ -54,9 +57,25 @@ export default defineConfig({
     port: 5173,
     strictPort: false,
     open: true,
+    headers: {
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "X-Frame-Options": "DENY",
+    },
+    fs: {
+      deny: [".env", ".env.*", "env.json"],
+    },
     proxy: {
+      "^/api/v1/weather": {
+        target: "http://127.0.0.1:3001",
+        changeOrigin: true,
+      },
+      "^/api/weather": {
+        target: "http://127.0.0.1:3001",
+        changeOrigin: true,
+      },
       // ICP canister API only — email routes handled by vite-plugin-email-api
-      "^/api/(?!booking|callback|corporate-quote|query|vouchers|giftcards|reviews|gallery|product-photos)": {
+      "^/api/(?!booking|callback|corporate-quote|query|vouchers|giftcards|reviews|gallery|product-photos|weather)": {
         target: "http://127.0.0.1:4943",
         changeOrigin: true,
       },

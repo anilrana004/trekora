@@ -17,7 +17,12 @@ const RULES = [
   { id: "private-key-block", re: /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/ },
   { id: "cloudinary-secret-assign", re: /CLOUDINARY_API_SECRET\s*=\s*[^\s#]+/i },
   { id: "smtp-pass-assign", re: /SMTP_PASS\s*=\s*[^\s#]+/i },
+  { id: "razorpay-secret", re: /rzp_(live|test)_[A-Za-z0-9]{14,}/ },
   { id: "generic-api-secret", re: /(?:api[_-]?secret|client[_-]?secret)\s*[:=]\s*['"][^'"]{8,}['"]/i },
+  {
+    id: "vite-secret-value",
+    re: /VITE_(?:ADMIN_SECRET|OPENWEATHER)[A-Z_]*\s*=\s*[^\s#'"]{12,}/i,
+  },
 ];
 
 const ALLOWLIST_FILES = new Set([
@@ -53,10 +58,13 @@ for (const rel of listCandidateFiles()) {
     continue;
   }
   for (const rule of RULES) {
-    if (rule.re.test(text)) {
-      hits.push({ file: rel, rule: rule.id });
-      rule.re.lastIndex = 0;
-    }
+    if (!rule.re.test(text)) continue;
+    rule.re.lastIndex = 0;
+    const isDocPlaceholder =
+      rel.startsWith("docs/") &&
+      /user:pass@|<paste>|your[-_]|example\.com/i.test(text);
+    if (isDocPlaceholder) continue;
+    hits.push({ file: rel, rule: rule.id });
   }
 }
 

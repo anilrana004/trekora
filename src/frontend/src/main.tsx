@@ -37,6 +37,7 @@ class RootErrorBoundary extends Component<
 
   render() {
     if (this.state.error) {
+      const isDev = import.meta.env.DEV;
       return (
         <div
           style={{
@@ -50,20 +51,24 @@ class RootErrorBoundary extends Component<
             Trekora could not start the UI
           </h1>
           <p style={{ color: "#444", fontSize: 14 }}>
-            Open DevTools (F12) → Console for the full stack trace.
+            {isDev
+              ? "Open DevTools (F12) → Console for details."
+              : "Please refresh the page or try again later."}
           </p>
-          <pre
-            style={{
-              background: "#f5f5f5",
-              padding: 12,
-              borderRadius: 8,
-              fontSize: 13,
-              overflow: "auto",
-              whiteSpace: "pre-wrap",
-            }}
-          >
-            {this.state.error.message}
-          </pre>
+          {isDev ? (
+            <pre
+              style={{
+                background: "#f5f5f5",
+                padding: 12,
+                borderRadius: 8,
+                fontSize: 13,
+                overflow: "auto",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              {this.state.error.message}
+            </pre>
+          ) : null}
         </div>
       );
     }

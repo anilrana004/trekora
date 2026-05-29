@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { hasOpenWeatherApiKey } from "@/lib/openweather";
+import { isWeatherServiceConfigured } from "@/lib/weather-api";
 import { useWeather } from "../hooks/useWeather";
 
 import OptimizedImage from "./media/OptimizedImage";
@@ -93,7 +93,7 @@ const CONDITION_EMOJI: Record<string, string> = {
   "Partly Cloudy": "⛅",
 };
 
-const HAS_API_KEY = hasOpenWeatherApiKey();
+const WEATHER_ENABLED = isWeatherServiceConfigured();
 
 function WeatherIcon({
   icon,
@@ -106,7 +106,7 @@ function WeatherIcon({
 }) {
   const [imgFailed, setImgFailed] = useState(false);
   const emoji = CONDITION_EMOJI[condition] ?? "🌤️";
-  if (!HAS_API_KEY || imgFailed) {
+  if (imgFailed) {
     return (
       <span style={{ fontSize: size * 0.75 }} role="img" aria-label={condition}>
         {emoji}
@@ -202,7 +202,7 @@ export default function WeatherWidget({
 
   if (showSkeleton || isLoading) return <SkeletonLoader />;
 
-  if (HAS_API_KEY && error && !liveData) {
+  if (WEATHER_ENABLED && error && !liveData) {
     return (
       <div
         className="rounded-2xl p-6 text-center space-y-3"
@@ -229,7 +229,7 @@ export default function WeatherWidget({
   }
 
   const data = liveData ?? MOCK_WEATHER;
-  const isMock = !HAS_API_KEY || !liveData;
+  const isMock = !WEATHER_ENABLED || !liveData;
 
   const { current, forecast } = data;
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -432,17 +432,9 @@ export default function WeatherWidget({
       {/* Footer */}
       <div className="px-5 pb-3">
         <span className="text-white/25 text-[10px]">
-          {isMock ? (
-            <>
-              🔑 Live weather requires{" "}
-              <code className="bg-white/10 px-1 rounded text-[9px]">
-                VITE_OPENWEATHER_API_KEY
-              </code>{" "}
-              in <code className="bg-white/10 px-1 rounded text-[9px]">src/.env</code>
-            </>
-          ) : (
-            "Powered by OpenWeatherMap · Updates every 30 min"
-          )}
+          {isMock
+            ? "Sample forecast — live data loads when the weather service is configured on the server."
+            : "Live trail conditions · Updates hourly"}
         </span>
       </div>
     </motion.div>

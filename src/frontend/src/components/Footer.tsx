@@ -34,6 +34,11 @@ import { AnimatePresence, motion } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
 import { Fragment, useCallback, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
+import {
+  getSiteCopyrightLine,
+  getSiteCopyrightYear,
+  SITE_PROPRIETARY_NOTICE,
+} from "@/lib/site-legal";
 import { SiteLogo } from "./SiteLogo";
 
 const FOOTER_TAGLINE =
@@ -456,7 +461,7 @@ function ColumnHeading({ children }: { children: ReactNode }) {
 }
 
 export default function Footer() {
-  const year = new Date().getFullYear();
+  const year = getSiteCopyrightYear();
   const isMobile = useIsMobile();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const onBlog = pathname === "/blog" || pathname.startsWith("/blog/");
@@ -741,7 +746,10 @@ export default function Footer() {
               className="order-2 text-center text-xs leading-relaxed lg:order-1 lg:text-left"
               style={{ color: "rgba(255,255,255,0.48)" }}
             >
-              © {year} Trekora. All rights reserved.
+              {getSiteCopyrightLine(year)}
+              <span className="mt-1 block text-[10px] text-white/35">
+                {SITE_PROPRIETARY_NOTICE}
+              </span>
             </p>
 
             <nav
