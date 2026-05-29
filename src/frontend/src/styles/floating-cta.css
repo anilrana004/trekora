@@ -12,7 +12,15 @@
 
   body:has(.mobile-detail-page-pad) {
     --mobile-fab-bottom: calc(
-      var(--mobile-book-bar-height, 5rem) + 0.75rem +
+      var(--mobile-book-bar-height, 3rem) + 0.5rem +
+        env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  body:has(.mobile-detail-page-pad).compare-bar-visible {
+    --mobile-fab-bottom: calc(
+      var(--mobile-book-bar-height, 3rem) +
+        var(--compare-bar-compact-height, 2.5rem) + 0.625rem +
         env(safe-area-inset-bottom, 0px)
     );
   }
