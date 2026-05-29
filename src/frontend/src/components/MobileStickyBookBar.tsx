@@ -36,7 +36,7 @@ export default function MobileStickyBookBar({
         to={bookTo}
         search={bookSearch}
         onClick={onBookClick}
-        className="mobile-sticky-book-bar__cta btn-primary"
+        className="mobile-sticky-book-bar__cta btn-book-box"
         aria-label={`Book ${productName}`}
         data-ocid={bookButtonOcid}
       >

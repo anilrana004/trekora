@@ -23,15 +23,7 @@ export default function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around"
-      style={{
-        height: 56,
-        background: "#fff",
-        borderTop: "1px solid #EBEBEB",
-        WebkitBackfaceVisibility: "hidden",
-        /* Safe-area for iPhone home indicator */
-        paddingBottom: "env(safe-area-inset-bottom)",
-      }}
+      className="mobile-bottom-nav fixed bottom-0 left-0 right-0 z-50 flex items-stretch justify-around"
       aria-label="Mobile bottom navigation"
       data-ocid="mobile_bottom_nav"
     >
@@ -42,54 +34,25 @@ export default function MobileBottomNav() {
           <Link
             key={to}
             to={to}
-            className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full relative"
-            style={{
-              textDecoration: "none",
-              touchAction: "manipulation",
-              WebkitTapHighlightColor: "transparent",
-            }}
+            className={`mobile-bottom-nav__link${isActive ? " mobile-bottom-nav__link--active" : ""}`}
             aria-label={label}
             aria-current={isActive ? "page" : undefined}
             data-ocid={`mobile_bottom_nav.${label.toLowerCase()}.link`}
           >
-            <span
-              className="flex h-9 w-9 items-center justify-center rounded-full"
-              style={{
-                background: isActive ? "#ffffff" : "transparent",
-              }}
-            >
+            <span className="mobile-bottom-nav__icon" aria-hidden>
               <Icon
-                size={20}
+                size={18}
+                strokeWidth={isActive ? 2.25 : 2}
                 style={{
                   color: isActive ? "var(--ew-red)" : "var(--ew-gray-dark)",
                   transition: "color 0.2s",
                 }}
               />
             </span>
-            <span
-              style={{
-                fontSize: 10,
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? "var(--ew-red)" : "var(--ew-gray-dark)",
-                transition: "color 0.2s",
-                lineHeight: 1,
-              }}
-            >
-              {label}
-            </span>
-            {/* Active dot */}
-            {isActive && (
-              <span
-                style={{
-                  position: "absolute",
-                  bottom: 4,
-                  width: 4,
-                  height: 4,
-                  borderRadius: "50%",
-                  background: "var(--ew-red)",
-                }}
-              />
-            )}
+            <span className="mobile-bottom-nav__label">{label}</span>
+            {isActive ? (
+              <span className="mobile-bottom-nav__dot" aria-hidden />
+            ) : null}
           </Link>
         );
       })}

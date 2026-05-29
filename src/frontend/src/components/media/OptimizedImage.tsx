@@ -98,8 +98,6 @@ export const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
     ref,
   ) {
     const [loaded, setLoaded] = useState(!blurUp);
-    /** Matches `index.css` lazy fade: `img[loading="lazy"]` starts at opacity 0 until `.loaded`. */
-    const [lazyRevealed, setLazyRevealed] = useState(false);
     const widths = VARIANT_WIDTHS[variant];
     const resolvedSizes = sizes ?? VARIANT_SIZES[variant];
     const effectiveDelivery = useMemo(
@@ -178,12 +176,10 @@ export const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
           canBlurLayout &&
             "relative z-[1] transition-opacity duration-500 ease-out",
           canBlurLayout && (loaded ? "opacity-100" : "opacity-0"),
-          loading === "lazy" && lazyRevealed && "loaded",
         )}
         style={style}
         onLoad={(e) => {
           if (canBlurLayout) setLoaded(true);
-          if (loading === "lazy") setLazyRevealed(true);
           onLoadProp?.(e);
         }}
       />

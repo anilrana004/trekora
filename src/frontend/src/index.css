@@ -275,6 +275,37 @@
     transform: translateY(0);
   }
 
+  /* Trek / yatra detail — rectangular book CTA (not pill) */
+  .btn-book-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.625rem 1.25rem;
+    border-radius: 12px;
+    background-color: var(--ew-red);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition:
+      filter 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  .btn-book-box:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+  }
+
+  .btn-book-box:active {
+    transform: translateY(0);
+  }
+
   /* ── Secondary outline button (ew-red border) ── */
   .btn-secondary {
     border: 2px solid var(--ew-red);
@@ -1287,6 +1318,56 @@
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  /* ── Mobile sticky book bar (trek / yatra detail) ── */
+  .mobile-sticky-book-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: calc(
+      var(--mobile-nav-height, 48px) + env(safe-area-inset-bottom, 0px)
+    );
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    padding-bottom: max(0.625rem, env(safe-area-inset-bottom, 0px));
+    background: #ffffff;
+    border-top: 1px solid var(--ew-gray-mid);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-sticky-book-bar__price {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 0.35rem;
+    row-gap: 0.1rem;
+    line-height: 1.25;
+  }
+
+  .mobile-sticky-book-bar__label,
+  .mobile-sticky-book-bar__per {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ew-gray-dark);
+  }
+
+  .mobile-sticky-book-bar__amount {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--ew-orange);
+  }
+
+  .mobile-sticky-book-bar__cta {
+    flex-shrink: 0;
+    min-width: 7.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   /* ── Booking sidebar ── */
   .booking-sidebar {
     position: sticky;
@@ -1441,13 +1522,15 @@
   Usage: https://res.cloudinary.com/[cloud]/image/fetch/f_auto,q_auto,w_400/{original_url}
 */
 
-/* ── Image lazy loading fade-in ── */
+/* ── Image lazy load — stay visible (no blank “buffer” flash) ── */
 img[loading="lazy"] {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-img[loading="lazy"].loaded {
   opacity: 1;
+}
+
+.route-pending-fallback {
+  min-height: 1px;
+  width: 100%;
+  pointer-events: none;
 }
 
 /* ── Skeleton shimmer ── */
@@ -1499,10 +1582,70 @@ img[loading="lazy"].loaded {
 
 @media (max-width: 768px) {
   :root {
-    --mobile-nav-height: 56px;
+    --mobile-nav-height: 48px;
   }
   .main-content {
-    padding-bottom: 56px;
+    padding-bottom: calc(
+      var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  /* ── Mobile bottom navigation ── */
+  .mobile-bottom-nav {
+    min-height: var(--mobile-nav-height);
+    padding-top: 0.2rem;
+    padding-bottom: max(0.15rem, env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top: 1px solid #ebebeb;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .mobile-bottom-nav__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    gap: 0.125rem;
+    padding: 0.125rem 0.25rem 0.05rem;
+    text-decoration: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-bottom-nav__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+  }
+
+  .mobile-bottom-nav__label {
+    font-size: 0.625rem;
+    line-height: 1.1;
+    font-weight: 400;
+    color: var(--ew-gray-dark);
+    transition: color 0.2s ease;
+  }
+
+  .mobile-bottom-nav__link--active .mobile-bottom-nav__label {
+    font-weight: 600;
+    color: var(--ew-red);
+  }
+
+  .mobile-bottom-nav__dot {
+    display: block;
+    width: 0.25rem;
+    height: 0.25rem;
+    margin-top: 0.0625rem;
+    border-radius: 50%;
+    background: var(--ew-red);
+    flex-shrink: 0;
   }
   /* Ensure all tap targets are at minimum 44px */
   button,

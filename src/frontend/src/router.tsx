@@ -525,10 +525,11 @@ export const router = createRouter({
   scrollRestoration: false,
   // Preload lazy route chunks on hover/focus — trek & yatra detail pages open faster.
   defaultPreload: "intent",
-  defaultPreloadDelay: 60,
+  defaultPreloadDelay: 0,
+  // Only show pending UI if a chunk is genuinely slow — never force a minimum flash.
   defaultPendingComponent: PageLoader,
-  defaultPendingMinMs: 180,
-  defaultPendingMs: 0,
+  defaultPendingMinMs: 0,
+  defaultPendingMs: 450,
 });
 
 declare module "@tanstack/react-router" {

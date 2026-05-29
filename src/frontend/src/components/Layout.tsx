@@ -66,7 +66,10 @@ export default function Layout() {
         <main
           id="main-content"
           className="flex-1"
-          style={{ paddingBottom: "var(--mobile-nav-height, 0)" }}
+          style={{
+            paddingBottom:
+              "calc(var(--mobile-nav-height, 0px) + env(safe-area-inset-bottom, 0px))",
+          }}
         >
           <AnimatedOutlet />
         </main>
