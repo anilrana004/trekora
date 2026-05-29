@@ -9,6 +9,13 @@ const productPhotoSchema = new mongoose.Schema(
     publicId: { type: String, default: "" },
     cloudinaryFolder: { type: String, default: "" },
     uploadedBy: { type: String, default: "Trekora trekker", trim: true },
+    /** gallery-page = navbar /gallery upload; product-page = trek/yatra Photos tab */
+    uploadSource: {
+      type: String,
+      enum: ["gallery-page", "product-page"],
+      default: "product-page",
+      index: true,
+    },
     tags: { type: [String], default: [] },
     approved: { type: Boolean, default: true, index: true },
     createdAt: { type: Date, default: Date.now, index: true },

@@ -6,9 +6,8 @@ import { createContext, useContext, type ReactNode } from "react";
 
 const ListingScrollChromeContext = createContext<ListingScrollChromeState>({
   chromeActive: false,
-  pastHero: false,
-  isScrolling: false,
   enabled: false,
+  pinEnabled: false,
 });
 
 export function ListingScrollChromeProvider({ children }: { children: ReactNode }) {

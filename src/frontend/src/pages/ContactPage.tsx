@@ -15,8 +15,9 @@ import {
 } from "@/lib/phone-countries";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { submitCallbackEmail } from "@/services/callback-email-api";
+import { buildContactPagePayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { ChevronRight, Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { ChevronRight, Clock, Loader2, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -70,6 +71,7 @@ export default function ContactPage() {
   const [callbackPhoneCountry, setCallbackPhoneCountry] = useState("IN");
   const [callbackSent, setCallbackSent] = useState(false);
   const [contactSent, setContactSent] = useState(false);
+  const [contactSubmitting, setContactSubmitting] = useState(false);
 
   const {
     register,
@@ -96,26 +98,21 @@ export default function ContactPage() {
       return;
     }
 
-    const messageBody = [
-      data.subject.trim() && `Subject: ${data.subject.trim()}`,
-      data.trekInterest && `Trek / yatra: ${data.trekInterest}`,
-      data.message.trim(),
-    ]
-      .filter(Boolean)
-      .join("\n\n");
-
+    if (contactSubmitting) return;
+    setContactSubmitting(true);
     submitEmailOptimistic(
       () =>
-        submitPlanTrekEmail({
-          name: data.name.trim(),
-          email: data.email.trim(),
-          phone,
-          phoneCountry: contactPhoneCountry,
-          destination: "",
-          destinationLabel: data.trekInterest || data.subject || "General contact",
-          message: messageBody,
-          source: "Send Query — Contact page",
-        }),
+        submitPlanTrekEmail(
+          buildContactPagePayload({
+            name: data.name,
+            email: data.email,
+            phone,
+            phoneCountry: contactPhoneCountry,
+            subject: data.subject,
+            trekInterest: data.trekInterest,
+            message: data.message,
+          }),
+        ),
       () => {
         setContactSent(true);
         reset();
@@ -124,6 +121,9 @@ export default function ContactPage() {
       (message) => {
         setContactSent(false);
         toast.error(message);
+      },
+      () => {
+        setContactSubmitting(false);
       },
     );
   };
@@ -600,10 +600,20 @@ export default function ContactPage() {
                 </div>
                 <button
                   type="submit"
-                  className={`${CTA_OUTLINE_RED} w-full`}
+                  disabled={contactSubmitting}
+                  className={`${CTA_OUTLINE_RED} w-full inline-flex items-center justify-center gap-2 disabled:opacity-70`}
                   data-ocid="contact.submit_button"
                 >
-                  Send Message <ChevronRight size={14} aria-hidden />
+                  {contactSubmitting ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" aria-hidden />
+                      Sending…
+                    </>
+                  ) : (
+                    <>
+                      Send Message <ChevronRight size={14} aria-hidden />
+                    </>
+                  )}
                 </button>
               </form>
               )}

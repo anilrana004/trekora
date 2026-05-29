@@ -1,11 +1,18 @@
 import PhoneInput from "@/components/ui/PhoneInput";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
 import { buildWhatsAppUrl } from "@/lib/site-contact";
-import { validateNationalPhone } from "@/lib/phone-countries";
+import {
+  normalizeIndianPhoneDigits,
+  validateNationalPhone,
+} from "@/lib/phone-countries";
+import { buildYatraPlanPayload } from "@/lib/query-email-payloads";
+import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { useSearch } from "@tanstack/react-router";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import ListingRegionFilterPills, {
   type ListingRegionTab,
 } from "../components/ListingRegionFilterPills";
@@ -35,6 +42,7 @@ export default function YatrasPage() {
   });
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const yatrasListingSeo = buildListingSEO("yatra");
 
@@ -51,13 +59,57 @@ export default function YatrasPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+
+    const name = formState.name.trim();
+    const email = formState.email.trim();
+    if (!name || name.length < 2) {
+      toast.error("Please enter your full name.");
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("A valid email address is required.");
+      return;
+    }
     const phoneCheck = validateNationalPhone(formState.phone, phoneCountry);
     if (phoneCheck !== true) {
       setPhoneError(phoneCheck);
       return;
     }
     setPhoneError(null);
-    setSubmitted(true);
+
+    const phone =
+      phoneCountry === "IN"
+        ? normalizeIndianPhoneDigits(formState.phone)
+        : formState.phone.replace(/\D/g, "");
+
+    setSubmitting(true);
+    submitEmailOptimistic(
+      () =>
+        submitPlanTrekEmail(
+          buildYatraPlanPayload({
+            name,
+            email,
+            phone,
+            phoneCountry,
+            yatra: formState.yatra,
+            message: formState.message,
+          }),
+        ),
+      () => {
+        // Instant success UI (optimistic)
+        setSubmitted(true);
+        setFormState({ name: "", email: "", phone: "", yatra: "", message: "" });
+        toast.success("Inquiry submitted! We’re emailing you the details now.");
+      },
+      (message) => {
+        setSubmitted(false);
+        toast.error(message);
+      },
+      () => {
+        setSubmitting(false);
+      },
+    );
   };
 
   return (
@@ -459,10 +511,18 @@ export default function YatrasPage() {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   type="submit"
-                  className="btn-primary flex-1 justify-center"
+                  className="btn-primary flex-1 justify-center inline-flex items-center gap-2"
+                  disabled={submitting}
                   data-ocid="yatras.inquiry.submit_button"
                 >
-                  Send Inquiry
+                  {submitting ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" aria-hidden />
+                      Sending…
+                    </>
+                  ) : (
+                    "Send Inquiry"
+                  )}
                 </button>
                 <a
                   href={buildWhatsAppUrl("Hi, I am interested in yatra")}

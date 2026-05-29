@@ -5,9 +5,10 @@ import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { validateNationalPhone } from "@/lib/phone-countries";
 import FormSuccessMessage from "@/components/FormSuccessMessage";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import { buildCorporateQuotePayload } from "@/lib/corporate-quote-payload";
 import { submitCorporateQuoteEmail } from "@/services/corporate-quote-email-api";
 import { useSearch } from "@tanstack/react-router";
-import { ChevronRight, MessageCircle } from "lucide-react";
+import { ChevronRight, Loader2, MessageCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -201,6 +202,7 @@ export default function CorporatePage() {
   const [orgType, setOrgType] = useState<OrgType>("corporate");
   const [phoneCountry, setPhoneCountry] = useState("IN");
   const [quoteSubmitted, setQuoteSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -221,18 +223,20 @@ export default function CorporatePage() {
   }, [orgFromUrl]);
 
   const onSubmit = (data: CorporateForm) => {
-    const payload = {
+    if (submitting) return;
+    setSubmitting(true);
+    const payload = buildCorporateQuotePayload({
       orgType,
-      company: data.company.trim(),
-      contactName: data.contactName.trim(),
-      email: data.email.trim(),
+      company: data.company,
+      contactName: data.contactName,
+      email: data.email,
       phone: data.phone,
       phoneCountry,
       groupSize: data.groupSize,
       budget: data.budget,
-      preferredDates: data.preferredDates.trim(),
-      requirements: data.requirements.trim(),
-    };
+      preferredDates: data.preferredDates,
+      requirements: data.requirements,
+    });
 
     submitEmailOptimistic(
       () => submitCorporateQuoteEmail(payload),
@@ -243,7 +247,11 @@ export default function CorporatePage() {
       },
       (message) => {
         setQuoteSubmitted(false);
+        setSubmitting(false);
         toast.error(message);
+      },
+      () => {
+        setSubmitting(false);
       },
     );
   };
@@ -723,10 +731,20 @@ export default function CorporatePage() {
             </div>
             <button
               type="submit"
-              className="btn-secondary w-full justify-center inline-flex items-center gap-1"
+              className="btn-secondary w-full justify-center inline-flex items-center gap-2"
+              disabled={submitting}
               data-ocid="corporate.submit_button"
             >
-              Request Custom Quote <ChevronRight size={14} aria-hidden />
+              {submitting ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" aria-hidden />
+                  Sending…
+                </>
+              ) : (
+                <>
+                  Request Custom Quote <ChevronRight size={14} aria-hidden />
+                </>
+              )}
             </button>
           </form>
           )}

@@ -1,5 +1,7 @@
 export interface GalleryItem {
   id: number;
+  /** Stable API id for React keys */
+  apiId?: string;
   src: string;
   title: string;
   category:
@@ -11,12 +13,12 @@ export interface GalleryItem {
     | "Sunrises"
     | "Snow";
   credit: string;
-  /** Trek/yatra name badge on community review photos */
   trekName?: string;
   trekSlug?: string;
   productType?: "trek" | "yatra";
   productLabel?: string;
   isCommunityPhoto?: boolean;
+  createdAt?: string;
 }
 
 export const GALLERY_ITEMS: GalleryItem[] = [

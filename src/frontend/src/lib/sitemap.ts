@@ -1,4 +1,9 @@
 import { BLOGS } from "../data/blogs";
+import {
+  DESTINATION_DISTRICTS_PATH_SLUG,
+  DESTINATION_STATE_SLUGS,
+  DESTINATIONS,
+} from "../data/destinations";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
 import {
@@ -21,6 +26,7 @@ export interface SitemapEntry {
 }
 
 const STATE_HUB_SLUGS = ["uttarakhand", "himachal"] as const;
+const DESTINATION_STATE_PAGES = Object.values(DESTINATION_STATE_SLUGS);
 
 const TREK_SEO_SUFFIXES = [
   "packing-list",
@@ -55,6 +61,26 @@ export function generateSitemapData(): SitemapEntry[] {
     changefreq: "weekly",
   }));
 
+  const destinationStatePages: SitemapEntry[] = DESTINATION_STATE_PAGES.map(
+    (stateSlug) => ({
+      url: `/destinations/${stateSlug}`,
+      priority: 0.7,
+      changefreq: "weekly",
+    }),
+  );
+
+  /**
+   * Legacy destination district pages still exist and redirect to treks/yatras.
+   * Keeping them in the sitemap helps capture long-tail links safely.
+   */
+  const destinationLegacyDistrictPages: SitemapEntry[] = DESTINATIONS.map(
+    (d) => ({
+      url: `/destinations/${DESTINATION_DISTRICTS_PATH_SLUG}/${d.slug}`,
+      priority: 0.35,
+      changefreq: "monthly",
+    }),
+  );
+
   const activeTreks = TREKS.filter((t) => t.isActive);
 
   const trekPages: SitemapEntry[] = activeTreks.flatMap((t) => [
@@ -85,6 +111,8 @@ export function generateSitemapData(): SitemapEntry[] {
   return [
     ...staticPages,
     ...stateHubPages,
+    ...destinationStatePages,
+    ...destinationLegacyDistrictPages,
     ...trekPages,
     ...yatraPages,
     ...blogPages,

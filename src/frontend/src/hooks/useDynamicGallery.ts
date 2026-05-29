@@ -1,9 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect } from "react";
+import { filterCommunityGalleryItems } from "@/lib/gallery-community";
+import { mergeGalleryItems } from "@/lib/merge-gallery-items";
 import { queryKeys } from "@/lib/query-keys";
 import {
   fetchGallery,
   type GalleryApiItem,
+  type GalleryResponse,
   type ProductKind,
 } from "@/lib/reviews-api";
 
@@ -11,30 +14,47 @@ export function useDynamicGallery(params?: {
   trekSlug?: string;
   type?: ProductKind;
   enabled?: boolean;
-  /** Skip slow Cloudinary Admin folder scan (Mongo + reviews only). */
-  fast?: boolean;
+  /** Trekker uploads only (excludes catalog / folder scans). Default true for site gallery. */
+  communityOnly?: boolean;
+  limit?: number;
 }) {
   const enabled = params?.enabled !== false;
   const trekSlug = params?.trekSlug ?? "";
   const type = params?.type;
-  const fast = params?.fast ?? Boolean(trekSlug);
+  const communityOnly = params?.communityOnly !== false;
   const queryClient = useQueryClient();
 
   const queryKey = queryKeys.gallery.list({
     trekSlug: trekSlug || undefined,
     type,
-    fast,
+    fast: true,
+    communityOnly,
+    productUploadSource: "all",
+    includeReviews: true,
   });
 
   const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey,
-    queryFn: () =>
-      fetchGallery({
+    queryFn: async (): Promise<GalleryResponse> => {
+      const res = await fetchGallery({
         trekSlug: trekSlug || undefined,
         type,
-        limit: trekSlug ? 48 : 120,
-        includeCloudinary: fast ? false : undefined,
-      }),
+        limit: params?.limit ?? (trekSlug ? 48 : 200),
+        includeCloudinary: false,
+        uploadSource: "all",
+        includeReviews: true,
+      });
+      if (!res.success) return res;
+
+      const cached = queryClient.getQueryData<GalleryResponse>(queryKey);
+      const prev = cached?.success ? (cached.items ?? []) : [];
+      let fromApi = res.items ?? [];
+      if (communityOnly) fromApi = filterCommunityGalleryItems(fromApi);
+      return {
+        ...res,
+        items: mergeGalleryItems(fromApi, prev),
+      };
+    },
     enabled,
     staleTime: 120_000,
     gcTime: 20 * 60_000,

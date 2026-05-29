@@ -1,6 +1,9 @@
 import { buildSeoImageUrl } from "@/lib/images";
 import { bookSearch } from "@/lib/book-search";
+import { usePrefetchProductGallery } from "@/hooks/usePrefetchProductGallery";
+import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
 import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
+import { mergeProductGalleryPhotos } from "@/lib/merge-gallery-photos";
 import {
   SITE_PHONE_TEL,
   buildWhatsAppUrl,
@@ -182,6 +185,20 @@ export default function YatraDetailPage() {
       return true;
     });
   }, [yatra, allImages]);
+
+  usePrefetchProductGallery(slug, "yatra");
+
+  const { photos: communityGalleryItems } = useTrekkerPhotos(slug ?? "", "yatra");
+
+  const photosForLightbox = useMemo(() => {
+    if (!yatra) return [];
+    return mergeProductGalleryPhotos(
+      communityGalleryItems,
+      galleryPhotos,
+      yatra.name,
+      "Yatra",
+    ).map((p) => p.src);
+  }, [communityGalleryItems, galleryPhotos, yatra]);
 
   // Auto-rotate hero slider
   useEffect(() => {
@@ -1117,6 +1134,7 @@ export default function YatraDetailPage() {
               {activeTab === "photos" && (
                 <DetailTabPanel tabKey="photos">
                   <ProductDetailPhotosSection
+                    key={`yatra-photos-${slug}`}
                     productName={yatra.name}
                     productSlug={slug ?? ""}
                     productType="yatra"
@@ -1532,16 +1550,17 @@ export default function YatraDetailPage() {
       {lightboxIdx !== null ? (
         <ProductDetailLightbox
           productName={yatra.name}
-          photos={galleryPhotos}
+          photos={photosForLightbox}
           activeIndex={lightboxIdx}
           onClose={() => setLightboxIdx(null)}
           onPrev={() =>
             setLightboxIdx(
-              (lightboxIdx - 1 + galleryPhotos.length) % galleryPhotos.length,
+              (lightboxIdx - 1 + photosForLightbox.length) %
+                photosForLightbox.length,
             )
           }
           onNext={() =>
-            setLightboxIdx((lightboxIdx + 1) % galleryPhotos.length)
+            setLightboxIdx((lightboxIdx + 1) % photosForLightbox.length)
           }
           ocidPrefix="yatra_detail"
         />

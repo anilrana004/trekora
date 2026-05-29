@@ -4,6 +4,7 @@ import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { buildHomePageSEO } from "@/lib/product-seo";
 import { SITE_ORIGIN } from "@/lib/site-config";
 import { SITE_EMAIL, SITE_PHONE_TEL } from "@/lib/site-contact";
+import { buildLeadMagnetPayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
@@ -13,12 +14,14 @@ import {
   ChevronRight,
   CreditCard,
   Leaf,
+  Loader2,
   RotateCcw,
   Shield,
   Users,
   X,
   Zap,
 } from "lucide-react";
+import FormSuccessMessage from "../components/FormSuccessMessage";
 import { motion } from "motion/react";
 import {
   type CSSProperties,
@@ -38,6 +41,7 @@ import YatraCard from "../components/YatraCard";
 import YouTubeSection from "../components/YouTubeSection";
 import HomeTrekFeatureMedia from "../components/media/HomeTrekFeatureMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
+import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -1543,20 +1547,54 @@ function HeroFeaturedMedia({
 
 function HeroBannerGrid() {
   const [setIdx, setSetIdx] = useState(0);
-  const [visible, setVisible] = useState(true);
+  const [mediaVisible, setMediaVisible] = useState(true);
   const [carouselPaused, setCarouselPaused] = useState(false);
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const goToSet = (index: number) => {
+    if (fadeTimerRef.current) {
+      clearTimeout(fadeTimerRef.current);
+      fadeTimerRef.current = null;
+    }
+    setMediaVisible(true);
+    setSetIdx(index);
+  };
 
   useEffect(() => {
-    if (carouselPaused) return;
+    if (carouselPaused) {
+      if (fadeTimerRef.current) {
+        clearTimeout(fadeTimerRef.current);
+        fadeTimerRef.current = null;
+      }
+      setMediaVisible(true);
+      return;
+    }
+
     const timer = setInterval(() => {
-      setVisible(false);
-      setTimeout(() => {
+      setMediaVisible(false);
+      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+      fadeTimerRef.current = setTimeout(() => {
         setSetIdx((prev) => (prev + 1) % HERO_SETS.length);
-        setVisible(true);
+        setMediaVisible(true);
+        fadeTimerRef.current = null;
       }, 400);
-    }, 4000);
-    return () => clearInterval(timer);
+    }, 5000);
+
+    return () => {
+      clearInterval(timer);
+      if (fadeTimerRef.current) {
+        clearTimeout(fadeTimerRef.current);
+        fadeTimerRef.current = null;
+      }
+    };
   }, [carouselPaused]);
+
+  /** Never leave hero media faded out (tab throttle / timer races). */
+  useEffect(() => {
+    if (mediaVisible) return;
+    const safety = setTimeout(() => setMediaVisible(true), 900);
+    return () => clearTimeout(safety);
+  }, [mediaVisible]);
 
   const set = HERO_SETS[setIdx];
 
@@ -1566,7 +1604,7 @@ function HeroBannerGrid() {
         <button
           key={heroSet.left.title}
           type="button"
-          onClick={() => setSetIdx(i)}
+          onClick={() => goToSet(i)}
           aria-label={`Banner set ${i + 1}`}
           className="rounded-full transition-all"
           style={{
@@ -1582,16 +1620,22 @@ function HeroBannerGrid() {
 
   const featuredCard = (
     <div className="home-hero__featured relative overflow-hidden rounded-2xl">
-      <HeroFeaturedMedia
-        banner={set.left}
-        setIdx={setIdx}
-        mobile
-        priority
-        sizes="(max-width: 1024px) 100vw, 50vw"
-        className="object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
-      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+      <div
+        className="absolute inset-0 transition-opacity duration-400 ease-out"
+        style={{ opacity: mediaVisible ? 1 : 0 }}
+        aria-hidden={!mediaVisible}
+      >
+        <HeroFeaturedMedia
+          banner={set.left}
+          setIdx={setIdx}
+          mobile
+          priority
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/10" />
+      </div>
+      <div className="home-hero__copy absolute bottom-0 left-0 right-0 z-[2] p-4 sm:p-6">
         <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white/75 sm:text-xs">
           Trekora Featured
         </p>
@@ -1624,14 +1668,7 @@ function HeroBannerGrid() {
       onBlurCapture={() => setCarouselPaused(false)}
     >
       {/* ── Phone: full-width featured + horizontal more treks ── */}
-      <div
-        className="home-hero__mobile lg:hidden"
-        style={{
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.4s ease",
-          pointerEvents: visible ? "auto" : "none",
-        }}
-      >
+      <div className="home-hero__mobile lg:hidden">
         <div className="container mx-auto px-4 pb-3 pt-3">
           {featuredCard}
           <div
@@ -1644,16 +1681,22 @@ function HeroBannerGrid() {
                 className="home-hero__strip-card relative shrink-0 overflow-hidden rounded-xl"
                 style={{ scrollSnapAlign: "start" }}
               >
-                <OptimizedImage
-                  src={b.image}
-                  alt={b.title}
-                  fill
-                  variant="hero"
-                  sizes="78vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-3">
+                <div
+                  className="absolute inset-0 transition-opacity duration-400 ease-out"
+                  style={{ opacity: mediaVisible ? 1 : 0 }}
+                  aria-hidden={!mediaVisible}
+                >
+                  <OptimizedImage
+                    src={b.image}
+                    alt={b.title}
+                    fill
+                    variant="hero"
+                    sizes="78vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                </div>
+                <div className="home-hero__copy absolute bottom-0 left-0 right-0 z-[2] p-3">
                   <h3 className="text-shadow text-sm font-bold leading-tight text-white">
                     {b.title}
                   </h3>
@@ -1679,12 +1722,7 @@ function HeroBannerGrid() {
       {/* ── Desktop: original 2-column grid (unchanged layout) ── */}
       <div
         className="home-hero__desktop hidden lg:block"
-        style={{
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.4s ease",
-          pointerEvents: visible ? "auto" : "none",
-          minHeight: 520,
-        }}
+        style={{ minHeight: 520 }}
       >
         <div className="container mx-auto px-4 py-4">
           <div
@@ -1699,19 +1737,25 @@ function HeroBannerGrid() {
               className="relative overflow-hidden rounded-lg"
               style={{ minHeight: 280, height: "clamp(280px, 50vw, 420px)" }}
             >
-              <OptimizedImage
-                key={`hero-left-desk-${setIdx}`}
-                src={set.left.image}
-                alt={set.left.title}
-                fill
-                variant="hero"
-                priority
-                sizes="50vw"
-                className="min-h-[420px]"
-                style={{ minHeight: 420 }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
+              <div
+                className="absolute inset-0 transition-opacity duration-400 ease-out"
+                style={{ opacity: mediaVisible ? 1 : 0 }}
+                aria-hidden={!mediaVisible}
+              >
+                <OptimizedImage
+                  key={`hero-left-desk-${setIdx}`}
+                  src={set.left.image}
+                  alt={set.left.title}
+                  fill
+                  variant="hero"
+                  priority
+                  sizes="50vw"
+                  className="min-h-[420px]"
+                  style={{ minHeight: 420 }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              </div>
+              <div className="home-hero__copy absolute bottom-0 left-0 right-0 z-[2] p-6">
                 <p className="mb-1 text-xs uppercase tracking-widest text-white/80">
                   Trekora Featured
                 </p>
@@ -1723,7 +1767,7 @@ function HeroBannerGrid() {
                 </p>
                 <HeroRightPromoCta
                   ctaLink={set.left.ctaLink}
-                  className="btn-primary text-sm"
+                  className="btn-primary home-hero__cta home-hero__cta--featured text-sm"
                   data-ocid="hero.left_cta"
                 >
                   {set.left.cta}
@@ -1740,25 +1784,31 @@ function HeroBannerGrid() {
                   className="relative flex-1 overflow-hidden rounded-lg"
                   style={{ minHeight: 128 }}
                 >
-                  <OptimizedImage
-                    src={b.image}
-                    alt={b.title}
-                    fill
-                    variant="hero"
-                    sizes="25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
-                  <div className="absolute inset-0 flex flex-col justify-center px-4">
-                    <h3 className="text-shadow text-base font-bold leading-tight text-white">
+                  <div
+                    className="absolute inset-0 transition-opacity duration-400 ease-out"
+                    style={{ opacity: mediaVisible ? 1 : 0 }}
+                    aria-hidden={!mediaVisible}
+                  >
+                    <OptimizedImage
+                      src={b.image}
+                      alt={b.title}
+                      fill
+                      variant="hero"
+                      sizes="25vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
+                  </div>
+                  <div className="home-hero__copy absolute inset-x-0 bottom-0 z-[2] flex flex-col justify-end px-4 pb-3 pt-10">
+                    <h3 className="text-shadow text-base font-bold leading-tight text-white line-clamp-2">
                       {b.title}
                     </h3>
-                    <p className="text-shadow mb-2 text-xs text-white/85">
+                    <p className="text-shadow mb-2 line-clamp-2 text-xs text-white/85">
                       {b.subtitle}
                     </p>
                     <HeroRightPromoCta
                       ctaLink={b.ctaLink}
                       ctaBookSearch={b.ctaBookSearch}
-                      className="btn-primary px-3 py-1 text-xs"
+                      className="btn-primary home-hero__cta home-hero__cta--strip shrink-0 px-3 py-1 text-xs"
                       style={{ width: "fit-content" }}
                       data-ocid={`hero.right_cta.${i + 1}`}
                     >
@@ -2146,6 +2196,7 @@ export default function HomePage() {
   const yatrasScrollRef = useRef<HTMLDivElement>(null);
   const [newsEmail, setNewsEmail] = useState("");
   const [newsSubmitted, setNewsSubmitted] = useState(false);
+  const [guideSubmitting, setGuideSubmitting] = useState(false);
 
   // Season treks: filter from TREKS by slug
   const seasonTreks = SEASON_TREKS[season]
@@ -2163,26 +2214,22 @@ export default function HomePage() {
       toast.error("Enter a valid email address.");
       return;
     }
+    if (guideSubmitting) return;
+
+    setGuideSubmitting(true);
     submitEmailOptimistic(
-      () =>
-        submitPlanTrekEmail({
-          name: "Newsletter subscriber",
-          email,
-          phone: "",
-          phoneCountry: "IN",
-          destination: "",
-          destinationLabel: "Free trek planning guide (PDF)",
-          message: "Requested free PDF trek planning guide from homepage.",
-          source: "Get Free Guide — Homepage",
-        }),
+      () => submitPlanTrekEmail(buildLeadMagnetPayload(email)),
       () => {
         setNewsSubmitted(true);
         setNewsEmail("");
-        toast.success("Guide request sent! Check your inbox shortly.");
+        toast.success("Success! Your free guide is on the way — check your inbox.");
       },
       (message) => {
         setNewsSubmitted(false);
         toast.error(message);
+      },
+      () => {
+        setGuideSubmitting(false);
       },
     );
   };
@@ -2291,18 +2338,16 @@ export default function HomePage() {
       {/* ── SECTION 1: HERO BANNER GRID ── */}
       <HeroBannerGrid />
 
-      <div
-        id={TRAVEL_HERO_SENTINEL_ID}
-        className="h-0 w-full"
-        aria-hidden
-      />
-
       <TrustBadgesStrip />
 
       {/* ── SOCIAL PROOF TICKER (below hero) ── */}
       <SocialProofTicker />
 
-      <HomeMobileSearchPanel />
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+
+      <ListingStickyToolbar className="home-listing-chrome border-b border-[var(--ew-gray-mid)]">
+        <HomeMobileSearchPanel />
+      </ListingStickyToolbar>
 
       {/* ── SECTION 2: SEARCH PANEL (desktop) ── */}
       <section
@@ -4365,10 +4410,21 @@ export default function HomePage() {
               Enter your email and receive it instantly
             </p>
             {newsSubmitted ? (
-              <div className="flex items-center justify-center gap-2 bg-white/20 rounded-lg py-4">
-                <span className="text-white font-semibold">
-                  ✅ Check your inbox! Guide sent.
-                </span>
+              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-lg max-w-md mx-auto">
+                <FormSuccessMessage
+                  title="You're all set!"
+                  description="Your free Trek Planning Guide (PDF) is on the way. Check your inbox in a few minutes — and your spam folder just in case."
+                  className="py-4"
+                  data-ocid="newsletter.success_state"
+                />
+                <button
+                  type="button"
+                  onClick={() => setNewsSubmitted(false)}
+                  className="mt-2 text-sm font-semibold underline text-[var(--ew-red)]"
+                  data-ocid="newsletter.success_another"
+                >
+                  Send to another email
+                </button>
               </div>
             ) : (
               <form
@@ -4381,17 +4437,26 @@ export default function HomePage() {
                   placeholder="Enter your email address"
                   value={newsEmail}
                   onChange={(e) => setNewsEmail(e.target.value)}
-                  className="flex-1 px-4 py-3 rounded-full text-[var(--ew-text)] text-sm focus:outline-none border-0"
+                  disabled={guideSubmitting}
+                  className="flex-1 px-4 py-3 rounded-full text-[var(--ew-text)] text-sm focus:outline-none border-0 disabled:opacity-70"
                   style={{ background: "#fff" }}
                   data-ocid="newsletter.email.input"
                 />
                 <button
                   type="submit"
-                  className="btn-white whitespace-nowrap text-sm"
+                  disabled={guideSubmitting}
+                  className="btn-white whitespace-nowrap text-sm inline-flex items-center justify-center gap-2 min-w-[9.5rem] disabled:opacity-70"
                   style={{ color: "var(--ew-red)" }}
                   data-ocid="newsletter.submit_button"
                 >
-                  Get Free Guide
+                  {guideSubmitting ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" aria-hidden />
+                      Sending…
+                    </>
+                  ) : (
+                    "Get Free Guide"
+                  )}
                 </button>
               </form>
             )}

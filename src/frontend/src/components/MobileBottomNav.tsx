@@ -5,8 +5,8 @@ import { useIsMobile } from "../hooks/use-mobile";
 const NAV_ITEMS = [
   { label: "Home", icon: Home, to: "/" },
   { label: "Treks", icon: Mountain, to: "/treks" },
-  { label: "Yatras", icon: MapPin, to: "/yatras" },
-  { label: "Destinations", icon: Heart, to: "/destinations" },
+  { label: "Yatras", icon: Heart, to: "/yatras" },
+  { label: "Destinations", icon: MapPin, to: "/destinations" },
   { label: "Contact", icon: User, to: "/contact" },
 ] as const;
 
@@ -43,18 +43,29 @@ export default function MobileBottomNav() {
             key={to}
             to={to}
             className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full relative"
-            style={{ textDecoration: "none", touchAction: "manipulation" }}
+            style={{
+              textDecoration: "none",
+              touchAction: "manipulation",
+              WebkitTapHighlightColor: "transparent",
+            }}
             aria-label={label}
             aria-current={isActive ? "page" : undefined}
             data-ocid={`mobile_bottom_nav.${label.toLowerCase()}.link`}
           >
-            <Icon
-              size={20}
+            <span
+              className="flex h-9 w-9 items-center justify-center rounded-full"
               style={{
-                color: isActive ? "var(--ew-red)" : "var(--ew-gray-dark)",
-                transition: "color 0.2s",
+                background: isActive ? "#ffffff" : "transparent",
               }}
-            />
+            >
+              <Icon
+                size={20}
+                style={{
+                  color: isActive ? "var(--ew-red)" : "var(--ew-gray-dark)",
+                  transition: "color 0.2s",
+                }}
+              />
+            </span>
             <span
               style={{
                 fontSize: 10,

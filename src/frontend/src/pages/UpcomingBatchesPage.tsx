@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useState } from "react";
 import BookingDrawer from "../components/BookingDrawer";
+import ListingStickyToolbar from "../components/ListingStickyToolbar";
+import { TRAVEL_HERO_SENTINEL_ID } from "../components/TravelSideActionRail";
 import { TREKS } from "../data/treks";
 
 type TabKey = "this-month" | "next-3-months" | "summer-2025" | "all";
@@ -210,30 +212,32 @@ export default function UpcomingBatchesPage() {
         </motion.div>
       </div>
 
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+
       {/* Tab filters */}
-      <div className="listing-sticky-toolbar bg-white py-3 shadow-sm">
-        <div className="container mx-auto px-4 flex gap-3 flex-wrap justify-center">
+      <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
+        <div className="listing-sticky-toolbar__regions container mx-auto px-4 py-3">
+          <div
+            className="listing-region-pills"
+            role="tablist"
+            aria-label="Filter batches by time"
+          >
           {TABS.map((t) => (
             <button
               key={t.key}
               type="button"
+              role="tab"
+              aria-selected={tab === t.key}
               onClick={() => setTab(t.key)}
-              className="px-5 py-1.5 rounded-full text-sm font-semibold transition-all"
-              style={
-                tab === t.key
-                  ? { background: "var(--ew-red)", color: "#fff" }
-                  : {
-                      background: "var(--ew-gray-lt)",
-                      color: "var(--ew-text-lt)",
-                    }
-              }
+              className={`listing-region-pill ${tab === t.key ? "listing-region-pill--active" : ""}`}
               data-ocid={`batches.filter.${t.key}`}
             >
               {t.label}
             </button>
           ))}
+          </div>
         </div>
-      </div>
+      </ListingStickyToolbar>
 
       <div className="container mx-auto px-4 py-10">
         {batches.length === 0 ? (

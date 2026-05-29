@@ -1,8 +1,3 @@
-import {
-  listCloudinaryImagesByPrefix,
-  productCloudinaryFolder,
-  reviewCloudinaryFolder,
-} from "./cloudinary-admin.js";
 import { galleryTagsForSlug } from "./product-seo-tags.js";
 import { ProductPhoto } from "../models/ProductPhoto.model.js";
 import { Review } from "../models/Review.model.js";
@@ -31,6 +26,30 @@ function productLabel(type) {
   return type === "yatra" ? "Yatra" : "Trek";
 }
 
+/** Filter product_photos by upload origin (legacy docs without uploadSource = product-page). */
+function productUploadSourceMongoFilter(productUploadSource) {
+  if (productUploadSource === "gallery-page") {
+    return { uploadSource: "gallery-page" };
+  }
+  if (productUploadSource === "product-page") {
+    return {
+      $or: [
+        { uploadSource: "product-page" },
+        { uploadSource: { $exists: false } },
+        { uploadSource: null },
+      ],
+    };
+  }
+  return {
+    $or: [
+      { uploadSource: "gallery-page" },
+      { uploadSource: "product-page" },
+      { uploadSource: { $exists: false } },
+      { uploadSource: null },
+    ],
+  };
+}
+
 function pushItem(items, seen, entry) {
   const src = entry.src;
   if (!src || seen.has(src)) return;
@@ -39,14 +58,18 @@ function pushItem(items, seen, entry) {
 }
 
 /**
- * Build gallery items: Mongo product photos + review photos + Cloudinary folder assets.
+ * Community gallery: trekker uploads only (Mongo product_photos + review photos).
+ * Does not include official trek/yatra catalog images or Cloudinary folder scans.
  */
 export async function buildGalleryItems({
   trekSlug = "",
   type = "",
   tag = "",
   limit = 120,
-  includeCloudinaryFolders = true,
+  includeCloudinaryFolders = false,
+  /** gallery-page | product-page | all (default) */
+  productUploadSource = "all",
+  includeReviews = true,
 } = {}) {
   const items = [];
   const seen = new Set();
@@ -55,13 +78,16 @@ export async function buildGalleryItems({
   const tagQuery = String(tag ?? "").trim();
   const cap = Math.min(Number(limit) || 120, 200);
 
-  const productFilter = { approved: true };
+  const productFilter = {
+    approved: true,
+    ...productUploadSourceMongoFilter(productUploadSource),
+  };
   if (slug) productFilter.trekSlug = slug;
   if (typeFilter) productFilter.type = typeFilter;
 
   const productDocs = await ProductPhoto.find(productFilter)
     .select(
-      "trekSlug trekName type url publicId uploadedBy tags approved createdAt",
+      "trekSlug trekName type url publicId uploadedBy tags approved createdAt uploadSource",
     )
     .sort({ createdAt: -1 })
     .limit(cap)
@@ -87,11 +113,18 @@ export async function buildGalleryItems({
       type: doc.type,
       tags,
       source: "product",
+      uploadSource: doc.uploadSource ?? "product-page",
       reviewId: "",
       createdAt: doc.createdAt,
     };
     if (!matchesTagFilter(entry.tags, tagQuery)) continue;
     pushItem(items, seen, entry);
+  }
+
+  if (!includeReviews) {
+    return items
+      .filter((entry) => entry.source === "product")
+      .slice(0, cap);
   }
 
   const reviewFilter = {
@@ -145,41 +178,9 @@ export async function buildGalleryItems({
     }
   }
 
-  if (includeCloudinaryFolders && slug && typeFilter) {
-    const prefixes = [
-      productCloudinaryFolder(typeFilter, slug),
-      reviewCloudinaryFolder(typeFilter, slug),
-    ];
-    const trekNameGuess =
-      productDocs[0]?.trekName ??
-      reviewDocs[0]?.trekName ??
-      slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  void includeCloudinaryFolders;
 
-    for (const prefix of prefixes) {
-      const cloudImages = await listCloudinaryImagesByPrefix(prefix);
-      for (const img of cloudImages) {
-        const tags = galleryTagsForSlug(slug, typeFilter);
-        const entry = {
-          id: `cloud-${img.publicId}`,
-          src: img.url,
-          publicId: img.publicId,
-          title: trekNameGuess,
-          subtitle: productLabel(typeFilter),
-          category: categoryForType(typeFilter),
-          credit: `${productLabel(typeFilter)} · Cloudinary`,
-          trekSlug: slug,
-          trekName: trekNameGuess,
-          type: typeFilter,
-          tags,
-          source: "cloudinary",
-          reviewId: "",
-          createdAt: img.createdAt ? new Date(img.createdAt) : new Date(),
-        };
-        if (!matchesTagFilter(entry.tags, tagQuery)) continue;
-        pushItem(items, seen, entry);
-      }
-    }
-  }
-
-  return items.slice(0, cap);
+  return items
+    .filter((entry) => entry.source === "product" || entry.source === "review")
+    .slice(0, cap);
 }

@@ -92,6 +92,12 @@
     --site-sticky-top: 0px;
   }
 
+  @media (max-width: 767px) {
+    :root {
+      --site-header-height: 3.5rem;
+    }
+  }
+
   .dark {
     --background: 0.08 0 0;
     --foreground: 0.95 0 0;
@@ -233,6 +239,17 @@
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
   }
 
+  /* Hero promos — copy/CTAs stay visible during carousel image crossfade */
+  .home-hero__copy {
+    pointer-events: auto;
+  }
+
+  .home-hero__cta {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+  }
+
   /* ── Primary CTA button (rounded pill, ew-orange) ── */
   .btn-primary {
     background-color: var(--ew-orange);
@@ -372,27 +389,97 @@
     background-color: var(--ew-gray-lt);
   }
 
-  /* ── Listing pages: sticky filters, region pills, shared card media ── */
-  .listing-sticky-toolbar {
-    position: sticky;
-    top: var(--site-sticky-top, var(--site-header-height, 4rem));
-    z-index: 40;
-    transition: top 0.3s ease-in-out;
+  /* Mobile drawer — logo on orange header (no dark box around asset) */
+  .mobile-drawer-logo {
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0.65rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   }
 
-  .listing-sticky-toolbar--chrome-pinned {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 45;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  .site-logo__img--drawer {
+    display: block;
+    max-height: 2.25rem;
+    width: auto;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06));
+  }
+
+  /* ── Listing pages: sticky filters; pin to top while scrolling (replaces navbar) ── */
+  .listing-sticky-toolbar {
+    position: sticky;
+    top: var(--site-sticky-top, var(--site-header-height, 3.5rem));
+    z-index: 40;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    contain: layout style;
+  }
+
+  @media (min-width: 768px) {
+    .listing-sticky-toolbar {
+      top: var(--site-sticky-top, var(--site-header-height, 4rem));
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .listing-sticky-toolbar--chrome-pinned {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 55;
+      background-color: #fff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      animation: listing-chrome-toolbar-in 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+      transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  @keyframes listing-chrome-toolbar-in {
+    from {
+      transform: translateY(calc(-1 * var(--site-header-height, 3.5rem)));
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 
   .listing-chrome-spacer {
     width: 100%;
     flex-shrink: 0;
     pointer-events: none;
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .listing-sticky-toolbar,
+    .listing-sticky-toolbar--chrome-pinned,
+    .listing-chrome-spacer {
+      transition: none;
+      animation: none;
+    }
+  }
+
+  /* Gallery / destinations (mobile): filter bar scrolls away — solid white, not pinned */
+  @media (max-width: 767px) {
+    .listing-sticky-toolbar--scroll-with-page {
+      position: static;
+      top: auto;
+      z-index: auto;
+      background-color: #fff;
+      border-bottom: 1px solid var(--ew-gray-mid);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+    }
+
+    .listing-sticky-toolbar--scroll-with-page .listing-region-pill {
+      background-color: #fff;
+    }
+
+    .listing-sticky-toolbar--scroll-with-page .listing-region-pill--active {
+      background-color: var(--ew-red);
+    }
   }
 
   .listing-region-pills {
@@ -607,6 +694,67 @@
     .listing-filters-panel {
       display: block;
     }
+
+    /* Desktop: compact listing filter strip (treks / yatras / packages) */
+    .listing-sticky-toolbar__regions {
+      padding-top: 0.125rem;
+      padding-bottom: 0.25rem;
+    }
+
+    .listing-region-pills {
+      gap: 0.375rem;
+    }
+
+    .listing-region-pill {
+      padding: 0.3125rem 0.875rem;
+      font-size: 0.8125rem;
+      border-width: 1.5px;
+      line-height: 1.2;
+    }
+
+    .listing-sticky-toolbar__filters {
+      background-color: #fff;
+    }
+
+    .listing-filters-panel .container {
+      padding-top: 0.375rem;
+      padding-bottom: 0.375rem;
+      gap: 0.5rem;
+    }
+
+    .listing-filters-panel .container input[type="search"],
+    .listing-filters-panel .container select,
+    .listing-filters-panel .container button {
+      min-height: 2rem;
+      padding-top: 0.3125rem;
+      padding-bottom: 0.3125rem;
+      font-size: 0.8125rem;
+      border-radius: 0.5rem;
+    }
+
+    .listing-filters-panel .container input[type="search"] {
+      padding-left: 1.75rem;
+    }
+
+    .listing-filters-panel .container .relative svg {
+      width: 13px;
+      height: 13px;
+      left: 0.625rem;
+    }
+
+    .listing-filters-sort-desktop {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .listing-filters-sort-desktop span {
+      font-size: 0.75rem;
+    }
+
+    .listing-filters-sort-desktop svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 
   .listing-card-media {
@@ -627,6 +775,93 @@
 
   .card:hover .listing-card-media__img {
     transform: scale(1.03);
+  }
+
+  /* Mobile listing chrome: compact pills + filter bar */
+  @media (max-width: 767px) {
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page) {
+      background-color: #fff;
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-sticky-toolbar__regions {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-region-pill {
+      flex-shrink: 0;
+      padding: 0.25rem 0.625rem;
+      font-size: 0.75rem;
+      border-width: 1.5px;
+      background-color: #fff;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-region-pill--active {
+      background-color: var(--ew-red);
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-sticky-toolbar__filters {
+      background-color: #fff;
+      border-top: 1px solid var(--ew-gray-mid);
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-filters-mobile-bar__inner {
+      padding-top: 0.25rem;
+      padding-bottom: 0.375rem;
+      gap: 0.375rem;
+      grid-template-columns: minmax(0, 1fr) minmax(5.25rem, 7.25rem);
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-filters-toggle {
+      min-height: 2rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-width: 1.5px;
+      gap: 0.25rem;
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-filters-toggle
+      svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-filters-sort-compact
+      .listing-filters-sort-select {
+      min-height: 2rem;
+      padding: 0.25rem 1.375rem 0.25rem 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-width: 1.5px;
+      border-radius: 0.5rem;
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-filters-panel__inner
+      .container {
+      padding-top: 0.375rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-filters-panel__inner
+      input[type="search"],
+    .listing-sticky-toolbar:not(.listing-sticky-toolbar--scroll-with-page)
+      .listing-filters-panel__inner
+      select {
+      min-height: 2.25rem;
+      font-size: 0.8125rem;
+    }
   }
 
   @media (max-width: 1023px) {

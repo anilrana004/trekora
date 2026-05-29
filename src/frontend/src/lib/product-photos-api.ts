@@ -2,11 +2,14 @@ import { fetchJson, postJsonLenient } from "@/lib/api-fetch";
 import { withRetry } from "@/lib/retry";
 import type { GalleryApiItem, ProductKind, ReviewPhotoMeta } from "@/lib/reviews-api";
 
+export type PhotoUploadSource = "gallery-page" | "product-page";
+
 export async function submitProductPhotos(payload: {
   trekSlug: string;
   trekName: string;
   type: ProductKind;
   uploadedBy?: string;
+  uploadSource?: PhotoUploadSource;
   tags?: string[];
   photos?: ReviewPhotoMeta[];
   photoUrls?: string[];
@@ -46,6 +49,7 @@ export async function submitProductPhotos(payload: {
 export async function fetchProductPhotos(params: {
   trekSlug: string;
   type: ProductKind;
+  uploadSource?: PhotoUploadSource;
 }): Promise<{
   success: boolean;
   items?: GalleryApiItem[];
@@ -56,6 +60,7 @@ export async function fetchProductPhotos(params: {
       trekSlug: params.trekSlug,
       type: params.type,
     });
+    if (params.uploadSource) q.set("uploadSource", params.uploadSource);
     return await fetchJson<{
       success: boolean;
       items?: GalleryApiItem[];

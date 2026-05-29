@@ -2,16 +2,16 @@ import { Loader2 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
+import { buildPhotoCredit, parsePhotoCredit } from "@/lib/photo-credit";
 import {
   productCloudinaryContext,
   productCloudinaryTags,
   productPhotoFolder,
 } from "@/lib/product-cloudinary";
-import { submitProductPhotos } from "@/lib/product-photos-api";
-import type { ProductKind } from "@/lib/reviews-api";
+import { saveTrekkerPhotosToApi } from "@/lib/submit-trekker-photos";
+import type { GalleryApiItem, ProductKind } from "@/lib/reviews-api";
 
 const MONTHS = [
   "Jan",
@@ -34,6 +34,15 @@ interface TrekkerPhotoWallProps {
   trekSlug: string;
   trekName: string;
   productType: ProductKind;
+  /** Shared with parent Photos grid (above Reels) — single React Query cache. */
+  communityPhotos: GalleryApiItem[];
+  communityLoading?: boolean;
+  communityError?: string | null;
+  prependPhotos: (items: GalleryApiItem[]) => void;
+  clearOptimistic: () => void;
+  reloadGallery: (silent?: boolean) => Promise<void>;
+  /** `reviews` — copy for Reviews tab photo block */
+  variant?: "photos" | "reviews";
 }
 
 function TrekkerGridImage({ src, alt }: { src: string; alt: string }) {
@@ -52,12 +61,18 @@ export default function TrekkerPhotoWall({
   trekSlug,
   trekName,
   productType,
+  communityPhotos,
+  communityLoading = false,
+  communityError = null,
+  prependPhotos,
+  clearOptimistic,
+  reloadGallery,
+  variant = "photos",
 }: TrekkerPhotoWallProps) {
   const normalizedSlug = trekSlug.trim().toLowerCase();
-  const { photos, loading, error, reload } = useTrekkerPhotos(
-    normalizedSlug,
-    productType,
-  );
+  const photos = communityPhotos;
+  const loading = communityLoading;
+  const error = communityError;
 
   const productLabel = productType === "yatra" ? "Yatra" : "Trek";
 
@@ -124,11 +139,9 @@ export default function TrekkerPhotoWall({
     }
     if (submitting) return;
 
-    const credit = `${name.trim()} · ${month} ${year}`;
+    const credit = buildPhotoCredit(name, month, year);
+    const displayName = name.trim();
     setSubmitting(true);
-    setName("");
-    clear();
-    toast.success("Photos submitted! Adding to gallery…", { duration: 4000 });
 
     try {
       const { assets: uploaded, errors: uploadErrors } =
@@ -145,39 +158,62 @@ export default function TrekkerPhotoWall({
         );
       }
 
-      const folderPath = productPhotoFolder(productType, normalizedSlug);
-      const photoEntries = uploaded.map((asset) => ({
-        url: asset.secureUrl,
-        publicId: asset.publicId,
-        cloudinaryFolder: folderPath,
-        width: asset.width,
-        height: asset.height,
-      }));
-
-      const res = await submitProductPhotos({
+      const optimistic: GalleryApiItem[] = uploaded.map((asset, i) => ({
+        id: `optimistic-${Date.now()}-${i}`,
+        src: asset.secureUrl,
+        title: trekName.trim(),
+        subtitle: productLabel,
+        category: productType === "yatra" ? "Yatras" : "Treks",
+        credit: `Photo by ${credit}`,
         trekSlug: normalizedSlug,
         trekName: trekName.trim(),
         type: productType,
+        source: "product",
+        reviewId: "",
+        createdAt: new Date().toISOString(),
+        publicId: asset.publicId,
+      }));
+
+      prependPhotos(optimistic);
+
+      const res = await saveTrekkerPhotosToApi({
+        trekSlug: normalizedSlug,
+        trekName: trekName.trim(),
+        productType,
         uploadedBy: credit,
-        tags: [trekName.trim(), normalizedSlug, productType],
-        photos: photoEntries,
-        photoUrls: photoEntries.map((p) => p.url),
+        assets: uploaded,
       });
 
       if (!res.success) {
-        toast.error(res.message ?? "Could not save photos to the gallery.");
+        setName("");
+        clear();
+        toast.warning(
+          res.message ??
+            "Your photos are visible here. Gallery sync will retry when the server is available.",
+          { duration: 6000 },
+        );
         return;
       }
 
-      await reload(true);
+      setName("");
+      clear();
+
       refreshTrekkerGallery(normalizedSlug, productType);
+      await reloadGallery(true);
 
       toast.success(
         res.message ??
-          `Your photos are live on ${trekName} and in the Gallery.`,
-        { duration: 5000 },
+          `Thank you, ${displayName}! Your photo${uploaded.length > 1 ? "s are" : " is"} now live on ${trekName} and in the Gallery.`,
+        { duration: 6000 },
       );
+
+      requestAnimationFrame(() => {
+        document
+          .querySelector("[data-ocid='ugc.photo.item.1']")
+          ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
     } catch (err) {
+      clearOptimistic();
       const msg = err instanceof Error ? err.message : "Upload failed.";
       toast.error(msg);
     } finally {
@@ -189,23 +225,27 @@ export default function TrekkerPhotoWall({
     "w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ew-red)]/30" +
     " border-[var(--ew-gray-mid)] text-[var(--ew-text)]";
   const labelCls = "block text-xs font-semibold mb-1";
+  const isReviewsVariant = variant === "reviews";
+  const sectionTitle = isReviewsVariant ? "Review Photos" : "Trekker Photos";
+  const sectionHint = isReviewsVariant
+    ? `Share photos from your ${productLabel.toLowerCase()} — they appear here, on the Photos tab, and in the site Gallery.`
+    : `Share your moments from ${trekName}. Approved photos appear here and in the site Gallery, tagged with this ${productLabel.toLowerCase()}.`;
 
   return (
-    <div className="mt-8 space-y-6">
+    <div className={isReviewsVariant ? "space-y-6" : "mt-8 space-y-6"}>
       <div>
         <h2
           className="text-lg font-bold flex items-center gap-2"
           style={{ color: "var(--ew-text)" }}
         >
-          <span>📸</span> Trekker Photos
+          <span>📸</span> {sectionTitle}
         </h2>
         <div
           className="h-0.5 w-16 mt-1 rounded"
           style={{ background: "var(--ew-red)" }}
         />
         <p className="text-xs mt-2" style={{ color: "var(--ew-text-lt)" }}>
-          Share your moments from <strong>{trekName}</strong>. Approved photos
-          appear here and in the site Gallery, tagged with this {productLabel.toLowerCase()}.
+          {sectionHint}
         </p>
       </div>
 
@@ -223,7 +263,7 @@ export default function TrekkerPhotoWall({
         className="rounded-2xl p-5"
         style={{
           border: "1px solid var(--ew-gray-mid)",
-          background: "var(--ew-gray-lt)",
+          background: isReviewsVariant ? "#fff" : "var(--ew-gray-lt)",
         }}
       >
         <h3
@@ -411,9 +451,17 @@ export default function TrekkerPhotoWall({
                 <p className="text-white text-xs font-bold truncate">
                   {photo.trekName || trekName}
                 </p>
-                <p className="text-[10px] truncate text-white/80">
-                  {productLabel} · {photo.credit}
-                </p>
+                {(() => {
+                  const { name: uploader, when } = parsePhotoCredit(
+                    photo.credit,
+                  );
+                  return (
+                    <p className="text-[10px] truncate text-white/80">
+                      {uploader}
+                      {when ? ` · ${when}` : ""}
+                    </p>
+                  );
+                })()}
               </div>
             </button>
           ))}

@@ -34,8 +34,6 @@ import {
   ctaMerge,
 } from "@/lib/cta-buttons";
 import {
-  AlertCircle,
-  Calendar,
   Check,
   ChevronRight,
   ClipboardCopy,
@@ -236,28 +234,37 @@ function Step3({
               label: "Sedentary",
               sub: "Minimal regular exercise",
             },
-          ].map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              onClick={() => setFd((p) => ({ ...p, fitnessLevel: f.id }))}
-              className={bookingChoiceCard(fd.fitnessLevel === f.id)}
-              data-ocid={`booking.fitness.${f.id}`}
-            >
-              <span className="text-xl">{f.icon}</span>
-              <div>
-                <p
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--ew-text)" }}
-                >
-                  {f.label}
-                </p>
-                <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
-                  {f.sub}
-                </p>
-              </div>
-            </button>
-          ))}
+          ].map((f) => {
+            const selected = fd.fitnessLevel === f.id;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setFd((p) => ({ ...p, fitnessLevel: f.id }))}
+                className={bookingChoiceCard(selected)}
+                aria-pressed={selected}
+                data-ocid={`booking.fitness.${f.id}`}
+              >
+                <span className="text-xl" aria-hidden>
+                  {f.icon}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="booking-choice-card__title text-sm font-semibold">
+                    {f.label}
+                  </p>
+                  <p className="booking-choice-card__sub text-xs">{f.sub}</p>
+                </div>
+                {selected ? (
+                  <Check
+                    size={20}
+                    className="booking-choice-card__check shrink-0"
+                    strokeWidth={2.5}
+                    aria-hidden
+                  />
+                ) : null}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -270,17 +277,24 @@ function Step3({
           {[
             { val: true, l: "Yes" },
             { val: false, l: "No" },
-          ].map(({ val, l }) => (
-            <button
-              key={l}
-              type="button"
-              onClick={() => setFd((p) => ({ ...p, hasTrekked: val }))}
-              className={bookingChoicePill(fd.hasTrekked === val)}
-              data-ocid={`booking.trekked.${l.toLowerCase()}`}
-            >
-              {l}
-            </button>
-          ))}
+          ].map(({ val, l }) => {
+            const selected = fd.hasTrekked === val;
+            return (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setFd((p) => ({ ...p, hasTrekked: val }))}
+                className={bookingChoicePill(selected)}
+                aria-pressed={selected}
+                data-ocid={`booking.trekked.${l.toLowerCase()}`}
+              >
+                {selected ? (
+                  <Check size={16} className="shrink-0" strokeWidth={2.5} aria-hidden />
+                ) : null}
+                {l}
+              </button>
+            );
+          })}
         </div>
         {fd.hasTrekked && (
           <div className="mt-3">

@@ -6,6 +6,7 @@ import BreadcrumbNav from "../components/BreadcrumbNav";
 import ListingRegionFilterPills, {
   type ListingRegionTab,
 } from "../components/ListingRegionFilterPills";
+import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -357,11 +358,11 @@ export default function StateHubPage() {
         productName={`${config.title} treks`}
       />
 
-      <div
-        className="listing-sticky-toolbar bg-white shadow-sm py-2.5 border-b"
+      <ListingStickyToolbar
+        className="bg-white shadow-sm border-b"
         style={{ borderColor: "var(--ew-gray-mid)" }}
       >
-        <div className="container mx-auto px-4">
+        <div className="listing-sticky-toolbar__regions container mx-auto px-4 py-2.5">
           <ListingRegionFilterPills
             kind="treks"
             active={config.filterKey as ListingRegionTab}
@@ -369,7 +370,7 @@ export default function StateHubPage() {
             onChange={(tab) => navigate({ to: STATE_HUB_PATHS[tab] })}
           />
         </div>
-      </div>
+      </ListingStickyToolbar>
 
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <BreadcrumbNav

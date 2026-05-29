@@ -108,18 +108,28 @@ export async function submitReview(payload: {
   );
 }
 
+export type ProductUploadSourceFilter = "all" | "gallery-page" | "product-page";
+
 export async function fetchGallery(params?: {
   trekSlug?: string;
   type?: ProductKind;
   limit?: number;
   /** When false, skips slow Cloudinary folder listing on the server. */
   includeCloudinary?: boolean;
+  /** Which product_photos rows to include (default all). Trek pages use product-page only. */
+  uploadSource?: ProductUploadSourceFilter;
+  /** When false, excludes review-tab photos from the response. */
+  includeReviews?: boolean;
 }): Promise<GalleryResponse> {
   const q = new URLSearchParams();
   if (params?.trekSlug) q.set("trekSlug", params.trekSlug);
   if (params?.type) q.set("type", params.type);
   if (params?.limit) q.set("limit", String(params.limit));
   if (params?.includeCloudinary === false) q.set("includeCloudinary", "0");
+  if (params?.uploadSource && params.uploadSource !== "all") {
+    q.set("uploadSource", params.uploadSource);
+  }
+  if (params?.includeReviews === false) q.set("includeReviews", "0");
   const qs = q.toString();
   return fetchJson<GalleryResponse>(`/api/gallery${qs ? `?${qs}` : ""}`, {
     timeoutMs: 28_000,

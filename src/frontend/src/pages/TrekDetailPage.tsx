@@ -42,7 +42,10 @@ import {
   GEAR_RENTAL_ADDON_ID,
   TREK_GEAR_RENTAL_ITEMS,
 } from "@/lib/booking-addons";
+import { usePrefetchProductGallery } from "@/hooks/usePrefetchProductGallery";
+import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
 import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
+import { mergeProductGalleryPhotos } from "@/lib/merge-gallery-photos";
 import { buildSeoImageUrl } from "@/lib/images";
 import { SITE_PHONE_TEL, buildWhatsAppUrl } from "@/lib/site-contact";
 import AltitudeChart from "../components/AltitudeChart";
@@ -358,6 +361,20 @@ export default function TrekDetailPage() {
       return true;
     });
   }, [trek]);
+
+  usePrefetchProductGallery(slug, "trek");
+
+  const { photos: communityGalleryItems } = useTrekkerPhotos(slug ?? "", "trek");
+
+  const photosForLightbox = useMemo(() => {
+    if (!trek) return [];
+    return mergeProductGalleryPhotos(
+      communityGalleryItems,
+      galleryPhotos,
+      trek.name,
+      "Trek",
+    ).map((p) => p.src);
+  }, [communityGalleryItems, galleryPhotos, trek]);
 
   useTrekBatches(trek?.id);
   const [activeTab, setActiveTab] = useState<Tab>("Overview");
@@ -1162,6 +1179,7 @@ export default function TrekDetailPage() {
             {activeTab === "Photos" && (
               <DetailTabPanel tabKey="photos">
                 <ProductDetailPhotosSection
+                  key={`trek-photos-${slug}`}
                   productName={trek.name}
                   productSlug={slug ?? ""}
                   productType="trek"
@@ -1920,16 +1938,19 @@ export default function TrekDetailPage() {
       {lightboxIndex !== null ? (
         <ProductDetailLightbox
           productName={trek.name}
-          photos={galleryPhotos}
+          photos={photosForLightbox}
           activeIndex={lightboxIndex}
           onClose={() => setLightboxIndex(null)}
           onPrev={() =>
             setLightboxIndex(
-              (lightboxIndex - 1 + galleryPhotos.length) % galleryPhotos.length,
+              (lightboxIndex - 1 + photosForLightbox.length) %
+                photosForLightbox.length,
             )
           }
           onNext={() =>
-            setLightboxIndex((lightboxIndex + 1) % galleryPhotos.length)
+            setLightboxIndex(
+              (lightboxIndex + 1) % photosForLightbox.length,
+            )
           }
           ocidPrefix="trek_detail"
         />

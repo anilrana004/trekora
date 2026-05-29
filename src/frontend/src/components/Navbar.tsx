@@ -3,12 +3,14 @@ import { openQueryModalFromLayout } from "@/lib/layout-modals";
 import { isListingScrollChromeRoute } from "@/lib/listing-scroll-chrome";
 import { bookSearch } from "@/lib/book-search";
 import { isFeatureLive } from "@/lib/dormant-features";
+import { SiteLogo } from "@/components/SiteLogo";
 import { SITE_LOGO_URL } from "@/lib/site-brand";
 import { SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/lib/site-contact";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { NAV_GALLERY_FEATURED } from "@/data/nav-gallery-menu";
 import { NAV_HP_TREKS, NAV_UK_TREKS } from "@/data/nav-trek-menu";
 import { NAV_HP_YATRAS, NAV_UK_YATRAS } from "@/data/nav-yatra-menu";
 import { useIsMobile } from "../hooks/use-mobile";
@@ -54,7 +56,7 @@ const NAV_LINKS = [
   { label: "Yatras", to: "/yatras", key: "yatras" },
   { label: "Destinations", to: "/destinations", key: null },
   { label: "Packages", to: "/packages", key: null },
-  { label: "Gallery", to: "/gallery", key: null },
+  { label: "Gallery", to: "/gallery", key: "gallery" },
   { label: "Blog", to: "/blog", key: null },
   { label: "More", to: "/about", key: null },
 ];
@@ -101,9 +103,9 @@ export default function Navbar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isListingChromeRoute = isListingScrollChromeRoute(pathname);
   const { chromeActive: listingChromeActive } = useListingScrollChromeContext();
-  const hideMobileNav =
-    isMobile &&
-    (isListingChromeRoute ? listingChromeActive : mobileNavHidden);
+  const hideNavBar = isListingChromeRoute
+    ? listingChromeActive
+    : isMobile && mobileNavHidden;
 
   function toggleLang() {
     const next = lang === "en" ? "hi" : "en";
@@ -122,14 +124,19 @@ export default function Navbar() {
         rafRef.current = null;
         const y = window.scrollY;
         const isScrollingDown = y > lastScrollY.current;
+        const scrolled = y > 10;
         if (isScrollingDown && y > 60) {
-          setAnnouncementVisible(false);
-          if (isMobile && !isListingChromeRoute) setMobileNavHidden(true);
+          setAnnouncementVisible((v) => (v ? false : v));
+          if (isMobile && !isListingChromeRoute) {
+            setMobileNavHidden((v) => (v ? v : true));
+          }
         } else if (!isScrollingDown) {
-          setAnnouncementVisible(true);
-          if (isMobile && !isListingChromeRoute) setMobileNavHidden(false);
+          setAnnouncementVisible((v) => (v === false ? true : v));
+          if (isMobile && !isListingChromeRoute) {
+            setMobileNavHidden((v) => (v ? false : v));
+          }
         }
-        setScrolled(y > 10);
+        setScrolled((prev) => (prev === scrolled ? prev : scrolled));
         lastScrollY.current = y;
       });
     };
@@ -207,10 +214,13 @@ export default function Navbar() {
       {/* Sticky Navbar */}
       <motion.header
         animate={{
-          y: hideMobileNav ? "-100%" : "0%",
+          y: hideNavBar ? "-100%" : "0%",
         }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ${scrolled ? "shadow-lg" : "shadow-sm"}`}
+        transition={{
+          duration: hideNavBar ? 0.22 : 0.42,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        className={`sticky top-0 z-[60] bg-white transition-shadow duration-300 will-change-transform ${scrolled ? "shadow-lg" : "shadow-sm"}`}
         style={{ height: isMobile ? 56 : 64 }}
         data-ocid="navbar"
       >
@@ -550,6 +560,80 @@ export default function Navbar() {
                     )}
                   </AnimatePresence>
                 )}
+
+                {/* Gallery dropdown — community photos by trek/yatra */}
+                {link.key === "gallery" && (
+                  <AnimatePresence>
+                    {activeMenu === "gallery" && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.18 }}
+                        className="mega-menu absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[420px] p-5 rounded-b-xl"
+                        style={{ borderTop: "3px solid var(--ew-red)" }}
+                        data-ocid="nav.gallery.dropdown"
+                      >
+                        <p className="mega-menu-header mb-3">
+                          Trekker-uploaded photos
+                        </p>
+                        <p
+                          className="text-[11px] mb-3 leading-relaxed"
+                          style={{ color: "var(--ew-text-lt)" }}
+                        >
+                          Only photos shared by travellers — tagged with trek or
+                          yatra name.
+                        </p>
+                        <ul className="space-y-1.5 mb-4">
+                          {NAV_GALLERY_FEATURED.map((g) => (
+                            <li key={g.slug}>
+                              <Link
+                                to="/gallery"
+                                search={{ trekSlug: g.slug }}
+                                className="text-[13px] text-[var(--ew-text-lt)] hover:text-[var(--ew-red)] flex items-center gap-1 transition-colors"
+                                style={{ textDecoration: "none" }}
+                              >
+                                <span
+                                  style={{
+                                    color: "var(--ew-red)",
+                                    fontSize: 10,
+                                  }}
+                                >
+                                  →
+                                </span>
+                                {g.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="pt-3 border-t border-[var(--ew-gray-mid)] flex flex-wrap gap-3">
+                          <Link
+                            to="/gallery"
+                            search={{ trekSlug: undefined }}
+                            className="font-semibold text-sm hover:underline"
+                            style={{
+                              color: "var(--ew-orange)",
+                              textDecoration: "none",
+                            }}
+                          >
+                            All gallery photos →
+                          </Link>
+                          <Link
+                            to="/treks/$slug"
+                            params={{ slug: "valley-of-flowers" }}
+                            className="text-sm hover:underline"
+                            style={{
+                              color: "var(--ew-text-lt)",
+                              textDecoration: "none",
+                            }}
+                          >
+                            Valley of Flowers trek page →
+                          </Link>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
               </div>
             ))}
           </nav>
@@ -706,17 +790,13 @@ export default function Navbar() {
                 flexShrink: 0,
               }}
             >
-              <div className="min-w-0 max-w-[min(200px,55vw)] rounded-lg bg-black/25 p-1">
-                <OptimizedImage
-                  src={SITE_LOGO_URL}
-                  alt="Trekora — Where Every Peak Tells a Story"
-                  width={180}
-                  height={44}
-                  variant="blog-card"
-                  sizes="(max-width: 768px) 55vw, 200px"
-                  className="h-8 w-auto max-w-full object-contain object-left"
-                />
-              </div>
+              <SiteLogo
+                className="mobile-drawer-logo min-w-0 max-w-[min(220px,58vw)]"
+                imgClassName="site-logo__img site-logo__img--drawer h-9 w-auto max-w-full object-contain object-left"
+                sizes="(max-width: 768px) 58vw, 220px"
+                onNavigate={() => setMobileOpen(false)}
+                dataOcid="nav.mobile_drawer_logo"
+              />
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
@@ -880,6 +960,37 @@ export default function Navbar() {
                                     {y.name}
                                   </Link>
                                 ))}
+                              </div>
+                            )}
+                            {link.key === "gallery" && (
+                              <div className="px-5 py-4 space-y-1">
+                                {NAV_GALLERY_FEATURED.map((g) => (
+                                  <Link
+                                    key={g.slug}
+                                    to="/gallery"
+                                    search={{ trekSlug: g.slug }}
+                                    onClick={() => setMobileOpen(false)}
+                                    className="block py-1.5 text-sm transition-colors"
+                                    style={{
+                                      color: "var(--ew-text-lt)",
+                                      textDecoration: "none",
+                                    }}
+                                  >
+                                    {g.name}
+                                  </Link>
+                                ))}
+                                <Link
+                                  to="/gallery"
+                                  search={{ trekSlug: undefined }}
+                                  onClick={() => setMobileOpen(false)}
+                                  className="block text-sm font-semibold mt-3"
+                                  style={{
+                                    color: "var(--ew-orange)",
+                                    textDecoration: "none",
+                                  }}
+                                >
+                                  All gallery photos →
+                                </Link>
                               </div>
                             )}
                           </motion.div>

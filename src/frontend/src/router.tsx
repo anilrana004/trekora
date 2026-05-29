@@ -229,6 +229,10 @@ const blogDetailRoute = createRoute({
 const galleryRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/gallery",
+  validateSearch: (search: Record<string, unknown>) => ({
+    trekSlug:
+      typeof search.trekSlug === "string" ? search.trekSlug : undefined,
+  }),
   component: () => (
     <Suspense fallback={<PageLoader />}>
       <GalleryPage />

@@ -2,12 +2,19 @@ import { Loader2, Star } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useImageUpload } from "@/hooks/useImageUpload";
+import { getCloudinaryCloudName } from "@/lib/images/cloudinary-config";
 import {
   reviewCloudinaryContext,
   reviewCloudinaryFolder,
   reviewCloudinaryTags,
 } from "@/lib/review-cloudinary";
-import { submitReview, type ProductKind, type TrekoraReview } from "@/lib/reviews-api";
+import { reviewToGalleryItems } from "@/lib/review-gallery-items";
+import {
+  submitReview,
+  type GalleryApiItem,
+  type ProductKind,
+  type TrekoraReview,
+} from "@/lib/reviews-api";
 import OptimizedImage from "./media/OptimizedImage";
 
 interface ReviewSubmitFormProps {
@@ -15,6 +22,7 @@ interface ReviewSubmitFormProps {
   trekName: string;
   productType: ProductKind;
   onSubmitted?: (review?: TrekoraReview) => void;
+  onPhotosPublished?: (items: GalleryApiItem[]) => void;
 }
 
 function StarPicker({
@@ -71,7 +79,9 @@ export default function ReviewSubmitForm({
   trekName,
   productType,
   onSubmitted,
+  onPhotosPublished,
 }: ReviewSubmitFormProps) {
+  const normalizedSlug = trekSlug.trim().toLowerCase();
   const [form, setForm] = useState<FormState>({
     rating: 0,
     title: "",
@@ -89,24 +99,23 @@ export default function ReviewSubmitForm({
   const uploadOptions = useMemo(
     () => ({
       folder: "reviews" as const,
-      folderPath: reviewCloudinaryFolder(productType, trekSlug),
-      tags: reviewCloudinaryTags(productType, trekSlug),
-      context: reviewCloudinaryContext(trekName, trekSlug, productType),
+      folderPath: reviewCloudinaryFolder(productType, normalizedSlug),
+      tags: reviewCloudinaryTags(productType, normalizedSlug),
+      context: reviewCloudinaryContext(trekName, normalizedSlug, productType),
     }),
-    [productType, trekSlug, trekName],
+    [productType, normalizedSlug, trekName],
   );
 
   const {
     items: uploadItems,
     queueFiles,
-    uploadOne,
-    uploadQueued,
+    uploadAllForSubmit,
     cancel: cancelUpload,
     clear,
+    cloudinaryReady,
   } = useImageUpload(uploadOptions);
 
   const isUploading = uploadItems.some((i) => i.status === "uploading");
-
   const wordCount = form.text.trim().split(/\s+/).filter(Boolean).length;
 
   function validate(): boolean {
@@ -121,21 +130,21 @@ export default function ReviewSubmitForm({
     return Object.keys(e).length === 0;
   }
 
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const remaining = 5 - uploadItems.length;
     const files = Array.from(e.target.files ?? []).slice(0, remaining);
-    if (files.length) {
-      const ids = queueFiles(files);
-      for (const id of ids) {
-        await uploadOne(id);
-      }
-    }
+    if (files.length) queueFiles(files);
     e.target.value = "";
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate() || submitting) return;
+
+    if (!cloudinaryReady && uploadItems.length > 0) {
+      toast.error("Photo upload is temporarily unavailable.");
+      return;
+    }
 
     const failedUpload = uploadItems.some((i) => i.status === "error");
     if (failedUpload && uploadItems.length > 0) {
@@ -145,15 +154,24 @@ export default function ReviewSubmitForm({
 
     const snapshot = { ...form };
     setSubmitting(true);
-    setSubmitted(true);
-    setForm({ rating: 0, title: "", text: "", name: "", city: "" });
-    clear();
-    setErrors({});
-    toast.success("Review submitted! Publishing to the page…", { duration: 4000 });
 
     try {
-      const uploaded = await uploadQueued();
-      const folderPath = reviewCloudinaryFolder(productType, trekSlug);
+      const { assets: uploaded, errors: uploadErrors } =
+        uploadItems.length > 0
+          ? await uploadAllForSubmit()
+          : { assets: [], errors: [] as string[] };
+
+      if (uploadItems.length > 0 && uploaded.length === 0) {
+        toast.error(uploadErrors[0] ?? "Photo upload failed. Please try again.");
+        return;
+      }
+      if (uploadErrors.length > 0) {
+        toast.warning(
+          `${uploaded.length} photo(s) uploaded; ${uploadErrors.length} failed.`,
+        );
+      }
+
+      const folderPath = reviewCloudinaryFolder(productType, normalizedSlug);
       const photos = uploaded.map((asset) => ({
         url: asset.secureUrl,
         publicId: asset.publicId,
@@ -163,8 +181,9 @@ export default function ReviewSubmitForm({
       }));
       const photoUrls = photos.map((p) => p.url);
       const tags = snapshot.title.trim() ? [snapshot.title.trim()] : [];
+
       const res = await submitReview({
-        trekSlug,
+        trekSlug: normalizedSlug,
         trekName,
         type: productType,
         userName: snapshot.name.trim(),
@@ -176,19 +195,29 @@ export default function ReviewSubmitForm({
       });
 
       if (!res.success) {
-        setSubmitted(false);
         toast.error(res.message ?? "Could not submit review. Please try again.");
         return;
       }
 
-      onSubmitted?.(res.review);
+      setForm({ rating: 0, title: "", text: "", name: "", city: "" });
+      clear();
+      setErrors({});
+      setSubmitted(true);
+
+      if (res.review) {
+        const galleryItems = reviewToGalleryItems(res.review, productType);
+        if (galleryItems.length > 0) onPhotosPublished?.(galleryItems);
+        onSubmitted?.(res.review);
+      }
+
       toast.success(
-        res.message ?? "Your review and photos are live on this page!",
-        { duration: 5000 },
+        res.message ??
+          `Thank you, ${snapshot.name.trim()}! Your review and photos are live on this page and in the Photos tab.`,
+        { duration: 6000 },
       );
+
       setTimeout(() => setSubmitted(false), 6000);
     } catch {
-      setSubmitted(false);
       toast.error("Could not submit review. Please check your connection.");
     } finally {
       setSubmitting(false);
@@ -203,6 +232,8 @@ export default function ReviewSubmitForm({
     minHeight: 48,
     background: "#fff",
   });
+
+  const cloudinaryConfigured = Boolean(getCloudinaryCloudName()) && cloudinaryReady;
 
   return (
     <div
@@ -224,8 +255,8 @@ export default function ReviewSubmitForm({
             Review Submitted!
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--ew-text-lt)" }}>
-            Your review is live below and photos appear in the Photos tab and
-            gallery.
+            Your review and photos are live below, in Review Photos, and on the
+            Photos tab.
           </p>
         </div>
       ) : (
@@ -323,11 +354,21 @@ export default function ReviewSubmitForm({
             >
               Photos (optional, max 5)
             </label>
+            {!cloudinaryConfigured ? (
+              <p
+                className="text-xs rounded-lg px-3 py-2 mb-2"
+                style={{ background: "#fff3e0", color: "var(--ew-text)" }}
+              >
+                Photo upload is temporarily unavailable. You can still submit your
+                review without photos.
+              </p>
+            ) : null}
             <input
               ref={fileInputRef}
               type="file"
               accept="image/jpeg,image/png,image/webp"
               multiple
+              disabled={!cloudinaryConfigured || uploadItems.length >= 5}
               className="sr-only"
               onChange={handleFileChange}
               data-ocid="review_form.photos.input"
@@ -335,19 +376,24 @@ export default function ReviewSubmitForm({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              disabled={uploadItems.length >= 5 || isUploading}
-              className="text-sm font-semibold px-4 py-2.5 rounded-full border-2 min-h-11"
+              disabled={
+                !cloudinaryConfigured || uploadItems.length >= 5 || isUploading
+              }
+              className="text-sm font-semibold px-4 py-2.5 rounded-full border-2 min-h-11 disabled:opacity-50"
               style={{
                 borderColor: "var(--ew-red)",
                 color: "var(--ew-red)",
               }}
             >
-              Upload photos
+              Choose photos
             </button>
             {uploadItems.length > 0 ? (
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-3">
                 {uploadItems.map((item) => (
-                  <div key={item.id} className="relative aspect-square rounded-lg overflow-hidden">
+                  <div
+                    key={item.id}
+                    className="relative aspect-square rounded-lg overflow-hidden"
+                  >
                     <OptimizedImage
                       src={item.previewUrl}
                       alt="Upload preview"
@@ -364,6 +410,7 @@ export default function ReviewSubmitForm({
                     <button
                       type="button"
                       onClick={() => cancelUpload(item.id)}
+                      disabled={submitting}
                       className="absolute top-1 right-1 bg-black/60 text-white text-xs rounded-full w-6 h-6"
                       aria-label="Remove photo"
                     >

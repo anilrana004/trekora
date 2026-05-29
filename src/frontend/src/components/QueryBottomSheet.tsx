@@ -9,8 +9,10 @@ import {
 import { SITE_PHONE_DISPLAY } from "@/lib/site-contact";
 import FormSuccessMessage from "@/components/FormSuccessMessage";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import { buildSendQueryPayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { AnimatePresence, motion } from "motion/react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useIsMobile } from "../hooks/use-mobile";
@@ -54,6 +56,7 @@ export default function QueryBottomSheet({
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errors, setErrors] = useState<Partial<FormState>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [successSnapshot, setSuccessSnapshot] = useState<{
     phone: string;
   } | null>(null);
@@ -105,21 +108,28 @@ export default function QueryBottomSheet({
     e.preventDefault();
     if (!validate()) return;
 
-    const phone = normalizeIndianPhoneDigits(form.phone);
-    const destinationLabel = trekName ?? "General enquiry";
-    const payload = {
-      name: form.name.trim(),
-      phone,
-      phoneCountry: form.phoneCountry,
-      email: form.email.trim(),
-      destination: resolveProductSlug(trekName) ?? "",
-      destinationLabel,
-      message: form.message.trim(),
-      source: trekName ? `Send Query — ${trekName}` : "Send Query",
-    };
+    if (submitting) return;
 
+    const phone =
+      form.phoneCountry === "IN"
+        ? normalizeIndianPhoneDigits(form.phone)
+        : form.phone.replace(/\D/g, "");
+
+    setSubmitting(true);
     submitEmailOptimistic(
-      () => submitPlanTrekEmail(payload),
+      () =>
+        submitPlanTrekEmail(
+          buildSendQueryPayload({
+            name: form.name,
+            email: form.email,
+            phone,
+            phoneCountry: form.phoneCountry,
+            destinationSlug: resolveProductSlug(trekName),
+            destinationLabel: trekName ?? "General enquiry",
+            message: form.message,
+            productName: trekName,
+          }),
+        ),
       () => {
         setSuccessSnapshot({
           phone: formatPhoneForDisplay(phone, form.phoneCountry),
@@ -132,6 +142,9 @@ export default function QueryBottomSheet({
         setSubmitted(false);
         setSuccessSnapshot(null);
         toast.error(message);
+      },
+      () => {
+        setSubmitting(false);
       },
     );
   }
@@ -413,11 +426,19 @@ export default function QueryBottomSheet({
 
                   <button
                     type="submit"
-                    className="w-full rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+                    disabled={submitting}
+                    className="w-full rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 inline-flex items-center justify-center gap-2 disabled:opacity-70"
                     style={{ height: 48, backgroundColor: "var(--ew-orange)" }}
                     data-ocid="query_sheet.submit_button"
                   >
-                    Send Query 🏔️
+                    {submitting ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" aria-hidden />
+                        Sending…
+                      </>
+                    ) : (
+                      "Send Query 🏔️"
+                    )}
                   </button>
                 </form>
               )}

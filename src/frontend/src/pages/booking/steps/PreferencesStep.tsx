@@ -34,8 +34,6 @@ import {
   ctaMerge,
 } from "@/lib/cta-buttons";
 import {
-  AlertCircle,
-  Calendar,
   Check,
   ChevronRight,
   ClipboardCopy,
@@ -213,17 +211,24 @@ function Step5({
           {[
             { val: true, l: "Yes" },
             { val: false, l: "No" },
-          ].map(({ val, l }) => (
-            <button
-              key={l}
-              type="button"
-              onClick={() => setFd((p) => ({ ...p, needsTransport: val }))}
-              className={bookingChoicePill(fd.needsTransport === val)}
-              data-ocid={`booking.transport.${l.toLowerCase()}`}
-            >
-              {l}
-            </button>
-          ))}
+          ].map(({ val, l }) => {
+            const selected = fd.needsTransport === val;
+            return (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setFd((p) => ({ ...p, needsTransport: val }))}
+                className={bookingChoicePill(selected)}
+                aria-pressed={selected}
+                data-ocid={`booking.transport.${l.toLowerCase()}`}
+              >
+                {selected ? (
+                  <Check size={16} className="shrink-0" strokeWidth={2.5} aria-hidden />
+                ) : null}
+                {l}
+              </button>
+            );
+          })}
         </div>
         {fd.needsTransport && (
           <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -277,17 +282,24 @@ function Step5({
           Preferred contact mode for updates
         </p>
         <div className={BOOKING_CONTACT_GRID}>
-          {["SMS", "WhatsApp", "Email", "All"].map((m) => (
-            <button
-              key={m}
-              type="button"
-              onClick={() => toggleContact(m)}
-              className={bookingChoicePill(fd.contactMode.includes(m))}
-              data-ocid={`booking.contact_mode.${m.toLowerCase()}`}
-            >
-              {m}
-            </button>
-          ))}
+          {["SMS", "WhatsApp", "Email", "All"].map((m) => {
+            const selected = fd.contactMode.includes(m);
+            return (
+              <button
+                key={m}
+                type="button"
+                onClick={() => toggleContact(m)}
+                className={bookingChoicePill(selected)}
+                aria-pressed={selected}
+                data-ocid={`booking.contact_mode.${m.toLowerCase()}`}
+              >
+                {selected ? (
+                  <Check size={16} className="shrink-0" strokeWidth={2.5} aria-hidden />
+                ) : null}
+                {m}
+              </button>
+            );
+          })}
         </div>
       </div>
 

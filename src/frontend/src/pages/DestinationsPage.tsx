@@ -1,7 +1,9 @@
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { buildWhatsAppUrl } from "@/lib/site-contact";
+import { buildDestinationPlanPayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { AnimatePresence, motion } from "motion/react";
+import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import DestinationCard from "../components/DestinationCard";
@@ -37,6 +39,7 @@ export default function DestinationsPage() {
     dates: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const filteredDestinations = useMemo(() => {
     const stateLabel = TAB_STATE_LABEL[tab];
@@ -48,37 +51,42 @@ export default function DestinationsPage() {
     e.preventDefault();
     const name = formState.name.trim();
     const email = formState.email.trim();
-    if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error("Enter your name and a valid email.");
+    const destination = formState.destination.trim();
+    const preferredDates = formState.dates.trim();
+
+    if (!name || name.length < 2) {
+      toast.error("Enter your full name.");
       return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Enter a valid email address.");
+      return;
+    }
+    if (submitting) return;
 
+    setSubmitting(true);
     submitEmailOptimistic(
       () =>
-        submitPlanTrekEmail({
-          name,
-          email,
-          phone: "",
-          phoneCountry: "IN",
-          destination: formState.destination.trim(),
-          destinationLabel:
-            formState.destination.trim() || "Himalayan destination (unspecified)",
-          message: [
-            formState.dates.trim() && `Preferred dates: ${formState.dates.trim()}`,
-            "Plan Your Destination Trip form — Destinations page",
-          ]
-            .filter(Boolean)
-            .join("\n"),
-          source: "Plan Your Destination Trip — Destinations",
-        }),
+        submitPlanTrekEmail(
+          buildDestinationPlanPayload({
+            name,
+            email,
+            destination,
+            preferredDates,
+          }),
+        ),
       () => {
+        // Instant success UI (optimistic)
         setSubmitted(true);
         setFormState({ name: "", email: "", destination: "", dates: "" });
-        toast.success("Request sent! Our experts will email you within 24 hours.");
+        toast.success("Request submitted! We’re emailing you the details now.");
       },
       (message) => {
         setSubmitted(false);
         toast.error(message);
+      },
+      () => {
+        setSubmitting(false);
       },
     );
   };
@@ -93,7 +101,6 @@ export default function DestinationsPage() {
       className="pt-16 min-h-screen"
       style={{ background: "var(--ew-gray-lt)" }}
     >
-      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <TravelSideActionRail variant="listing-gallery" />
 
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
@@ -151,8 +158,10 @@ export default function DestinationsPage() {
         </div>
       </div>
 
-      <ListingStickyToolbar>
-        <div className="container mx-auto px-4 py-3">
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+
+      <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
+        <div className="listing-sticky-toolbar__regions container mx-auto px-4">
           <ListingRegionFilterPills
             kind="destinations"
             active={tab}
@@ -320,10 +329,18 @@ export default function DestinationsPage() {
               </div>
               <button
                 type="submit"
-                className="btn-primary w-full"
+                className="btn-primary w-full inline-flex items-center justify-center gap-2"
+                disabled={submitting}
                 data-ocid="destinations.submit_button"
               >
-                Send My Trip Plan Request
+                {submitting ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" aria-hidden />
+                    Sending…
+                  </>
+                ) : (
+                  "Send My Trip Plan Request"
+                )}
               </button>
             </form>
           )}

@@ -206,7 +206,7 @@ export function buildGalleryPageSEO(): PageMetaConfig {
   return {
     title: "Trekora Gallery | Himalayan Trek & Yatra Photos",
     description:
-      "Browse Trekora's Himalayan gallery — trek photos, summit views, snowfall, camping memories & yatra moments from Uttarakhand and Himachal.",
+      "Browse trekker-shared photos from Himalayan treks and yatras — every image tagged with the trek or yatra name and the traveller who uploaded it.",
     keywords: formatMetaKeywords([...GALLERY_SEO_TAGS, ...TREKORA_BRAND_KEYWORDS]),
     canonical: `${SITE_ORIGIN}/gallery`,
   };

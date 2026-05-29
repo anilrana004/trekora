@@ -12,6 +12,9 @@ export const queryKeys = {
       trekSlug?: string;
       type?: string;
       fast?: boolean;
+      communityOnly?: boolean;
+      productUploadSource?: "all" | "gallery-page" | "product-page";
+      includeReviews?: boolean;
     }) => ["gallery", "list", params] as const,
   },
   treks: {

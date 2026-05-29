@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /** Side rails stay hidden until user scrolls past ~one viewport (first screen) */
 export const TRAVEL_FIRST_VIEWPORT_SCROLL_PX = () =>
@@ -9,36 +9,51 @@ export const TRAVEL_IMAGE_SECTION_ATTR = "data-travel-image-section";
 
 const IMAGE_SECTION_VISIBLE_RATIO = 0.22;
 
+function useRafScrollSync(sync: () => void) {
+  useEffect(() => {
+    let raf = 0;
+    const onFrame = () => {
+      raf = 0;
+      sync();
+    };
+    const schedule = () => {
+      if (raf !== 0) return;
+      raf = requestAnimationFrame(onFrame);
+    };
+
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf !== 0) cancelAnimationFrame(raf);
+    };
+  }, [sync]);
+}
+
 /** True while a marked image/hero block covers ~22%+ of the viewport */
 export function useTravelImageSectionOverlap(): boolean {
   const [active, setActive] = useState(false);
+  const activeRef = useRef(false);
 
-  useEffect(() => {
-    const sync = () => {
-      const sections = document.querySelectorAll(
-        `[${TRAVEL_IMAGE_SECTION_ATTR}]`,
-      );
-      const vh = window.innerHeight;
-      const hit = Array.from(sections).some((el) => {
-        const r = el.getBoundingClientRect();
-        const visible = Math.max(
-          0,
-          Math.min(r.bottom, vh) - Math.max(r.top, 0),
-        );
-        return visible >= vh * IMAGE_SECTION_VISIBLE_RATIO;
-      });
-      setActive(hit);
-    };
-
-    sync();
-    window.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("resize", sync);
-
-    return () => {
-      window.removeEventListener("scroll", sync);
-      window.removeEventListener("resize", sync);
-    };
+  const sync = useCallback(() => {
+    const sections = document.querySelectorAll(
+      `[${TRAVEL_IMAGE_SECTION_ATTR}]`,
+    );
+    const vh = window.innerHeight;
+    const hit = Array.from(sections).some((el) => {
+      const r = el.getBoundingClientRect();
+      const visible = Math.max(0, Math.min(r.bottom, vh) - Math.max(r.top, 0));
+      return visible >= vh * IMAGE_SECTION_VISIBLE_RATIO;
+    });
+    if (hit === activeRef.current) return;
+    activeRef.current = hit;
+    setActive(hit);
   }, []);
+
+  useRafScrollSync(sync);
 
   return active;
 }
@@ -46,21 +61,16 @@ export function useTravelImageSectionOverlap(): boolean {
 /** True after the user has scrolled past the first viewport (desktop + mobile) */
 export function usePastFirstViewport(): boolean {
   const [past, setPast] = useState(false);
+  const pastRef = useRef(false);
 
-  useEffect(() => {
-    const sync = () => {
-      setPast(window.scrollY >= TRAVEL_FIRST_VIEWPORT_SCROLL_PX());
-    };
-
-    sync();
-    window.addEventListener("scroll", sync, { passive: true });
-    window.addEventListener("resize", sync);
-
-    return () => {
-      window.removeEventListener("scroll", sync);
-      window.removeEventListener("resize", sync);
-    };
+  const sync = useCallback(() => {
+    const next = window.scrollY >= TRAVEL_FIRST_VIEWPORT_SCROLL_PX();
+    if (next === pastRef.current) return;
+    pastRef.current = next;
+    setPast(next);
   }, []);
+
+  useRafScrollSync(sync);
 
   return past;
 }

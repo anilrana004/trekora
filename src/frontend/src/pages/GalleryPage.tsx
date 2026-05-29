@@ -2,6 +2,7 @@ import {
   Binoculars,
   ChevronRight,
   Download,
+  Loader2,
   MapPinned,
   Phone,
   Share2,
@@ -11,7 +12,34 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearch } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import GalleryPhotoCard from "@/components/gallery/GalleryPhotoCard";
+import ProductNameCombobox from "@/components/gallery/ProductNameCombobox";
+import ListingStickyToolbar from "@/components/ListingStickyToolbar";
 import { useDynamicGallery } from "@/hooks/useDynamicGallery";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import {
+  buildOptimisticGalleryItems,
+  COMMUNITY_GALLERY_FILTERS,
+  communityItemsToGallery,
+  filterGalleryByTab,
+  galleryUploaderLabel,
+  type CommunityGalleryFilter,
+} from "@/lib/gallery-community";
+import { refreshAllGalleries } from "@/lib/gallery-refresh";
+import { buildPhotoCredit } from "@/lib/photo-credit";
+import { pushSiteGalleryToCache } from "@/lib/product-gallery-cache";
+import {
+  galleryPageCloudinaryContext,
+  galleryPageCloudinaryTags,
+  galleryPagePhotoFolder,
+} from "@/lib/gallery-upload-cloudinary";
+import { resolveProductForUpload } from "@/lib/resolve-product-upload";
+import { saveGalleryPagePhotosToApi } from "@/lib/submit-gallery-photos";
+import { TREKS } from "@/data/treks";
+import { YATRAS } from "@/data/yatras";
+import type { ProductKind } from "@/lib/reviews-api";
 import { toast } from "sonner";
 import { SEOHead } from "../components/SEOHead";
 import { buildGalleryPageSEO } from "@/lib/product-seo";
@@ -19,8 +47,8 @@ import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
 import OptimizedImage from "../components/media/OptimizedImage";
-import { GALLERY_CATEGORIES, GALLERY_ITEMS } from "../data/gallery";
 import type { GalleryItem } from "../data/gallery";
+import type { GalleryApiItem } from "@/lib/reviews-api";
 
 import {
   openCallbackFromLayout,
@@ -39,13 +67,8 @@ const CTA_OUTLINE_RED =
 const CTA_OUTLINE_WHITE =
   "inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 px-4 rounded-full border-2 border-white text-white hover:bg-white hover:text-[var(--ew-red)] transition-colors";
 
-const FILTER_PILL_BASE =
-  "px-4 py-1.5 rounded-full text-sm font-semibold border-2 transition-colors";
-
 function filterPillClass(active: boolean): string {
-  return active
-    ? `${FILTER_PILL_BASE} border-[var(--ew-red)] bg-[var(--ew-red)] text-white`
-    : `${FILTER_PILL_BASE} border-[var(--ew-red)] text-[var(--ew-red)] bg-transparent hover:bg-[var(--ew-red)] hover:text-white`;
+  return `listing-region-pill${active ? " listing-region-pill--active" : ""}`;
 }
 
 /* ───────────────────────────────────
@@ -182,9 +205,15 @@ function Lightbox({
         {/* Caption row */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
           <div>
-            <p className="text-white font-bold text-sm">{item.title}</p>
+            <p className="text-white font-bold text-sm">
+              {item.trekName ?? item.title}
+            </p>
             <p className="text-white/60 text-xs mt-0.5">
-              {item.category} · Photo: {item.credit}
+              {item.productLabel ?? "Trek"} ·{" "}
+              {galleryUploaderLabel(item.credit).name}
+              {galleryUploaderLabel(item.credit).when
+                ? ` · ${galleryUploaderLabel(item.credit).when}`
+                : ""}
             </p>
           </div>
           <div className="flex gap-2">
@@ -219,138 +248,261 @@ function Lightbox({
   );
 }
 
+const MONTH_LABELS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+function monthValueToLabel(when: string): { month: string; year: string } {
+  const [year, mon] = when.split("-");
+  const idx = Number.parseInt(mon ?? "", 10) - 1;
+  return {
+    month: MONTH_LABELS[idx] ?? "Jan",
+    year: year ?? String(new Date().getFullYear()),
+  };
+}
+
 /* ───────────────────────────────────
    UPLOAD FORM
 ─────────────────────────────────── */
-function UploadSection() {
+function UploadSection({
+  defaultTrekName,
+  onUploaded,
+  onPhotosPublished,
+}: {
+  defaultTrekName?: string;
+  onUploaded?: () => void;
+  onPhotosPublished?: (items: GalleryApiItem[]) => void;
+}) {
   const [name, setName] = useState("");
-  const [trek, setTrek] = useState("");
+  const [trek, setTrek] = useState(defaultTrekName ?? "");
   const [when, setWhen] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    if (f.size > 5 * 1024 * 1024) {
-      toast.error("File too large. Maximum size is 5 MB.");
-      return;
+  const resolved = useMemo(() => resolveProductForUpload(trek), [trek]);
+
+  const uploadOptions = useMemo(() => {
+    if (!resolved) {
+      return {
+        folder: "treks" as const,
+        folderPath: "trekora/gallery/pending",
+        tags: [] as string[],
+        context: {} as Record<string, string>,
+      };
     }
-    setFile(f);
-    const reader = new FileReader();
-    reader.onload = (ev) => setPreview(ev.target?.result as string);
-    reader.readAsDataURL(f);
+    const slug = resolved.slug;
+    return {
+      folder: "treks" as const,
+      folderPath: galleryPagePhotoFolder(resolved.type, slug),
+      tags: galleryPageCloudinaryTags(resolved.type, slug),
+      context: galleryPageCloudinaryContext(
+        resolved.name,
+        slug,
+        resolved.type,
+      ),
+    };
+  }, [resolved]);
+
+  const {
+    items: uploadItems,
+    queueFiles,
+    uploadAllForSubmit,
+    cancel,
+    clear,
+    cloudinaryReady,
+  } = useImageUpload(uploadOptions);
+
+  useEffect(() => {
+    if (defaultTrekName) setTrek(defaultTrekName);
+  }, [defaultTrekName]);
+
+  const handleFilePick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []).slice(0, 5 - uploadItems.length);
+    if (files.length) queueFiles(files);
+    e.target.value = "";
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!file) {
-      toast.error("Please select a photo first.");
-      return;
-    }
     if (!name.trim() || !trek.trim() || !when.trim()) {
       toast.error("Please fill in all fields.");
       return;
     }
-    setSubmitted(true);
-    toast.success(
-      "Thank you! Share trek photos from the trek or yatra Photos tab (Trekker Photos section).",
-      { duration: 5000 },
-    );
-  };
+    if (!resolved) {
+      toast.error("Enter a valid trek or yatra name (e.g. Valley of Flowers).");
+      return;
+    }
+    if (!cloudinaryReady) {
+      toast.error("Photo upload is temporarily unavailable. Try again later.");
+      return;
+    }
+    if (uploadItems.length === 0) {
+      toast.error("Choose at least one photo.");
+      return;
+    }
+    if (submitting) return;
 
-  if (submitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center py-12"
-      >
-        <div
-          className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-          style={{ backgroundColor: "#e8f5e9" }}
-        >
-          <span className="text-3xl">✅</span>
-        </div>
-        <h3
-          className="font-bold text-xl mb-2"
-          style={{ color: "var(--ew-text)" }}
-        >
-          Got it!
-        </h3>
-        <p className="text-sm" style={{ color: "var(--ew-text-lt)" }}>
-          Open your trek or yatra page → Photos tab → Trekker Photos to upload to
-          Cloudinary with the correct name.
-        </p>
-      </motion.div>
-    );
+    const { month, year } = monthValueToLabel(when);
+    const credit = buildPhotoCredit(name, month, year);
+    const displayName = name.trim();
+    setSubmitting(true);
+
+    try {
+      const { assets: uploaded, errors: uploadErrors } =
+        await uploadAllForSubmit();
+
+      if (uploaded.length === 0) {
+        toast.error(uploadErrors[0] ?? "Photo upload failed.");
+        return;
+      }
+
+      const optimistic = buildOptimisticGalleryItems({
+        assets: uploaded,
+        trekSlug: resolved.slug,
+        trekName: resolved.name,
+        productType: resolved.type,
+        credit,
+      });
+      onPhotosPublished?.(optimistic);
+
+      const res = await saveGalleryPagePhotosToApi({
+        trekSlug: resolved.slug,
+        trekName: resolved.name,
+        productType: resolved.type,
+        uploadedBy: credit,
+        assets: uploaded,
+      });
+
+      if (!res.success) {
+        toast.warning(
+          res.message ??
+            "Photos are visible here; full gallery sync will retry shortly.",
+          { duration: 6000 },
+        );
+        clear();
+        setName("");
+        setWhen("");
+        return;
+      }
+
+      clear();
+      setName("");
+      setWhen("");
+      refreshAllGalleries();
+      onUploaded?.();
+
+      toast.success(
+        res.message ??
+          `Thank you, ${displayName}! Your photos are live in the community gallery.`,
+        { duration: 6000 },
+      );
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed.");
+    } finally {
+      setSubmitting(false);
+    }
   }
+
+  const inputCls =
+    "w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--ew-red)]/30 border border-[var(--ew-gray-mid)] text-[var(--ew-text)]";
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={(e) => void handleSubmit(e)}
       className="space-y-4"
       data-ocid="gallery.upload_form"
     >
+      {!cloudinaryReady ? (
+        <p
+          className="text-sm rounded-lg px-4 py-3"
+          style={{ background: "#fff3e0", color: "var(--ew-text)" }}
+        >
+          Photo upload is temporarily unavailable. You can still share from any
+          trek page → Photos → Trekker Photos.
+        </p>
+      ) : null}
+
       <button
         type="button"
         onClick={() => fileRef.current?.click()}
-        className="w-full rounded-xl border-2 border-dashed flex flex-col items-center justify-center py-8 transition-colors cursor-pointer"
+        disabled={submitting || uploadItems.length >= 5}
+        className="w-full rounded-xl border-2 border-dashed flex flex-col items-center justify-center py-8 transition-colors cursor-pointer disabled:opacity-60"
         style={{
-          borderColor: preview ? "var(--ew-green)" : "var(--ew-gray-mid)",
+          borderColor:
+            uploadItems.length > 0 ? "var(--ew-green)" : "var(--ew-gray-mid)",
           backgroundColor: "var(--ew-gray-lt)",
         }}
         data-ocid="gallery.dropzone"
         aria-label="Upload photo"
       >
-        {preview ? (
-          <OptimizedImage
-            src={preview}
-            alt="Preview"
-            variant="gallery-full"
-            sizes="280px"
-            width={320}
-            height={160}
-            className="max-h-40 rounded-lg object-contain mb-2 w-auto h-auto max-w-full"
-          />
-        ) : (
-          <>
-            <Upload
-              size={32}
-              className="mb-3"
-              style={{ color: "var(--ew-gray-dark)" }}
-            />
-            <p
-              className="font-semibold text-sm"
-              style={{ color: "var(--ew-text)" }}
-            >
-              Click to select your photo
-            </p>
-            <p
-              className="text-xs mt-1"
-              style={{ color: "var(--ew-gray-dark)" }}
-            >
-              JPEG or PNG · Max 5 MB
-            </p>
-          </>
-        )}
+        <Upload
+          size={32}
+          className="mb-3"
+          style={{ color: "var(--ew-gray-dark)" }}
+        />
+        <p className="font-semibold text-sm" style={{ color: "var(--ew-text)" }}>
+          {uploadItems.length > 0
+            ? `${uploadItems.length} photo(s) selected`
+            : "Click to select photos"}
+        </p>
+        <p className="text-xs mt-1" style={{ color: "var(--ew-gray-dark)" }}>
+          JPEG / PNG / WebP · Max 5 MB each · Up to 5
+        </p>
       </button>
       <input
         ref={fileRef}
         type="file"
-        accept="image/jpeg,image/png"
-        onChange={handleFile}
+        accept="image/jpeg,image/png,image/webp"
+        multiple
+        onChange={handleFilePick}
         className="hidden"
         data-ocid="gallery.upload_button"
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div>
+      {uploadItems.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {uploadItems.map((item) => (
+            <div key={item.id} className="relative">
+              <img
+                src={item.previewUrl}
+                alt=""
+                className="h-20 w-20 rounded-lg object-cover border border-[var(--ew-gray-mid)]"
+              />
+              {item.status === "uploading" ? (
+                <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/40">
+                  <Loader2 className="animate-spin text-white" size={16} />
+                </div>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => cancel(item.id)}
+                disabled={submitting}
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-white text-xs font-bold border border-[var(--ew-gray-mid)] text-[var(--ew-red)]"
+                aria-label="Remove"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="min-w-0">
           <label
             htmlFor="upload-name"
-            className="text-xs font-semibold block mb-1"
+            className="text-xs font-semibold block mb-1.5"
             style={{ color: "var(--ew-text)" }}
           >
             Your Name *
@@ -362,41 +514,33 @@ function UploadSection() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none"
-            style={{
-              border: "1px solid var(--ew-gray-mid)",
-              color: "var(--ew-text)",
-            }}
+            disabled={submitting}
+            className={inputCls}
             data-ocid="gallery.upload_name.input"
           />
         </div>
-        <div>
+        <div className="min-w-0 sm:col-span-2 lg:col-span-1 relative z-[1]">
           <label
             htmlFor="upload-trek"
-            className="text-xs font-semibold block mb-1"
+            className="text-xs font-semibold block mb-1.5"
             style={{ color: "var(--ew-text)" }}
           >
-            Which Trek? *
+            Trek / Yatra name *
           </label>
-          <input
+          <ProductNameCombobox
             id="upload-trek"
-            type="text"
-            placeholder="Roopkund Trek"
             value={trek}
-            onChange={(e) => setTrek(e.target.value)}
+            onChange={setTrek}
+            placeholder="Type to search — e.g. valley, kedarnath"
             required
-            className="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none"
-            style={{
-              border: "1px solid var(--ew-gray-mid)",
-              color: "var(--ew-text)",
-            }}
+            disabled={submitting}
             data-ocid="gallery.upload_trek.input"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label
             htmlFor="upload-when"
-            className="text-xs font-semibold block mb-1"
+            className="text-xs font-semibold block mb-1.5"
             style={{ color: "var(--ew-text)" }}
           >
             When? *
@@ -407,11 +551,8 @@ function UploadSection() {
             value={when}
             onChange={(e) => setWhen(e.target.value)}
             required
-            className="w-full rounded-lg px-3 py-2.5 text-sm focus:outline-none"
-            style={{
-              border: "1px solid var(--ew-gray-mid)",
-              color: "var(--ew-text)",
-            }}
+            disabled={submitting}
+            className={inputCls}
             data-ocid="gallery.upload_when.input"
           />
         </div>
@@ -419,72 +560,96 @@ function UploadSection() {
 
       <button
         type="submit"
-        className={`${CTA_OUTLINE_RED} w-full`}
+        disabled={
+          submitting ||
+          !cloudinaryReady ||
+          uploadItems.length === 0 ||
+          !resolved
+        }
+        className={`${CTA_OUTLINE_RED} w-full disabled:opacity-60 inline-flex items-center justify-center gap-2`}
         data-ocid="gallery.upload.submit_button"
       >
-        <Upload size={16} aria-hidden /> Submit Photo for Review{" "}
-        <ChevronRight size={14} aria-hidden />
+        {submitting ? (
+          <>
+            <Loader2 size={16} className="animate-spin" aria-hidden />
+            Uploading…
+          </>
+        ) : (
+          <>
+            <Upload size={16} aria-hidden /> Share Your Memory{" "}
+            <ChevronRight size={14} aria-hidden />
+          </>
+        )}
       </button>
     </form>
   );
 }
 
-/* ───────────────────────────────────
-   GALLERY PAGE
-─────────────────────────────────── */
-function mapApiToGalleryItem(
-  item: {
-    id: string;
-    src: string;
-    title: string;
-    subtitle?: string;
-    category: string;
-    credit: string;
-    trekName: string;
-    trekSlug: string;
-    type: "trek" | "yatra";
-  },
-  index: number,
-): GalleryItem {
-  const cat = item.category as GalleryItem["category"];
-  const productLabel = item.subtitle ?? (item.type === "yatra" ? "Yatra" : "Trek");
-  return {
-    id: 100_000 + index,
-    src: item.src,
-    title: item.trekName || item.title,
-    category: cat,
-    credit: item.credit,
-    trekName: item.trekName,
-    trekSlug: item.trekSlug,
-    productType: item.type,
-    productLabel,
-    isCommunityPhoto: true,
-  };
-}
-
 export default function GalleryPage() {
   const gallerySeo = buildGalleryPageSEO();
-  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const { trekSlug: trekSlugRaw } = useSearch({ strict: false });
+  const trekSlugFilter = useMemo(
+    () => (typeof trekSlugRaw === "string" ? trekSlugRaw : "").trim().toLowerCase(),
+    [trekSlugRaw],
+  );
+
+  const trekFilterType = useMemo((): ProductKind | undefined => {
+    if (!trekSlugFilter) return undefined;
+    return YATRAS.some((y) => y.slug === trekSlugFilter) ? "yatra" : "trek";
+  }, [trekSlugFilter]);
+
+  const [activeFilter, setActiveFilter] = useState<CommunityGalleryFilter>("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const { items: communityItems, loading: galleryLoading } = useDynamicGallery();
+  const queryClient = useQueryClient();
+  const {
+    items: communityItems,
+    loading: galleryLoading,
+    refetch: refetchGallery,
+  } = useDynamicGallery({
+    trekSlug: trekSlugFilter || undefined,
+    type: trekFilterType,
+    communityOnly: true,
+    limit: 200,
+  });
 
-  const allItems = useMemo(() => {
-    const fromReviews = communityItems.map((item, i) =>
-      mapApiToGalleryItem(item, i),
-    );
-    return [...fromReviews, ...GALLERY_ITEMS];
-  }, [communityItems]);
+  const trekFilterLabel = useMemo(() => {
+    if (!trekSlugFilter) return null;
+    const fromApi = communityItems.find((i) => i.trekSlug === trekSlugFilter);
+    if (fromApi?.trekName) return fromApi.trekName;
+    const trek = TREKS.find((t) => t.slug === trekSlugFilter);
+    return trek?.name ?? trekSlugFilter.replace(/-/g, " ");
+  }, [trekSlugFilter, communityItems]);
 
-  const filtered =
-    activeCategory === "All"
-      ? allItems
-      : allItems.filter((g) => g.category === activeCategory);
+  const allItems = useMemo(
+    () => communityItemsToGallery(communityItems),
+    [communityItems],
+  );
+
+  const filtered = useMemo(
+    () => filterGalleryByTab(allItems, activeFilter),
+    [allItems, activeFilter],
+  );
 
   const [visibleCount, setVisibleCount] = useState(GALLERY_RENDER_BATCH);
 
   useEffect(() => {
     setVisibleCount(GALLERY_RENDER_BATCH);
-  }, [activeCategory]);
+  }, [activeFilter, trekSlugFilter]);
+
+  const handlePhotosPublished = useCallback(
+    (items: GalleryApiItem[]) => {
+      if (!items.length) return;
+      const slug = items[0]?.trekSlug;
+      const type = items[0]?.type;
+      pushSiteGalleryToCache(
+        queryClient,
+        items,
+        slug && type ? { trekSlug: slug, type } : undefined,
+      );
+      void refetchGallery(true);
+    },
+    [queryClient, refetchGallery],
+  );
 
   const visibleItems = useMemo(
     () => filtered.slice(0, visibleCount),
@@ -548,15 +713,25 @@ export default function GalleryPage() {
               className="text-center text-white"
             >
               <span className="inline-block text-xs font-semibold uppercase tracking-widest bg-white/20 px-4 py-1.5 rounded-full mb-4">
-                Visual Stories
+                Trekker Gallery
               </span>
               <h1 className="text-4xl md:text-5xl font-bold mb-3 text-shadow">
-                Himalayan Gallery
+                Community Photo Gallery
               </h1>
               <p className="text-white/85 text-sm md:text-base max-w-2xl mx-auto">
-                60+ stunning images from across the Himalayas — Uttarakhand
-                &amp; Himachal Pradesh
+                {trekFilterLabel
+                  ? `Real photos shared by trekkers on ${trekFilterLabel} — each tagged with trek/yatra and traveller name.`
+                  : "Only photos uploaded by trekkers and pilgrims. Every image shows the trek or yatra name and who shared it."}
               </p>
+              {trekSlugFilter ? (
+                <Link
+                  to="/gallery"
+                  search={{ trekSlug: undefined }}
+                  className="inline-block mt-3 text-xs font-semibold text-white/90 underline underline-offset-2 hover:text-white"
+                >
+                  View all gallery photos
+                </Link>
+              ) : null}
               <span
                 className="inline-block mt-6 px-7 py-2.5 rounded-full text-sm font-semibold text-white shadow-md"
                 style={{
@@ -564,7 +739,7 @@ export default function GalleryPage() {
                   border: "2px solid rgba(255,255,255,0.35)",
                 }}
               >
-                All Photos
+                {filtered.length} trekker photo{filtered.length === 1 ? "" : "s"}
               </span>
               <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
                 <button
@@ -600,27 +775,32 @@ export default function GalleryPage() {
         </div>
 
         <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
-        <TravelSideActionRail variant="listing-gallery" />
 
-        {/* Filter tabs — sticky */}
-        <div
-          className="bg-white py-3 shadow-sm sticky z-20"
-          style={{ top: 64, borderBottom: "1px solid var(--ew-gray-mid)" }}
-        >
-          <div className="container mx-auto px-4 flex flex-wrap gap-2 justify-center">
-            {GALLERY_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setActiveCategory(cat)}
-                className={filterPillClass(activeCategory === cat)}
-                data-ocid={`gallery.filter.${cat.toLowerCase().replace(/\s+/g, "_")}`}
-              >
-                {cat}
-              </button>
-            ))}
+        <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
+          <div className="listing-sticky-toolbar__regions container mx-auto px-4">
+            <div
+              className="listing-region-pills"
+              role="tablist"
+              aria-label="Filter gallery photos"
+            >
+              {COMMUNITY_GALLERY_FILTERS.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeFilter === cat}
+                  onClick={() => setActiveFilter(cat)}
+                  className={filterPillClass(activeFilter === cat)}
+                  data-ocid={`gallery.filter.${cat.toLowerCase()}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        </ListingStickyToolbar>
+
+        <TravelSideActionRail variant="listing-gallery" />
 
         {/* Masonry grid */}
         <div className="container mx-auto px-4 py-10">
@@ -650,7 +830,7 @@ export default function GalleryPage() {
           >
             {visibleItems.map((item, i) => (
               <motion.div
-                key={item.id}
+                key={item.apiId ?? `${item.src}-${i}`}
                 variants={{
                   hidden: { opacity: 0, y: 12 },
                   visible: { opacity: 1, y: 0 },
@@ -658,61 +838,11 @@ export default function GalleryPage() {
                 transition={{ duration: 0.35 }}
                 className="break-inside-avoid mb-4"
               >
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.2 }}
-                  className="w-full text-left group relative rounded-xl overflow-hidden shadow-card"
-                  onClick={() => openLightbox(i)}
-                  data-ocid={`gallery.item.${i + 1}`}
-                  aria-label={`View ${item.title}`}
-                >
-                  <OptimizedImage
-                    src={item.src}
-                    alt={
-                      item.isCommunityPhoto && item.trekName
-                        ? `${item.trekName} — ${item.productLabel ?? "Trek"}`
-                        : item.title
-                    }
-                    variant="gallery-thumb"
-                    width={1200}
-                    height={900}
-                    className="w-full h-auto group-hover:scale-[1.06] transition-transform duration-500"
-                  />
-                  {item.isCommunityPhoto && item.trekName ? (
-                    <div
-                      className="absolute bottom-0 left-0 right-0 px-2.5 py-2 pointer-events-none"
-                      style={{
-                        background:
-                          "linear-gradient(transparent, rgba(0,0,0,0.78))",
-                      }}
-                    >
-                      <p className="text-white font-bold text-xs leading-tight truncate">
-                        {item.trekName}
-                      </p>
-                      <p className="text-white/80 text-[10px] truncate">
-                        {item.productLabel ?? "Trek"} · {item.credit}
-                      </p>
-                    </div>
-                  ) : null}
-                  {/* Hover overlay */}
-                  <div
-                    className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-250"
-                    style={{ background: "rgba(192,0,28,0.62)" }}
-                  >
-                    <ZoomIn size={28} className="text-white mb-2" />
-                    <p className="text-white font-bold text-sm px-3 text-center leading-tight">
-                      {item.isCommunityPhoto && item.trekName
-                        ? item.trekName
-                        : item.title}
-                    </p>
-                    <p className="text-white/70 text-xs mt-0.5 px-3 text-center">
-                      {item.isCommunityPhoto && item.trekName
-                        ? `${item.productLabel ?? "Trek"} · ${item.credit}`
-                        : item.credit}
-                    </p>
-                  </div>
-                </motion.button>
+                <GalleryPhotoCard
+                  item={item}
+                  index={i}
+                  onOpen={() => openLightbox(i)}
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -734,20 +864,23 @@ export default function GalleryPage() {
             </div>
           )}
 
-          {filtered.length === 0 && (
+          {!galleryLoading && filtered.length === 0 && (
             <div className="text-center py-20" data-ocid="gallery.empty_state">
-              <span className="text-5xl block mb-4">🏔️</span>
+              <span className="text-5xl block mb-4">📷</span>
               <p
                 className="font-bold text-lg"
                 style={{ color: "var(--ew-text)" }}
               >
-                No photos in this category yet
+                {trekFilterLabel
+                  ? `No trekker photos for ${trekFilterLabel} yet`
+                  : "No trekker photos yet"}
               </p>
               <p
-                className="text-sm mt-1"
+                className="text-sm mt-1 max-w-sm mx-auto"
                 style={{ color: "var(--ew-gray-dark)" }}
               >
-                Be the first to contribute!
+                Upload below or from any trek/yatra page. Only shared photos
+                appear here — not official catalog images.
               </p>
             </div>
           )}
@@ -781,18 +914,22 @@ export default function GalleryPage() {
                 className="mt-3 text-sm max-w-md mx-auto"
                 style={{ color: "var(--ew-text-lt)" }}
               >
-                Upload from any trek or yatra page (Photos tab → Trekker Photos).
-                Approved shots appear here with the trek or yatra name.
+                Upload here — your name, trek or yatra name, and date appear on
+                every photo. Official trek images are not shown in this gallery.
               </p>
             </motion.div>
             <div
-              className="rounded-2xl p-6 shadow-card"
+              className="rounded-2xl p-5 sm:p-6 shadow-card overflow-visible relative"
               style={{
                 background: "var(--ew-white)",
                 border: "1px solid var(--ew-gray-mid)",
               }}
             >
-              <UploadSection />
+              <UploadSection
+                defaultTrekName={trekFilterLabel ?? undefined}
+                onUploaded={() => refetchGallery(true)}
+                onPhotosPublished={handlePhotosPublished}
+              />
             </div>
           </div>
         </div>

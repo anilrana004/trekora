@@ -1,7 +1,8 @@
 import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import { buildPlanMyTrekPayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { Clock, ShieldCheck, X } from "lucide-react";
+import { Clock, Loader2, ShieldCheck, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -50,6 +51,7 @@ function destinationLabel(slug: string): string {
 
 export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const {
     register,
@@ -99,18 +101,21 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
         ? normalizeIndianPhoneDigits(data.phone)
         : data.phone.replace(/\D/g, "");
 
+    if (submitting) return;
+    setSubmitting(true);
     submitEmailOptimistic(
       () =>
-        submitPlanTrekEmail({
-          name: data.name.trim(),
-          phone: phoneDigits,
-          phoneCountry: data.phoneCountry,
-          email: data.email.trim(),
-          destination: data.destination,
-          destinationLabel: destinationLabel(data.destination),
-          message: data.message.trim(),
-          source: "Plan My Trek",
-        }),
+        submitPlanTrekEmail(
+          buildPlanMyTrekPayload({
+            name: data.name,
+            email: data.email,
+            phone: phoneDigits,
+            phoneCountry: data.phoneCountry,
+            destinationSlug: data.destination,
+            destinationLabel: destinationLabel(data.destination),
+            message: data.message,
+          }),
+        ),
       () => {
         setSubmitted(true);
         toast.success("Request sent! We'll contact you within 1 hour.");
@@ -118,6 +123,9 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
       (message) => {
         setSubmitted(false);
         toast.error(message);
+      },
+      () => {
+        setSubmitting(false);
       },
     );
   };
@@ -392,15 +400,22 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                 <button
                   type="submit"
                   form="plan-trek-form"
-                  disabled={!isValid}
-                  className="plan-trek-modal__submit btn-primary justify-center"
+                  disabled={!isValid || submitting}
+                  className="plan-trek-modal__submit btn-primary justify-center inline-flex items-center gap-2"
                   style={{
-                    opacity: isValid ? 1 : 0.55,
-                    cursor: isValid ? "pointer" : "not-allowed",
+                    opacity: isValid && !submitting ? 1 : 0.55,
+                    cursor: isValid && !submitting ? "pointer" : "not-allowed",
                   }}
                   data-ocid="query.submit_button"
                 >
-                  Submit Request
+                  {submitting ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" aria-hidden />
+                      Sending…
+                    </>
+                  ) : (
+                    "Submit Request"
+                  )}
                 </button>
                 <p className="plan-trek-modal__trust">
                   <ShieldCheck

@@ -154,21 +154,34 @@ function TravelSideActionRail({
       return;
     }
 
+    let visibleRef = false;
+    const applyVisible = (next: boolean) => {
+      if (visibleRef === next) return;
+      visibleRef = next;
+      setVisible(next);
+    };
+
     const markVisibleIfPastHero = () => {
       const pastHeroSentinel = el.getBoundingClientRect().top <= NAV_OFFSET_PX;
       if (listingRail) {
-        setVisible(pastHeroSentinel);
+        applyVisible(pastHeroSentinel);
         return;
       }
       if (window.scrollY < window.innerHeight) {
-        setVisible(false);
+        applyVisible(false);
         return;
       }
-      setVisible(pastHeroSentinel);
+      applyVisible(pastHeroSentinel);
     };
 
     const observer = new IntersectionObserver(
-      () => {
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        if (listingRail) {
+          applyVisible(!entry.isIntersecting);
+          return;
+        }
         markVisibleIfPastHero();
       },
       {
@@ -180,13 +193,13 @@ function TravelSideActionRail({
 
     observer.observe(el);
     markVisibleIfPastHero();
-    window.addEventListener("scroll", markVisibleIfPastHero, { passive: true });
-    window.addEventListener("resize", markVisibleIfPastHero);
+
+    const onResize = () => markVisibleIfPastHero();
+    window.addEventListener("resize", onResize);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("scroll", markVisibleIfPastHero);
-      window.removeEventListener("resize", markVisibleIfPastHero);
+      window.removeEventListener("resize", onResize);
     };
   }, [sentinelId, listingRail]);
 

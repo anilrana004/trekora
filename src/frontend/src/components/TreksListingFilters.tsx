@@ -85,7 +85,7 @@ export default function TreksListingFilters({
             onClick={() => setMobileOpen((o) => !o)}
             data-ocid="treks.filters_toggle"
           >
-            <SlidersHorizontal size={16} className="shrink-0" aria-hidden />
+            <SlidersHorizontal size={14} className="shrink-0" aria-hidden />
             <span className="truncate font-semibold">
               {mobileOpen ? "Hide filters" : "Search & filters"}
             </span>
@@ -95,12 +95,17 @@ export default function TreksListingFilters({
               </span>
             ) : null}
           </button>
-          <label className="listing-filters-sort-compact shrink-0">
-            <span className="sr-only">Sort treks</span>
+          <label className="listing-filters-sort-compact shrink-0 flex flex-col gap-0.5">
+            <span
+              className="text-[10px] font-semibold leading-none lg:sr-only"
+              style={{ color: "var(--ew-gray-dark)" }}
+            >
+              Sort
+            </span>
             <select
               value={sort}
               onChange={(e) => onSortChange(e.target.value as TreksSortValue)}
-              className="listing-filters-sort-select w-full rounded-lg border bg-white text-sm focus:outline-none focus:ring-2"
+              className="listing-filters-sort-select w-full rounded-md border bg-white focus:outline-none focus:ring-2"
               style={inputRing}
               aria-label="Sort treks"
               data-ocid="treks.sort.select"
@@ -121,7 +126,7 @@ export default function TreksListingFilters({
         className={`listing-filters-panel${mobileOpen ? " listing-filters-panel--open" : ""}`}
       >
         <div className="listing-filters-panel__inner">
-          <div className="container mx-auto flex flex-wrap items-center justify-center gap-2 px-4 py-2.5 sm:justify-between">
+          <div className="container mx-auto flex flex-wrap items-center justify-center gap-2 px-4 py-2.5 lg:gap-1.5 lg:py-1 sm:justify-between">
             <div className="flex w-full flex-1 flex-wrap items-center justify-center gap-2 min-[480px]:w-auto">
               <div className="relative min-w-0 w-full max-w-xs flex-1 min-[480px]:min-w-[180px]">
                 <Search
@@ -135,7 +140,7 @@ export default function TreksListingFilters({
                   placeholder="Search treks or destinations…"
                   value={search}
                   onChange={(e) => onSearchChange(e.target.value)}
-                  className="w-full rounded-lg bg-white py-2.5 pl-8 pr-3 text-sm focus:outline-none focus:ring-2 min-h-11"
+                  className="w-full rounded-lg bg-white py-2.5 pl-8 pr-3 text-sm focus:outline-none focus:ring-2 min-h-11 lg:min-h-8 lg:py-1.5 lg:pl-7 lg:text-[0.8125rem]"
                   style={inputRing}
                   data-ocid="treks.search_input"
                 />
@@ -146,7 +151,7 @@ export default function TreksListingFilters({
                 onChange={(e) =>
                   onDifficultyChange(e.target.value as TrekDifficulty | "all")
                 }
-                className="min-h-11 w-full min-[480px]:w-auto rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                className="min-h-11 w-full min-[480px]:w-auto rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 lg:min-h-8 lg:py-1.5 lg:px-2.5 lg:text-[0.8125rem]"
                 style={inputRing}
                 aria-label="Filter by difficulty"
                 data-ocid="treks.difficulty.select"
@@ -162,7 +167,7 @@ export default function TreksListingFilters({
               <select
                 value={durationFilter}
                 onChange={(e) => onDurationChange(e.target.value)}
-                className="min-h-11 w-full min-[480px]:w-auto rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                className="min-h-11 w-full min-[480px]:w-auto rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 lg:min-h-8 lg:py-1.5 lg:px-2.5 lg:text-[0.8125rem]"
                 style={inputRing}
                 aria-label="Filter by duration"
                 data-ocid="treks.duration.select"
@@ -211,7 +216,7 @@ export default function TreksListingFilters({
                 ))}
             </div>
 
-            <div className="hidden shrink-0 items-center gap-2 py-1 lg:flex">
+            <div className="listing-filters-sort-desktop hidden shrink-0 items-center gap-2 py-1 lg:flex lg:gap-1.5">
               <SlidersHorizontal
                 size={15}
                 style={{ color: "var(--ew-gray-dark)" }}
@@ -226,7 +231,7 @@ export default function TreksListingFilters({
               <select
                 value={sort}
                 onChange={(e) => onSortChange(e.target.value as TreksSortValue)}
-                className="rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2"
+                className="rounded-lg border bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 lg:min-h-8 lg:py-1.5 lg:px-2.5 lg:text-[0.8125rem]"
                 style={inputRing}
                 aria-label="Sort treks"
                 data-ocid="treks.sort.select_desktop"

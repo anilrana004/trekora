@@ -13,7 +13,7 @@ const viteEntry = path.join(frontendRoot, "node_modules/vite/dist/node/index.js"
 const { createServer } = await import(pathToFileURL(viteEntry).href);
 const siteOrigin =
   process.env.VITE_SITE_ORIGIN?.replace(/\/$/, "") ||
-  "https://www.trekora.in";
+  "https://trekora.in";
 
 function escapeXml(value) {
   return String(value)

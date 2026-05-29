@@ -4,9 +4,10 @@ import {
   normalizeIndianPhoneDigits,
   validateNationalPhone,
 } from "@/lib/phone-countries";
-import { SITE_EMAIL, WHATSAPP_CHAT_URL } from "@/lib/site-contact";
+import { buildEnquiryModalPayload } from "@/lib/query-email-payloads";
+import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -87,6 +88,7 @@ export default function EnquiryModal({
 
   const [phase, setPhase] = useState<"form" | "success" | "error">("form");
   const [successPhone, setSuccessPhone] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => {
@@ -118,38 +120,44 @@ export default function EnquiryModal({
   }, [isOpen, presetTrekLabel, reset]);
 
   const onValid = (data: EnquiryFormValues) => {
+    const email = data.email.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Enter a valid email address.");
+      return;
+    }
+    if (submitting) return;
+
     const phoneDigits =
       phoneCountry === "IN"
         ? normalizeIndianPhoneDigits(data.phone)
         : data.phone.replace(/\D/g, "");
 
-    const messageBody = [
-      data.preferred_date && `Preferred date: ${data.preferred_date}`,
-      `Group size: ${data.group_size}`,
-      data.message.trim(),
-    ]
-      .filter(Boolean)
-      .join("\n");
-
+    setSubmitting(true);
     submitEmailOptimistic(
       () =>
-        submitPlanTrekEmail({
-          name: data.name.trim(),
-          phone: phoneDigits,
-          phoneCountry,
-          email: data.email.trim() || SITE_EMAIL,
-          destination: "",
-          destinationLabel: data.interested,
-          message: messageBody,
-          source: "Send Query — Enquiry modal",
-        }),
+        submitPlanTrekEmail(
+          buildEnquiryModalPayload({
+            name: data.name,
+            email,
+            phone: phoneDigits,
+            phoneCountry,
+            interested: data.interested,
+            preferredDate: data.preferred_date,
+            groupSize: data.group_size,
+            message: data.message,
+          }),
+        ),
       () => {
         setSuccessPhone(data.phone);
         setPhase("success");
+        toast.success("Enquiry sent! We'll call you within 2 hours.");
       },
       (message) => {
         setPhase("error");
         toast.error(message);
+      },
+      () => {
+        setSubmitting(false);
       },
     );
   };
@@ -320,7 +328,10 @@ export default function EnquiryModal({
 
                   <div>
                     <label htmlFor="eq-email" className={labelCls}>
-                      Email Address
+                      Email Address{" "}
+                      <span className="text-red-400" aria-hidden>
+                        *
+                      </span>
                     </label>
                     <input
                       id="eq-email"
@@ -328,8 +339,19 @@ export default function EnquiryModal({
                       autoComplete="email"
                       placeholder="your@email.com"
                       className={inputCls}
-                      {...register("email")}
+                      {...register("email", {
+                        required: "Required",
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Invalid email",
+                        },
+                      })}
                     />
+                    {errors.email && (
+                      <p className="mt-1 text-xs text-red-400">
+                        {errors.email.message || "Required"}
+                      </p>
+                    )}
                   </div>
 
                   <div>
@@ -406,10 +428,18 @@ export default function EnquiryModal({
 
                   <button
                     type="submit"
-                    className="btn-primary flex w-full items-center justify-center gap-2 py-3"
+                    disabled={submitting}
+                    className="btn-primary flex w-full items-center justify-center gap-2 py-3 disabled:opacity-70"
                     data-ocid="enquiry.modal.submit"
                   >
-                    Submit enquiry
+                    {submitting ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" aria-hidden />
+                        Sending…
+                      </>
+                    ) : (
+                      "Submit enquiry"
+                    )}
                   </button>
 
                   {phase === "error" && (

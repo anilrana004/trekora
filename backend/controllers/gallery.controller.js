@@ -7,6 +7,8 @@ export async function getGalleryLogic({
   tag = "",
   limit = 120,
   includeCloudinaryFolders = false,
+  productUploadSource = "all",
+  includeReviews = true,
 } = {}) {
   const ping = await connectDBSafe();
   if (!ping.ok) {
@@ -22,6 +24,8 @@ export async function getGalleryLogic({
     tag,
     limit,
     includeCloudinaryFolders,
+    productUploadSource,
+    includeReviews,
   });
 
   return { success: true, count: items.length, items };
@@ -41,15 +45,22 @@ async function handleGalleryRoute(req, res) {
   const type = params.get("type") ?? "";
   const tag = params.get("tag") ?? params.get("filter") ?? "";
   const limit = params.get("limit") ?? "120";
+  const uploadSourceRaw = params.get("uploadSource") ?? "";
+  const productUploadSource =
+    uploadSourceRaw === "gallery-page" || uploadSourceRaw === "product-page"
+      ? uploadSourceRaw
+      : "all";
+  const includeReviews = params.get("includeReviews") !== "0";
 
   try {
-    const includeCloudinary = params.get("includeCloudinary") !== "0";
     const result = await getGalleryLogic({
       trekSlug,
       type,
       tag,
       limit,
-      includeCloudinaryFolders: includeCloudinary && Boolean(trekSlug && type),
+      includeCloudinaryFolders: false,
+      productUploadSource,
+      includeReviews,
     });
     return res.status(result.success ? 200 : 503).json(result);
   } catch (err) {

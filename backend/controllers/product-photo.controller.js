@@ -62,6 +62,9 @@ export async function createProductPhotosLogic(body) {
     return { success: false, message: "At least one Cloudinary photo URL is required" };
   }
 
+  const uploadSource =
+    body.uploadSource === "gallery-page" ? "gallery-page" : "product-page";
+
   const seoTags = galleryTagsForSlug(trekSlug, type);
   const bodyTags = Array.isArray(body.tags)
     ? body.tags.map((t) => String(t).trim()).filter(Boolean).slice(0, 8)
@@ -77,15 +80,21 @@ export async function createProductPhotosLogic(body) {
       publicId: e.publicId,
       cloudinaryFolder: e.cloudinaryFolder || folderPath,
       uploadedBy,
+      uploadSource,
       tags,
       approved: true,
       createdAt: new Date(),
     })),
   );
 
+  const message =
+    uploadSource === "gallery-page"
+      ? `Photos saved for ${trekName} and are live in the community gallery.`
+      : `Photos saved for ${trekName} and are live on the ${type} page and gallery.`;
+
   return {
     success: true,
-    message: `Photos saved for ${trekName} and are live on the ${type} page and gallery.`,
+    message,
     count: docs.length,
     trekSlug,
     trekName,
@@ -114,6 +123,8 @@ export async function getProductPhotosBySlugLogic(slug, type) {
     type: productType ?? "",
     limit: 80,
     includeCloudinaryFolders: false,
+    productUploadSource: "product-page",
+    includeReviews: false,
   });
 
   return {

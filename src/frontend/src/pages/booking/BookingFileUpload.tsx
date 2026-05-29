@@ -1,5 +1,5 @@
-import { Loader2, Upload } from "lucide-react";
-import { useRef, useState } from "react";
+import { Check, Loader2, Upload } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   BOOKING_DOC_LIMITS,
@@ -8,7 +8,6 @@ import {
   type BookingFilePayload,
 } from "@/lib/booking-documents";
 import { CTA_OUTLINE_DASHED, ctaMerge } from "@/lib/cta-buttons";
-
 
 export default function BookingFileUpload({
   id,
@@ -30,6 +29,16 @@ export default function BookingFileUpload({
   const inputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
+  const isPhoto = kind === "photo";
+  const mobileAccept = isPhoto
+    ? "image/jpeg,image/png,image/*,.jpg,.jpeg,.png"
+    : accept;
+
+  const previewUrl = useMemo(() => {
+    if (!value || !value.contentType.startsWith("image/")) return null;
+    return `data:${value.contentType};base64,${value.contentBase64}`;
+  }, [value]);
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
@@ -50,22 +59,58 @@ export default function BookingFileUpload({
     }
   };
 
+  const clearFile = () => {
+    onChange(null);
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
   return (
     <div className="booking-file-upload">
       <input
         ref={inputRef}
         id={id}
         type="file"
-        accept={accept}
+        accept={mobileAccept}
         className="sr-only"
         onChange={handleChange}
         tabIndex={-1}
       />
+      {value && previewUrl ? (
+        <div className="booking-file-upload__preview-wrap booking-file-upload__preview-wrap--success">
+          <img
+            src={previewUrl}
+            alt="Uploaded preview"
+            className="booking-file-upload__thumb"
+          />
+          <div className="booking-file-upload__meta">
+            <p className="booking-file-upload__filename flex items-center gap-1.5">
+              <Check size={16} style={{ color: "#22C55E" }} aria-hidden />
+              {value.filename}
+            </p>
+            <p className="booking-file-upload__hint">
+              {formatFileSize(value.sizeBytes)} · Tap replace to change
+            </p>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={loading}
+              className="text-xs font-semibold mt-2 underline"
+              style={{ color: "var(--ew-red)" }}
+            >
+              Replace photo
+            </button>
+          </div>
+        </div>
+      ) : null}
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={loading}
-        className={ctaMerge(CTA_OUTLINE_DASHED, loading && "opacity-60")}
+        className={ctaMerge(
+          CTA_OUTLINE_DASHED,
+          "booking-file-upload__trigger",
+          loading && "opacity-60",
+        )}
         data-ocid={dataOcid}
         aria-controls={id}
       >
@@ -81,13 +126,21 @@ export default function BookingFileUpload({
           </>
         )}
       </button>
-      {value && (
-        <p className="text-xs mt-2" style={{ color: "#22C55E" }}>
+      {value && !previewUrl ? (
+        <p className="text-xs" style={{ color: "#22C55E" }}>
           ✓ {value.filename} ({formatFileSize(value.sizeBytes)})
         </p>
-      )}
+      ) : null}
+      {value ? (
+        <button
+          type="button"
+          onClick={clearFile}
+          className="text-xs font-medium self-start"
+          style={{ color: "var(--ew-gray-dark)" }}
+        >
+          Remove file
+        </button>
+      ) : null}
     </div>
   );
 }
-
-

@@ -1,83 +1,105 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo } from "react";
+import { filterCommunityGalleryItems } from "@/lib/gallery-community";
+import { mergeGalleryItems } from "@/lib/merge-gallery-items";
+import { productGalleryQueryKey } from "@/lib/product-gallery-cache";
 import {
   fetchGallery,
   type GalleryApiItem,
+  type GalleryResponse,
   type ProductKind,
 } from "@/lib/reviews-api";
 
 /**
- * Trekker Photos for one trek/yatra — loads once per slug, no global refresh loop.
+ * Trekker Photos for one trek/yatra — React Query cache shared with gallery grids.
  */
-export function useTrekkerPhotos(
-  trekSlug: string,
-  productType: ProductKind,
-) {
-  const [photos, setPhotos] = useState<GalleryApiItem[]>([]);
-  const [loading, setLoading] = useState(Boolean(trekSlug));
-  const [error, setError] = useState<string | null>(null);
-  const requestIdRef = useRef(0);
+export function useTrekkerPhotos(trekSlug: string, productType: ProductKind) {
+  const slug = useMemo(() => trekSlug.trim().toLowerCase(), [trekSlug]);
+  const queryClient = useQueryClient();
+  const queryKey = productGalleryQueryKey(slug, productType);
 
-  const reload = useCallback(
-    async (silent = false) => {
-      const slug = trekSlug.trim().toLowerCase();
-      if (!slug) {
-        setPhotos([]);
-        setLoading(false);
-        return;
-      }
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
+    queryKey,
+    queryFn: async (): Promise<GalleryResponse> => {
+      const res = await fetchGallery({
+        trekSlug: slug,
+        type: productType,
+        limit: 48,
+        includeCloudinary: false,
+        uploadSource: "product-page",
+        includeReviews: false,
+      });
+      if (!res.success) return res;
 
-      const reqId = ++requestIdRef.current;
-      if (!silent) setLoading(true);
-      setError(null);
-
-      try {
-        const res = await fetchGallery({
-          trekSlug: slug,
-          type: productType,
-          limit: 48,
-          includeCloudinary: false,
-        });
-        if (reqId !== requestIdRef.current) return;
-
-        if (!res.success) {
-          setError(res.message ?? "Could not load trekker photos");
-          if (!silent) setPhotos([]);
-        } else {
-          setPhotos(res.items ?? []);
-        }
-      } catch {
-        if (reqId !== requestIdRef.current) return;
-        setError("Could not load trekker photos.");
-        if (!silent) setPhotos([]);
-      } finally {
-        if (reqId === requestIdRef.current) setLoading(false);
-      }
+      const cached = queryClient.getQueryData<GalleryResponse>(queryKey);
+      const prev = cached?.success ? (cached.items ?? []) : [];
+      const fromApi = filterCommunityGalleryItems(res.items ?? []);
+      return {
+        ...res,
+        items: mergeGalleryItems(fromApi, prev),
+      };
     },
-    [trekSlug, productType],
-  );
-
-  useEffect(() => {
-    void reload(false);
-  }, [reload]);
+    enabled: Boolean(slug),
+    staleTime: 60_000,
+    gcTime: 15 * 60_000,
+  });
 
   useEffect(() => {
     const onRefresh = (ev: Event) => {
       const detail = (ev as CustomEvent<{ trekSlug?: string; type?: string }>)
         .detail;
-      const slug = trekSlug.trim().toLowerCase();
       if (detail?.trekSlug && detail.trekSlug !== slug) return;
       if (detail?.type && detail.type !== productType) return;
-      void reload(true);
+      void queryClient.invalidateQueries({ queryKey });
     };
     window.addEventListener("trekora-gallery-refresh", onRefresh);
     return () =>
       window.removeEventListener("trekora-gallery-refresh", onRefresh);
-  }, [trekSlug, productType, reload]);
+  }, [slug, productType, queryClient, queryKey]);
+
+  const photos: GalleryApiItem[] = data?.success ? (data.items ?? []) : [];
+  const loadError =
+    data && !data.success
+      ? (data.message ?? "Could not load trekker photos")
+      : error
+        ? "Could not load trekker photos."
+        : null;
+
+  const prependPhotos = useCallback(
+    (incoming: GalleryApiItem[]) => {
+      if (!incoming.length) return;
+      queryClient.setQueryData<GalleryResponse>(queryKey, (old) => {
+        const prev = old?.success ? (old.items ?? []) : [];
+        return {
+          success: true,
+          items: mergeGalleryItems(incoming, prev),
+        };
+      });
+    },
+    [queryClient, queryKey],
+  );
+
+  const clearOptimistic = useCallback(() => {
+    queryClient.setQueryData<GalleryResponse>(queryKey, (old) => ({
+      success: true,
+      items: (old?.items ?? []).filter((p) => !p.id.startsWith("optimistic-")),
+    }));
+  }, [queryClient, queryKey]);
+
+  const reload = useCallback(
+    async (silent = false) => {
+      await refetch({ cancelRefetch: !silent });
+    },
+    [refetch],
+  );
 
   return {
     photos,
-    loading: loading && photos.length === 0,
-    error,
+    loading: isLoading && photos.length === 0,
+    refreshing: isFetching && photos.length > 0,
+    error: loadError,
     reload,
+    prependPhotos,
+    clearOptimistic,
   };
 }

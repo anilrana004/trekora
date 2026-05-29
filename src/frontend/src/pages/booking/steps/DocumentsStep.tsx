@@ -132,7 +132,7 @@ function Step4({
           accept=".jpg,.jpeg,.png,image/jpeg,image/png"
           kind="photo"
           dataOcid="booking.photo.upload_button"
-          buttonLabel="Upload passport-size photo"
+          buttonLabel="Take or choose passport-size photo"
           value={fd.photoFile}
           onChange={(file) => setFd((p) => ({ ...p, photoFile: file }))}
         />

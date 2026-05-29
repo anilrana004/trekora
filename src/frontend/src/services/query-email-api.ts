@@ -1,13 +1,30 @@
+export type QueryFormType =
+  | "plan_my_trek"
+  | "send_query"
+  | "contact"
+  | "destination_plan"
+  | "yatra_plan"
+  | "lead_magnet";
+
 export type PlanTrekEmailPayload = {
+  /** Stable routing key for admin + customer emails */
+  formType?: QueryFormType;
   name: string;
   phone: string;
   /** ISO 3166-1 alpha-2 — default IN */
   phoneCountry?: string;
+  /** Destinations “Plan Your Trip” form — phone not required */
+  phoneOptional?: boolean;
+  /** Homepage PDF guide / newsletter — email-only lead capture */
+  leadMagnet?: boolean;
   email: string;
   destination?: string;
   destinationLabel?: string;
+  preferredDates?: string;
   message?: string;
   source?: string;
+  /** Where the form was submitted (SEO / ops) */
+  pagePath?: string;
 };
 
 export type PlanTrekEmailResult = { ok: true } | { ok: false; error: string };

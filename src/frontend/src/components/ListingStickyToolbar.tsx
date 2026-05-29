@@ -1,58 +1,208 @@
 import { useListingScrollChromeContext } from "@/contexts/ListingScrollChromeContext";
-import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+
+import { LISTING_CHROME_PIN_MEDIA } from "@/lib/listing-scroll-chrome";
+
+import {
+
+  useEffect,
+
+  useLayoutEffect,
+
+  useRef,
+
+  useState,
+
+  type CSSProperties,
+
+  type ReactNode,
+
+} from "react";
+
+
+
+/** Matches Navbar show animation duration in Navbar.tsx. */
+
+const CHROME_UNPIN_HOLD_MS = 420;
+
+
 
 export interface ListingStickyToolbarProps {
+
   children: ReactNode;
+
   className?: string;
+
   style?: CSSProperties;
+
 }
+
+
 
 /**
- * Sticky listing header (region pills + filters). On mobile listing pages,
- * pins flush to the top while the user is scrolling past the hero; hides
- * when scroll stops so the main navbar returns.
+
+ * Listing filters — sticky below navbar when idle; on mobile, pins to top
+
+ * (replaces navbar) while actively scrolling past the hero.
+
  */
+
 export default function ListingStickyToolbar({
+
   children,
+
   className = "",
+
   style,
+
 }: ListingStickyToolbarProps) {
-  const { chromeActive } = useListingScrollChromeContext();
+
+  const { chromeActive, pinEnabled } = useListingScrollChromeContext();
+
   const toolbarRef = useRef<HTMLDivElement>(null);
+
   const [spacerHeight, setSpacerHeight] = useState(0);
 
+  const [holdSpacer, setHoldSpacer] = useState(false);
+
+  const [canPinLayout, setCanPinLayout] = useState(() =>
+
+    typeof window !== "undefined"
+
+      ? window.matchMedia(LISTING_CHROME_PIN_MEDIA).matches
+
+      : false,
+
+  );
+
+
+
+  useEffect(() => {
+
+    const mq = window.matchMedia(LISTING_CHROME_PIN_MEDIA);
+
+    const apply = () => setCanPinLayout(mq.matches);
+
+    apply();
+
+    mq.addEventListener("change", apply);
+
+    return () => mq.removeEventListener("change", apply);
+
+  }, []);
+
+
+
+  const usePinLayout = pinEnabled && canPinLayout;
+
+
+
   useLayoutEffect(() => {
+
+    if (!usePinLayout) return;
+
     const el = toolbarRef.current;
+
     if (!el) return;
 
-    const measure = () => setSpacerHeight(el.offsetHeight);
+
+
+    const measure = () => {
+
+      const h = el.offsetHeight;
+
+      setSpacerHeight((prev) => (prev === h ? prev : h));
+
+    };
+
     measure();
 
+
+
     const ro = new ResizeObserver(measure);
+
     ro.observe(el);
+
     return () => ro.disconnect();
-  }, [chromeActive, children]);
+
+  }, [children, usePinLayout]);
+
+
+
+  useEffect(() => {
+
+    if (!usePinLayout) {
+
+      setHoldSpacer(false);
+
+      return;
+
+    }
+
+    if (chromeActive) {
+
+      setHoldSpacer(true);
+
+      return;
+
+    }
+
+    if (!holdSpacer) return;
+
+    const t = window.setTimeout(() => setHoldSpacer(false), CHROME_UNPIN_HOLD_MS);
+
+    return () => window.clearTimeout(t);
+
+  }, [chromeActive, holdSpacer, usePinLayout]);
+
+
+
+  const showSpacer = usePinLayout && (chromeActive || holdSpacer) && spacerHeight > 0;
+
+
 
   const toolbarClass = [
+
     "listing-sticky-toolbar",
+
     chromeActive ? "listing-sticky-toolbar--chrome-pinned" : "",
+
     className,
+
   ]
+
     .filter(Boolean)
+
     .join(" ");
 
+
+
   return (
+
     <>
-      {chromeActive && spacerHeight > 0 ? (
+
+      {showSpacer ? (
+
         <div
+
           className="listing-chrome-spacer"
+
           style={{ height: spacerHeight }}
+
           aria-hidden
+
         />
+
       ) : null}
+
       <div ref={toolbarRef} className={toolbarClass} style={style}>
+
         {children}
+
       </div>
+
     </>
+
   );
+
 }
+
