@@ -50,7 +50,7 @@ export default function SocialProofTicker() {
   return (
     <div
       ref={ref}
-      className="w-full overflow-hidden py-2"
+      className="home-strip-marquee w-full py-2"
       style={{
         background: "var(--ew-gray-lt)",
         borderTop: "1px solid var(--ew-gray-mid)",
@@ -65,7 +65,7 @@ export default function SocialProofTicker() {
           <span
             // biome-ignore lint/suspicious/noArrayIndexKey: static duplicate list
             key={i}
-            className="flex items-center gap-1.5 whitespace-nowrap px-5 text-[13px]"
+            className="home-strip-marquee__item flex shrink-0 items-center gap-1.5 whitespace-nowrap px-4 text-[13px] sm:px-5"
             style={{ color: "var(--ew-text-lt)" }}
           >
             <span

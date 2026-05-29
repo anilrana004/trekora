@@ -1404,23 +1404,43 @@
     }
   }
 
-  /* ── Marquee / trust strip ── */
+  /* ── Homepage trust + social-proof strips (infinite scroll) ── */
+  .home-strip-marquee,
   .marquee-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
     overflow: hidden;
+    isolation: isolate;
+    contain: layout style;
   }
+
+  .marquee-track,
+  .ticker-track {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: max-content;
+    min-width: 100%;
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
   .marquee-track {
-    display: flex;
-    animation: marquee 30s linear infinite;
+    animation: marquee 36s linear infinite;
   }
+
   .marquee-track:hover {
     animation-play-state: paused;
   }
+
   @keyframes marquee {
     from {
-      transform: translateX(0);
+      transform: translate3d(0, 0, 0);
     }
     to {
-      transform: translateX(-50%);
+      transform: translate3d(-50%, 0, 0);
     }
   }
 
@@ -1455,18 +1475,33 @@
 
   /* ── Social proof ticker ── */
   .ticker-track {
-    display: flex;
-    animation: ticker-scroll 45s linear infinite;
+    animation: ticker-scroll 40s linear infinite;
   }
+
   .ticker-track:hover {
     animation-play-state: paused;
   }
+
   @keyframes ticker-scroll {
     from {
-      transform: translateX(0);
+      transform: translate3d(0, 0, 0);
     }
     to {
-      transform: translateX(-50%);
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track,
+    .ticker-track {
+      animation: none;
+      transform: none;
+      flex-wrap: wrap;
+      width: 100%;
+      min-width: 0;
+      justify-content: center;
+      row-gap: 0.35rem;
+      padding: 0.25rem 0.5rem;
     }
   }
 

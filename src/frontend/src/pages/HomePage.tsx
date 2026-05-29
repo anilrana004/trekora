@@ -1845,7 +1845,7 @@ function TrustMarquee() {
   );
   return (
     <div
-      className="marquee-container py-3"
+      className="home-strip-marquee marquee-container py-3"
       style={{ background: "var(--ew-gray-lt)" }}
       data-ocid="trust.section"
     >
@@ -1853,7 +1853,7 @@ function TrustMarquee() {
         {items.map((item) => (
           <span
             key={item.key}
-            className="flex items-center gap-2 whitespace-nowrap px-5 text-[13px]"
+            className="home-strip-marquee__item flex shrink-0 items-center gap-2 whitespace-nowrap px-4 text-[13px] sm:px-5"
             style={{ color: "var(--ew-text-lt)" }}
           >
             <svg

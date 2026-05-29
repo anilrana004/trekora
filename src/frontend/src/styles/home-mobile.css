@@ -21,7 +21,40 @@
 
 @media (max-width: 1023px) {
   .home-page {
-    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  /* Social proof + trust marquees — keep horizontal scroll on phone */
+  .home-strip-marquee,
+  .marquee-container,
+  [data-ocid="social_proof.ticker"] {
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+
+  .ticker-track,
+  .marquee-track {
+    animation-play-state: running !important;
+  }
+
+  .home-strip-marquee__item {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .ticker-track {
+    animation-duration: 28s;
+  }
+
+  .marquee-track {
+    animation-duration: 24s;
+  }
+
+  [data-ocid="social_proof.ticker"] .inline-flex.w-5 {
+    width: 1.125rem;
+    height: 1.125rem;
+    font-size: 0.5625rem;
   }
 
   /* Hero */
