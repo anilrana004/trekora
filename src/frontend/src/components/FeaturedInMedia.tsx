@@ -32,6 +32,7 @@ export default function FeaturedInMedia({
         <OptimizedVideo
           src={videoSrc}
           poster={imageSrc}
+          profile="logo"
           width={200}
           height={48}
           muted

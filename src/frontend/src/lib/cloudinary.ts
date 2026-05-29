@@ -29,5 +29,8 @@ export {
 } from "./images/types";
 export {
   buildOptimizedVideoUrl,
+  buildVideoPosterUrl,
+  reelPosterFromVideo,
   isRemoteHttpUrl,
+  type VideoDeliveryProfile,
 } from "../utils/mediaTransform";

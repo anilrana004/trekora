@@ -34,6 +34,7 @@ export default function CinematicHeroMedia({
         <OptimizedVideo
           src={videoSrc as string}
           poster={posterSrc ?? imageSrc}
+          profile="hero-mobile"
           fill
           priority
           muted

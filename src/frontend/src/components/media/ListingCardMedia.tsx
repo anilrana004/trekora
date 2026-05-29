@@ -40,6 +40,7 @@ export default function ListingCardMedia({
           <OptimizedVideo
             src={reelVideo}
             poster={src}
+            profile="card-mobile"
             fill
             muted
             loop

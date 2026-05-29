@@ -1,6 +1,10 @@
 import type { TrekReel } from "@/data/trek-reels";
 import { reelInstanceKey } from "@/data/trek-reels";
-import { buildOptimizedVideoUrl } from "@/utils/mediaTransform";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  buildOptimizedVideoUrl,
+  buildVideoPosterUrl,
+} from "@/utils/mediaTransform";
 import { Volume2, VolumeX, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -33,10 +37,19 @@ export default function ReelVideoLightbox({
 }: ReelVideoLightboxProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [soundOn, setSoundOn] = useState(!defaultMuted);
+  const isMobile = useIsMobile(1024);
 
   const optimizedSrc = useMemo(
-    () => buildOptimizedVideoUrl(videoSrc, { width: 1080 }),
-    [videoSrc],
+    () =>
+      buildOptimizedVideoUrl(videoSrc, {
+        profile: isMobile ? "lightbox-mobile" : "lightbox-desktop",
+      }),
+    [videoSrc, isMobile],
+  );
+
+  const optimizedPoster = useMemo(
+    () => poster ?? buildVideoPosterUrl(videoSrc, isMobile ? 480 : 720),
+    [poster, videoSrc, isMobile],
   );
 
   const currentIdx = videoReels.findIndex(
@@ -216,7 +229,7 @@ export default function ReelVideoLightbox({
         <video
           ref={attachVideo}
           src={optimizedSrc}
-          poster={poster}
+          poster={optimizedPoster}
           className="h-full w-full object-contain bg-black"
           controls
           playsInline

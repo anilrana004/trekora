@@ -31,6 +31,7 @@ export default function HomeTrekFeatureMedia({
       <>
         <OptimizedVideo
           src={reelVideo}
+          profile="hero-mobile"
           fill
           muted
           loop

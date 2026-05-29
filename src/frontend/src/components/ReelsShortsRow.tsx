@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 import type { TrekReel } from "@/data/trek-reels";
 import { reelInstanceKey } from "@/data/trek-reels";
 import { isVideoMediaUrl } from "@/lib/media-url";
+import { buildVideoPosterUrl } from "@/utils/mediaTransform";
 import OptimizedImage from "./media/OptimizedImage";
 import ReelBookButton from "./ReelBookButton";
 import ReelVideoLightbox from "./ReelVideoLightbox";
@@ -22,25 +23,10 @@ export function reelVideoSrc(reel: TrekReel): string | undefined {
   return undefined;
 }
 
-/** Frame-0 JPG from Cloudinary MP4 — reel card preview. */
-export function reelPosterFromVideo(
-  videoSrc: string,
-  width = 480,
-): string | undefined {
-  const trimmed = videoSrc.trim();
-  const marker = "/video/upload/";
-  const i = trimmed.indexOf(marker);
-  if (i === -1) return undefined;
-  const rest = trimmed.slice(i + marker.length);
-  const chain = `so_0,w_${width},c_fill,q_auto,f_jpg`;
-  const path = rest.replace(/\.(mp4|webm|mov)$/i, ".jpg");
-  return `${trimmed.slice(0, i + marker.length)}${chain}/${path}`;
-}
-
 /** Card preview: catalog still first — some reel MP4s have a black first frame (e.g. Roopkund). */
 function reelPreviewSrc(reel: TrekReel, videoSrc: string): string {
   if (reel.thumb) return reel.thumb;
-  return reelPosterFromVideo(videoSrc) ?? "";
+  return buildVideoPosterUrl(videoSrc, 480) ?? "";
 }
 
 export default function ReelsShortsRow({
