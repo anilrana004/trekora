@@ -5,6 +5,7 @@ import {
 } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
 import { SEOHead } from "../components/SEOHead";
+import { SITE_ORIGIN } from "@/lib/site-config";
 
 const LAST_UPDATED = "May 13, 2026";
 
@@ -14,7 +15,7 @@ export default function PrivacyPolicyPage() {
       <SEOHead
         title="Privacy Policy | Trekora"
         description="How Trekora collects, uses, and protects your personal information."
-        canonical="https://www.trekora.in/privacy-policy"
+        canonical={`${SITE_ORIGIN}/privacy-policy`}
       />
       <section
         className="py-12 text-white"

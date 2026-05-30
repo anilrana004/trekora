@@ -11,6 +11,7 @@ import { motion } from "motion/react";
 import FeaturedInMedia from "../components/FeaturedInMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
 import { SEOHead } from "../components/SEOHead";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -165,7 +166,7 @@ export default function AboutPage() {
         title="About Trekora | Himalayan Trekking & Yatra Experts"
         description="Learn about Trekora — founded in 2009, 10,000+ trekkers, IMF-certified guides, and responsible Himalayan adventures across Uttarakhand and Himachal."
         keywords="about Trekora, Himalayan trekking company, certified trek guides India"
-        canonical="https://www.trekora.in/about"
+        canonical={`${SITE_ORIGIN}/about`}
       />
 
       {/* Hero — Our Story watermark background */}

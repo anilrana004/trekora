@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { SEOHead } from "../components/SEOHead";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -28,7 +29,7 @@ export default function BlogPage() {
         title="Trek Knowledge — Travel Stories & Tips from the Himalayas | Trekora"
         description="Expert Himalayan trek guides, yatra tips, destination stories, safety advice, and gear recommendations from Trekora."
         keywords="Himalayan trek blog, trekking tips India, Trekora travel stories, trek guides Uttarakhand"
-        canonical="https://www.trekora.in/blog"
+        canonical={`${SITE_ORIGIN}/blog`}
       />
 
       {/* Hero — matches gallery / packages listing */}

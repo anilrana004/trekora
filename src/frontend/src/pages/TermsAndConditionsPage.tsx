@@ -5,6 +5,7 @@ import {
 } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
 import { SEOHead } from "../components/SEOHead";
+import { SITE_ORIGIN } from "@/lib/site-config";
 
 const LAST_UPDATED = "May 13, 2026";
 
@@ -14,7 +15,7 @@ export default function TermsAndConditionsPage() {
       <SEOHead
         title="Terms & Conditions | Trekora"
         description="Bookings, cancellations, liability, and governing law for Trekora treks and yatras."
-        canonical="https://www.trekora.in/terms-and-conditions"
+        canonical={`${SITE_ORIGIN}/terms-and-conditions`}
       />
       <section
         className="py-12 text-white"

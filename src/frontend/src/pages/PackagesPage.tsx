@@ -25,6 +25,7 @@ import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import PackageCard from "../components/PackageCard";
 import { SEOHead } from "../components/SEOHead";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -140,7 +141,7 @@ export default function PackagesPage() {
         title="Himalayan Trek & Yatra Packages — Curated Combo Circuits | Trekora"
         description="Book world-first Himalayan packages combining Char Dham, Panch Kedar, Valley of Flowers, Hampta Pass, Spiti and more. Real treks + yatras, bundle savings, IMF-certified guides."
         keywords="Himalayan package tours, Char Dham trek combo, trek yatra package India, Trekora curated packages, pilgrimage trek package"
-        canonical="https://www.trekora.in/packages"
+        canonical={`${SITE_ORIGIN}/packages`}
       />
 
       {/* Hero — matches /treks and /yatras listing */}

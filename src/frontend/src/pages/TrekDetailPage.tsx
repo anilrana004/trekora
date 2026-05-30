@@ -80,6 +80,7 @@ import { useGTM } from "../hooks/useGTM";
 import { useTrekBatches } from "../hooks/useTrekBatches";
 import { downloadTrekItineraryPDF } from "../lib/pdfGenerator";
 import { buildTrekPageSEO, getRelatedTreks } from "@/lib/product-seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import {
   generateBreadcrumbJSONLD,
   generateFAQJSONLD,
@@ -465,7 +466,7 @@ export default function TrekDetailPage() {
     provider: {
       "@type": "TouristInformationCenter",
       name: "Trekora",
-      url: "https://www.trekora.in",
+      url: SITE_ORIGIN,
     },
     touristType: "Adventure Trekking",
     offers: {
@@ -490,19 +491,19 @@ export default function TrekDetailPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://www.trekora.in",
+        item: SITE_ORIGIN,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Treks",
-        item: "https://www.trekora.in/treks",
+        item: `${SITE_ORIGIN}/treks`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: trek?.name ?? "",
-        item: `https://www.trekora.in/treks/${slug}`,
+        item: `${SITE_ORIGIN}/treks/${slug}`,
       },
     ],
   };

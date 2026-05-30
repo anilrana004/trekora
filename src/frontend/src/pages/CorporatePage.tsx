@@ -15,6 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import OptimizedImage from "../components/media/OptimizedImage";
 import { SEOHead } from "../components/SEOHead";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -264,7 +265,7 @@ export default function CorporatePage() {
         title="Corporate & School Treks — Team Building in the Himalayas | Trekora"
         description="Custom corporate and school trek programs in Uttarakhand and Himachal. Team building, leadership development, and certified Himalayan experiences for groups of all sizes."
         keywords="corporate trekking India, school trek programs, team building Himalayas, corporate outing Trekora"
-        canonical="https://www.trekora.in/corporate"
+        canonical={`${SITE_ORIGIN}/corporate`}
       />
 
       {/* Hero — matches treks / packages listing */}

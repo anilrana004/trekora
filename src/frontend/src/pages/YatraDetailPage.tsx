@@ -68,6 +68,7 @@ import {
 import type { YatraHowToReach } from "../data/yatras";
 import { downloadYatraItineraryPDF } from "../lib/pdfGenerator";
 import { buildYatraPageSEO, getRelatedYatras } from "@/lib/product-seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import {
   generateBreadcrumbJSONLD,
   generateFAQJSONLD,
@@ -273,7 +274,7 @@ export default function YatraDetailPage() {
     provider: {
       "@type": "TouristInformationCenter",
       name: "Trekora",
-      url: "https://www.trekora.in",
+      url: SITE_ORIGIN,
     },
     offers: {
       "@type": "Offer",
@@ -291,19 +292,19 @@ export default function YatraDetailPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://www.trekora.in",
+        item: SITE_ORIGIN,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Yatras",
-        item: "https://www.trekora.in/yatras",
+        item: `${SITE_ORIGIN}/yatras`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: yatra?.name ?? "",
-        item: `https://www.trekora.in/yatras/${slug}`,
+        item: `${SITE_ORIGIN}/yatras/${slug}`,
       },
     ],
   };
