@@ -154,9 +154,11 @@ Use path **`/health`**, not `/`. Expected JSON:
 
 ## Connecting Vercel frontend → Railway API (optional)
 
-By default, `src/frontend/vercel.json` serves `/api/reviews`, `/api/gallery`, `/api/product-photos` via **Vercel serverless** (same codebase as `backend/controllers`).
+`src/frontend/vercel.json` proxies **`/api/reviews`** (including `GET /api/reviews/:slug`) to **`https://api.trekora.in`** because Vercel serverless only handles the exact `/api/reviews` path — dynamic slugs must hit Railway Express.
 
-To offload to Railway, add rewrites in `vercel.json`:
+`/api/gallery` and `/api/product-photos` still use **Vercel serverless** unless you add similar rewrites.
+
+To proxy additional Mongo routes to Railway, extend `vercel.json`:
 
 ```json
 {

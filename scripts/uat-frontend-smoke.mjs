@@ -153,6 +153,38 @@ async function testContactApi() {
   }
 }
 
+async function testReviewsBySlugApi() {
+  const slug = "kedarkantha-trek";
+  try {
+    const { res, text } = await fetchText(`${BASE}/api/reviews/${slug}`);
+    if (res.status === 404) {
+      fail(
+        "12-reviews-by-slug",
+        "GET /api/reviews/:slug returned 404 (Vercel needs Railway rewrite)",
+      );
+      return;
+    }
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch {
+      fail("12-reviews-by-slug", "non-JSON response");
+      return;
+    }
+    if (res.status === 200 && json.success === true) {
+      pass("12-reviews-by-slug", `trekSlug=${json.trekSlug ?? slug}`);
+      return;
+    }
+    if (res.status === 503) {
+      pass("12-reviews-by-slug", "route OK; Mongo unavailable");
+      return;
+    }
+    fail("12-reviews-by-slug", `HTTP ${res.status} ${text.slice(0, 80)}`);
+  } catch (e) {
+    fail("12-reviews-by-slug", e.message);
+  }
+}
+
 async function testBookingApi() {
   try {
     const { res, text } = await fetchText(`${BASE}/api/booking`, {
@@ -187,6 +219,7 @@ async function main() {
   await testStaticAssets();
   await testContactApi();
   await testBookingApi();
+  await testReviewsBySlugApi();
 
   const failed = results.filter((r) => !r.ok);
   for (const r of results) {

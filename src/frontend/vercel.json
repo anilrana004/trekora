@@ -89,6 +89,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/api/reviews",
+      "destination": "https://api.trekora.in/api/reviews"
+    },
+    {
+      "source": "/api/reviews/:path*",
+      "destination": "https://api.trekora.in/api/reviews/:path*"
+    },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
