@@ -2,7 +2,17 @@ import { BLOGS } from "@/data/blogs";
 import { resolveBlogCardImage } from "@/lib/blog-product-images";
 import { TREKS } from "@/data/treks";
 import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "@/lib/site-config";
-import { generateBlogJSONLD, generateTrekJSONLD } from "@/lib/seo";
+import {
+  generateBlogJSONLD,
+  generateBreadcrumbJSONLD,
+  generateDestinationDistrictPlaceJSONLD,
+  generateDestinationStatePlaceJSONLD,
+  generateDestinationsIndexPlaceJSONLD,
+  generateTrekJSONLD,
+} from "@/lib/seo";
+import type { Blog } from "@/data/blogs";
+
+const CURRENT_YEAR = new Date().getFullYear();
 
 export { SITE_ORIGIN, DEFAULT_OG_IMAGE };
 
@@ -34,8 +44,14 @@ export function routeHasOwnSEOHead(pathname: string): boolean {
     pathname === "/treks" ||
     pathname === "/yatras" ||
     pathname === "/gallery" ||
+    pathname === "/about" ||
+    pathname === "/blog" ||
+    pathname === "/contact" ||
+    pathname === "/corporate" ||
+    pathname === "/packages" ||
     pathname === "/privacy-policy" ||
-    pathname === "/terms-and-conditions"
+    pathname === "/terms-and-conditions" ||
+    pathname === "/book"
   ) {
     return true;
   }
@@ -45,6 +61,9 @@ export function routeHasOwnSEOHead(pathname: string): boolean {
     return true;
   }
   if (parts[0] === "yatras" && parts.length === 2) {
+    return true;
+  }
+  if (parts[0] === "blog" && parts.length === 2) {
     return true;
   }
 
@@ -122,6 +141,13 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
         "Explore trek destinations across Uttarakhand and Himachal Pradesh — districts, trails, and curated experiences.",
       keywords: "trek destinations India, Uttarakhand treks, Himachal trekking",
       canonical: `${SITE_ORIGIN}/destinations`,
+      schema: [
+        generateDestinationsIndexPlaceJSONLD(),
+        generateBreadcrumbJSONLD([
+          { name: "Home", url: "/" },
+          { name: "Destinations", url: "/destinations" },
+        ]),
+      ],
     },
     "/book": {
       title: "Book Your Trek | Trekora",
@@ -146,15 +172,7 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
   if (blogMatch) {
     const blog = BLOGS.find((b) => b.slug === blogMatch[1]);
     if (!blog) return null;
-    return {
-      title: `${blog.title} | Trekora Blog`,
-      description: blog.excerpt,
-      keywords: blog.tags.join(", "),
-      canonical: `${SITE_ORIGIN}/blog/${blog.slug}`,
-      ogImage: resolveBlogCardImage(blog) || DEFAULT_OG_IMAGE,
-      ogType: "article",
-      schema: generateBlogJSONLD(blog),
-    };
+    return getBlogDetailSEO(blog);
   }
 
   const trekkerMatch = pathname.match(/^\/trekkers\/([^/]+)$/);
@@ -174,7 +192,7 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
   if (stateHubMatch) {
     const label = stateLabel(stateHubMatch[1]);
     return {
-      title: `${label} Treks 2025 | Trekora`,
+      title: `${label} Treks ${CURRENT_YEAR} | Trekora`,
       description: `Discover guided treks in ${label} with Trekora — certified guides, fixed batches, and all-inclusive packages.`,
       keywords: `${label} treks, Himalayan trekking ${label}, book trek ${label}`,
       canonical: `${SITE_ORIGIN}${pathname}`,
@@ -229,6 +247,14 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
       keywords: `${label} trekking, trek destinations ${label}`,
       canonical: `${SITE_ORIGIN}${pathname}`,
       ogImage: DEFAULT_OG_IMAGE,
+      schema: [
+        generateDestinationStatePlaceJSONLD(label),
+        generateBreadcrumbJSONLD([
+          { name: "Home", url: "/" },
+          { name: "Destinations", url: "/destinations" },
+          { name: label, url: pathname },
+        ]),
+      ],
     };
   }
 
@@ -236,16 +262,50 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
   if (destDistrictMatch) {
     const district = destDistrictMatch[2].replace(/-/g, " ");
     const state = stateLabel(destDistrictMatch[1]);
+    const districtTitle =
+      district.charAt(0).toUpperCase() + district.slice(1);
     return {
-      title: `${district} Treks, ${state} | Trekora`,
-      description: `Trekking experiences in ${district}, ${state} — curated routes, guides, and packages from Trekora.`,
-      keywords: `${district} trek, trekking ${district} ${state}`,
+      title: `${districtTitle} Treks, ${state} | Trekora`,
+      description: `Trekking experiences in ${districtTitle}, ${state} — curated routes, guides, and packages from Trekora.`,
+      keywords: `${districtTitle} trek, trekking ${districtTitle} ${state}`,
       canonical: `${SITE_ORIGIN}${pathname}`,
       ogImage: DEFAULT_OG_IMAGE,
+      schema: [
+        generateDestinationDistrictPlaceJSONLD(districtTitle, state),
+        generateBreadcrumbJSONLD([
+          { name: "Home", url: "/" },
+          { name: "Destinations", url: "/destinations" },
+          {
+            name: state,
+            url: `/destinations/${destDistrictMatch[1]}`,
+          },
+          { name: districtTitle, url: pathname },
+        ]),
+      ],
     };
   }
 
   return null;
+}
+
+/** Shared blog article SEO for RoutePageSEO and BlogDetailPage. */
+export function getBlogDetailSEO(blog: Blog): RouteSEOConfig {
+  return {
+    title: `${blog.title} | Trekora Blog`,
+    description: blog.excerpt,
+    keywords: blog.tags.join(", "),
+    canonical: `${SITE_ORIGIN}/blog/${blog.slug}`,
+    ogImage: resolveBlogCardImage(blog) || DEFAULT_OG_IMAGE,
+    ogType: "article",
+    schema: [
+      generateBlogJSONLD(blog),
+      generateBreadcrumbJSONLD([
+        { name: "Home", url: "/" },
+        { name: "Blog", url: "/blog" },
+        { name: blog.title, url: `/blog/${blog.slug}` },
+      ]),
+    ],
+  };
 }
 
 export const NOT_FOUND_SEO: RouteSEOConfig = {

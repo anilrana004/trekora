@@ -15,6 +15,7 @@ import { CompareBar } from "./TrekCompare";
 import TrekRecommenderQuiz from "./TrekRecommenderQuiz";
 import { EnquiryProvider } from "./ui/EnquiryContext";
 import WhatsAppButton from "./ui/WhatsAppButton";
+import RoutePageSEO from "./RoutePageSEO";
 
 export default function Layout() {
   const [isQueryModalOpen, setIsQueryModalOpen] = useState(false);
@@ -61,6 +62,7 @@ export default function Layout() {
         >
           Skip to main content
         </a>
+        <RoutePageSEO />
         <Navbar />
         <LanguageBanner />
         <main
