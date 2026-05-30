@@ -23,6 +23,8 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { SEOHead } from "../components/SEOHead";
+import { generateContactLocalBusinessJSONLD } from "@/lib/seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -164,7 +166,8 @@ export default function ContactPage() {
         title="Contact Trekora | Book Treks & Yatras"
         description="Contact Trekora in Dehradun — phone, WhatsApp, email, and callback. Mon–Sat 9AM–9PM. Plan your Himalayan trek or yatra."
         keywords="contact Trekora, book Himalayan trek, Trekora Dehradun office"
-        canonical="https://www.trekora.in/contact"
+        canonical={`${SITE_ORIGIN}/contact`}
+        schema={generateContactLocalBusinessJSONLD()}
       />
 
       {/* Hero — matches gallery / blog listing */}

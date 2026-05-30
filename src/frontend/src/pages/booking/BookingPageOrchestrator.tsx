@@ -17,6 +17,8 @@ import { flushSync } from "react-dom";
 import { toast } from "sonner";
 import { createActor } from "@/backend";
 import BookingHelpActions from "@/components/BookingHelpActions";
+import { SEOHead } from "@/components/SEOHead";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import OptimizedImage from "@/components/media/OptimizedImage";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
@@ -920,6 +922,12 @@ export default function BookingPageOrchestrator() {
         className="booking-page pt-24 min-h-screen pb-12 px-4"
         style={{ background: "var(--ew-gray-lt)" }}
       >
+        <SEOHead
+          title="Booking Confirmed | Trekora"
+          description="Your Trekora booking confirmation."
+          canonical={`${SITE_ORIGIN}/book`}
+          noindex
+        />
         <BookingSuccessScreen
           bookingRef={successRef}
           trekName={product?.name ?? "your trip"}
@@ -935,6 +943,12 @@ export default function BookingPageOrchestrator() {
       className="booking-page min-h-screen sm:pb-32"
       style={{ background: "var(--ew-gray-lt)" }}
     >
+      <SEOHead
+        title="Book Your Trek | Trekora"
+        description="Complete your Trekora trek or yatra booking securely online."
+        canonical={`${SITE_ORIGIN}/book`}
+        noindex
+      />
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <TravelSideActionRail
         variant="listing-booking"

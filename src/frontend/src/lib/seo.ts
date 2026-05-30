@@ -8,7 +8,7 @@ import {
   enrichTrekJSONLD,
   enrichYatraJSONLD,
 } from "./product-seo";
-import { SITE_PHONE_TEL } from "./site-contact";
+import { SITE_EMAIL, SITE_GEO, SITE_PHONE_TEL } from "./site-contact";
 import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "./site-config";
 
 /* ── DOM helpers ── */
@@ -196,11 +196,15 @@ export function generateYatraJSONLD(yatra: Yatra): Record<string, unknown> {
 }
 
 export function generateBlogJSONLD(blog: Blog): Record<string, unknown> {
+  const image = resolveBlogCardImage(blog) ?? blog.images?.[0];
+  const published = blog.publishedAt ?? new Date().toISOString().split("T")[0];
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: blog.title,
     description: blog.excerpt ?? blog.title,
+    url: `${SITE_ORIGIN}/blog/${blog.slug}`,
+    mainEntityOfPage: `${SITE_ORIGIN}/blog/${blog.slug}`,
     author: {
       "@type": "Person",
       name: blog.author ?? "Trekora Editorial Team",
@@ -213,8 +217,78 @@ export function generateBlogJSONLD(blog: Blog): Record<string, unknown> {
         url: `${SITE_ORIGIN}/logo.png`,
       },
     },
-    datePublished: blog.publishedAt ?? new Date().toISOString().split("T")[0],
-    image: resolveBlogCardImage(blog) ?? blog.images?.[0],
+    datePublished: published,
+    dateModified: published,
+    image,
+  };
+}
+
+export function generateContactLocalBusinessJSONLD(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Trekora",
+    url: SITE_ORIGIN,
+    telephone: SITE_PHONE_TEL,
+    email: SITE_EMAIL,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "15 Rajpur Road",
+      addressLocality: "Dehradun",
+      addressRegion: "Uttarakhand",
+      postalCode: "248001",
+      addressCountry: "IN",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: SITE_GEO.lat,
+      longitude: SITE_GEO.lng,
+    },
+  };
+}
+
+export function generateDestinationsIndexPlaceJSONLD(): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    name: "Himalayan Trek Destinations",
+    description:
+      "Trek and pilgrimage destinations across Uttarakhand and Himachal Pradesh, India.",
+    containedInPlace: {
+      "@type": "Country",
+      name: "India",
+    },
+  };
+}
+
+export function generateDestinationStatePlaceJSONLD(
+  stateName: string,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    name: stateName,
+    description: `Trekking and yatra destinations in ${stateName}, India.`,
+    containedInPlace: {
+      "@type": "Country",
+      name: "India",
+    },
+  };
+}
+
+export function generateDestinationDistrictPlaceJSONLD(
+  districtName: string,
+  stateName: string,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Place",
+    name: districtName,
+    description: `Trekking hub in ${districtName}, ${stateName}, India.`,
+    containedInPlace: {
+      "@type": "AdministrativeArea",
+      name: stateName,
+    },
   };
 }
 

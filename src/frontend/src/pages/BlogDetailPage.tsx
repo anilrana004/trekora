@@ -10,8 +10,10 @@ import OptimizedImage from "../components/media/OptimizedImage";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
+import { SEOHead } from "../components/SEOHead";
 import { BLOGS } from "../data/blogs";
 import { resolveBlogCardImage } from "../lib/blog-product-images";
+import { getBlogDetailSEO } from "../lib/route-seo";
 
 export default function BlogDetailPage() {
   const { slug } = useParams({ from: "/layout/blog/$slug" });
@@ -53,11 +55,22 @@ export default function BlogDetailPage() {
     );
   }
 
+  const blogSeo = getBlogDetailSEO(blog);
+
   return (
     <div
       className="pt-16 min-h-screen"
       style={{ background: "var(--ew-gray-lt)" }}
     >
+      <SEOHead
+        title={blogSeo.title}
+        description={blogSeo.description}
+        keywords={blogSeo.keywords}
+        canonical={blogSeo.canonical}
+        ogImage={blogSeo.ogImage}
+        ogType={blogSeo.ogType}
+        schema={blogSeo.schema}
+      />
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <TravelSideActionRail variant="listing-blog" />
       {/* Hero */}
