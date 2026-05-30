@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-/** Side rails stay hidden until user scrolls past ~one viewport (first screen) */
+/** One full viewport — used as fallback when no hero sentinel exists */
 export const TRAVEL_FIRST_VIEWPORT_SCROLL_PX = () =>
   typeof window !== "undefined" ? window.innerHeight : 0;
 
-/** Mark hero / full-width image blocks so side CTAs hide except WhatsApp */
+/** Navbar clearance for hero-sentinel intersection checks */
+export const TRAVEL_RAIL_NAV_OFFSET_PX = 72;
+
+/** Mark hero blocks — pre-engage chat float styling only */
 export const TRAVEL_IMAGE_SECTION_ATTR = "data-travel-image-section";
 
 const IMAGE_SECTION_VISIBLE_RATIO = 0.22;
@@ -33,7 +36,7 @@ function useRafScrollSync(sync: () => void) {
   }, [sync]);
 }
 
-/** True while a marked image/hero block covers ~22%+ of the viewport */
+/** True while a marked hero/image block covers ~22%+ of the viewport */
 export function useTravelImageSectionOverlap(): boolean {
   const [active, setActive] = useState(false);
   const activeRef = useRef(false);
@@ -58,21 +61,56 @@ export function useTravelImageSectionOverlap(): boolean {
   return active;
 }
 
-/** True after the user has scrolled past the first viewport (desktop + mobile) */
-export function usePastFirstViewport(): boolean {
-  const [past, setPast] = useState(false);
-  const pastRef = useRef(false);
+/**
+ * Side-rail visibility — true while scroll is past one full viewport.
+ * Updates live: hides again when the user scrolls back to the first page.
+ */
+export function useTravelSideRailEngaged(options?: {
+  /** Booking / no-hero flows — full stack always visible */
+  immediate?: boolean;
+}): boolean {
+  const { immediate = false } = options ?? {};
+
+  const readEngaged = useCallback(() => {
+    if (immediate) return true;
+    if (typeof window === "undefined") return false;
+    return window.scrollY >= TRAVEL_FIRST_VIEWPORT_SCROLL_PX();
+  }, [immediate]);
+
+  const [engaged, setEngaged] = useState(readEngaged);
+  const engagedRef = useRef(engaged);
 
   const sync = useCallback(() => {
-    const next = window.scrollY >= TRAVEL_FIRST_VIEWPORT_SCROLL_PX();
-    if (next === pastRef.current) return;
-    pastRef.current = next;
-    setPast(next);
-  }, []);
+    const next = readEngaged();
+    if (next === engagedRef.current) return;
+    engagedRef.current = next;
+    setEngaged(next);
+  }, [readEngaged]);
 
-  useRafScrollSync(sync);
+  useEffect(() => {
+    engagedRef.current = readEngaged();
+    setEngaged(engagedRef.current);
+  }, [readEngaged]);
 
-  return past;
+  useRafScrollSync(immediate ? () => {} : sync);
+
+  return immediate ? true : engaged;
+}
+
+/** @deprecated Use useTravelSideRailEngaged */
+export function useLatchedRailEngaged(options?: {
+  enabled?: boolean;
+  sentinelId?: string;
+  immediate?: boolean;
+}): boolean {
+  return useTravelSideRailEngaged({
+    immediate: options?.immediate ?? false,
+  });
+}
+
+/** @deprecated Use useTravelSideRailEngaged */
+export function usePastFirstViewport(): boolean {
+  return useTravelSideRailEngaged();
 }
 
 /** Pages that use vertical side-tab CTAs + integrated chat (replaces legacy FABs) */
@@ -91,7 +129,8 @@ export function usesTravelSideActionRail(pathname: string): boolean {
     path === "/about" ||
     path === "/contact" ||
     path === "/book" ||
-    path === "/compare"
+    path === "/compare" ||
+    path === "/upcoming-batches"
   )
     return true;
   if (/^\/treks\/state\/[^/]+$/.test(path)) return true;
@@ -162,18 +201,30 @@ const CONTACT_ONLY_RAIL_VARIANTS = new Set<TravelSideActionRailVariant>([
   "listing-corporate",
 ]);
 
-/** Listing pages: chat + WhatsApp only — destinations & corporate (no callback / plan / find side tabs) */
+/** Destinations & corporate: chat + WhatsApp only (no callback / plan / find) */
 export function isContactOnlyRailVariant(
   variant: TravelSideActionRailVariant,
 ): boolean {
   return CONTACT_ONLY_RAIL_VARIANTS.has(variant);
 }
 
-/** Booking has no hero — side CTAs stay available without a full-viewport scroll */
 export function isBookingRailVariant(
   variant: TravelSideActionRailVariant,
 ): boolean {
   return variant === "listing-booking";
+}
+
+export function isProductDetailRailVariant(
+  variant: TravelSideActionRailVariant,
+): boolean {
+  return variant === "product";
+}
+
+export function isHeroSentinelRailVariant(
+  variant: TravelSideActionRailVariant,
+): boolean {
+  if (isBookingRailVariant(variant)) return false;
+  return true;
 }
 
 export function getRailWhatsAppMessage(

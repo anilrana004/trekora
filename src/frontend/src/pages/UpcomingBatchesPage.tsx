@@ -5,7 +5,9 @@ import { useState } from "react";
 import BookingDrawer from "../components/BookingDrawer";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import ListingToolbarRegions from "../components/ListingToolbarRegions";
-import { TRAVEL_HERO_SENTINEL_ID } from "../components/TravelSideActionRail";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import { TREKS } from "../data/treks";
 
 type TabKey = "this-month" | "next-3-months" | "summer-2025" | "all";
@@ -214,6 +216,8 @@ export default function UpcomingBatchesPage() {
       </div>
 
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+
+      <TravelSideActionRail variant="listing-treks" />
 
       {/* Tab filters */}
       <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">

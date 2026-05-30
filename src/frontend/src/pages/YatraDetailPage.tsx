@@ -457,8 +457,12 @@ export default function YatraDetailPage() {
         ocidPrefix="yatra_detail"
       />
 
-      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
-      <TravelSideActionRail productName={yatra.name} />
+      <div
+        id={TRAVEL_HERO_SENTINEL_ID}
+        className="pointer-events-none h-px w-full"
+        aria-hidden
+      />
+      <TravelSideActionRail variant="product" productName={yatra.name} />
 
       {/* Stats Bar */}
       <div style={{ backgroundColor: "var(--ew-red)" }}>

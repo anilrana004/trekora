@@ -665,9 +665,13 @@ export default function TrekDetailPage() {
         ocidPrefix="trek_detail"
       />
 
-      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <div
+        id={TRAVEL_HERO_SENTINEL_ID}
+        className="pointer-events-none h-px w-full"
+        aria-hidden
+      />
 
-      <TravelSideActionRail productName={trek.name} />
+      <TravelSideActionRail variant="product" productName={trek.name} />
 
       {/* ── Stats bar (matches Yatra detail red stats strip) ── */}
       <div style={{ backgroundColor: "var(--ew-red)" }}>

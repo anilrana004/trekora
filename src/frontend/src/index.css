@@ -1347,7 +1347,7 @@
 
   /* ── Mobile sticky book bar (trek / yatra detail) ── */
   .mobile-sticky-book-bar {
-    --mobile-book-bar-height: 3rem;
+    --mobile-book-bar-height: 3.75rem;
     position: fixed;
     left: 0;
     right: 0;

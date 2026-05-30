@@ -4,8 +4,8 @@ import {
   getRailWhatsAppMessage,
   isBookingRailVariant,
   isContactOnlyRailVariant,
-  usePastFirstViewport,
-  useTravelImageSectionOverlap,
+  isProductDetailRailVariant,
+  useTravelSideRailEngaged,
   type TravelSideActionRailVariant,
 } from "@/lib/travel-side-rail";
 import {
@@ -14,9 +14,8 @@ import {
 } from "@/lib/layout-modals";
 import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { Binoculars, MapPinned } from "lucide-react";
-import { memo, useEffect, useState } from "react";
-
-const NAV_OFFSET_PX = 72;
+import { memo } from "react";
+import { createPortal } from "react-dom";
 
 export const TRAVEL_HERO_SENTINEL_ID = "travel-hero-sentinel";
 
@@ -32,7 +31,6 @@ interface SideTab {
   id: string;
   accent: "whatsapp" | "brand";
   icon: React.ReactNode;
-  /** Full phrase on tab; omit for icon-only WhatsApp */
   label?: string;
   iconOnly?: boolean;
   href?: string;
@@ -92,15 +90,13 @@ function renderTabs(tabs: SideTab[], side: "left" | "right") {
       );
     }
 
-    const fire = () => tab.onClick?.();
-
     return (
       <button
         key={tab.id}
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          fire();
+          tab.onClick?.();
         }}
         className={className}
         aria-label={tab.ariaLabel}
@@ -117,91 +113,19 @@ function TravelSideActionRail({
   variant = "product",
   sentinelId = TRAVEL_HERO_SENTINEL_ID,
 }: TravelSideActionRailProps) {
-  /** Latched on: stays visible once user has scrolled past the hero sentinel */
-  const [visible, setVisible] = useState(false);
   const bookingRail = isBookingRailVariant(variant);
-  const pastFirstViewport = usePastFirstViewport();
-  const inImageSection = useTravelImageSectionOverlap();
-  /** Booking: side tabs always reachable; chat stays on other listing pages only */
-  const listingRail =
-    variant.startsWith("listing-") && variant !== "listing-booking";
-  const showChat =
-    !bookingRail &&
-    (listingRail
-      ? visible || inImageSection
-      : pastFirstViewport && (visible || inImageSection));
-  const showWhatsapp =
-    (bookingRail
-      ? true
-      : listingRail
-        ? visible && !inImageSection
-        : pastFirstViewport && visible && !inImageSection);
+  const productDetailRail = isProductDetailRailVariant(variant);
 
-  const showRightTabs = bookingRail
-    ? !isContactOnlyRailVariant(variant)
-    : !isContactOnlyRailVariant(variant) &&
-      (listingRail
-        ? visible && !inImageSection
-        : pastFirstViewport && visible && !inImageSection);
+  /** Visible only past one full viewport; hides again on scroll back to hero. */
+  const engaged = useTravelSideRailEngaged({ immediate: bookingRail });
 
-  const showCallback =
-    !isContactOnlyRailVariant(variant) && showRightTabs;
+  if (!engaged) return null;
 
-  useEffect(() => {
-    const el = document.getElementById(sentinelId);
-    if (!el) {
-      setVisible(window.scrollY >= window.innerHeight);
-      return;
-    }
-
-    let visibleRef = false;
-    const applyVisible = (next: boolean) => {
-      if (visibleRef === next) return;
-      visibleRef = next;
-      setVisible(next);
-    };
-
-    const markVisibleIfPastHero = () => {
-      const pastHeroSentinel = el.getBoundingClientRect().top <= NAV_OFFSET_PX;
-      if (listingRail) {
-        applyVisible(pastHeroSentinel);
-        return;
-      }
-      if (window.scrollY < window.innerHeight) {
-        applyVisible(false);
-        return;
-      }
-      applyVisible(pastHeroSentinel);
-    };
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry) return;
-        if (listingRail) {
-          applyVisible(!entry.isIntersecting);
-          return;
-        }
-        markVisibleIfPastHero();
-      },
-      {
-        root: null,
-        threshold: 0,
-        rootMargin: `-${NAV_OFFSET_PX}px 0px 0px 0px`,
-      },
-    );
-
-    observer.observe(el);
-    markVisibleIfPastHero();
-
-    const onResize = () => markVisibleIfPastHero();
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", onResize);
-    };
-  }, [sentinelId, listingRail]);
+  const showChat = !bookingRail;
+  const showFullStack = true;
+  const showWhatsapp = showFullStack;
+  const showRightTabs = !isContactOnlyRailVariant(variant) && showFullStack;
+  const showCallback = showRightTabs;
 
   const waUrl = buildWhatsAppUrl(getRailWhatsAppMessage(variant, productName));
 
@@ -239,26 +163,30 @@ function TravelSideActionRail({
     },
   ];
 
-  if (!showChat && !showWhatsapp && !showCallback && !showRightTabs) return null;
+  if (!showChat && !showWhatsapp && !showCallback && !showRightTabs) {
+    return null;
+  }
 
-  return (
+  const rail = (
     <>
       <nav
-        className={`travel-side-rail travel-side-rail--left ${inImageSection && showChat && !showCallback ? "travel-side-rail--chat-float" : ""}`}
+        className={`travel-side-rail travel-side-rail--left ${
+          productDetailRail ? "travel-side-rail--product-detail" : ""
+        }`}
         aria-label="Contact actions"
         data-ocid="travel_rail.left"
       >
         <div className="travel-side-rail__stack">
-          {showChat && (
-            <TravelSideChatButton floatingOverImage={inImageSection} />
-          )}
-          {showWhatsapp && renderTabs(leftTabs, "left")}
-          {showCallback && <TravelSideCallbackButton />}
+          {showChat ? <TravelSideChatButton /> : null}
+          {showWhatsapp ? renderTabs(leftTabs, "left") : null}
+          {showCallback ? <TravelSideCallbackButton /> : null}
         </div>
       </nav>
       {showRightTabs ? (
         <nav
-          className="travel-side-rail travel-side-rail--right"
+          className={`travel-side-rail travel-side-rail--right ${
+            productDetailRail ? "travel-side-rail--product-detail" : ""
+          }`}
           aria-label="Planning actions"
           data-ocid="travel_rail.right"
         >
@@ -269,6 +197,9 @@ function TravelSideActionRail({
       ) : null}
     </>
   );
+
+  if (typeof document === "undefined") return rail;
+  return createPortal(rail, document.body);
 }
 
 export default memo(TravelSideActionRail);

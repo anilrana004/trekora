@@ -16,10 +16,7 @@ export default function ProductDetailThumbnailStrip({
   if (images.length < 2) return null;
 
   return (
-    <div
-      className="flex gap-1 overflow-x-auto bg-black px-2 py-1"
-      data-travel-image-section
-    >
+    <div className="flex gap-1 overflow-x-auto bg-black px-2 py-1">
       {images.map((img, i) => (
         <button
           key={img}

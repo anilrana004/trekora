@@ -102,8 +102,6 @@ export default function DestinationsPage() {
       className="pt-16 min-h-screen"
       style={{ background: "var(--ew-gray-lt)" }}
     >
-      <TravelSideActionRail variant="listing-gallery" />
-
       {/* ── Hero ────────────────────────────────────────────────────────────── */}
       <div
         className="relative py-20 overflow-hidden"
@@ -160,6 +158,8 @@ export default function DestinationsPage() {
       </div>
 
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+
+      <TravelSideActionRail variant="listing-destinations" />
 
       <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
         <ListingToolbarRegions>

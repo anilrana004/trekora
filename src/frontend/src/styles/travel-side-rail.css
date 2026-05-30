@@ -219,14 +219,26 @@
     );
   }
 
+  body.compare-bar-visible {
+    --travel-rail-mobile-bottom: calc(
+      var(--mobile-nav-height, 56px) + var(--compare-bar-compact-height, 2.125rem) +
+        0.625rem + env(safe-area-inset-bottom, 0px)
+    );
+  }
+
   body:has(.mobile-detail-page-pad) {
     --travel-rail-mobile-bottom: var(--mobile-fab-bottom);
+  }
+
+  .travel-side-rail--product-detail.travel-side-rail--left,
+  .travel-side-rail--product-detail.travel-side-rail--right {
+    z-index: 56;
   }
 
   .travel-side-rail {
     top: auto;
     transform: none;
-    z-index: 44;
+    z-index: 46;
     gap: 0.55rem;
     overflow: visible;
     max-height: none;

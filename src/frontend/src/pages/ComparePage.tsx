@@ -101,6 +101,10 @@ export default function ComparePage() {
       style={{ backgroundColor: "var(--ew-gray-lt)" }}
     >
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail
+        variant="listing-compare"
+        productName={compareRailContext}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8 flex-wrap">
@@ -467,11 +471,6 @@ export default function ComparePage() {
           </>
         )}
       </div>
-
-      <TravelSideActionRail
-        variant="listing-compare"
-        productName={compareRailContext}
-      />
     </div>
   );
 }
