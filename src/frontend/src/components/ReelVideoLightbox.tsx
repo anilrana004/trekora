@@ -300,7 +300,9 @@ export default function ReelVideoLightbox({
         ) : null}
 
         <motion.div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-4 pt-10">
-          <p className="text-center text-sm font-bold text-white">{reel.title}</p>
+          <p className="text-center text-sm font-bold text-white">
+            {reel.title}
+          </p>
         </motion.div>
       </motion.div>
     </motion.div>

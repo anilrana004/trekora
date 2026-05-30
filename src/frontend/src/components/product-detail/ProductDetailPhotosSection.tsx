@@ -1,13 +1,13 @@
-import { Share2 } from "lucide-react";
-import { useMemo, type ReactNode } from "react";
+import type { TrekReel } from "@/data/trek-reels";
 import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
 import { mergeProductGalleryPhotos } from "@/lib/merge-gallery-photos";
 import { parsePhotoCredit } from "@/lib/photo-credit";
 import type { ProductKind } from "@/lib/reviews-api";
-import OptimizedImage from "../media/OptimizedImage";
+import { Share2 } from "lucide-react";
+import { type ReactNode, useMemo } from "react";
 import ReelsShortsRow from "../ReelsShortsRow";
 import TrekkerPhotoWall from "../TrekkerPhotoWall";
-import type { TrekReel } from "@/data/trek-reels";
+import OptimizedImage from "../media/OptimizedImage";
 
 export default function ProductDetailPhotosSection({
   productName,

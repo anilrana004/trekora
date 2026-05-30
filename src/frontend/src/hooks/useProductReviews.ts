@@ -1,14 +1,15 @@
+import { queryKeys } from "@/lib/query-keys";
 import {
+  type ReviewsBySlugResponse,
+  type TrekoraReview,
+  fetchReviewsBySlug,
+} from "@/lib/reviews-api";
+import {
+  type InfiniteData,
   useInfiniteQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
-import { queryKeys } from "@/lib/query-keys";
-import {
-  fetchReviewsBySlug,
-  type ReviewsBySlugResponse,
-  type TrekoraReview,
-} from "@/lib/reviews-api";
 
 const PAGE_SIZE = 25;
 
@@ -32,7 +33,8 @@ function statsFromReviews(reviews: TrekoraReview[], trekSlug: string) {
   const count = reviews.length;
   const avgRating =
     count > 0
-      ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / count) * 10) / 10
+      ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / count) * 10) /
+        10
       : 0;
   const distribution = { ...EMPTY_DIST };
   for (const r of reviews) {
@@ -49,7 +51,9 @@ function statsFromReviews(reviews: TrekoraReview[], trekSlug: string) {
   };
 }
 
-export function useProductReviews(slug: string | undefined): UseProductReviewsResult {
+export function useProductReviews(
+  slug: string | undefined,
+): UseProductReviewsResult {
   const normalized = slug?.trim().toLowerCase() ?? "";
   const queryClient = useQueryClient();
 
@@ -61,9 +65,15 @@ export function useProductReviews(slug: string | undefined): UseProductReviewsRe
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<
+    ReviewsBySlugResponse,
+    Error,
+    InfiniteData<ReviewsBySlugResponse, number>,
+    ReturnType<typeof queryKeys.reviews.infinite>,
+    number
+  >({
     queryKey: queryKeys.reviews.infinite(normalized),
-    queryFn: ({ pageParam }) =>
+    queryFn: ({ pageParam }: { pageParam: number }) =>
       fetchReviewsBySlug(normalized, {
         limit: PAGE_SIZE,
         skip: pageParam,
@@ -89,7 +99,11 @@ export function useProductReviews(slug: string | undefined): UseProductReviewsRe
       if (!normalized) return;
       queryClient.setQueryData(
         queryKeys.reviews.infinite(normalized),
-        (prev: { pages: ReviewsBySlugResponse[]; pageParams: number[] } | undefined) => {
+        (
+          prev:
+            | { pages: ReviewsBySlugResponse[]; pageParams: number[] }
+            | undefined,
+        ) => {
           if (!prev) {
             return {
               pages: [statsFromReviews([review], normalized)],
@@ -118,9 +132,7 @@ export function useProductReviews(slug: string | undefined): UseProductReviewsRe
     firstPage && !firstPage.success
       ? (firstPage.message ?? "Could not load reviews")
       : null;
-  const fetchError = error
-    ? "Could not load reviews. Please try again."
-    : null;
+  const fetchError = error ? "Could not load reviews. Please try again." : null;
 
   const distribution = { ...EMPTY_DIST, ...firstPage?.distribution };
   const totalCount = firstPage?.count ?? reviews.length;

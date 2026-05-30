@@ -1,4 +1,8 @@
-import type { GalleryApiItem, ProductKind, TrekoraReview } from "@/lib/reviews-api";
+import type {
+  GalleryApiItem,
+  ProductKind,
+  TrekoraReview,
+} from "@/lib/reviews-api";
 
 /** Map a saved review's photos into gallery grid items (Reviews + Photos tabs). */
 export function reviewToGalleryItems(

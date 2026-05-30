@@ -1,13 +1,13 @@
+import {
+  type BOOKING_DOC_LIMITS,
+  type BookingFilePayload,
+  fileToBookingPayload,
+  formatFileSize,
+} from "@/lib/booking-documents";
+import { CTA_OUTLINE_DASHED, ctaMerge } from "@/lib/cta-buttons";
 import { Check, Loader2, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-import {
-  BOOKING_DOC_LIMITS,
-  fileToBookingPayload,
-  formatFileSize,
-  type BookingFilePayload,
-} from "@/lib/booking-documents";
-import { CTA_OUTLINE_DASHED, ctaMerge } from "@/lib/cta-buttons";
 
 export default function BookingFileUpload({
   id,

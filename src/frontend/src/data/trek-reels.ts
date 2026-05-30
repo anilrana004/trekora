@@ -142,7 +142,8 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
 
 /** Stable key for list/lightbox (slug is unique across homepage reels). */
 export function reelInstanceKey(reel: TrekReel): string {
-  if (reel.productSlug) return `${reel.productType ?? "trek"}:${reel.productSlug}`;
+  if (reel.productSlug)
+    return `${reel.productType ?? "trek"}:${reel.productSlug}`;
   return `reel:${reel.id}`;
 }
 
@@ -172,9 +173,10 @@ export function enrichReelsForDisplay(
 }
 
 /** Homepage Reels & Shorts row — one reel per featured trek video (unique ids). */
-export const HOMEPAGE_REELS: TrekReel[] = Object.values(TREK_REELS_BY_SLUG).flatMap(
-  (entries, slugIndex) =>
-    enrichReelsForDisplay(entries, slugIndex * 10),
+export const HOMEPAGE_REELS: TrekReel[] = Object.values(
+  TREK_REELS_BY_SLUG,
+).flatMap((entries, slugIndex) =>
+  enrichReelsForDisplay(entries, slugIndex * 10),
 );
 
 /** Reel MP4 for homepage hero, dest grid, feature strips, and cards (phone). */

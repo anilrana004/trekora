@@ -1,7 +1,3 @@
-import { Loader2 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useMemo, useState } from "react";
-import { toast } from "sonner";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
 import { buildPhotoCredit, parsePhotoCredit } from "@/lib/photo-credit";
@@ -10,8 +6,12 @@ import {
   productCloudinaryTags,
   productPhotoFolder,
 } from "@/lib/product-cloudinary";
-import { saveTrekkerPhotosToApi } from "@/lib/submit-trekker-photos";
 import type { GalleryApiItem, ProductKind } from "@/lib/reviews-api";
+import { saveTrekkerPhotosToApi } from "@/lib/submit-trekker-photos";
+import { Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 const MONTHS = [
   "Jan",
@@ -148,7 +148,8 @@ export default function TrekkerPhotoWall({
         await uploadAllForSubmit();
 
       if (uploaded.length === 0) {
-        const detail = uploadErrors[0] ?? "Photo upload failed. Please try again.";
+        const detail =
+          uploadErrors[0] ?? "Photo upload failed. Please try again.";
         toast.error(detail);
         return;
       }

@@ -11,10 +11,7 @@ import {
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { TREKS } from "../data/treks";
-import {
-  compareKeysEqual,
-  normalizeCompareKey,
-} from "../lib/compare-treks";
+import { compareKeysEqual, normalizeCompareKey } from "../lib/compare-treks";
 
 /* ─────────────── Context ─────────────── */
 

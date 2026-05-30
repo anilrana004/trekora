@@ -174,7 +174,8 @@ const PACKAGE_DEFS: Parameters<typeof buildPackage>[0][] = [
     id: "panch-kedar-ultimate",
     slug: "panch-kedar-ultimate",
     name: "Panch Kedar Ultimate",
-    tagline: "5 sacred peaks. 1 legendary mystery lake. Zero parallels on Earth.",
+    tagline:
+      "5 sacred peaks. 1 legendary mystery lake. Zero parallels on Earth.",
     description:
       "All 5 Shiva Shrines + Roopkund Trek — complete Panch Kedar with Roopkund Mystery Lake, Bedni Bugyal, and Chopta Chandrashila at dawn.",
     category: "sacred",
@@ -280,7 +281,8 @@ const PACKAGE_DEFS: Parameters<typeof buildPackage>[0][] = [
     id: "luxury-himalayan-odyssey",
     slug: "luxury-himalayan-odyssey",
     name: "Himalayan Luxury Odyssey",
-    tagline: "Five-star comforts at 4,000m. Yoga at sunrise. Stars at midnight.",
+    tagline:
+      "Five-star comforts at 4,000m. Yoga at sunrise. Stars at midnight.",
     description:
       "Rishikesh + Auli + Chopta + Deoriatal — ski slopes, perfect Chaukhamba reflections, and private heated glamping at Deoriatal.",
     category: "luxury",
@@ -420,7 +422,8 @@ const PACKAGE_DEFS: Parameters<typeof buildPackage>[0][] = [
   },
 ];
 
-export const CURATED_PACKAGES: CuratedPackage[] = PACKAGE_DEFS.map(buildPackage);
+export const CURATED_PACKAGES: CuratedPackage[] =
+  PACKAGE_DEFS.map(buildPackage);
 
 export const PACKAGE_CATEGORIES: {
   id: CuratedPackageCategory | "all";

@@ -1,6 +1,6 @@
+import { useRouteScrollManager } from "@/hooks/useRouteScrollManager";
 import { Outlet } from "@tanstack/react-router";
 import { useState } from "react";
-import { useRouteScrollManager } from "@/hooks/useRouteScrollManager";
 
 /** Admin panel scroll container — same back/forward rules as public layout. */
 export default function AdminScrollOutlet() {

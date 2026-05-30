@@ -19,12 +19,7 @@ export function reviewCloudinaryTags(
   trekSlug: string,
 ): string[] {
   const safe = trekSlug.trim().toLowerCase();
-  return [
-    "trekora-review",
-    productType,
-    `slug-${safe}`,
-    "community-gallery",
-  ];
+  return ["trekora-review", productType, `slug-${safe}`, "community-gallery"];
 }
 
 export function reviewCloudinaryContext(

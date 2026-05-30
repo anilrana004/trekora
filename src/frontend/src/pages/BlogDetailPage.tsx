@@ -1,16 +1,11 @@
 import { Link, useParams } from "@tanstack/react-router";
-import {
-  Calendar,
-  ChevronRight,
-  Clock,
-  User,
-} from "lucide-react";
+import { Calendar, ChevronRight, Clock, User } from "lucide-react";
 import { motion } from "motion/react";
-import OptimizedImage from "../components/media/OptimizedImage";
+import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
-import { SEOHead } from "../components/SEOHead";
+import OptimizedImage from "../components/media/OptimizedImage";
 import { BLOGS } from "../data/blogs";
 import { resolveBlogCardImage } from "../lib/blog-product-images";
 import { getBlogDetailSEO } from "../lib/route-seo";

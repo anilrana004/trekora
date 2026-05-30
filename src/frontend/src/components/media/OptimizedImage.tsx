@@ -1,9 +1,9 @@
 import { RESPONSIVE_IMAGE_WIDTHS } from "@/lib/images/breakpoints";
 import {
+  type ImageDeliveryOptions,
   buildBlurPlaceholderUrl,
   buildOptimizedImageUrl,
   buildResponsiveSrcSet,
-  type ImageDeliveryOptions,
 } from "@/lib/images/cloudinary-url";
 import { getVariantImageDelivery } from "@/lib/images/variant-delivery";
 import { type ImgHTMLAttributes, forwardRef, useMemo, useState } from "react";
@@ -144,10 +144,7 @@ export const OptimizedImage = forwardRef<HTMLImageElement, OptimizedImageProps>(
       variant !== "brand-logo";
 
     const mergedClass = fill
-      ? [
-          "absolute inset-0 h-full w-full object-cover object-center",
-          className,
-        ]
+      ? ["absolute inset-0 h-full w-full object-cover object-center", className]
           .filter(Boolean)
           .join(" ")
       : [needsDefaultCover ? "object-cover" : "", className]

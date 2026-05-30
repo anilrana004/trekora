@@ -63,7 +63,6 @@ export default function SocialProofTicker() {
       <div className="ticker-track">
         {TICKER_ITEMS.map((msg, i) => (
           <span
-            // biome-ignore lint/suspicious/noArrayIndexKey: static duplicate list
             key={i}
             className="home-strip-marquee__item flex shrink-0 items-center gap-1.5 whitespace-nowrap px-4 text-[13px] sm:px-5"
             style={{ color: "var(--ew-text-lt)" }}

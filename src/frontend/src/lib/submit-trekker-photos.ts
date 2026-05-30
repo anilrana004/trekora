@@ -1,7 +1,5 @@
 import type { CloudinaryAsset } from "@/lib/images/upload-types";
-import {
-  productPhotoFolder,
-} from "@/lib/product-cloudinary";
+import { productPhotoFolder } from "@/lib/product-cloudinary";
 import { submitProductPhotos } from "@/lib/product-photos-api";
 import type { ProductKind } from "@/lib/reviews-api";
 

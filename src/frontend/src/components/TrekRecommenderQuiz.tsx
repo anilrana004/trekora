@@ -1,13 +1,13 @@
+import { bookSearch } from "@/lib/book-search";
+import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
 import { TREKS } from "../data/treks";
 import type { Trek } from "../data/treks";
 import OptimizedImage from "./media/OptimizedImage";
-import { bookSearch } from "@/lib/book-search";
 
 /* ── Types ────────────────────────────────────────────────── */
 type Fitness = "beginner" | "moderate" | "fit" | "veryfit";
@@ -419,174 +419,178 @@ export default function TrekRecommenderQuiz({
                   }}
                   data-ocid="quiz.modal"
                 >
-            <motion.div
-              initial={{ scale: 0.92, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.92, opacity: 0, y: 20 }}
-              transition={{ duration: 0.25 }}
-              className="bg-white rounded-2xl shadow-deep w-full max-w-md overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Modal header */}
-              <div
-                className="px-5 py-4 flex items-center justify-between"
-                style={{ backgroundColor: "var(--ew-red)" }}
-              >
-                <div>
-                  <p className="text-white text-sm font-medium opacity-75 mb-0.5">
-                    Trekora Trek Finder
-                  </p>
-                  <h2 className="text-white text-xl font-bold">
-                    {results
-                      ? "Your Perfect Treks 🏔"
-                      : "Find Your Perfect Trek"}
-                  </h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
-                  style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
-                  aria-label="Close quiz"
-                  data-ocid="quiz.close_button"
-                >
-                  <X size={18} className="text-white" />
-                </button>
-              </div>
-
-              {/* Progress bar */}
-              <div
-                className="h-1.5"
-                style={{ backgroundColor: "var(--ew-gray-mid)" }}
-              >
-                <motion.div
-                  className="h-full rounded-r-full"
-                  style={{ backgroundColor: "var(--ew-red)" }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPct}%` }}
-                  transition={{ duration: 0.4 }}
-                />
-              </div>
-
-              <div className="p-5">
-                <AnimatePresence mode="wait">
-                  {!results ? (
-                    /* Quiz step */
-                    <motion.div
-                      key={`step-${step}`}
-                      initial={{ opacity: 0, x: 30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -30 }}
-                      transition={{ duration: 0.2 }}
+                  <motion.div
+                    initial={{ scale: 0.92, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    exit={{ scale: 0.92, opacity: 0, y: 20 }}
+                    transition={{ duration: 0.25 }}
+                    className="bg-white rounded-2xl shadow-deep w-full max-w-md overflow-hidden"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {/* Modal header */}
+                    <div
+                      className="px-5 py-4 flex items-center justify-between"
+                      style={{ backgroundColor: "var(--ew-red)" }}
                     >
-                      {/* Step indicator */}
-                      <div className="flex items-center gap-1 mb-3">
-                        {[1, 2, 3, 4].map((s) => (
-                          <div
-                            key={s}
-                            className="flex-1 h-1 rounded-full transition-colors"
-                            style={{
-                              backgroundColor:
-                                s <= step
-                                  ? "var(--ew-red)"
+                      <div>
+                        <p className="text-white text-sm font-medium opacity-75 mb-0.5">
+                          Trekora Trek Finder
+                        </p>
+                        <h2 className="text-white text-xl font-bold">
+                          {results
+                            ? "Your Perfect Treks 🏔"
+                            : "Find Your Perfect Trek"}
+                        </h2>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleClose}
+                        className="w-9 h-9 rounded-full flex items-center justify-center transition-colors"
+                        style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+                        aria-label="Close quiz"
+                        data-ocid="quiz.close_button"
+                      >
+                        <X size={18} className="text-white" />
+                      </button>
+                    </div>
+
+                    {/* Progress bar */}
+                    <div
+                      className="h-1.5"
+                      style={{ backgroundColor: "var(--ew-gray-mid)" }}
+                    >
+                      <motion.div
+                        className="h-full rounded-r-full"
+                        style={{ backgroundColor: "var(--ew-red)" }}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progressPct}%` }}
+                        transition={{ duration: 0.4 }}
+                      />
+                    </div>
+
+                    <div className="p-5">
+                      <AnimatePresence mode="wait">
+                        {!results ? (
+                          /* Quiz step */
+                          <motion.div
+                            key={`step-${step}`}
+                            initial={{ opacity: 0, x: 30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -30 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            {/* Step indicator */}
+                            <div className="flex items-center gap-1 mb-3">
+                              {[1, 2, 3, 4].map((s) => (
+                                <div
+                                  key={s}
+                                  className="flex-1 h-1 rounded-full transition-colors"
+                                  style={{
+                                    backgroundColor:
+                                      s <= step
+                                        ? "var(--ew-red)"
+                                        : "var(--ew-gray-mid)",
+                                  }}
+                                />
+                              ))}
+                              <span
+                                className="text-xs ml-2 font-medium whitespace-nowrap"
+                                style={{ color: "var(--ew-gray-dark)" }}
+                              >
+                                {step}/4
+                              </span>
+                            </div>
+
+                            <h3
+                              className="text-base font-bold mb-4"
+                              style={{ color: "var(--ew-text)" }}
+                            >
+                              {currentStepConfig.question}
+                            </h3>
+
+                            <div
+                              className={`grid gap-3 mb-5 ${
+                                currentStepConfig.options.length === 4
+                                  ? "grid-cols-2"
+                                  : "grid-cols-3"
+                              }`}
+                            >
+                              {currentStepConfig.options.map((opt) => (
+                                <OptionCard
+                                  key={opt.value}
+                                  icon={opt.icon}
+                                  label={opt.label}
+                                  sub={(opt as { sub?: string }).sub}
+                                  selected={currentAnswer === opt.value}
+                                  onClick={() => handleSelect(opt.value)}
+                                />
+                              ))}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={handleNext}
+                              disabled={!currentAnswer}
+                              className="w-full font-semibold py-3 rounded-xl text-sm transition-all"
+                              style={{
+                                backgroundColor: currentAnswer
+                                  ? "var(--ew-orange)"
                                   : "var(--ew-gray-mid)",
-                            }}
-                          />
-                        ))}
-                        <span
-                          className="text-xs ml-2 font-medium whitespace-nowrap"
-                          style={{ color: "var(--ew-gray-dark)" }}
-                        >
-                          {step}/4
-                        </span>
-                      </div>
-
-                      <h3
-                        className="text-base font-bold mb-4"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        {currentStepConfig.question}
-                      </h3>
-
-                      <div
-                        className={`grid gap-3 mb-5 ${
-                          currentStepConfig.options.length === 4
-                            ? "grid-cols-2"
-                            : "grid-cols-3"
-                        }`}
-                      >
-                        {currentStepConfig.options.map((opt) => (
-                          <OptionCard
-                            key={opt.value}
-                            icon={opt.icon}
-                            label={opt.label}
-                            sub={(opt as { sub?: string }).sub}
-                            selected={currentAnswer === opt.value}
-                            onClick={() => handleSelect(opt.value)}
-                          />
-                        ))}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        disabled={!currentAnswer}
-                        className="w-full font-semibold py-3 rounded-xl text-sm transition-all"
-                        style={{
-                          backgroundColor: currentAnswer
-                            ? "var(--ew-orange)"
-                            : "var(--ew-gray-mid)",
-                          color: currentAnswer ? "#fff" : "var(--ew-gray-dark)",
-                          cursor: currentAnswer ? "pointer" : "not-allowed",
-                        }}
-                        data-ocid={`quiz.step${step}.next_button`}
-                      >
-                        {step === 4 ? "Find My Trek →" : "Next →"}
-                      </button>
-                    </motion.div>
-                  ) : (
-                    /* Results */
-                    <motion.div
-                      key="results"
-                      initial={{ opacity: 0, x: 30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.25 }}
-                    >
-                      <p
-                        className="text-sm mb-4"
-                        style={{ color: "var(--ew-text-lt)" }}
-                      >
-                        Based on your preferences, here are your top 3
-                        recommended treks:
-                      </p>
-                      <div className="space-y-3 mb-5">
-                        {results.map((trek, i) => (
-                          <ResultCard
-                            key={trek.id}
-                            trek={trek}
-                            index={i}
-                            onBook={handleClose}
-                          />
-                        ))}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleRetake}
-                        className="w-full border-2 font-semibold py-2.5 rounded-xl text-sm transition-colors"
-                        style={{
-                          borderColor: "var(--ew-red)",
-                          color: "var(--ew-red)",
-                        }}
-                        data-ocid="quiz.retake_button"
-                      >
-                        🔄 Retake Quiz
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          </motion.div>
+                                color: currentAnswer
+                                  ? "#fff"
+                                  : "var(--ew-gray-dark)",
+                                cursor: currentAnswer
+                                  ? "pointer"
+                                  : "not-allowed",
+                              }}
+                              data-ocid={`quiz.step${step}.next_button`}
+                            >
+                              {step === 4 ? "Find My Trek →" : "Next →"}
+                            </button>
+                          </motion.div>
+                        ) : (
+                          /* Results */
+                          <motion.div
+                            key="results"
+                            initial={{ opacity: 0, x: 30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.25 }}
+                          >
+                            <p
+                              className="text-sm mb-4"
+                              style={{ color: "var(--ew-text-lt)" }}
+                            >
+                              Based on your preferences, here are your top 3
+                              recommended treks:
+                            </p>
+                            <div className="space-y-3 mb-5">
+                              {results.map((trek, i) => (
+                                <ResultCard
+                                  key={trek.id}
+                                  trek={trek}
+                                  index={i}
+                                  onBook={handleClose}
+                                />
+                              ))}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleRetake}
+                              className="w-full border-2 font-semibold py-2.5 rounded-xl text-sm transition-colors"
+                              style={{
+                                borderColor: "var(--ew-red)",
+                                color: "var(--ew-red)",
+                              }}
+                              data-ocid="quiz.retake_button"
+                            >
+                              🔄 Retake Quiz
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                </motion.div>
               ) : null}
             </AnimatePresence>,
             document.body,

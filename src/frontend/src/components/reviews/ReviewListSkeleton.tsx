@@ -1,6 +1,10 @@
 export default function ReviewListSkeleton({ rows = 3 }: { rows?: number }) {
   return (
-    <div className="space-y-4 animate-pulse" aria-busy="true" aria-label="Loading reviews">
+    <div
+      className="space-y-4 animate-pulse"
+      aria-busy="true"
+      aria-label="Loading reviews"
+    >
       {Array.from({ length: rows }, (_, i) => (
         <div
           key={`review-skel-${i}`}

@@ -1,7 +1,7 @@
-import type { TrekDifficulty } from "../data/treks";
-import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useId, useState } from "react";
+import type { TrekDifficulty } from "../data/treks";
 
 const DIFFICULTIES: TrekDifficulty[] = [
   "Easy",
@@ -90,7 +90,10 @@ export default function TreksListingFilters({
               {mobileOpen ? "Hide filters" : "Search & filters"}
             </span>
             {refineCount > 0 ? (
-              <span className="listing-filters-toggle__badge shrink-0" aria-hidden>
+              <span
+                className="listing-filters-toggle__badge shrink-0"
+                aria-hidden
+              >
                 {refineCount}
               </span>
             ) : null}

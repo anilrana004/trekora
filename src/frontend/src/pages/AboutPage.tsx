@@ -1,20 +1,20 @@
 import { CTA_OUTLINE_RED, CTA_OUTLINE_WHITE } from "@/lib/cta-buttons";
 import type { ImageDeliveryOptions } from "@/lib/images/cloudinary-url";
-import { ABOUT_STORY_WATERMARK_URL } from "@/lib/site-brand";
-import { Link } from "@tanstack/react-router";
 import {
   CERTIFICATION_LOGOS,
   FEATURED_PRESS_MEDIA,
 } from "@/lib/press-media-logos";
+import { ABOUT_STORY_WATERMARK_URL } from "@/lib/site-brand";
+import { SITE_ORIGIN } from "@/lib/site-config";
+import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import FeaturedInMedia from "../components/FeaturedInMedia";
-import OptimizedImage from "../components/media/OptimizedImage";
 import { SEOHead } from "../components/SEOHead";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
+import OptimizedImage from "../components/media/OptimizedImage";
 
 const TEAM = [
   {
@@ -437,13 +437,17 @@ export default function AboutPage() {
                     width={120}
                     height={64}
                     variant={
-                      "imageDelivery" in v && v.imageDelivery?.format === "f_png"
+                      "imageDelivery" in v &&
+                      v.imageDelivery?.format === "f_png"
                         ? "brand-logo"
                         : "blog-card"
                     }
                     delivery={
                       ("imageDelivery" in v && v.imageDelivery) ||
-                      ({ crop: "e_trim", quality: "q_90" } satisfies ImageDeliveryOptions)
+                      ({
+                        crop: "e_trim",
+                        quality: "q_90",
+                      } satisfies ImageDeliveryOptions)
                     }
                     className="block h-14 w-auto max-h-14 max-w-[5.5rem] object-contain"
                   />

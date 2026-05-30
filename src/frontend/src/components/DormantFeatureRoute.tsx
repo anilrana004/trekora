@@ -1,9 +1,6 @@
+import { type DormantFeature, isFeatureLive } from "@/lib/dormant-features";
 import { Navigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import {
-  type DormantFeature,
-  isFeatureLive,
-} from "@/lib/dormant-features";
 
 type Props = {
   feature: DormantFeature;

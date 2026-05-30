@@ -4,10 +4,7 @@ import {
   CTA_OUTLINE_WHATSAPP,
 } from "@/lib/cta-buttons";
 import { openQueryModalFromLayout } from "@/lib/layout-modals";
-import {
-  buildWhatsAppUrl,
-  SITE_PHONE_TEL,
-} from "@/lib/site-contact";
+import { SITE_PHONE_TEL, buildWhatsAppUrl } from "@/lib/site-contact";
 import { ChevronRight, MapPinned, MessageCircle, Phone } from "lucide-react";
 
 export interface BookingHelpActionsProps {

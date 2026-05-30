@@ -1,30 +1,33 @@
-import type { Dispatch, SetStateAction } from "react";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 import type { TrekBatchPublic } from "@/backend";
-import type { BookableProduct } from "@/lib/booking-product";
-import type { DiscountValidationSuccess } from "@/lib/discount-api";
-import {
-  BOOKING_ADD_ONS,
-  GEAR_RENTAL_ADDON_ID,
-} from "@/lib/booking-addons";
-import { resolveProductWeather } from "@/lib/openweather";
-import { buildWhatsAppUrl } from "@/lib/site-contact";
+import DiscountInput from "@/components/DiscountInput";
+import PriceSummary from "@/components/PriceSummary";
+import OptimizedImage from "@/components/media/OptimizedImage";
+import ProductDetailGroupSizeStepper from "@/components/product-detail/ProductDetailGroupSizeStepper";
+import PhoneInput from "@/components/ui/PhoneInput";
+import { BOOKING_ADD_ONS, GEAR_RENTAL_ADDON_ID } from "@/lib/booking-addons";
 import {
   BOOKING_DOC_LIMITS,
+  type BookingFilePayload,
   collectBookingAttachments,
   fileToBookingPayload,
   formatFileSize,
-  type BookingFilePayload,
 } from "@/lib/booking-documents";
-import DiscountInput from "@/components/DiscountInput";
-import PriceSummary from "@/components/PriceSummary";
-import ProductDetailGroupSizeStepper from "@/components/product-detail/ProductDetailGroupSizeStepper";
-import PhoneInput from "@/components/ui/PhoneInput";
-import OptimizedImage from "@/components/media/OptimizedImage";
+import type { BookableProduct } from "@/lib/booking-product";
+import type { DiscountValidationSuccess } from "@/lib/discount-api";
+import { resolveProductWeather } from "@/lib/openweather";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
+import type { Dispatch, SetStateAction } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { lazy as lazyVideo } from "react";
-const WeatherWidget = lazyVideo(() => import("@/components/WeatherWidget"));
-import { Suspense as WeatherSuspense } from "react";
+import { toast } from "sonner";
+const _WeatherWidget = lazyVideo(() => import("@/components/WeatherWidget"));
 import {
   CTA_COMPACT_GREEN,
   CTA_NAV_PRIMARY,
@@ -48,16 +51,20 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import {  type CoTraveler,
-  type CoTravelerFieldErrors,
-  type FormDataAccumulated,
-  type Step2FieldErrors,
-  type Step2FieldKey,
+import { Suspense as WeatherSuspense } from "react";
+import BookingFileUpload from "../BookingFileUpload";
+import PackageBookingSummary from "../PackageBookingSummary";
+import {
   BLOOD_GROUPS,
   CITIES,
   COMPANION_RELATIONSHIPS,
+  type CoTraveler,
+  type CoTravelerFieldErrors,
   DAYS_OF_WEEK,
+  type FormDataAccumulated,
   MEDICAL_CONDITIONS,
+  type Step2FieldErrors,
+  type Step2FieldKey,
   bookingChoicePill,
   calcPrices,
   countFutureAvailableSlotsInMonth,
@@ -74,8 +81,6 @@ import {  type CoTraveler,
   syncPartyGroupSize,
   upcomingBatchChoices,
 } from "../booking-form-shared";
-import BookingFileUpload from "../BookingFileUpload";
-import PackageBookingSummary from "../PackageBookingSummary";
 
 function Step4({
   fd,
@@ -174,6 +179,5 @@ function Step4({
     </div>
   );
 }
-
 
 export default Step4;

@@ -207,7 +207,6 @@ function StateOverviewMap({
     state === "himachal" ? [31.9165, 77.5723] : [30.0668, 79.0193];
   const stateName = state === "himachal" ? "Himachal Pradesh" : "Uttarakhand";
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: stateCenter derived from state prop; runs once on mount
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
@@ -363,7 +362,6 @@ function TrailMap({ richCoords, trekName }: TrailMapProps) {
     };
   }, [richCoords]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: isFullscreen triggers invalidateSize via ref side-effect
   useEffect(() => {
     if (mapInstanceRef.current) {
       setTimeout(() => mapInstanceRef.current?.invalidateSize(), 100);

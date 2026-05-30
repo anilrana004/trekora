@@ -61,7 +61,12 @@ export const SEASONAL_SEO_TAGS = {
     "winter adventure",
   ],
   summer: ["summer trek", "green valley trek", "himalayan summer"],
-  monsoon: ["monsoon trek", "valley flowers", "lush mountains", "waterfall trek"],
+  monsoon: [
+    "monsoon trek",
+    "valley flowers",
+    "lush mountains",
+    "waterfall trek",
+  ],
   autumn: ["autumn trekking", "clear mountain views", "scenic landscapes"],
 } as const;
 

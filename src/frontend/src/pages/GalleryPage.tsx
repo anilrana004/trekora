@@ -1,3 +1,34 @@
+import ListingStickyToolbar from "@/components/ListingStickyToolbar";
+import ListingToolbarRegions from "@/components/ListingToolbarRegions";
+import GalleryPhotoCard from "@/components/gallery/GalleryPhotoCard";
+import ProductNameCombobox from "@/components/gallery/ProductNameCombobox";
+import { TREKS } from "@/data/treks";
+import { YATRAS } from "@/data/yatras";
+import { useDynamicGallery } from "@/hooks/useDynamicGallery";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import {
+  COMMUNITY_GALLERY_FILTERS,
+  type CommunityGalleryFilter,
+  buildOptimisticGalleryItems,
+  communityItemsToGallery,
+  filterGalleryByTab,
+  galleryUploaderLabel,
+} from "@/lib/gallery-community";
+import { refreshAllGalleries } from "@/lib/gallery-refresh";
+import {
+  galleryPageCloudinaryContext,
+  galleryPageCloudinaryTags,
+  galleryPagePhotoFolder,
+} from "@/lib/gallery-upload-cloudinary";
+import { buildPhotoCredit } from "@/lib/photo-credit";
+import { pushSiteGalleryToCache } from "@/lib/product-gallery-cache";
+import { buildGalleryPageSEO } from "@/lib/product-seo";
+import { resolveProductForUpload } from "@/lib/resolve-product-upload";
+import type { ProductKind } from "@/lib/reviews-api";
+import type { GalleryApiItem } from "@/lib/reviews-api";
+import { saveGalleryPagePhotosToApi } from "@/lib/submit-gallery-photos";
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useSearch } from "@tanstack/react-router";
 import {
   Binoculars,
   ChevronRight,
@@ -12,44 +43,13 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearch } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import GalleryPhotoCard from "@/components/gallery/GalleryPhotoCard";
-import ProductNameCombobox from "@/components/gallery/ProductNameCombobox";
-import ListingStickyToolbar from "@/components/ListingStickyToolbar";
-import ListingToolbarRegions from "@/components/ListingToolbarRegions";
-import { useDynamicGallery } from "@/hooks/useDynamicGallery";
-import { useImageUpload } from "@/hooks/useImageUpload";
-import {
-  buildOptimisticGalleryItems,
-  COMMUNITY_GALLERY_FILTERS,
-  communityItemsToGallery,
-  filterGalleryByTab,
-  galleryUploaderLabel,
-  type CommunityGalleryFilter,
-} from "@/lib/gallery-community";
-import { refreshAllGalleries } from "@/lib/gallery-refresh";
-import { buildPhotoCredit } from "@/lib/photo-credit";
-import { pushSiteGalleryToCache } from "@/lib/product-gallery-cache";
-import {
-  galleryPageCloudinaryContext,
-  galleryPageCloudinaryTags,
-  galleryPagePhotoFolder,
-} from "@/lib/gallery-upload-cloudinary";
-import { resolveProductForUpload } from "@/lib/resolve-product-upload";
-import { saveGalleryPagePhotosToApi } from "@/lib/submit-gallery-photos";
-import { TREKS } from "@/data/treks";
-import { YATRAS } from "@/data/yatras";
-import type { ProductKind } from "@/lib/reviews-api";
 import { toast } from "sonner";
 import { SEOHead } from "../components/SEOHead";
-import { buildGalleryPageSEO } from "@/lib/product-seo";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
 import OptimizedImage from "../components/media/OptimizedImage";
 import type { GalleryItem } from "../data/gallery";
-import type { GalleryApiItem } from "@/lib/reviews-api";
 
 import {
   openCallbackFromLayout,
@@ -307,11 +307,7 @@ function UploadSection({
       folder: "treks" as const,
       folderPath: galleryPagePhotoFolder(resolved.type, slug),
       tags: galleryPageCloudinaryTags(resolved.type, slug),
-      context: galleryPageCloudinaryContext(
-        resolved.name,
-        slug,
-        resolved.type,
-      ),
+      context: galleryPageCloudinaryContext(resolved.name, slug, resolved.type),
     };
   }, [resolved]);
 
@@ -329,7 +325,10 @@ function UploadSection({
   }, [defaultTrekName]);
 
   const handleFilePick = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []).slice(0, 5 - uploadItems.length);
+    const files = Array.from(e.target.files ?? []).slice(
+      0,
+      5 - uploadItems.length,
+    );
     if (files.length) queueFiles(files);
     e.target.value = "";
   };
@@ -452,7 +451,10 @@ function UploadSection({
           className="mb-3"
           style={{ color: "var(--ew-gray-dark)" }}
         />
-        <p className="font-semibold text-sm" style={{ color: "var(--ew-text)" }}>
+        <p
+          className="font-semibold text-sm"
+          style={{ color: "var(--ew-text)" }}
+        >
           {uploadItems.length > 0
             ? `${uploadItems.length} photo(s) selected`
             : "Click to select photos"}
@@ -590,7 +592,8 @@ export default function GalleryPage() {
   const gallerySeo = buildGalleryPageSEO();
   const { trekSlug: trekSlugRaw } = useSearch({ strict: false });
   const trekSlugFilter = useMemo(
-    () => (typeof trekSlugRaw === "string" ? trekSlugRaw : "").trim().toLowerCase(),
+    () =>
+      (typeof trekSlugRaw === "string" ? trekSlugRaw : "").trim().toLowerCase(),
     [trekSlugRaw],
   );
 
@@ -599,7 +602,8 @@ export default function GalleryPage() {
     return YATRAS.some((y) => y.slug === trekSlugFilter) ? "yatra" : "trek";
   }, [trekSlugFilter]);
 
-  const [activeFilter, setActiveFilter] = useState<CommunityGalleryFilter>("All");
+  const [activeFilter, setActiveFilter] =
+    useState<CommunityGalleryFilter>("All");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const queryClient = useQueryClient();
   const {
@@ -740,7 +744,8 @@ export default function GalleryPage() {
                   border: "2px solid rgba(255,255,255,0.35)",
                 }}
               >
-                {filtered.length} trekker photo{filtered.length === 1 ? "" : "s"}
+                {filtered.length} trekker photo
+                {filtered.length === 1 ? "" : "s"}
               </span>
               <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
                 <button

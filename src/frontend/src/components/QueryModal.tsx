@@ -1,17 +1,17 @@
-import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
-import { submitEmailOptimistic } from "@/lib/optimistic-email";
-import { buildPlanMyTrekPayload } from "@/lib/query-email-payloads";
-import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { Clock, Loader2, ShieldCheck, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import PhoneInput from "@/components/ui/PhoneInput";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import {
   isNationalPhoneValid,
   normalizeIndianPhoneDigits,
   validateNationalPhone,
 } from "@/lib/phone-countries";
+import { buildPlanMyTrekPayload } from "@/lib/query-email-payloads";
+import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
+import { submitPlanTrekEmail } from "@/services/query-email-api";
+import { Clock, Loader2, ShieldCheck, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { TREKS } from "../data/treks";
@@ -175,7 +175,11 @@ export default function QueryModal({ isOpen, onClose }: QueryModalProps) {
                   Plan Your Trek with Trekora
                 </h2>
                 <p className="text-white/80 text-xs sm:text-sm mt-1 flex items-center gap-1.5">
-                  <Clock size={14} className="shrink-0 opacity-90" aria-hidden />
+                  <Clock
+                    size={14}
+                    className="shrink-0 opacity-90"
+                    aria-hidden
+                  />
                   Our expert will contact you within 1 hour
                 </p>
               </div>

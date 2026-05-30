@@ -1,5 +1,5 @@
-import type { CloudinaryAsset } from "@/lib/images/upload-types";
 import { galleryPagePhotoFolder } from "@/lib/gallery-upload-cloudinary";
+import type { CloudinaryAsset } from "@/lib/images/upload-types";
 import { submitProductPhotos } from "@/lib/product-photos-api";
 import type { ProductKind } from "@/lib/reviews-api";
 

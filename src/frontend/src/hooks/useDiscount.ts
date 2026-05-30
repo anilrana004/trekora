@@ -1,10 +1,10 @@
-import { useCallback, useState } from "react";
 import {
   type DiscountValidationResult,
   type DiscountValidationSuccess,
   validateGiftCardCode,
   validateVoucherCode,
 } from "@/lib/discount-api";
+import { useCallback, useState } from "react";
 
 export function useDiscount() {
   const [appliedCode, setAppliedCode] = useState("");
@@ -14,7 +14,12 @@ export function useDiscount() {
   const [error, setError] = useState<string | null>(null);
 
   const validateCode = useCallback(
-    async (bookingAmount: number, packageId: string, userId: string, code: string) => {
+    async (
+      bookingAmount: number,
+      packageId: string,
+      userId: string,
+      code: string,
+    ) => {
       const normalized = code.trim().toUpperCase();
       if (!normalized) {
         setError("Enter a voucher or gift card code");

@@ -1,8 +1,8 @@
 import { BLOGS } from "../data/blogs";
 import {
+  DESTINATIONS,
   DESTINATION_DISTRICTS_PATH_SLUG,
   DESTINATION_STATE_SLUGS,
-  DESTINATIONS,
 } from "../data/destinations";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
@@ -132,8 +132,7 @@ export function generateSeoTagDiscoveryEntries(): SitemapEntry[] {
   );
   const conversion = HIGH_CONVERSION_SEO_KEYWORDS.slice(0, 5);
 
-  const encode = (tag: string) =>
-    encodeURIComponent(tag.trim().toLowerCase());
+  const encode = (tag: string) => encodeURIComponent(tag.trim().toLowerCase());
 
   const trekEntries: SitemapEntry[] = [...new Set(trekTags)].map((tag) => ({
     url: `/treks?tag=${encode(tag)}`,

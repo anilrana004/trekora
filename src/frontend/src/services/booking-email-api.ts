@@ -1,7 +1,5 @@
 import type { BookingEmailAttachment } from "../lib/booking-documents";
-import type {
-  BookingEmailSection,
-} from "../lib/booking-email-details";
+import type { BookingEmailSection } from "../lib/booking-email-details";
 
 export type BookingEmailPayload = {
   bookingRef: string;
@@ -23,9 +21,7 @@ export type BookingEmailPayload = {
   attachments?: BookingEmailAttachment[];
 };
 
-export type BookingEmailResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type BookingEmailResult = { ok: true } | { ok: false; error: string };
 
 export function bookingEmailSuccessMessage(email: string): string {
   return `Confirmation sent to ${email}. Our team will contact you within 2 hours.`;
@@ -37,7 +33,10 @@ export async function submitBookingEmail(
   try {
     const res = await fetch("/api/booking", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify(payload),
     });
     const data = (await res.json().catch(() => ({}))) as {

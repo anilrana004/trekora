@@ -1,7 +1,6 @@
-import { revokeAdminSession } from "@/lib/admin-access";
 import { SiteLogo } from "@/components/SiteLogo";
+import { revokeAdminSession } from "@/lib/admin-access";
 import { Link, useLocation } from "@tanstack/react-router";
-import AdminScrollOutlet from "./AdminScrollOutlet";
 import {
   BarChart3,
   BookOpen,
@@ -15,6 +14,7 @@ import {
   Tag,
   Users,
 } from "lucide-react";
+import AdminScrollOutlet from "./AdminScrollOutlet";
 
 const ADMIN_NAV = [
   { label: "Dashboard", to: "/admin", icon: LayoutDashboard },

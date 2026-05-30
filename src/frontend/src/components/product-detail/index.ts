@@ -5,7 +5,10 @@ export {
   yatraItineraryToDisplayDays,
 } from "./itinerary-utils";
 export type { DisplayItineraryDay } from "./itinerary-utils";
-export { default as ProductDetailBestSeasonGrid, monthsFromSeasonLabel } from "./ProductDetailBestSeasonGrid";
+export {
+  default as ProductDetailBestSeasonGrid,
+  monthsFromSeasonLabel,
+} from "./ProductDetailBestSeasonGrid";
 export { default as ProductDetailBookingSidebarHeader } from "./ProductDetailBookingSidebarHeader";
 export { default as ProductDetailFaqList } from "./ProductDetailFaqList";
 export type { FaqItem } from "./ProductDetailFaqList";

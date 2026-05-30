@@ -1,16 +1,17 @@
-import { Link } from "@tanstack/react-router";
-import { bookSearch } from "@/lib/book-search";
 import {
   CURATED_PACKAGES,
-  PACKAGE_CATEGORIES,
   type CuratedPackageCategory,
+  PACKAGE_CATEGORIES,
 } from "@/data/curated-packages";
+import { bookSearch } from "@/lib/book-search";
 import { CTA_OUTLINE_WHITE } from "@/lib/cta-buttons";
 import {
   openCallbackFromLayout,
   openQueryModalFromLayout,
   openTrekQuizFromLayout,
 } from "@/lib/layout-modals";
+import { SITE_ORIGIN } from "@/lib/site-config";
+import { Link } from "@tanstack/react-router";
 import {
   AlertCircle,
   Binoculars,
@@ -25,7 +26,6 @@ import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import ListingToolbarRegions from "../components/ListingToolbarRegions";
 import PackageCard from "../components/PackageCard";
 import { SEOHead } from "../components/SEOHead";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
@@ -386,9 +386,7 @@ export default function PackagesPage() {
       <section className="py-14 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="section-title mx-auto block">
-              Why Only on Trekora
-            </h2>
+            <h2 className="section-title mx-auto block">Why Only on Trekora</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {WHY_TREKORA.map((item, i) => (
@@ -477,13 +475,19 @@ export default function PackagesPage() {
                   >
                     {tier.name}
                   </h3>
-                  <p className="text-sm" style={{ color: "var(--ew-gray-dark)" }}>
+                  <p
+                    className="text-sm"
+                    style={{ color: "var(--ew-gray-dark)" }}
+                  >
                     {tier.tagline}
                   </p>
                   <p className="font-bold text-2xl mt-3 trek-price">
                     {tier.price}
                   </p>
-                  <p className="text-xs" style={{ color: "var(--ew-gray-dark)" }}>
+                  <p
+                    className="text-xs"
+                    style={{ color: "var(--ew-gray-dark)" }}
+                  >
                     per person · on any combo
                   </p>
                 </div>
@@ -540,7 +544,10 @@ export default function PackagesPage() {
           }}
         >
           <div className="text-center sm:text-left">
-            <p className="font-bold text-lg" style={{ color: "var(--ew-text)" }}>
+            <p
+              className="font-bold text-lg"
+              style={{ color: "var(--ew-text)" }}
+            >
               Group discount
             </p>
             <p className="text-sm" style={{ color: "var(--ew-text-lt)" }}>

@@ -30,9 +30,7 @@ export default function ListingCardBadgeRow({
   secondaryStyle = SECONDARY_BADGE,
 }: ListingCardBadgeRowProps) {
   return (
-    <div
-      className="listing-card-badge-row pointer-events-none absolute top-3 left-3 right-3 z-[3] flex items-start justify-between gap-2"
-    >
+    <div className="listing-card-badge-row pointer-events-none absolute top-3 left-3 right-3 z-[3] flex items-start justify-between gap-2">
       <span
         className="listing-card-badge-row__primary w-fit max-w-[calc(100%-6.5rem)] shrink truncate rounded-full px-2 py-0.5 text-xs font-semibold leading-tight whitespace-nowrap"
         style={primaryStyle}

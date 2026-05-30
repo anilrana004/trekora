@@ -292,9 +292,7 @@
     border: none;
     cursor: pointer;
     white-space: nowrap;
-    transition:
-      filter 0.2s ease,
-      transform 0.15s ease;
+    transition: filter 0.2s ease, transform 0.15s ease;
   }
 
   .btn-book-box:hover {
@@ -337,10 +335,8 @@
     color: var(--ew-text);
     padding: 0.75rem 0.9rem;
     outline: none;
-    transition:
-      border-color 0.15s ease,
-      box-shadow 0.15s ease,
-      background-color 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color
+      0.15s ease;
   }
 
   .ew-field::placeholder {
@@ -464,7 +460,8 @@
       z-index: 55;
       background-color: #fff;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-      animation: listing-chrome-toolbar-in 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+      animation: listing-chrome-toolbar-in 0.32s cubic-bezier(0.4, 0, 0.2, 1)
+        both;
       transition: box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
   }
@@ -534,10 +531,8 @@
     border: 2px solid var(--ew-gray-mid);
     color: var(--ew-gray-dark);
     background: transparent;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s
+      ease;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -615,11 +610,8 @@
     border: 2px solid var(--ew-gray-mid);
     color: var(--ew-text-lt);
     background: var(--ew-gray-lt);
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease,
-      box-shadow 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s
+      ease, box-shadow 0.2s ease;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -666,9 +658,7 @@
     background: #fff;
     color: var(--ew-text);
     font-size: 0.875rem;
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
     -webkit-tap-highlight-color: transparent;
   }
 
@@ -987,7 +977,8 @@
       transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .listing-filters-panel:not(.listing-filters-panel--open) .listing-filters-panel__inner {
+    .listing-filters-panel:not(.listing-filters-panel--open)
+      .listing-filters-panel__inner {
       opacity: 0.92;
     }
 
@@ -1018,9 +1009,7 @@
     border: 2px solid var(--ew-red);
     color: var(--ew-red);
     background: #fff;
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   .packages-page .packages-promo__cta:hover {
@@ -1040,9 +1029,7 @@
     color: var(--ew-text);
     background: var(--ew-gray-lt);
     border: 1px solid var(--ew-gray-mid);
-    transition:
-      border-color 0.2s ease,
-      color 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease;
   }
 
   .packages-page .package-card__chip:hover {
@@ -1352,7 +1339,8 @@
     left: 0;
     right: 0;
     bottom: calc(
-      var(--mobile-nav-height, 48px) + env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 48px) +
+      env(safe-area-inset-bottom, 0px)
     );
     z-index: 55;
     display: flex;
@@ -1656,7 +1644,8 @@ img[loading="lazy"] {
   }
   .main-content {
     padding-bottom: calc(
-      var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height) +
+      env(safe-area-inset-bottom, 0px)
     );
   }
 

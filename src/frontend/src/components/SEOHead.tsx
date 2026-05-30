@@ -82,10 +82,7 @@ export function SEOHead({
     setMeta("twitter:card", "summary_large_image");
     setMeta("twitter:title", title);
     setMeta("twitter:description", description);
-    setMeta(
-      "twitter:image",
-      ogImage || DEFAULT_OG_IMAGE,
-    );
+    setMeta("twitter:image", ogImage || DEFAULT_OG_IMAGE);
 
     // JSON-LD
     if (schema) {

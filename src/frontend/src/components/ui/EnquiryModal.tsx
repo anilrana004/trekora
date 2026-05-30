@@ -190,7 +190,6 @@ export default function EnquiryModal({
           onClick={handleClose}
           data-ocid="enquiry.modal.backdrop"
         >
-          {/* biome-ignore lint/a11y/useSemanticElements: animated panel via motion; native dialog breaks exit animations */}
           <motion.div
             role="dialog"
             aria-modal="true"
@@ -434,7 +433,11 @@ export default function EnquiryModal({
                   >
                     {submitting ? (
                       <>
-                        <Loader2 size={16} className="animate-spin" aria-hidden />
+                        <Loader2
+                          size={16}
+                          className="animate-spin"
+                          aria-hidden
+                        />
                         Sending…
                       </>
                     ) : (

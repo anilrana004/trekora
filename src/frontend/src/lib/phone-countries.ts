@@ -24,9 +24,7 @@ export const PHONE_COUNTRIES: PhoneCountry[] = [
 ];
 
 export function getPhoneCountry(iso: string): PhoneCountry {
-  return (
-    PHONE_COUNTRIES.find((c) => c.iso === iso) ?? PHONE_COUNTRIES[0]
-  );
+  return PHONE_COUNTRIES.find((c) => c.iso === iso) ?? PHONE_COUNTRIES[0];
 }
 
 export function formatPhoneForDisplay(

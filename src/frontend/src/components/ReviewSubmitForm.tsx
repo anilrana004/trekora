@@ -1,6 +1,3 @@
-import { Loader2, Star } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { getCloudinaryCloudName } from "@/lib/images/cloudinary-config";
 import {
@@ -10,11 +7,14 @@ import {
 } from "@/lib/review-cloudinary";
 import { reviewToGalleryItems } from "@/lib/review-gallery-items";
 import {
-  submitReview,
   type GalleryApiItem,
   type ProductKind,
   type TrekoraReview,
+  submitReview,
 } from "@/lib/reviews-api";
+import { Loader2, Star } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 import OptimizedImage from "./media/OptimizedImage";
 
 interface ReviewSubmitFormProps {
@@ -89,9 +89,9 @@ export default function ReviewSubmitForm({
     name: "",
     city: "",
   });
-  const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>(
-    {},
-  );
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof FormState, string>>
+  >({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -162,7 +162,9 @@ export default function ReviewSubmitForm({
           : { assets: [], errors: [] as string[] };
 
       if (uploadItems.length > 0 && uploaded.length === 0) {
-        toast.error(uploadErrors[0] ?? "Photo upload failed. Please try again.");
+        toast.error(
+          uploadErrors[0] ?? "Photo upload failed. Please try again.",
+        );
         return;
       }
       if (uploadErrors.length > 0) {
@@ -195,7 +197,9 @@ export default function ReviewSubmitForm({
       });
 
       if (!res.success) {
-        toast.error(res.message ?? "Could not submit review. Please try again.");
+        toast.error(
+          res.message ?? "Could not submit review. Please try again.",
+        );
         return;
       }
 
@@ -233,7 +237,8 @@ export default function ReviewSubmitForm({
     background: "#fff",
   });
 
-  const cloudinaryConfigured = Boolean(getCloudinaryCloudName()) && cloudinaryReady;
+  const cloudinaryConfigured =
+    Boolean(getCloudinaryCloudName()) && cloudinaryReady;
 
   return (
     <div
@@ -251,7 +256,10 @@ export default function ReviewSubmitForm({
       {submitted ? (
         <div className="text-center py-8" data-ocid="review_form.success_state">
           <div className="text-5xl mb-3">✅</div>
-          <p className="font-bold text-base" style={{ color: "var(--ew-text)" }}>
+          <p
+            className="font-bold text-base"
+            style={{ color: "var(--ew-text)" }}
+          >
             Review Submitted!
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--ew-text-lt)" }}>
@@ -265,13 +273,15 @@ export default function ReviewSubmitForm({
           noValidate
           data-ocid="review_form.form"
         >
-          <div>
-            <label
+          <div role="group" aria-labelledby="rv-rating-label">
+            <span
+              id="rv-rating-label"
               className="block text-sm font-semibold mb-2"
               style={{ color: "var(--ew-text)" }}
             >
-              Rate your experience <span style={{ color: "var(--ew-red)" }}>*</span>
-            </label>
+              Rate your experience{" "}
+              <span style={{ color: "var(--ew-red)" }}>*</span>
+            </span>
             <StarPicker
               value={form.rating}
               onChange={(n) => setForm((p) => ({ ...p, rating: n }))}
@@ -298,7 +308,9 @@ export default function ReviewSubmitForm({
               style={inputStyle(!!errors.title)}
               placeholder="E.g., Most magical week of my life"
               value={form.title}
-              onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, title: e.target.value }))
+              }
               data-ocid="review_form.title.input"
             />
             {errors.title ? (
@@ -334,7 +346,8 @@ export default function ReviewSubmitForm({
             <p
               className="text-[11px] mt-1 text-right"
               style={{
-                color: wordCount < 50 ? "var(--ew-gray-dark)" : "var(--ew-green)",
+                color:
+                  wordCount < 50 ? "var(--ew-gray-dark)" : "var(--ew-green)",
               }}
             >
               {wordCount} / 50 words minimum
@@ -348,6 +361,7 @@ export default function ReviewSubmitForm({
 
           <div>
             <label
+              htmlFor="rv-photos"
               className="block text-sm font-semibold mb-2"
               style={{ color: "var(--ew-text)" }}
             >
@@ -358,11 +372,12 @@ export default function ReviewSubmitForm({
                 className="text-xs rounded-lg px-3 py-2 mb-2"
                 style={{ background: "#fff3e0", color: "var(--ew-text)" }}
               >
-                Photo upload is temporarily unavailable. You can still submit your
-                review without photos.
+                Photo upload is temporarily unavailable. You can still submit
+                your review without photos.
               </p>
             ) : null}
             <input
+              id="rv-photos"
               ref={fileInputRef}
               type="file"
               accept="image/jpeg,image/png,image/webp"
@@ -403,7 +418,10 @@ export default function ReviewSubmitForm({
                     />
                     {item.status === "uploading" ? (
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <Loader2 className="animate-spin text-white" size={20} />
+                        <Loader2
+                          className="animate-spin text-white"
+                          size={20}
+                        />
                       </div>
                     ) : null}
                     <button
@@ -436,7 +454,9 @@ export default function ReviewSubmitForm({
                 className={inputCls}
                 style={inputStyle(!!errors.name)}
                 value={form.name}
-                onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, name: e.target.value }))
+                }
                 data-ocid="review_form.name.input"
               />
               {errors.name ? (
@@ -459,7 +479,9 @@ export default function ReviewSubmitForm({
                 className={inputCls}
                 style={inputStyle(false)}
                 value={form.city}
-                onChange={(e) => setForm((p) => ({ ...p, city: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, city: e.target.value }))
+                }
                 data-ocid="review_form.city.input"
               />
             </div>

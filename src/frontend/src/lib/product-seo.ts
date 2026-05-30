@@ -1,18 +1,18 @@
 import type { Trek } from "@/data/treks";
-import type { Yatra } from "@/data/yatras";
 import { TREKS } from "@/data/treks";
+import type { Yatra } from "@/data/yatras";
 import { YATRAS } from "@/data/yatras";
-import { SITE_ORIGIN } from "@/lib/site-config";
-import type { PageMetaConfig } from "@/lib/seo";
 import {
   GALLERY_SEO_TAGS,
   HIGH_CONVERSION_SEO_KEYWORDS,
   LONG_TAIL_SEO_KEYWORDS,
+  type ProductSEOProfile,
   TREKORA_BRAND_KEYWORDS,
   TREK_SEO_BY_SLUG,
   YATRA_SEO_BY_SLUG,
-  type ProductSEOProfile,
 } from "@/lib/product-seo-taxonomy";
+import type { PageMetaConfig } from "@/lib/seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
 
 export type { ProductSEOProfile } from "@/lib/product-seo-taxonomy";
 export {
@@ -54,7 +54,9 @@ export function getTrekSEOProfile(slug: string): ProductSEOProfile | undefined {
   return TREK_SEO_BY_SLUG[slug];
 }
 
-export function getYatraSEOProfile(slug: string): ProductSEOProfile | undefined {
+export function getYatraSEOProfile(
+  slug: string,
+): ProductSEOProfile | undefined {
   return YATRA_SEO_BY_SLUG[slug];
 }
 
@@ -99,13 +101,16 @@ export function resolveTrekSEO(trek: Trek): ProductSEOProfile {
   return {
     slug: trek.slug,
     tags: [...new Set([...(curated?.tags ?? []), ...baseTags])],
-    seoKeywords: [...new Set([...(curated?.seoKeywords ?? []), ...baseKeywords])],
+    seoKeywords: [
+      ...new Set([...(curated?.seoKeywords ?? []), ...baseKeywords]),
+    ],
     difficulty: curated?.difficulty ?? trek.difficulty,
     season: curated?.season ?? inferSeasonFromBestSeason(trek.bestSeason),
     activities: curated?.activities ?? ["trekking", "camping"],
     terrain: curated?.terrain ?? [trek.trekType.toLowerCase()],
     states: curated?.states ?? [stateLabel],
-    altitudeCategory: curated?.altitudeCategory ?? inferAltitudeCategory(trek.altitude),
+    altitudeCategory:
+      curated?.altitudeCategory ?? inferAltitudeCategory(trek.altitude),
     experienceType: curated?.experienceType ?? [trek.difficulty.toLowerCase()],
     travelStyle: curated?.travelStyle ?? ["guided trekking"],
   };
@@ -132,7 +137,9 @@ export function resolveYatraSEO(yatra: Yatra): ProductSEOProfile {
   return {
     slug: yatra.slug,
     tags: [...new Set([...(curated?.tags ?? []), ...baseTags])],
-    seoKeywords: [...new Set([...(curated?.seoKeywords ?? []), ...baseKeywords])],
+    seoKeywords: [
+      ...new Set([...(curated?.seoKeywords ?? []), ...baseKeywords]),
+    ],
     season: curated?.season ?? ["summer", "autumn"],
     activities: curated?.activities ?? ["spiritual tourism"],
     states: curated?.states ?? [stateLabel],
@@ -182,7 +189,7 @@ export function buildListingSEO(type: "trek" | "yatra"): PageMetaConfig {
       description:
         "Book sacred Himalayan yatras with Trekora — Kedarnath, Badrinath, Char Dham and more. VIP darshan, meals, guides & trusted pilgrimage packages.",
       keywords: formatMetaKeywords([
-        ...YATRA_SEO_BY_SLUG["kedarnath-yatra"]?.seoKeywords ?? [],
+        ...(YATRA_SEO_BY_SLUG["kedarnath-yatra"]?.seoKeywords ?? []),
         ...HIGH_CONVERSION_SEO_KEYWORDS.slice(0, 8),
         ...TREKORA_BRAND_KEYWORDS,
       ]),
@@ -207,7 +214,10 @@ export function buildGalleryPageSEO(): PageMetaConfig {
     title: "Trekora Gallery | Himalayan Trek & Yatra Photos",
     description:
       "Browse trekker-shared photos from Himalayan treks and yatras — every image tagged with the trek or yatra name and the traveller who uploaded it.",
-    keywords: formatMetaKeywords([...GALLERY_SEO_TAGS, ...TREKORA_BRAND_KEYWORDS]),
+    keywords: formatMetaKeywords([
+      ...GALLERY_SEO_TAGS,
+      ...TREKORA_BRAND_KEYWORDS,
+    ]),
     canonical: `${SITE_ORIGIN}/gallery`,
   };
 }
@@ -245,7 +255,10 @@ function seoOverlapScore(a: ProductSEOProfile, b: ProductSEOProfile): number {
 export function getRelatedTreks(trek: Trek, limit = 4): Trek[] {
   const profile = resolveTrekSEO(trek);
   return TREKS.filter((t) => t.slug !== trek.slug && t.isActive)
-    .map((t) => ({ trek: t, score: seoOverlapScore(profile, resolveTrekSEO(t)) }))
+    .map((t) => ({
+      trek: t,
+      score: seoOverlapScore(profile, resolveTrekSEO(t)),
+    }))
     .sort((a, b) => b.score - a.score || b.trek.rating - a.trek.rating)
     .slice(0, limit)
     .map(({ trek: t }) => t);
@@ -254,15 +267,29 @@ export function getRelatedTreks(trek: Trek, limit = 4): Trek[] {
 export function getRelatedYatras(yatra: Yatra, limit = 3): Yatra[] {
   const profile = resolveYatraSEO(yatra);
   return YATRAS.filter((y) => y.slug !== yatra.slug && y.isActive)
-    .map((y) => ({ yatra: y, score: seoOverlapScore(profile, resolveYatraSEO(y)) }))
-    .sort((a, b) => b.score - a.score || (b.yatra.rating ?? 0) - (a.yatra.rating ?? 0))
+    .map((y) => ({
+      yatra: y,
+      score: seoOverlapScore(profile, resolveYatraSEO(y)),
+    }))
+    .sort(
+      (a, b) =>
+        b.score - a.score || (b.yatra.rating ?? 0) - (a.yatra.rating ?? 0),
+    )
     .slice(0, limit)
     .map(({ yatra: y }) => y);
 }
 
 /** Match trek/yatra against a search or tag filter (list pages, tag cloud links). */
 export function matchesSeoTag(
-  product: { name: string; slug: string; state: string; category?: string; bestSeason?: string; bestTime?: string; tags?: string[] },
+  product: {
+    name: string;
+    slug: string;
+    state: string;
+    category?: string;
+    bestSeason?: string;
+    bestTime?: string;
+    tags?: string[];
+  },
   rawQuery: string,
   type: "trek" | "yatra",
 ): boolean {
@@ -289,7 +316,10 @@ export function matchesSeoTag(
     .map(normalizeTag)
     .join(" ");
 
-  return haystack.includes(q) || q.split(" ").every((word) => haystack.includes(word));
+  return (
+    haystack.includes(q) ||
+    q.split(" ").every((word) => haystack.includes(word))
+  );
 }
 
 export function allSeoTagsForProduct(

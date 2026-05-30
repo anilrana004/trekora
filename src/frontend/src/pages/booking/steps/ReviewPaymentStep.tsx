@@ -1,30 +1,33 @@
-import type { Dispatch, SetStateAction } from "react";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 import type { TrekBatchPublic } from "@/backend";
-import type { BookableProduct } from "@/lib/booking-product";
-import type { DiscountValidationSuccess } from "@/lib/discount-api";
-import {
-  BOOKING_ADD_ONS,
-  GEAR_RENTAL_ADDON_ID,
-} from "@/lib/booking-addons";
-import { resolveProductWeather } from "@/lib/openweather";
-import { buildWhatsAppUrl } from "@/lib/site-contact";
+import DiscountInput from "@/components/DiscountInput";
+import PriceSummary from "@/components/PriceSummary";
+import OptimizedImage from "@/components/media/OptimizedImage";
+import ProductDetailGroupSizeStepper from "@/components/product-detail/ProductDetailGroupSizeStepper";
+import PhoneInput from "@/components/ui/PhoneInput";
+import { BOOKING_ADD_ONS, GEAR_RENTAL_ADDON_ID } from "@/lib/booking-addons";
 import {
   BOOKING_DOC_LIMITS,
+  type BookingFilePayload,
   collectBookingAttachments,
   fileToBookingPayload,
   formatFileSize,
-  type BookingFilePayload,
 } from "@/lib/booking-documents";
-import DiscountInput from "@/components/DiscountInput";
-import PriceSummary from "@/components/PriceSummary";
-import ProductDetailGroupSizeStepper from "@/components/product-detail/ProductDetailGroupSizeStepper";
-import PhoneInput from "@/components/ui/PhoneInput";
-import OptimizedImage from "@/components/media/OptimizedImage";
+import type { BookableProduct } from "@/lib/booking-product";
+import type { DiscountValidationSuccess } from "@/lib/discount-api";
+import { resolveProductWeather } from "@/lib/openweather";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
+import type { Dispatch, SetStateAction } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { lazy as lazyVideo } from "react";
-const WeatherWidget = lazyVideo(() => import("@/components/WeatherWidget"));
-import { Suspense as WeatherSuspense } from "react";
+import { toast } from "sonner";
+const _WeatherWidget = lazyVideo(() => import("@/components/WeatherWidget"));
 import {
   CTA_COMPACT_GREEN,
   CTA_NAV_PRIMARY,
@@ -48,16 +51,18 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import {  type CoTraveler,
-  type CoTravelerFieldErrors,
-  type FormDataAccumulated,
-  type Step2FieldErrors,
-  type Step2FieldKey,
+import { Suspense as WeatherSuspense } from "react";
+import {
   BLOOD_GROUPS,
   CITIES,
   COMPANION_RELATIONSHIPS,
+  type CoTraveler,
+  type CoTravelerFieldErrors,
   DAYS_OF_WEEK,
+  type FormDataAccumulated,
   MEDICAL_CONDITIONS,
+  type Step2FieldErrors,
+  type Step2FieldKey,
   bookingChoicePill,
   calcPrices,
   countFutureAvailableSlotsInMonth,
@@ -116,7 +121,9 @@ function Step6({
     codeDiscountAmount,
   );
   const bookingAmountForCodes = prices.subtotal;
-  const selectedAddOns = BOOKING_ADD_ONS.filter((a) => fd.addOns.includes(a.id));
+  const selectedAddOns = BOOKING_ADD_ONS.filter((a) =>
+    fd.addOns.includes(a.id),
+  );
 
   return (
     <div className="space-y-5">
@@ -124,7 +131,10 @@ function Step6({
         <>
           <PackageBookingSummary product={trek} compact />
           {fd.batchDate ? (
-            <p className="text-sm -mt-2" style={{ color: "var(--ew-gray-dark)" }}>
+            <p
+              className="text-sm -mt-2"
+              style={{ color: "var(--ew-gray-dark)" }}
+            >
               📅 Preferred start: {formatBatchDateShortIN(fd.batchDate)} · 👥{" "}
               {partyHeadcount(fd)} traveler
               {partyHeadcount(fd) !== 1 ? "s" : ""}
@@ -196,12 +206,18 @@ function Step6({
         <ul className="space-y-2">
           <li
             className="rounded-lg px-3 py-2"
-            style={{ background: "#fff", border: "1px solid var(--ew-gray-mid)" }}
+            style={{
+              background: "#fff",
+              border: "1px solid var(--ew-gray-mid)",
+            }}
           >
             <span className="font-semibold" style={{ color: "var(--ew-text)" }}>
               {fd.fullName || "Lead traveler"}
             </span>
-            <span className="text-xs ml-2" style={{ color: "var(--ew-gray-dark)" }}>
+            <span
+              className="text-xs ml-2"
+              style={{ color: "var(--ew-gray-dark)" }}
+            >
               You · Primary contact
             </span>
           </li>
@@ -292,16 +308,13 @@ function Step6({
         </p>
         <p style={{ color: "#1B5E20" }}>
           <strong>Submit Booking</strong> confirms instantly. Your full details
-          go to <strong>{fd.email.trim() || "your step 2 email"}</strong> and our
-          team in the background — usually within a minute.
+          go to <strong>{fd.email.trim() || "your step 2 email"}</strong> and
+          our team in the background — usually within a minute.
         </p>
       </div>
 
       {/* Terms */}
-      <label
-        className="booking-terms-label"
-        data-ocid="booking.terms.checkbox"
-      >
+      <label className="booking-terms-label" data-ocid="booking.terms.checkbox">
         <input
           type="checkbox"
           checked={fd.termsAccepted}

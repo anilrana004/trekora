@@ -1,3 +1,19 @@
+import FormSuccessMessage from "@/components/FormSuccessMessage";
+import PhoneInput from "@/components/ui/PhoneInput";
+import {
+  CTA_OUTLINE_ORANGE_FLEX,
+  CTA_OUTLINE_RED,
+  CTA_OUTLINE_WHATSAPP_FLEX,
+  CTA_OUTLINE_WHITE,
+} from "@/lib/cta-buttons";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import {
+  normalizeIndianPhoneDigits,
+  parseIndianMobileInput,
+} from "@/lib/phone-countries";
+import { buildContactPagePayload } from "@/lib/query-email-payloads";
+import { generateContactLocalBusinessJSONLD } from "@/lib/seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import {
   SITE_EMAIL,
   SITE_OFFICE_ADDRESS,
@@ -7,33 +23,25 @@ import {
   getSiteMapEmbedSrc,
   getSiteMapOpenUrl,
 } from "@/lib/site-contact";
-import FormSuccessMessage from "@/components/FormSuccessMessage";
-import PhoneInput from "@/components/ui/PhoneInput";
-import {
-  normalizeIndianPhoneDigits,
-  parseIndianMobileInput,
-} from "@/lib/phone-countries";
-import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { submitCallbackEmail } from "@/services/callback-email-api";
-import { buildContactPagePayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { ChevronRight, Clock, Loader2, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import {
+  ChevronRight,
+  Clock,
+  Loader2,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { SEOHead } from "../components/SEOHead";
-import { generateContactLocalBusinessJSONLD } from "@/lib/seo";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
-import {
-  CTA_OUTLINE_ORANGE_FLEX,
-  CTA_OUTLINE_RED,
-  CTA_OUTLINE_WHATSAPP_FLEX,
-  CTA_OUTLINE_WHITE,
-} from "@/lib/cta-buttons";
 
 interface ContactForm {
   name: string;
@@ -88,7 +96,9 @@ export default function ContactPage() {
     control: cbControl,
     handleSubmit: handleCb,
     reset: resetCb,
-  } = useForm<CallbackForm>({ defaultValues: { cbPhone: "", cbTime: "Morning (9–12)" } });
+  } = useForm<CallbackForm>({
+    defaultValues: { cbPhone: "", cbTime: "Morning (9–12)" },
+  });
 
   const onSubmit = (data: ContactForm) => {
     const phone =
@@ -436,189 +446,193 @@ export default function ContactPage() {
                   </button>
                 </div>
               ) : (
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-4"
-                noValidate
-              >
-                <div>
-                  <label
-                    htmlFor="contact-name"
-                    className="block text-sm font-semibold mb-1"
-                    style={{ color: "var(--ew-text)" }}
-                  >
-                    Full Name *
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    {...register("name", { required: "Required" })}
-                    className="w-full rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none"
-                    style={{ border: "1px solid var(--ew-gray-mid)" }}
-                    data-ocid="contact.name.input"
-                  />
-                  {errors.name && (
-                    <p
-                      className="text-xs mt-1"
-                      style={{ color: "var(--ew-red)" }}
-                      data-ocid="contact.name.field_error"
-                    >
-                      {errors.name.message}
-                    </p>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="space-y-4"
+                  noValidate
+                >
                   <div>
                     <label
-                      htmlFor="contact-email"
+                      htmlFor="contact-name"
                       className="block text-sm font-semibold mb-1"
                       style={{ color: "var(--ew-text)" }}
                     >
-                      Email *
+                      Full Name *
                     </label>
                     <input
-                      id="contact-email"
-                      type="email"
-                      {...register("email", { required: "Required" })}
+                      id="contact-name"
+                      type="text"
+                      {...register("name", { required: "Required" })}
                       className="w-full rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none"
                       style={{ border: "1px solid var(--ew-gray-mid)" }}
-                      data-ocid="contact.email.input"
+                      data-ocid="contact.name.input"
                     />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="contact-phone"
-                      className="block text-sm font-semibold mb-1"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Mobile Number *
-                    </label>
-                    <Controller
-                      name="phone"
-                      control={control}
-                      rules={{ required: "Required" }}
-                      render={({ field }) => (
-                        <PhoneInput
-                          id="contact-phone"
-                          value={field.value}
-                          countryIso={contactPhoneCountry}
-                          onValueChange={field.onChange}
-                          onCountryChange={(meta) =>
-                            setContactPhoneCountry(meta.iso)
-                          }
-                          hasError={Boolean(errors.phone)}
-                          placeholder="Enter Your Mobile Number"
-                          data-ocid="contact.phone.input"
-                        />
-                      )}
-                    />
-                    {errors.phone && (
+                    {errors.name && (
                       <p
                         className="text-xs mt-1"
                         style={{ color: "var(--ew-red)" }}
-                        data-ocid="contact.phone.field_error"
+                        data-ocid="contact.name.field_error"
                       >
-                        {errors.phone.message}
+                        {errors.name.message}
                       </p>
                     )}
                   </div>
-                </div>
-                <div>
-                  <label
-                    htmlFor="contact-subject"
-                    className="block text-sm font-semibold mb-1"
-                    style={{ color: "var(--ew-text)" }}
-                  >
-                    Subject
-                  </label>
-                  <input
-                    id="contact-subject"
-                    type="text"
-                    {...register("subject")}
-                    className="w-full rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none"
-                    style={{ border: "1px solid var(--ew-gray-mid)" }}
-                    data-ocid="contact.subject.input"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="contact-trek"
-                    className="block text-sm font-semibold mb-1"
-                    style={{ color: "var(--ew-text)" }}
-                  >
-                    Trek of Interest
-                  </label>
-                  <select
-                    id="contact-trek"
-                    {...register("trekInterest")}
-                    className="w-full rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none"
-                    style={{ border: "1px solid var(--ew-gray-mid)" }}
-                    data-ocid="contact.trek_interest.select"
-                  >
-                    <option value="">Select a trek (optional)</option>
-                    <optgroup label="Uttarakhand">
-                      <option>Roopkund Trek</option>
-                      <option>Valley of Flowers</option>
-                      <option>Kedarnath Trek</option>
-                      <option>Brahmatal Trek</option>
-                    </optgroup>
-                    <optgroup label="Himachal Pradesh">
-                      <option>Hampta Pass</option>
-                      <option>Triund Trek</option>
-                      <option>Sar Pass</option>
-                      <option>Spiti Valley</option>
-                    </optgroup>
-                    <optgroup label="Yatras">
-                      <option>Char Dham Yatra</option>
-                      <option>Panch Kedar</option>
-                      <option>Mani Mahesh Yatra</option>
-                    </optgroup>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="contact-message"
-                    className="block text-sm font-semibold mb-1"
-                    style={{ color: "var(--ew-text)" }}
-                  >
-                    Message *
-                  </label>
-                  <textarea
-                    id="contact-message"
-                    rows={4}
-                    {...register("message", { required: "Required" })}
-                    className="w-full rounded-lg px-3 py-2.5 text-sm resize-none bg-white focus:outline-none"
-                    style={{ border: "1px solid var(--ew-gray-mid)" }}
-                    data-ocid="contact.message.textarea"
-                  />
-                  {errors.message && (
-                    <p
-                      className="text-xs mt-1"
-                      style={{ color: "var(--ew-red)" }}
-                      data-ocid="contact.message.field_error"
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        htmlFor="contact-email"
+                        className="block text-sm font-semibold mb-1"
+                        style={{ color: "var(--ew-text)" }}
+                      >
+                        Email *
+                      </label>
+                      <input
+                        id="contact-email"
+                        type="email"
+                        {...register("email", { required: "Required" })}
+                        className="w-full rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none"
+                        style={{ border: "1px solid var(--ew-gray-mid)" }}
+                        data-ocid="contact.email.input"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="contact-phone"
+                        className="block text-sm font-semibold mb-1"
+                        style={{ color: "var(--ew-text)" }}
+                      >
+                        Mobile Number *
+                      </label>
+                      <Controller
+                        name="phone"
+                        control={control}
+                        rules={{ required: "Required" }}
+                        render={({ field }) => (
+                          <PhoneInput
+                            id="contact-phone"
+                            value={field.value}
+                            countryIso={contactPhoneCountry}
+                            onValueChange={field.onChange}
+                            onCountryChange={(meta) =>
+                              setContactPhoneCountry(meta.iso)
+                            }
+                            hasError={Boolean(errors.phone)}
+                            placeholder="Enter Your Mobile Number"
+                            data-ocid="contact.phone.input"
+                          />
+                        )}
+                      />
+                      {errors.phone && (
+                        <p
+                          className="text-xs mt-1"
+                          style={{ color: "var(--ew-red)" }}
+                          data-ocid="contact.phone.field_error"
+                        >
+                          {errors.phone.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="contact-subject"
+                      className="block text-sm font-semibold mb-1"
+                      style={{ color: "var(--ew-text)" }}
                     >
-                      {errors.message.message}
-                    </p>
-                  )}
-                </div>
-                <button
-                  type="submit"
-                  disabled={contactSubmitting}
-                  className={`${CTA_OUTLINE_RED} w-full inline-flex items-center justify-center gap-2 disabled:opacity-70`}
-                  data-ocid="contact.submit_button"
-                >
-                  {contactSubmitting ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" aria-hidden />
-                      Sending…
-                    </>
-                  ) : (
-                    <>
-                      Send Message <ChevronRight size={14} aria-hidden />
-                    </>
-                  )}
-                </button>
-              </form>
+                      Subject
+                    </label>
+                    <input
+                      id="contact-subject"
+                      type="text"
+                      {...register("subject")}
+                      className="w-full rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none"
+                      style={{ border: "1px solid var(--ew-gray-mid)" }}
+                      data-ocid="contact.subject.input"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="contact-trek"
+                      className="block text-sm font-semibold mb-1"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      Trek of Interest
+                    </label>
+                    <select
+                      id="contact-trek"
+                      {...register("trekInterest")}
+                      className="w-full rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none"
+                      style={{ border: "1px solid var(--ew-gray-mid)" }}
+                      data-ocid="contact.trek_interest.select"
+                    >
+                      <option value="">Select a trek (optional)</option>
+                      <optgroup label="Uttarakhand">
+                        <option>Roopkund Trek</option>
+                        <option>Valley of Flowers</option>
+                        <option>Kedarnath Trek</option>
+                        <option>Brahmatal Trek</option>
+                      </optgroup>
+                      <optgroup label="Himachal Pradesh">
+                        <option>Hampta Pass</option>
+                        <option>Triund Trek</option>
+                        <option>Sar Pass</option>
+                        <option>Spiti Valley</option>
+                      </optgroup>
+                      <optgroup label="Yatras">
+                        <option>Char Dham Yatra</option>
+                        <option>Panch Kedar</option>
+                        <option>Mani Mahesh Yatra</option>
+                      </optgroup>
+                    </select>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="contact-message"
+                      className="block text-sm font-semibold mb-1"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      Message *
+                    </label>
+                    <textarea
+                      id="contact-message"
+                      rows={4}
+                      {...register("message", { required: "Required" })}
+                      className="w-full rounded-lg px-3 py-2.5 text-sm resize-none bg-white focus:outline-none"
+                      style={{ border: "1px solid var(--ew-gray-mid)" }}
+                      data-ocid="contact.message.textarea"
+                    />
+                    {errors.message && (
+                      <p
+                        className="text-xs mt-1"
+                        style={{ color: "var(--ew-red)" }}
+                        data-ocid="contact.message.field_error"
+                      >
+                        {errors.message.message}
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={contactSubmitting}
+                    className={`${CTA_OUTLINE_RED} w-full inline-flex items-center justify-center gap-2 disabled:opacity-70`}
+                    data-ocid="contact.submit_button"
+                  >
+                    {contactSubmitting ? (
+                      <>
+                        <Loader2
+                          size={16}
+                          className="animate-spin"
+                          aria-hidden
+                        />
+                        Sending…
+                      </>
+                    ) : (
+                      <>
+                        Send Message <ChevronRight size={14} aria-hidden />
+                      </>
+                    )}
+                  </button>
+                </form>
               )}
             </div>
           </div>

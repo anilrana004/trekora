@@ -6,10 +6,7 @@ export function refreshAllGalleries() {
 }
 
 /** Notify gallery / trekker photo grids for a specific trek or yatra. */
-export function refreshTrekkerGallery(
-  trekSlug: string,
-  type: ProductKind,
-) {
+export function refreshTrekkerGallery(trekSlug: string, type: ProductKind) {
   refreshAllGalleries();
   window.dispatchEvent(
     new CustomEvent("trekora-gallery-refresh", {

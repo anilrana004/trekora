@@ -1,14 +1,14 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo } from "react";
 import { filterCommunityGalleryItems } from "@/lib/gallery-community";
 import { mergeGalleryItems } from "@/lib/merge-gallery-items";
 import { productGalleryQueryKey } from "@/lib/product-gallery-cache";
 import {
-  fetchGallery,
   type GalleryApiItem,
   type GalleryResponse,
   type ProductKind,
+  fetchGallery,
 } from "@/lib/reviews-api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo } from "react";
 
 /**
  * Trekker Photos for one trek/yatra — React Query cache shared with gallery grids.

@@ -1,11 +1,12 @@
+import FormSuccessMessage from "@/components/FormSuccessMessage";
+import PhoneInput from "@/components/ui/PhoneInput";
+import { buildCorporateQuotePayload } from "@/lib/corporate-quote-payload";
 import { CTA_OUTLINE_WHITE } from "@/lib/cta-buttons";
 import type { ImageDeliveryOptions } from "@/lib/images/cloudinary-url";
-import PhoneInput from "@/components/ui/PhoneInput";
-import { buildWhatsAppUrl } from "@/lib/site-contact";
-import { validateNationalPhone } from "@/lib/phone-countries";
-import FormSuccessMessage from "@/components/FormSuccessMessage";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
-import { buildCorporateQuotePayload } from "@/lib/corporate-quote-payload";
+import { validateNationalPhone } from "@/lib/phone-countries";
+import { SITE_ORIGIN } from "@/lib/site-config";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { submitCorporateQuoteEmail } from "@/services/corporate-quote-email-api";
 import { useSearch } from "@tanstack/react-router";
 import { ChevronRight, Loader2, MessageCircle } from "lucide-react";
@@ -13,12 +14,11 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import OptimizedImage from "../components/media/OptimizedImage";
 import { SEOHead } from "../components/SEOHead";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
+import OptimizedImage from "../components/media/OptimizedImage";
 
 type OrgType = "corporate" | "school" | "college";
 
@@ -178,10 +178,7 @@ const TESTIMONIALS = [
   },
 ];
 
-const QUOTE_SUCCESS: Record<
-  OrgType,
-  { title: string; description: string }
-> = {
+const QUOTE_SUCCESS: Record<OrgType, { title: string; description: string }> = {
   corporate: {
     title: "Quote request sent!",
     description:
@@ -218,7 +215,11 @@ export default function CorporatePage() {
   });
 
   useEffect(() => {
-    if (orgFromUrl === "school" || orgFromUrl === "college" || orgFromUrl === "corporate") {
+    if (
+      orgFromUrl === "school" ||
+      orgFromUrl === "college" ||
+      orgFromUrl === "corporate"
+    ) {
       setOrgType(orgFromUrl);
     }
   }, [orgFromUrl]);
@@ -562,192 +563,195 @@ export default function CorporatePage() {
               </button>
             </div>
           ) : (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="card corporate-quote-form p-6 md:p-8 space-y-4"
-            noValidate
-            data-ocid="corporate.quote_form"
-          >
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="corp-company"
-                  className="block text-sm font-medium mb-1"
-                  style={{ color: "var(--ew-text)" }}
-                >
-                  {labels.org} *
-                </label>
-                <input
-                  id="corp-company"
-                  type="text"
-                  {...register("company", { required: true })}
-                  className="ew-field"
-                  data-ocid="corporate.company.input"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="corp-name"
-                  className="block text-sm font-medium mb-1"
-                  style={{ color: "var(--ew-text)" }}
-                >
-                  {labels.contact} *
-                </label>
-                <input
-                  id="corp-name"
-                  type="text"
-                  {...register("contactName", { required: true })}
-                  className="ew-field"
-                  data-ocid="corporate.contact_name.input"
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="corp-email"
-                  className="block text-sm font-medium mb-1"
-                  style={{ color: "var(--ew-text)" }}
-                >
-                  Email *
-                </label>
-                <input
-                  id="corp-email"
-                  type="email"
-                  {...register("email", { required: true })}
-                  className="ew-field"
-                  data-ocid="corporate.email.input"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="corp-phone"
-                  className="block text-sm font-medium mb-1"
-                  style={{ color: "var(--ew-text)" }}
-                >
-                  Mobile Number *
-                </label>
-                <Controller
-                  name="phone"
-                  control={control}
-                  rules={{
-                    required: "Required",
-                    validate: (v) => validateNationalPhone(v, phoneCountry),
-                  }}
-                  render={({ field }) => (
-                    <PhoneInput
-                      id="corp-phone"
-                      value={field.value}
-                      countryIso={phoneCountry}
-                      onValueChange={field.onChange}
-                      onCountryChange={(meta) => setPhoneCountry(meta.iso)}
-                      hasError={Boolean(errors.phone)}
-                      placeholder="Enter Your Mobile Number"
-                      data-ocid="corporate.phone.input"
-                    />
-                  )}
-                />
-                {errors.phone && (
-                  <p className="text-xs mt-1" style={{ color: "var(--ew-red)" }}>
-                    {String(errors.phone.message ?? errors.phone)}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="corp-group"
-                  className="block text-sm font-medium mb-1"
-                  style={{ color: "var(--ew-text)" }}
-                >
-                  {groupSizeLabel(orgType)}
-                </label>
-                <select
-                  id="corp-group"
-                  {...register("groupSize")}
-                  className="ew-field"
-                  data-ocid="corporate.group_size.select"
-                >
-                  <option>10–25 people</option>
-                  <option>25–50 people</option>
-                  <option>50–100 people</option>
-                  <option>100+ people</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  htmlFor="corp-budget"
-                  className="block text-sm font-medium mb-1"
-                  style={{ color: "var(--ew-text)" }}
-                >
-                  Budget per person
-                </label>
-                <select
-                  id="corp-budget"
-                  {...register("budget")}
-                  className="ew-field"
-                  data-ocid="corporate.budget.select"
-                >
-                  <option>Under ₹5,000</option>
-                  <option>₹5,000–₹10,000</option>
-                  <option>₹10,000–₹20,000</option>
-                  <option>₹20,000+</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label
-                htmlFor="corp-dates"
-                className="block text-sm font-medium mb-1"
-                style={{ color: "var(--ew-text)" }}
-              >
-                Preferred month
-              </label>
-              <input
-                id="corp-dates"
-                type="text"
-                placeholder="e.g., June 2026"
-                {...register("preferredDates")}
-                className="ew-field"
-                data-ocid="corporate.dates.input"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="corp-requirements"
-                className="block text-sm font-medium mb-1"
-                style={{ color: "var(--ew-text)" }}
-              >
-                Trip goals &amp; requirements
-              </label>
-              <textarea
-                id="corp-requirements"
-                rows={4}
-                {...register("requirements")}
-                placeholder={requirementsPlaceholder(orgType)}
-                className="ew-field resize-none"
-                data-ocid="corporate.requirements.textarea"
-              />
-            </div>
-            <button
-              type="submit"
-              className="btn-secondary w-full justify-center inline-flex items-center gap-2"
-              disabled={submitting}
-              data-ocid="corporate.submit_button"
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="card corporate-quote-form p-6 md:p-8 space-y-4"
+              noValidate
+              data-ocid="corporate.quote_form"
             >
-              {submitting ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" aria-hidden />
-                  Sending…
-                </>
-              ) : (
-                <>
-                  Request Custom Quote <ChevronRight size={14} aria-hidden />
-                </>
-              )}
-            </button>
-          </form>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="corp-company"
+                    className="block text-sm font-medium mb-1"
+                    style={{ color: "var(--ew-text)" }}
+                  >
+                    {labels.org} *
+                  </label>
+                  <input
+                    id="corp-company"
+                    type="text"
+                    {...register("company", { required: true })}
+                    className="ew-field"
+                    data-ocid="corporate.company.input"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="corp-name"
+                    className="block text-sm font-medium mb-1"
+                    style={{ color: "var(--ew-text)" }}
+                  >
+                    {labels.contact} *
+                  </label>
+                  <input
+                    id="corp-name"
+                    type="text"
+                    {...register("contactName", { required: true })}
+                    className="ew-field"
+                    data-ocid="corporate.contact_name.input"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="corp-email"
+                    className="block text-sm font-medium mb-1"
+                    style={{ color: "var(--ew-text)" }}
+                  >
+                    Email *
+                  </label>
+                  <input
+                    id="corp-email"
+                    type="email"
+                    {...register("email", { required: true })}
+                    className="ew-field"
+                    data-ocid="corporate.email.input"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="corp-phone"
+                    className="block text-sm font-medium mb-1"
+                    style={{ color: "var(--ew-text)" }}
+                  >
+                    Mobile Number *
+                  </label>
+                  <Controller
+                    name="phone"
+                    control={control}
+                    rules={{
+                      required: "Required",
+                      validate: (v) => validateNationalPhone(v, phoneCountry),
+                    }}
+                    render={({ field }) => (
+                      <PhoneInput
+                        id="corp-phone"
+                        value={field.value}
+                        countryIso={phoneCountry}
+                        onValueChange={field.onChange}
+                        onCountryChange={(meta) => setPhoneCountry(meta.iso)}
+                        hasError={Boolean(errors.phone)}
+                        placeholder="Enter Your Mobile Number"
+                        data-ocid="corporate.phone.input"
+                      />
+                    )}
+                  />
+                  {errors.phone && (
+                    <p
+                      className="text-xs mt-1"
+                      style={{ color: "var(--ew-red)" }}
+                    >
+                      {String(errors.phone.message ?? errors.phone)}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="corp-group"
+                    className="block text-sm font-medium mb-1"
+                    style={{ color: "var(--ew-text)" }}
+                  >
+                    {groupSizeLabel(orgType)}
+                  </label>
+                  <select
+                    id="corp-group"
+                    {...register("groupSize")}
+                    className="ew-field"
+                    data-ocid="corporate.group_size.select"
+                  >
+                    <option>10–25 people</option>
+                    <option>25–50 people</option>
+                    <option>50–100 people</option>
+                    <option>100+ people</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="corp-budget"
+                    className="block text-sm font-medium mb-1"
+                    style={{ color: "var(--ew-text)" }}
+                  >
+                    Budget per person
+                  </label>
+                  <select
+                    id="corp-budget"
+                    {...register("budget")}
+                    className="ew-field"
+                    data-ocid="corporate.budget.select"
+                  >
+                    <option>Under ₹5,000</option>
+                    <option>₹5,000–₹10,000</option>
+                    <option>₹10,000–₹20,000</option>
+                    <option>₹20,000+</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label
+                  htmlFor="corp-dates"
+                  className="block text-sm font-medium mb-1"
+                  style={{ color: "var(--ew-text)" }}
+                >
+                  Preferred month
+                </label>
+                <input
+                  id="corp-dates"
+                  type="text"
+                  placeholder="e.g., June 2026"
+                  {...register("preferredDates")}
+                  className="ew-field"
+                  data-ocid="corporate.dates.input"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="corp-requirements"
+                  className="block text-sm font-medium mb-1"
+                  style={{ color: "var(--ew-text)" }}
+                >
+                  Trip goals &amp; requirements
+                </label>
+                <textarea
+                  id="corp-requirements"
+                  rows={4}
+                  {...register("requirements")}
+                  placeholder={requirementsPlaceholder(orgType)}
+                  className="ew-field resize-none"
+                  data-ocid="corporate.requirements.textarea"
+                />
+              </div>
+              <button
+                type="submit"
+                className="btn-secondary w-full justify-center inline-flex items-center gap-2"
+                disabled={submitting}
+                data-ocid="corporate.submit_button"
+              >
+                {submitting ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" aria-hidden />
+                    Sending…
+                  </>
+                ) : (
+                  <>
+                    Request Custom Quote <ChevronRight size={14} aria-hidden />
+                  </>
+                )}
+              </button>
+            </form>
           )}
         </div>
       </section>

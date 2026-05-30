@@ -1,6 +1,10 @@
 import { fetchJsonLenient, postJsonLenient } from "@/lib/api-fetch";
 import { withRetry } from "@/lib/retry";
-import type { GalleryApiItem, ProductKind, ReviewPhotoMeta } from "@/lib/reviews-api";
+import type {
+  GalleryApiItem,
+  ProductKind,
+  ReviewPhotoMeta,
+} from "@/lib/reviews-api";
 
 export type PhotoUploadSource = "gallery-page" | "product-page";
 

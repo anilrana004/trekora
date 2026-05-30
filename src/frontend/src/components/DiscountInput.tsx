@@ -1,8 +1,8 @@
-import { Loader2, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { DiscountValidationSuccess } from "@/lib/discount-api";
 import { useDiscount } from "@/hooks/useDiscount";
 import { CTA_COMPACT_GREEN, ctaMerge } from "@/lib/cta-buttons";
+import type { DiscountValidationSuccess } from "@/lib/discount-api";
+import { Loader2, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type DiscountInputProps = {
   bookingAmount: number;
@@ -78,7 +78,8 @@ export default function DiscountInput({
     onDiscountApplied(discountResult);
   }, [discountResult, onDiscountApplied]);
 
-  const activeResult = discountResult ?? (prefilledResult?.success ? prefilledResult : null);
+  const activeResult =
+    discountResult ?? (prefilledResult?.success ? prefilledResult : null);
   const activeCode = appliedCode || prefilledResult?.code || "";
 
   if (activeResult) {
@@ -86,8 +87,7 @@ export default function DiscountInput({
       <div
         className="rounded-xl p-4 space-y-1"
         style={{
-          background:
-            activeResult.kind === "giftcard" ? "#F3E8FF" : "#ECFDF5",
+          background: activeResult.kind === "giftcard" ? "#F3E8FF" : "#ECFDF5",
           border: `1px solid ${activeResult.kind === "giftcard" ? "#C4B5FD" : "#86EFAC"}`,
         }}
         data-ocid="booking.discount.applied"
@@ -100,8 +100,8 @@ export default function DiscountInput({
                 color: activeResult.kind === "giftcard" ? "#6D28D9" : "#15803D",
               }}
             >
-              {activeResult.kind === "giftcard" ? "🎁" : "✅"}{" "}
-              {activeCode} applied
+              {activeResult.kind === "giftcard" ? "🎁" : "✅"} {activeCode}{" "}
+              applied
             </p>
             <p
               className="text-sm mt-0.5"
@@ -135,7 +135,10 @@ export default function DiscountInput({
 
   return (
     <div className="space-y-2" data-ocid="booking.discount.input_block">
-      <p className="text-[13px] font-medium" style={{ color: "var(--ew-text)" }}>
+      <p
+        className="text-[13px] font-medium"
+        style={{ color: "var(--ew-text)" }}
+      >
         🏷️ Have a voucher or gift card?
       </p>
       <div className="flex flex-col sm:flex-row gap-2">

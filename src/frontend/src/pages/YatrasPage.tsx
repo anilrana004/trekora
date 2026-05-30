@@ -1,12 +1,12 @@
 import PhoneInput from "@/components/ui/PhoneInput";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
-import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
-import { buildWhatsAppUrl } from "@/lib/site-contact";
 import {
   normalizeIndianPhoneDigits,
   validateNationalPhone,
 } from "@/lib/phone-countries";
+import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
 import { buildYatraPlanPayload } from "@/lib/query-email-payloads";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { useSearch } from "@tanstack/react-router";
 import { AlertCircle, Loader2 } from "lucide-react";
@@ -100,7 +100,13 @@ export default function YatrasPage() {
       () => {
         // Instant success UI (optimistic)
         setSubmitted(true);
-        setFormState({ name: "", email: "", phone: "", yatra: "", message: "" });
+        setFormState({
+          name: "",
+          email: "",
+          phone: "",
+          yatra: "",
+          message: "",
+        });
         toast.success("Inquiry submitted! We’re emailing you the details now.");
       },
       (message) => {
@@ -218,11 +224,7 @@ export default function YatrasPage() {
         </div>
       </div>
 
-      <div
-        id={TRAVEL_HERO_SENTINEL_ID}
-        className="h-0 w-full"
-        aria-hidden
-      />
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <TravelSideActionRail variant="listing-yatras" />
 
       {/* ── State Filter Tabs ── */}
@@ -442,7 +444,10 @@ export default function YatrasPage() {
                     data-ocid="yatras.phone.input"
                   />
                   {phoneError && (
-                    <p className="text-xs mt-1" style={{ color: "var(--ew-red)" }}>
+                    <p
+                      className="text-xs mt-1"
+                      style={{ color: "var(--ew-red)" }}
+                    >
                       {phoneError}
                     </p>
                   )}

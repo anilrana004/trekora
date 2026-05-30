@@ -100,7 +100,10 @@ function AdminShell({
     >
       <div className="flex w-full max-w-lg flex-col items-center rounded-2xl bg-white p-8 shadow-lg">
         <Lock size={40} style={{ color: "var(--ew-red)" }} />
-        <h1 className="mt-4 text-xl font-bold" style={{ color: "var(--ew-text)" }}>
+        <h1
+          className="mt-4 text-xl font-bold"
+          style={{ color: "var(--ew-text)" }}
+        >
           {title}
         </h1>
         <p

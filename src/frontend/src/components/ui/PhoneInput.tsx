@@ -1,11 +1,11 @@
-import { ChevronDown } from "lucide-react";
-import { useId } from "react";
 import {
-  getPhoneCountry,
-  normalizeIndianPhoneDigits,
   PHONE_COUNTRIES,
   type PhoneCountry,
+  getPhoneCountry,
+  normalizeIndianPhoneDigits,
 } from "@/lib/phone-countries";
+import { ChevronDown } from "lucide-react";
+import { useId } from "react";
 
 export type PhoneInputChangeMeta = {
   iso: string;

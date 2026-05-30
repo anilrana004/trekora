@@ -1,6 +1,6 @@
+import type { GalleryItem } from "@/data/gallery";
 import { parsePhotoCredit } from "@/lib/photo-credit";
 import type { GalleryApiItem, ProductKind } from "@/lib/reviews-api";
-import type { GalleryItem } from "@/data/gallery";
 
 /** Gallery shows only trekker-uploaded photos (not official trek/yatra catalog images). */
 export const COMMUNITY_GALLERY_SOURCES = new Set<GalleryApiItem["source"]>([
@@ -39,7 +39,8 @@ export function mapCommunityItemToGallery(
 ): GalleryItem | null {
   if (!isCommunityGalleryItem(item)) return null;
 
-  const productLabel = item.subtitle ?? (item.type === "yatra" ? "Yatra" : "Trek");
+  const productLabel =
+    item.subtitle ?? (item.type === "yatra" ? "Yatra" : "Trek");
   const category =
     item.type === "yatra" ? ("Yatras" as const) : ("Treks" as const);
 
@@ -79,9 +80,13 @@ export function filterGalleryByTab(
 ): GalleryItem[] {
   if (tab === "All") return items;
   if (tab === "Treks") {
-    return items.filter((i) => i.productType === "trek" || i.category === "Treks");
+    return items.filter(
+      (i) => i.productType === "trek" || i.category === "Treks",
+    );
   }
-  return items.filter((i) => i.productType === "yatra" || i.category === "Yatras");
+  return items.filter(
+    (i) => i.productType === "yatra" || i.category === "Yatras",
+  );
 }
 
 export function galleryUploaderLabel(credit: string): {

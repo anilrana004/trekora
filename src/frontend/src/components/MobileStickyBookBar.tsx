@@ -29,7 +29,9 @@ export default function MobileStickyBookBar({
     >
       <div className="mobile-sticky-book-bar__price">
         <span className="mobile-sticky-book-bar__label">Starting from</span>
-        <span className="mobile-sticky-book-bar__amount">₹{formattedPrice}</span>
+        <span className="mobile-sticky-book-bar__amount">
+          ₹{formattedPrice}
+        </span>
         <span className="mobile-sticky-book-bar__per">per person</span>
       </div>
       <Link

@@ -39,7 +39,7 @@ export function validateBookSearch(
           ? rawGroup
           : typeof rawGroup === "string" && /^\d+$/.test(rawGroup.trim())
             ? Number.parseInt(rawGroup.trim(), 10)
-            : NaN;
+            : Number.NaN;
       if (!Number.isFinite(n) || n < 1) return undefined;
       return Math.min(20, Math.floor(n));
     })(),

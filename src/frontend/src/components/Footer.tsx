@@ -5,6 +5,11 @@ import {
   SITE_PHONE_TEL,
   WHATSAPP_CHAT_URL,
 } from "@/lib/site-contact";
+import {
+  SITE_PROPRIETARY_NOTICE,
+  getSiteCopyrightLine,
+  getSiteCopyrightYear,
+} from "@/lib/site-legal";
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -34,11 +39,6 @@ import { AnimatePresence, motion } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
 import { Fragment, useCallback, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
-import {
-  getSiteCopyrightLine,
-  getSiteCopyrightYear,
-  SITE_PROPRIETARY_NOTICE,
-} from "@/lib/site-legal";
 import { SiteLogo } from "./SiteLogo";
 
 const FOOTER_TAGLINE =
@@ -787,7 +787,10 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="order-3 text-xs font-medium transition-colors hover:text-white"
-              style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none" }}
+              style={{
+                color: "rgba(255,255,255,0.55)",
+                textDecoration: "none",
+              }}
               data-ocid="footer.built_with_omnistack"
             >
               Built with omnistack.co.in

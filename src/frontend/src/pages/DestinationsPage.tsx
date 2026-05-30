@@ -1,9 +1,9 @@
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
-import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { buildDestinationPlanPayload } from "@/lib/query-email-payloads";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { AnimatePresence, motion } from "motion/react";
 import { Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import DestinationCard from "../components/DestinationCard";

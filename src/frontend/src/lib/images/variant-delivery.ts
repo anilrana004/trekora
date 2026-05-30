@@ -46,8 +46,7 @@ export function getVariantImageDelivery(
   variant: string,
   overrides?: ImageDeliveryOptions,
 ): ImageDeliveryOptions {
-  const base =
-    VARIANT_IMAGE_DELIVERY[variant as DeliverableImageVariant];
+  const base = VARIANT_IMAGE_DELIVERY[variant as DeliverableImageVariant];
   if (!base && !overrides) return {};
   return { ...base, ...overrides };
 }

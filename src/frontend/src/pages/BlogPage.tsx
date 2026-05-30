@@ -1,9 +1,9 @@
+import { SITE_ORIGIN } from "@/lib/site-config";
 import { Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { SEOHead } from "../components/SEOHead";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";

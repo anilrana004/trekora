@@ -119,9 +119,7 @@ export default function ProductDetailHero({
                 width: activeIndex === i ? 20 : 8,
                 height: 8,
                 backgroundColor:
-                  activeIndex === i
-                    ? "var(--ew-red)"
-                    : "rgba(255,255,255,0.6)",
+                  activeIndex === i ? "var(--ew-red)" : "rgba(255,255,255,0.6)",
               }}
               data-ocid={`${ocidPrefix}.hero_dot.${i + 1}`}
             />

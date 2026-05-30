@@ -32,10 +32,7 @@ export default function BookingQuickStats({ stats }: BookingQuickStatsProps) {
           <p className="text-[10px]" style={{ color: "var(--ew-gray-dark)" }}>
             {label}
           </p>
-          <p
-            className="text-xs font-bold"
-            style={{ color: "var(--ew-text)" }}
-          >
+          <p className="text-xs font-bold" style={{ color: "var(--ew-text)" }}>
             {value}
           </p>
         </div>

@@ -47,13 +47,9 @@
   cursor: pointer;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  box-shadow:
-    0 3px 12px rgba(0, 0, 0, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  transition:
-    filter 0.18s ease,
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16), inset 0 1px 0
+    rgba(255, 255, 255, 0.12);
+  transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .travel-side-tab--icon-only {
@@ -215,14 +211,18 @@
 @media (max-width: 1023px) {
   :root {
     --travel-rail-mobile-bottom: calc(
-      var(--mobile-nav-height, 56px) + 0.75rem + env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 56px) +
+      0.75rem +
+      env(safe-area-inset-bottom, 0px)
     );
   }
 
   body.compare-bar-visible {
     --travel-rail-mobile-bottom: calc(
-      var(--mobile-nav-height, 56px) + var(--compare-bar-compact-height, 2.125rem) +
-        0.625rem + env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 56px) +
+      var(--compare-bar-compact-height, 2.125rem) +
+      0.625rem +
+      env(safe-area-inset-bottom, 0px)
     );
   }
 

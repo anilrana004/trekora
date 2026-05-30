@@ -1,5 +1,22 @@
 "use client";
 
+import {
+  Popover,
+  PopoverAnchor,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  PRODUCT_TREK_COUNT,
+  PRODUCT_YATRA_COUNT,
+  type ProductNameOption,
+  highlightProductName,
+  searchProductNameOptions,
+} from "@/lib/product-name-options";
+import {
+  type ResolvedUploadProduct,
+  resolveProductForUpload,
+} from "@/lib/resolve-product-upload";
+import { cn } from "@/lib/utils";
 import { Check, ChevronDown, Mountain, Search } from "lucide-react";
 import {
   useCallback,
@@ -9,23 +26,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Popover,
-  PopoverAnchor,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import {
-  highlightProductName,
-  PRODUCT_TREK_COUNT,
-  PRODUCT_YATRA_COUNT,
-  searchProductNameOptions,
-  type ProductNameOption,
-} from "@/lib/product-name-options";
-import {
-  resolveProductForUpload,
-  type ResolvedUploadProduct,
-} from "@/lib/resolve-product-upload";
 
 type ProductNameComboboxProps = {
   id?: string;
@@ -91,8 +91,12 @@ export default function ProductNameCombobox({
 
   const resolved = useMemo(() => resolveProductForUpload(value), [value]);
   const search = useMemo(() => searchProductNameOptions(value), [value]);
-  const { items: options, isEmptyQuery, totalCatalog, query: searchQuery } =
-    search;
+  const {
+    items: options,
+    isEmptyQuery,
+    totalCatalog,
+    query: searchQuery,
+  } = search;
 
   useEffect(() => {
     onResolvedChange?.(resolved);
@@ -167,7 +171,7 @@ export default function ProductNameCombobox({
   return (
     <div className={cn("relative w-full", className)}>
       <Popover open={open} onOpenChange={setOpen} modal={false}>
-        <PopoverAnchor asChild>
+        <PopoverAnchor className="relative block w-full">
           <div className="relative w-full">
             <Search
               size={16}
@@ -267,7 +271,10 @@ export default function ProductNameCombobox({
               {panelTitle}
             </p>
             {isEmptyQuery ? (
-              <p className="text-[11px] mt-0.5" style={{ color: "var(--ew-text-lt)" }}>
+              <p
+                className="text-[11px] mt-0.5"
+                style={{ color: "var(--ew-text-lt)" }}
+              >
                 {PRODUCT_TREK_COUNT} treks · {PRODUCT_YATRA_COUNT} yatras — type
                 a few letters (like +91 for India)
               </p>
@@ -277,7 +284,6 @@ export default function ProductNameCombobox({
           <ul
             ref={listRef}
             id={listboxId}
-            role="listbox"
             aria-label="Trek and yatra names"
             className="overflow-y-auto overscroll-contain py-1 scroll-py-1"
             style={{ maxHeight: "min(280px, calc(55dvh - 4rem))" }}
@@ -347,10 +353,7 @@ export default function ProductNameCombobox({
         </p>
       ) : null}
       {showInvalidHint ? (
-        <p
-          className="mt-1 text-[11px]"
-          style={{ color: "var(--ew-orange)" }}
-        >
+        <p className="mt-1 text-[11px]" style={{ color: "var(--ew-orange)" }}>
           Select a match from the list — every trek and yatra is searchable.
         </p>
       ) : null}
@@ -406,8 +409,7 @@ function OptionRow({
               opt.type === "yatra"
                 ? "rgba(255,152,0,0.12)"
                 : "rgba(229,57,53,0.1)",
-            color:
-              opt.type === "yatra" ? "var(--ew-orange)" : "var(--ew-red)",
+            color: opt.type === "yatra" ? "var(--ew-orange)" : "var(--ew-red)",
           }}
         >
           {opt.type === "yatra" ? "Yatra" : "Trek"}

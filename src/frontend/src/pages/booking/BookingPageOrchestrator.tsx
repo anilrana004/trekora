@@ -1,35 +1,27 @@
-import type { BookSearchParams } from "@/lib/book-route-search";
-import { useSearch } from "@tanstack/react-router";
-import { useActor } from "@trekora/icp";
-import {
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { flushSync } from "react-dom";
-import { toast } from "sonner";
 import { createActor } from "@/backend";
 import BookingHelpActions from "@/components/BookingHelpActions";
 import { SEOHead } from "@/components/SEOHead";
-import { SITE_ORIGIN } from "@/lib/site-config";
-import OptimizedImage from "@/components/media/OptimizedImage";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "@/components/TravelSideActionRail";
+import OptimizedImage from "@/components/media/OptimizedImage";
+import { useTrekBatches } from "@/hooks/useTrekBatches";
+import type { BookSearchParams } from "@/lib/book-route-search";
 import {
-  CTA_NAV_PRIMARY,
-  CTA_NAV_PRIMARY_GROW,
-  CTA_NAV_PRIMARY_SOLO,
-  CTA_NAV_SECONDARY_FLEX,
-  ctaMerge,
-} from "@/lib/cta-buttons";
+  BOOKING_ADD_ONS,
+  GEAR_RENTAL_ADDON_ID,
+  parseBookingAddonIds,
+} from "@/lib/booking-addons";
+import { collectBookingAttachments } from "@/lib/booking-documents";
+import {
+  bookingDetailsPlainText,
+  buildBookingEmailSections,
+} from "@/lib/booking-email-details";
+import {
+  type BookingBackgroundJob,
+  type BookingDeliveryStatus,
+  submitBookingOptimistic,
+} from "@/lib/booking-optimistic";
 import {
   BOOKABLE_PACKAGES,
   BOOKABLE_TREKS,
@@ -41,58 +33,52 @@ import {
   resolveBookableProductFromSelectionKey,
   selectionKeyFromBookSearch,
 } from "@/lib/booking-product";
-import { useTrekBatches } from "@/hooks/useTrekBatches";
 import {
-  BOOKING_ADD_ONS,
-  GEAR_RENTAL_ADDON_ID,
-  parseBookingAddonIds,
-} from "@/lib/booking-addons";
+  CTA_NAV_PRIMARY,
+  CTA_NAV_PRIMARY_GROW,
+  CTA_NAV_PRIMARY_SOLO,
+  CTA_NAV_SECONDARY_FLEX,
+  ctaMerge,
+} from "@/lib/cta-buttons";
 import {
-  collectBookingAttachments,
-} from "@/lib/booking-documents";
-import {
-  bookingDetailsPlainText,
-  buildBookingEmailSections,
-} from "@/lib/booking-email-details";
-import {
+  type DiscountValidationSuccess,
   markVoucherUsed,
   redeemGiftCard,
-  type DiscountValidationSuccess,
   validateVoucherCode,
 } from "@/lib/discount-api";
-import {
-  submitBookingOptimistic,
-  type BookingBackgroundJob,
-  type BookingDeliveryStatus,
-} from "@/lib/booking-optimistic";
 import { scrollToPageTop } from "@/lib/route-scroll";
+import { SITE_ORIGIN } from "@/lib/site-config";
+import { useSearch } from "@tanstack/react-router";
+import { useActor } from "@trekora/icp";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { flushSync } from "react-dom";
+import { toast } from "sonner";
 import BookingStepIndicator from "./BookingStepIndicator";
 import BookingSuccessScreen from "./BookingSuccessScreen";
 import {
-  BookingStepFallback,
-  LazyDateSelectionStep,
-  LazyDocumentsStep,
-  LazyHealthInfoStep,
-  LazyPreferencesStep,
-  LazyReviewPaymentStep,
-  LazyTravelerDetailsStep,
-} from "./lazy-booking-steps";
-import {
   type AppliedCodeDiscount,
+  BOOKING_DRAFT_KEY,
   type CoTraveler,
   type CoTravelerFieldErrors,
+  DEFAULT_FORM,
   type FormDataAccumulated,
+  MAX_PARTY_SIZE,
   type Step2FieldErrors,
   type Step2FieldKey,
-  BOOKING_DRAFT_KEY,
-  DEFAULT_FORM,
   calcPrices,
+  formatBatchDateLongIN,
   formatINR,
   formatYmdFromBatchTs,
-  formatBatchDateLongIN,
   generateRef,
   maxCompanionSlots,
-  MAX_PARTY_SIZE,
   normalizeCoTravelers,
   normalizeStep2Fd,
   parseYmdLocal,
@@ -103,6 +89,15 @@ import {
   validateCoTravelers,
   validateStep2,
 } from "./booking-form-shared";
+import {
+  BookingStepFallback,
+  LazyDateSelectionStep,
+  LazyDocumentsStep,
+  LazyHealthInfoStep,
+  LazyPreferencesStep,
+  LazyReviewPaymentStep,
+  LazyTravelerDetailsStep,
+} from "./lazy-booking-steps";
 
 // ── Main BookingPage ───────────────────────────────────────────────────────
 
@@ -227,9 +222,7 @@ export default function BookingPageOrchestrator() {
   useEffect(() => {
     if (groupFromSearch == null || groupPrefilledFromUrl.current) return;
     groupPrefilledFromUrl.current = true;
-    setFd((p) =>
-      syncPartyGroupSize({ ...p, groupSize: groupFromSearch }),
-    );
+    setFd((p) => syncPartyGroupSize({ ...p, groupSize: groupFromSearch }));
   }, [groupFromSearch]);
 
   useEffect(() => {
@@ -249,7 +242,10 @@ export default function BookingPageOrchestrator() {
         appliedCode?: { kind: string; code: string; amount: number } | null;
       };
       if (draft.fd) setFd((p) => ({ ...p, ...draft.fd }));
-      if (typeof draft.codeDiscountAmount === "number" && draft.codeDiscountAmount > 0) {
+      if (
+        typeof draft.codeDiscountAmount === "number" &&
+        draft.codeDiscountAmount > 0
+      ) {
         setCodeDiscountAmount(draft.codeDiscountAmount);
       }
       if (draft.appliedCode?.code) {
@@ -323,7 +319,14 @@ export default function BookingPageOrchestrator() {
     } catch {
       /* quota / private mode */
     }
-  }, [selectionKey, fd, step, successRef, codeDiscountAmount, appliedCodeDiscount]);
+  }, [
+    selectionKey,
+    fd,
+    step,
+    successRef,
+    codeDiscountAmount,
+    appliedCodeDiscount,
+  ]);
 
   const clearStep2FieldError = useCallback((field: Step2FieldKey) => {
     setStep2Errors((prev) => {
@@ -364,7 +367,10 @@ export default function BookingPageOrchestrator() {
         {
           ...p,
           coTravelers: trimmed,
-          groupSize: Math.min(max, partyHeadcount({ ...p, coTravelers: trimmed })),
+          groupSize: Math.min(
+            max,
+            partyHeadcount({ ...p, coTravelers: trimmed }),
+          ),
         },
         max,
       );
@@ -372,9 +378,7 @@ export default function BookingPageOrchestrator() {
   }, [selectedBatch]);
 
   const unitPrice = useMemo(() => product?.price ?? 0, [product]);
-  const packageIdForDiscount = product
-    ? `${product.kind}:${product.slug}`
-    : "";
+  const packageIdForDiscount = product ? `${product.kind}:${product.slug}` : "";
   const bundleSavings = useMemo(() => {
     if (!product || product.kind !== "package") return 0;
     const was = product.priceWas ?? 0;
@@ -382,7 +386,7 @@ export default function BookingPageOrchestrator() {
     const perPerson = Math.max(0, was - from);
     return perPerson * partyHeadcount(fd);
   }, [product, fd]);
-  const prices = calcPrices(
+  const _prices = calcPrices(
     unitPrice,
     partyHeadcount(fd),
     fd.addOns,
@@ -474,7 +478,6 @@ export default function BookingPageOrchestrator() {
     handleCodeDiscountApplied,
   ]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: step triggers scroll side-effect
   useEffect(() => {
     scrollToPageTop();
   }, [step]);
@@ -502,9 +505,9 @@ export default function BookingPageOrchestrator() {
     });
     if (attachErr) return null;
 
-    const addOnLabels = BOOKING_ADD_ONS.filter((a) => fd.addOns.includes(a.id)).map(
-      (a) => a.label,
-    );
+    const addOnLabels = BOOKING_ADD_ONS.filter((a) =>
+      fd.addOns.includes(a.id),
+    ).map((a) => a.label);
     const unitPrice =
       selectedBatch?.priceOverride != null
         ? Number(selectedBatch.priceOverride)
@@ -607,14 +610,7 @@ export default function BookingPageOrchestrator() {
             }
           : null,
     };
-  }, [
-    fd,
-    product,
-    actor,
-    selectedBatch,
-    maxPartySlots,
-    codeDiscountAmount,
-  ]);
+  }, [fd, product, actor, selectedBatch, maxPartySlots, codeDiscountAmount]);
 
   useEffect(() => {
     if (step !== 5) {
@@ -774,7 +770,8 @@ export default function BookingPageOrchestrator() {
       const companionCheck = validateCoTravelers(normalized);
       if (!companionCheck.valid) {
         setCompanionErrors(companionCheck.errors);
-        if (companionCheck.firstMessage) toast.error(companionCheck.firstMessage);
+        if (companionCheck.firstMessage)
+          toast.error(companionCheck.firstMessage);
         setStep(1);
         scrollToFirstCoTravelerError(companionCheck.errors);
         return;
@@ -889,9 +886,10 @@ export default function BookingPageOrchestrator() {
   const STEP_TITLES = [
     {
       title: "Let's plan your Himalayan adventure! 🏔️",
-      sub: product?.kind === "package"
-        ? "Review your package, pick a start date, and add-ons"
-        : "Select your trek or yatra, batch date, and add-ons",
+      sub:
+        product?.kind === "package"
+          ? "Review your package, pick a start date, and add-ons"
+          : "Select your trek or yatra, batch date, and add-ons",
     },
     {
       title: "Tell us about you & your group",
@@ -1066,13 +1064,15 @@ export default function BookingPageOrchestrator() {
                 }}
                 data-ocid="booking.rental.addon_banner"
               >
-                <span className="font-semibold">Gear rental</span> is included in
-                your quote. Pick your departure date above; sizes are confirmed
-                after booking.
+                <span className="font-semibold">Gear rental</span> is included
+                in your quote. Pick your departure date above; sizes are
+                confirmed after booking.
               </div>
             ) : null}
 
-            {voucherFromSearch && appliedCodeDiscount && codeDiscountAmount > 0 ? (
+            {voucherFromSearch &&
+            appliedCodeDiscount &&
+            codeDiscountAmount > 0 ? (
               <div
                 className="mb-5 rounded-xl px-4 py-3 text-sm"
                 style={{
@@ -1082,7 +1082,9 @@ export default function BookingPageOrchestrator() {
                 }}
                 data-ocid="booking.promo.applied_banner"
               >
-                <span className="font-semibold">{appliedCodeDiscount.code}</span>{" "}
+                <span className="font-semibold">
+                  {appliedCodeDiscount.code}
+                </span>{" "}
                 is active — you save ₹
                 {codeDiscountAmount.toLocaleString("en-IN")} on this booking.
                 {step < 5 ? (
@@ -1218,10 +1220,7 @@ export default function BookingPageOrchestrator() {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className={ctaMerge(
-                      CTA_NAV_SECONDARY_FLEX,
-                      "sm:flex-none",
-                    )}
+                    className={ctaMerge(CTA_NAV_SECONDARY_FLEX, "sm:flex-none")}
                     data-ocid={
                       step === 5
                         ? "booking.step6.back_button"
@@ -1238,9 +1237,7 @@ export default function BookingPageOrchestrator() {
                     disabled={bookingSending}
                     className={ctaMerge(
                       CTA_NAV_PRIMARY,
-                      step === 0
-                        ? CTA_NAV_PRIMARY_SOLO
-                        : CTA_NAV_PRIMARY_GROW,
+                      step === 0 ? CTA_NAV_PRIMARY_SOLO : CTA_NAV_PRIMARY_GROW,
                       "sm:w-auto",
                     )}
                     data-ocid={`booking.step${step + 1}.next_button`}

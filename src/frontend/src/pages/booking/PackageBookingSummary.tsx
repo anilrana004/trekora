@@ -1,8 +1,8 @@
+import OptimizedImage from "@/components/media/OptimizedImage";
+import { packageItemPath } from "@/data/curated-packages";
+import type { BookableProduct } from "@/lib/booking-product";
 import { Link } from "@tanstack/react-router";
 import { Check } from "lucide-react";
-import OptimizedImage from "@/components/media/OptimizedImage";
-import type { BookableProduct } from "@/lib/booking-product";
-import { packageItemPath } from "@/data/curated-packages";
 import { formatINR } from "./booking-form-shared";
 
 function PackageBookingSummary({
@@ -54,12 +54,13 @@ function PackageBookingSummary({
             {product.duration} days
             {product.categoryLabel ? ` · ${product.categoryLabel}` : ""}
             {product.bestSeason ? ` · Best ${product.bestSeason}` : ""}
-            {product.rating != null
-              ? ` · ${product.rating} ★`
-              : ""}
+            {product.rating != null ? ` · ${product.rating} ★` : ""}
           </p>
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 mt-1">
-            <span className="text-sm font-semibold" style={{ color: "#C0001C" }}>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "#C0001C" }}
+            >
               Rs.{formatINR(product.price)}/person
             </span>
             {product.priceWas != null && product.priceWas > product.price ? (
@@ -83,7 +84,10 @@ function PackageBookingSummary({
       </div>
 
       {!compact && product.description ? (
-        <p className="text-sm leading-relaxed" style={{ color: "var(--ew-text-lt)" }}>
+        <p
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--ew-text-lt)" }}
+        >
           {product.description}
         </p>
       ) : null}

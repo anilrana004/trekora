@@ -36,11 +36,15 @@ export const BLOG_LINKED_PRODUCT: Record<string, BlogLinkedProduct> = {
   },
 };
 
-export function getLinkedProductForBlog(slug: string): BlogLinkedProduct | null {
+export function getLinkedProductForBlog(
+  slug: string,
+): BlogLinkedProduct | null {
   return BLOG_LINKED_PRODUCT[slug] ?? null;
 }
 
-export function getProductHeroImage(link: BlogLinkedProduct): string | undefined {
+export function getProductHeroImage(
+  link: BlogLinkedProduct,
+): string | undefined {
   if (link.kind === "trek") {
     return TREKS.find((t) => t.slug === link.slug)?.image;
   }
@@ -48,7 +52,9 @@ export function getProductHeroImage(link: BlogLinkedProduct): string | undefined
 }
 
 /** Card/hero image: always use the linked trek or yatra image when mapped. */
-export function resolveBlogCardImage(blog: Pick<Blog, "slug" | "heroImage">): string {
+export function resolveBlogCardImage(
+  blog: Pick<Blog, "slug" | "heroImage">,
+): string {
   const link = getLinkedProductForBlog(blog.slug);
   if (link) {
     const productImage = getProductHeroImage(link);

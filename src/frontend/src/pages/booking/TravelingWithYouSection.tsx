@@ -1,7 +1,7 @@
-import { Plus, Trash2, UserPlus, Users } from "lucide-react";
-import { toast } from "sonner";
 import { CTA_OUTLINE_DASHED, ctaMerge } from "@/lib/cta-buttons";
 import { normalizeIndianPhoneDigits } from "@/lib/phone-countries";
+import { Plus, Trash2, UserPlus, Users } from "lucide-react";
+import { toast } from "sonner";
 import {
   BLOOD_GROUPS,
   COMPANION_RELATIONSHIPS,
@@ -20,7 +20,6 @@ const COMPANION_GENDERS = [
   "Non-binary",
   "Prefer not to say",
 ] as const;
-
 
 export default function TravelingWithYouSection({
   fd,
@@ -122,7 +121,10 @@ export default function TravelingWithYouSection({
           >
             Traveling with you
           </h3>
-          <p className="text-xs mt-1 leading-relaxed" style={{ color: "var(--ew-text-lt)" }}>
+          <p
+            className="text-xs mt-1 leading-relaxed"
+            style={{ color: "var(--ew-text-lt)" }}
+          >
             Add everyone in your group besides yourself — family, friends, or
             colleagues. You can add as many people as you need (up to batch
             availability).
@@ -154,10 +156,16 @@ export default function TravelingWithYouSection({
           className="rounded-xl border-2 border-dashed px-4 py-6 text-center"
           style={{ borderColor: "var(--ew-gray-mid)" }}
         >
-          <p className="text-sm font-medium" style={{ color: "var(--ew-text)" }}>
+          <p
+            className="text-sm font-medium"
+            style={{ color: "var(--ew-text)" }}
+          >
             Booking solo?
           </p>
-          <p className="text-xs mt-1 mb-4" style={{ color: "var(--ew-gray-dark)" }}>
+          <p
+            className="text-xs mt-1 mb-4"
+            style={{ color: "var(--ew-gray-dark)" }}
+          >
             Skip this section, or add people who are traveling with you.
           </p>
           <button
@@ -238,9 +246,7 @@ export default function TravelingWithYouSection({
                     id={`cmp-name-${i}`}
                     type="text"
                     value={ct.name}
-                    onChange={(e) =>
-                      updateCompanion(i, "name", e.target.value)
-                    }
+                    onChange={(e) => updateCompanion(i, "name", e.target.value)}
                     className={inp}
                     autoComplete="name"
                     data-ocid={`booking.companion.name.${i + 1}`}
@@ -409,4 +415,3 @@ export default function TravelingWithYouSection({
     </div>
   );
 }
-

@@ -79,7 +79,8 @@ export function readFileAsBase64(file: File): Promise<string> {
       const base64 = result.includes(",") ? result.split(",")[1]! : result;
       resolve(base64);
     };
-    reader.onerror = () => reject(reader.error ?? new Error("Could not read file"));
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Could not read file"));
     reader.readAsDataURL(file);
   });
 }
@@ -87,7 +88,9 @@ export function readFileAsBase64(file: File): Promise<string> {
 export async function fileToBookingPayload(
   file: File,
   kind: keyof typeof BOOKING_DOC_LIMITS,
-): Promise<{ ok: true; data: BookingFilePayload } | { ok: false; error: string }> {
+): Promise<
+  { ok: true; data: BookingFilePayload } | { ok: false; error: string }
+> {
   const { maxBytes, label } = BOOKING_DOC_LIMITS[kind];
   const mime = normalizeMime(file);
   const allowed =
@@ -130,13 +133,11 @@ export async function fileToBookingPayload(
   }
 }
 
-export function collectBookingAttachments(
-  files: {
-    idProof: BookingFilePayload | null;
-    photo: BookingFilePayload | null;
-    fitnessCert: BookingFilePayload | null;
-  },
-): { attachments: BookingEmailAttachment[]; error?: string } {
+export function collectBookingAttachments(files: {
+  idProof: BookingFilePayload | null;
+  photo: BookingFilePayload | null;
+  fitnessCert: BookingFilePayload | null;
+}): { attachments: BookingEmailAttachment[]; error?: string } {
   const list = [files.idProof, files.photo, files.fitnessCert].filter(
     (f): f is BookingFilePayload => f != null,
   );

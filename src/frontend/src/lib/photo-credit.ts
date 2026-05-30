@@ -17,7 +17,11 @@ export function parsePhotoCredit(credit: string): {
 }
 
 /** Build stored/API credit from trekker form fields. */
-export function buildPhotoCredit(name: string, month: string, year: string): string {
+export function buildPhotoCredit(
+  name: string,
+  month: string,
+  year: string,
+): string {
   const trimmed = name.trim();
   const when = [month, year].filter(Boolean).join(" ").trim();
   return when ? `${trimmed} · ${when}` : trimmed;

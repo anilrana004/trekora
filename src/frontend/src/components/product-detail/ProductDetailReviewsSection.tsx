@@ -1,15 +1,15 @@
+import { useProductReviews } from "@/hooks/useProductReviews";
+import {
+  type ProductKind,
+  type TrekoraReview,
+  formatReviewDate,
+} from "@/lib/reviews-api";
 import { Star } from "lucide-react";
 import { useMemo } from "react";
 import ReviewSubmitForm from "../ReviewSubmitForm";
 import ShareSection from "../ShareSection";
 import OptimizedImage from "../media/OptimizedImage";
 import ReviewListSkeleton from "../reviews/ReviewListSkeleton";
-import { useProductReviews } from "@/hooks/useProductReviews";
-import {
-  formatReviewDate,
-  type ProductKind,
-  type TrekoraReview,
-} from "@/lib/reviews-api";
 import StarRow from "./StarRow";
 
 export default function ProductDetailReviewsSection({

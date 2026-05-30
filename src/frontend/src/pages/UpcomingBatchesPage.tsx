@@ -410,9 +410,7 @@ export default function UpcomingBatchesPage() {
         {/* WhatsApp CTA */}
         <div className="mt-8 text-center">
           <a
-            href={buildWhatsAppUrl(
-              "Hi Trekora, I'd like to book a trek batch",
-            )}
+            href={buildWhatsAppUrl("Hi Trekora, I'd like to book a trek batch")}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full text-white transition-opacity hover:opacity-90"

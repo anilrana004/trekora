@@ -1,30 +1,33 @@
-import type { Dispatch, SetStateAction } from "react";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 import type { TrekBatchPublic } from "@/backend";
-import type { BookableProduct } from "@/lib/booking-product";
-import type { DiscountValidationSuccess } from "@/lib/discount-api";
-import {
-  BOOKING_ADD_ONS,
-  GEAR_RENTAL_ADDON_ID,
-} from "@/lib/booking-addons";
-import { resolveProductWeather } from "@/lib/openweather";
-import { buildWhatsAppUrl } from "@/lib/site-contact";
+import DiscountInput from "@/components/DiscountInput";
+import PriceSummary from "@/components/PriceSummary";
+import OptimizedImage from "@/components/media/OptimizedImage";
+import ProductDetailGroupSizeStepper from "@/components/product-detail/ProductDetailGroupSizeStepper";
+import PhoneInput from "@/components/ui/PhoneInput";
+import { BOOKING_ADD_ONS, GEAR_RENTAL_ADDON_ID } from "@/lib/booking-addons";
 import {
   BOOKING_DOC_LIMITS,
+  type BookingFilePayload,
   collectBookingAttachments,
   fileToBookingPayload,
   formatFileSize,
-  type BookingFilePayload,
 } from "@/lib/booking-documents";
-import DiscountInput from "@/components/DiscountInput";
-import PriceSummary from "@/components/PriceSummary";
-import ProductDetailGroupSizeStepper from "@/components/product-detail/ProductDetailGroupSizeStepper";
-import PhoneInput from "@/components/ui/PhoneInput";
-import OptimizedImage from "@/components/media/OptimizedImage";
+import type { BookableProduct } from "@/lib/booking-product";
+import type { DiscountValidationSuccess } from "@/lib/discount-api";
+import { resolveProductWeather } from "@/lib/openweather";
+import { buildWhatsAppUrl } from "@/lib/site-contact";
+import type { Dispatch, SetStateAction } from "react";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { lazy as lazyVideo } from "react";
-const WeatherWidget = lazyVideo(() => import("@/components/WeatherWidget"));
-import { Suspense as WeatherSuspense } from "react";
+import { toast } from "sonner";
+const _WeatherWidget = lazyVideo(() => import("@/components/WeatherWidget"));
 import {
   CTA_COMPACT_GREEN,
   CTA_NAV_PRIMARY,
@@ -46,18 +49,21 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
-import {  type CoTraveler,
-  type CoTravelerFieldErrors,
-  type FormDataAccumulated,
-  type Step2FieldErrors,
-  type Step2FieldKey,
+import { Suspense as WeatherSuspense } from "react";
+import PackageBookingSummary from "../PackageBookingSummary";
+import {
   BLOOD_GROUPS,
-  CITIES,
-  COMPANION_RELATIONSHIPS,
-  DAYS_OF_WEEK,
-  MEDICAL_CONDITIONS,
   BOOKING_CHOICE_ROW,
   BOOKING_CONTACT_GRID,
+  CITIES,
+  COMPANION_RELATIONSHIPS,
+  type CoTraveler,
+  type CoTravelerFieldErrors,
+  DAYS_OF_WEEK,
+  type FormDataAccumulated,
+  MEDICAL_CONDITIONS,
+  type Step2FieldErrors,
+  type Step2FieldKey,
   bookingCheckRow,
   bookingChoicePill,
   calcPrices,
@@ -75,7 +81,6 @@ import {  type CoTraveler,
   syncPartyGroupSize,
   upcomingBatchChoices,
 } from "../booking-form-shared";
-import PackageBookingSummary from "../PackageBookingSummary";
 
 function Step5({
   fd,
@@ -223,7 +228,12 @@ function Step5({
                 data-ocid={`booking.transport.${l.toLowerCase()}`}
               >
                 {selected ? (
-                  <Check size={16} className="shrink-0" strokeWidth={2.5} aria-hidden />
+                  <Check
+                    size={16}
+                    className="shrink-0"
+                    strokeWidth={2.5}
+                    aria-hidden
+                  />
                 ) : null}
                 {l}
               </button>
@@ -294,7 +304,12 @@ function Step5({
                 data-ocid={`booking.contact_mode.${m.toLowerCase()}`}
               >
                 {selected ? (
-                  <Check size={16} className="shrink-0" strokeWidth={2.5} aria-hidden />
+                  <Check
+                    size={16}
+                    className="shrink-0"
+                    strokeWidth={2.5}
+                    aria-hidden
+                  />
                 ) : null}
                 {m}
               </button>

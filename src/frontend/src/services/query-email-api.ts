@@ -35,7 +35,10 @@ export async function submitPlanTrekEmail(
   try {
     const res = await fetch("/api/query", {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body: JSON.stringify(payload),
     });
     const data = (await res.json().catch(() => ({}))) as {

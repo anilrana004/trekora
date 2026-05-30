@@ -2,10 +2,7 @@ export type ListingRegionTab = "all" | "uttarakhand" | "himachal";
 
 type ListingKind = "treks" | "yatras" | "destinations";
 
-const LABELS: Record<
-  ListingKind,
-  Record<ListingRegionTab, string>
-> = {
+const LABELS: Record<ListingKind, Record<ListingRegionTab, string>> = {
   treks: {
     all: "All Treks",
     uttarakhand: "Uttarakhand",

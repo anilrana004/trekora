@@ -1,7 +1,7 @@
+import type { GalleryItem } from "@/data/gallery";
+import { galleryUploaderLabel } from "@/lib/gallery-community";
 import { ZoomIn } from "lucide-react";
 import { motion } from "motion/react";
-import { galleryUploaderLabel } from "@/lib/gallery-community";
-import type { GalleryItem } from "@/data/gallery";
 import OptimizedImage from "../media/OptimizedImage";
 
 /** Trekker community photo tile — trek/yatra name + uploader on every image. */
@@ -15,7 +15,8 @@ export default function GalleryPhotoCard({
   onOpen: () => void;
 }) {
   const trekLabel = item.trekName ?? item.title;
-  const typeLabel = item.productLabel ?? (item.productType === "yatra" ? "Yatra" : "Trek");
+  const typeLabel =
+    item.productLabel ?? (item.productType === "yatra" ? "Yatra" : "Trek");
   const { name: uploader, when } = galleryUploaderLabel(item.credit);
 
   return (

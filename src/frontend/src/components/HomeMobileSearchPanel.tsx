@@ -38,7 +38,11 @@ export default function HomeMobileSearchPanel() {
           onClick={() => setOpen((o) => !o)}
           data-ocid="home.search_toggle"
         >
-          <Search size={15} className="home-search__toggle-icon shrink-0 text-[var(--ew-orange)]" aria-hidden />
+          <Search
+            size={15}
+            className="home-search__toggle-icon shrink-0 text-[var(--ew-orange)]"
+            aria-hidden
+          />
           <span className="home-search__toggle-label min-w-0 flex-1 truncate text-left font-semibold">
             {open ? "Hide trek finder" : "Find your perfect trek"}
           </span>

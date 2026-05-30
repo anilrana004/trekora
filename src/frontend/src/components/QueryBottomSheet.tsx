@@ -1,18 +1,18 @@
+import FormSuccessMessage from "@/components/FormSuccessMessage";
+import PhoneInput from "@/components/ui/PhoneInput";
 import { TREKS } from "@/data/treks";
 import { YATRAS } from "@/data/yatras";
-import PhoneInput from "@/components/ui/PhoneInput";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import {
   formatPhoneForDisplay,
   normalizeIndianPhoneDigits,
   validateNationalPhone,
 } from "@/lib/phone-countries";
-import { SITE_PHONE_DISPLAY } from "@/lib/site-contact";
-import FormSuccessMessage from "@/components/FormSuccessMessage";
-import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { buildSendQueryPayload } from "@/lib/query-email-payloads";
+import { SITE_PHONE_DISPLAY } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { AnimatePresence, motion } from "motion/react";
 import { Loader2 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useIsMobile } from "../hooks/use-mobile";
@@ -187,7 +187,6 @@ export default function QueryBottomSheet({
               maxHeight: sheetHeight,
               boxShadow: "0 -4px 32px rgba(0,0,0,0.18)",
             }}
-            // biome-ignore lint/a11y/useSemanticElements: motion.div cannot be changed to dialog element
             role="dialog"
             data-ocid="query_sheet.dialog"
           >
@@ -433,7 +432,11 @@ export default function QueryBottomSheet({
                   >
                     {submitting ? (
                       <>
-                        <Loader2 size={16} className="animate-spin" aria-hidden />
+                        <Loader2
+                          size={16}
+                          className="animate-spin"
+                          aria-hidden
+                        />
                         Sending…
                       </>
                     ) : (

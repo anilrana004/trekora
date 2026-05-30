@@ -1,22 +1,22 @@
-import { isFeatureLive } from "@/lib/dormant-features";
+import PhoneInput from "@/components/ui/PhoneInput";
 import {
   bookingDetailsPlainText,
   buildBookingEmailSections,
 } from "@/lib/booking-email-details";
-import { bookingEmailSuccessMessage } from "@/services/booking-email-api";
-import { submitEmailOptimistic } from "@/lib/optimistic-email";
-import { submitBookingEmail } from "@/services/booking-email-api";
-import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useReducer, useRef, useState } from "react";
-import { toast } from "sonner";
 import {
   CTA_NAV_PRIMARY,
   CTA_NAV_PRIMARY_GROW,
   CTA_NAV_SECONDARY_FLEX,
   ctaMerge,
 } from "@/lib/cta-buttons";
-import PhoneInput from "@/components/ui/PhoneInput";
+import { isFeatureLive } from "@/lib/dormant-features";
+import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { validateNationalPhone } from "@/lib/phone-countries";
+import { bookingEmailSuccessMessage } from "@/services/booking-email-api";
+import { submitBookingEmail } from "@/services/booking-email-api";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useReducer, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useIsMobile } from "../hooks/use-mobile";
 import OptimizedImage from "./media/OptimizedImage";
 
@@ -956,10 +956,7 @@ export default function BookingDrawer({
                   void initiatePayment();
                 }
               }}
-              className={ctaMerge(
-                CTA_NAV_PRIMARY_GROW,
-                "disabled:opacity-60",
-              )}
+              className={ctaMerge(CTA_NAV_PRIMARY_GROW, "disabled:opacity-60")}
               data-ocid="booking_drawer.step2_proceed"
             >
               {rzpLoading
@@ -1065,7 +1062,6 @@ export default function BookingDrawer({
                     borderRadius: "20px 0 0 20px",
                   }),
             }}
-            // biome-ignore lint/a11y/useSemanticElements: motion.div cannot be native dialog element
             role="dialog"
             aria-modal="true"
             aria-label={`Book ${trekName}`}

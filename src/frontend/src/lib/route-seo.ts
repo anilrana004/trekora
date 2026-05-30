@@ -1,7 +1,7 @@
 import { BLOGS } from "@/data/blogs";
-import { resolveBlogCardImage } from "@/lib/blog-product-images";
+import type { Blog } from "@/data/blogs";
 import { TREKS } from "@/data/treks";
-import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "@/lib/site-config";
+import { resolveBlogCardImage } from "@/lib/blog-product-images";
 import {
   generateBlogJSONLD,
   generateBreadcrumbJSONLD,
@@ -10,7 +10,7 @@ import {
   generateDestinationsIndexPlaceJSONLD,
   generateTrekJSONLD,
 } from "@/lib/seo";
-import type { Blog } from "@/data/blogs";
+import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "@/lib/site-config";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -73,8 +73,6 @@ export function routeHasOwnSEOHead(pathname: string): boolean {
 export function getRouteSEO(pathname: string): RouteSEOConfig | null {
   if (routeHasOwnSEOHead(pathname)) return null;
 
-  const canonical = `${SITE_ORIGIN}${pathname === "/" ? "" : pathname}`;
-
   const staticRoutes: Record<string, RouteSEOConfig> = {
     "/about": {
       title: "About Trekora | Himalayan Trekking & Yatra Experts",
@@ -103,7 +101,8 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
       title: "Corporate Trekking | Team Outings with Trekora",
       description:
         "Custom corporate trekking and team-building retreats in the Himalayas. Safety-certified guides and end-to-end logistics.",
-      keywords: "corporate trekking India, team outing Himalayas, corporate retreat trek",
+      keywords:
+        "corporate trekking India, team outing Himalayas, corporate retreat trek",
       canonical: `${SITE_ORIGIN}/corporate`,
     },
     "/packages": {
@@ -118,7 +117,8 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
       title: "Upcoming Trek Batches | Trekora",
       description:
         "See upcoming fixed-departure trek batches across Uttarakhand and Himachal Pradesh. Limited seats — book early.",
-      keywords: "upcoming trek batches, fixed departure treks, Himalayan trek dates",
+      keywords:
+        "upcoming trek batches, fixed departure treks, Himalayan trek dates",
       canonical: `${SITE_ORIGIN}/upcoming-batches`,
     },
     "/press": {
@@ -151,7 +151,8 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
     },
     "/book": {
       title: "Book Your Trek | Trekora",
-      description: "Complete your Trekora trek or yatra booking securely online.",
+      description:
+        "Complete your Trekora trek or yatra booking securely online.",
       canonical: `${SITE_ORIGIN}/book`,
       noindex: true,
     },
@@ -180,7 +181,8 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
     const code = trekkerMatch[1];
     return {
       title: `Trekker Profile @${code} | Trekora`,
-      description: `Community trekker profile on Trekora — referrals, badges, and Himalayan trek history.`,
+      description:
+        "Community trekker profile on Trekora — referrals, badges, and Himalayan trek history.",
       keywords: "Trekora trekker profile, referral trek, community trekking",
       canonical: `${SITE_ORIGIN}/trekkers/${code}`,
       ogImage: DEFAULT_OG_IMAGE,
@@ -258,12 +260,13 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
     };
   }
 
-  const destDistrictMatch = pathname.match(/^\/destinations\/([^/]+)\/([^/]+)$/);
+  const destDistrictMatch = pathname.match(
+    /^\/destinations\/([^/]+)\/([^/]+)$/,
+  );
   if (destDistrictMatch) {
     const district = destDistrictMatch[2].replace(/-/g, " ");
     const state = stateLabel(destDistrictMatch[1]);
-    const districtTitle =
-      district.charAt(0).toUpperCase() + district.slice(1);
+    const districtTitle = district.charAt(0).toUpperCase() + district.slice(1);
     return {
       title: `${districtTitle} Treks, ${state} | Trekora`,
       description: `Trekking experiences in ${districtTitle}, ${state} — curated routes, guides, and packages from Trekora.`,
@@ -310,14 +313,16 @@ export function getBlogDetailSEO(blog: Blog): RouteSEOConfig {
 
 export const NOT_FOUND_SEO: RouteSEOConfig = {
   title: "Page Not Found | Trekora",
-  description: "The page you are looking for does not exist. Browse treks, yatras, and destinations on Trekora.",
+  description:
+    "The page you are looking for does not exist. Browse treks, yatras, and destinations on Trekora.",
   canonical: SITE_ORIGIN,
   noindex: true,
 };
 
 export const ERROR_PAGE_SEO: RouteSEOConfig = {
   title: "Something Went Wrong | Trekora",
-  description: "An unexpected error occurred. Return to Trekora to browse Himalayan treks and yatras.",
+  description:
+    "An unexpected error occurred. Return to Trekora to browse Himalayan treks and yatras.",
   canonical: SITE_ORIGIN,
   noindex: true,
 };

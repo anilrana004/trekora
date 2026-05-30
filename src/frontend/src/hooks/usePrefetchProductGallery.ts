@@ -1,7 +1,7 @@
+import { queryKeys } from "@/lib/query-keys";
+import { type ProductKind, fetchGallery } from "@/lib/reviews-api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { queryKeys } from "@/lib/query-keys";
-import { fetchGallery, type ProductKind } from "@/lib/reviews-api";
 
 /** Warm trekker/gallery cache when a trek or yatra detail page loads. */
 export function usePrefetchProductGallery(

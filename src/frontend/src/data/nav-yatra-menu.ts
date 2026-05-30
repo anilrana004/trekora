@@ -36,4 +36,3 @@ export const NAV_UK_YATRAS = resolveNavYatras(UK_NAV_RAW);
 
 /** Himachal Pradesh — desktop & mobile yatra mega-menu. */
 export const NAV_HP_YATRAS = resolveNavYatras(HP_NAV_RAW);
-

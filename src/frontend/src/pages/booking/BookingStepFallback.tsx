@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { Suspense, type ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 
 export function BookingStepFallback({
   label,
@@ -22,7 +22,10 @@ export function BookingStepFallback({
             className="animate-spin text-[#C0001C]"
             aria-hidden
           />
-          <p className="text-sm font-medium" style={{ color: "var(--ew-gray-dark)" }}>
+          <p
+            className="text-sm font-medium"
+            style={{ color: "var(--ew-gray-dark)" }}
+          >
             {label}
           </p>
         </div>

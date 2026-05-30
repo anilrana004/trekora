@@ -1,6 +1,9 @@
 import { fetchJson } from "@/lib/api-fetch";
+import {
+  type OpenWeatherCurrentJson,
+  parseForecast,
+} from "@/lib/openweather-parse";
 import type { WeatherData } from "@/lib/weather-types";
-import { parseForecast, type OpenWeatherCurrentJson } from "@/lib/openweather-parse";
 
 const PROXY_BASE = "/api/v1/weather";
 
@@ -42,10 +45,9 @@ export async function fetchWeatherForLocation(
 ): Promise<WeatherData | null> {
   const q = encodeURIComponent(location);
   try {
-    const res = await fetchJson<ProxyWeatherResponse>(
-      `${PROXY_BASE}?q=${q}`,
-      { timeoutMs: 14_000 },
-    );
+    const res = await fetchJson<ProxyWeatherResponse>(`${PROXY_BASE}?q=${q}`, {
+      timeoutMs: 14_000,
+    });
     if (!res.success || !res.current || !res.forecast?.list) return null;
     return mapProxyToWeatherData(res.current, res.forecast.list);
   } catch {

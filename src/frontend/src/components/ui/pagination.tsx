@@ -38,7 +38,7 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 
 type PaginationLinkProps = {
   isActive?: boolean;
-} & Pick<React.ComponentProps<typeof Button>, "size"> &
+} & Pick<React.ComponentPropsWithoutRef<typeof Button>, "size"> &
   React.ComponentProps<"a">;
 
 function PaginationLink({
@@ -67,7 +67,7 @@ function PaginationLink({
 function PaginationPrevious({
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: React.ComponentPropsWithoutRef<typeof PaginationLink>) {
   return (
     <PaginationLink
       aria-label="Go to previous page"
@@ -84,7 +84,7 @@ function PaginationPrevious({
 function PaginationNext({
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: React.ComponentPropsWithoutRef<typeof PaginationLink>) {
   return (
     <PaginationLink
       aria-label="Go to next page"

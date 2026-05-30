@@ -1,16 +1,16 @@
 import type { Blog } from "../data/blogs";
-import { resolveBlogCardImage } from "./blog-product-images";
 import type { Trek } from "../data/treks";
 import type { Yatra } from "../data/yatras";
+import { resolveBlogCardImage } from "./blog-product-images";
+import { BRAND_LOGO_IMAGE_OBJECT, BRAND_LOGO_URL } from "./brand-seo";
 import {
   buildTrekPageSEO,
   buildYatraPageSEO,
   enrichTrekJSONLD,
   enrichYatraJSONLD,
 } from "./product-seo";
-import { SITE_EMAIL, SITE_GEO, SITE_PHONE_TEL } from "./site-contact";
-import { BRAND_LOGO_IMAGE_OBJECT, BRAND_LOGO_URL } from "./brand-seo";
 import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "./site-config";
+import { SITE_EMAIL, SITE_GEO, SITE_PHONE_TEL } from "./site-contact";
 
 /* ── DOM helpers ── */
 function setMetaTag(name: string, content: string): void {
@@ -92,10 +92,7 @@ export function setPageMeta(config: PageMetaConfig): void {
   setMetaTag("twitter:card", twitterCard);
   setMetaTag("twitter:title", title);
   setMetaTag("twitter:description", description);
-  setMetaTag(
-    "twitter:image",
-    ogImage ?? DEFAULT_OG_IMAGE,
-  );
+  setMetaTag("twitter:image", ogImage ?? DEFAULT_OG_IMAGE);
 }
 
 /* ── injectJSONLD: uses unique IDs to prevent duplicates ── */
@@ -247,7 +244,10 @@ export function generateContactLocalBusinessJSONLD(): Record<string, unknown> {
   };
 }
 
-export function generateDestinationsIndexPlaceJSONLD(): Record<string, unknown> {
+export function generateDestinationsIndexPlaceJSONLD(): Record<
+  string,
+  unknown
+> {
   return {
     "@context": "https://schema.org",
     "@type": "Place",

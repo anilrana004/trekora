@@ -1,6 +1,6 @@
 import {
-  type ExploreTag,
   EXPLORE_TAG_COUNT,
+  type ExploreTag,
   exploreSectionTitle,
   orderExploreTagsForPath,
 } from "@/lib/explore-tags";
@@ -109,7 +109,10 @@ export default function ExploreTagsSection() {
             </button>
           )}
         </div>
-        <p className="mt-3 text-[10px]" style={{ color: "var(--ew-gray-dark)" }}>
+        <p
+          className="mt-3 text-[10px]"
+          style={{ color: "var(--ew-gray-dark)" }}
+        >
           {EXPLORE_TAG_COUNT} curated links across treks, yatras, destinations &
           guides
         </p>

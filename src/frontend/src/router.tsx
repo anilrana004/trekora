@@ -8,8 +8,8 @@ import { Suspense, lazy } from "react";
 import AdminLayout from "./components/AdminLayout";
 import DormantFeatureRoute from "./components/DormantFeatureRoute";
 import Layout from "./components/Layout";
-import { validateBookSearch } from "./lib/book-route-search";
 import PageLoader from "./components/PageLoader";
+import { validateBookSearch } from "./lib/book-route-search";
 import ErrorPage from "./pages/ErrorPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -230,8 +230,7 @@ const galleryRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/gallery",
   validateSearch: (search: Record<string, unknown>) => ({
-    trekSlug:
-      typeof search.trekSlug === "string" ? search.trekSlug : undefined,
+    trekSlug: typeof search.trekSlug === "string" ? search.trekSlug : undefined,
   }),
   component: () => (
     <Suspense fallback={<PageLoader />}>

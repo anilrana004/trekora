@@ -1,18 +1,13 @@
-import type { ErrorComponentProps } from "@tanstack/react-router";
-import { Link } from "@tanstack/react-router";
-import {
-  AlertTriangle,
-  Home,
-  MessageCircle,
-  RefreshCw,
-} from "lucide-react";
-import { SEOHead } from "./SEOHead";
 import { ERROR_PAGE_SEO } from "@/lib/route-seo";
 import {
   SITE_PHONE_DISPLAY,
   SITE_PHONE_TEL,
   buildWhatsAppUrl,
 } from "@/lib/site-contact";
+import type { ErrorComponentProps } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
+import { AlertTriangle, Home, MessageCircle, RefreshCw } from "lucide-react";
+import { SEOHead } from "./SEOHead";
 
 /** Route-level error UI — keeps navbar/footer via parent layout when possible. */
 export default function RouteErrorFallback({
@@ -40,7 +35,11 @@ export default function RouteErrorFallback({
         className="mb-6 flex h-16 w-16 items-center justify-center rounded-full"
         style={{ background: "var(--ew-red-lt)" }}
       >
-        <AlertTriangle size={32} style={{ color: "var(--ew-red)" }} aria-hidden />
+        <AlertTriangle
+          size={32}
+          style={{ color: "var(--ew-red)" }}
+          aria-hidden
+        />
       </div>
       <h1 className="text-2xl font-bold" style={{ color: "var(--ew-text)" }}>
         Something went wrong

@@ -38,7 +38,10 @@ export type PressMediaOutlet = {
 export const FEATURED_PRESS_MEDIA: PressMediaOutlet[] = [
   { name: "Times of India", logoSrc: PRESS_MEDIA_LOGOS["Times of India"] },
   { name: "NDTV", logoSrc: PRESS_MEDIA_LOGOS.NDTV },
-  { name: "Outlook Traveller", logoSrc: PRESS_MEDIA_LOGOS["Outlook Traveller"] },
+  {
+    name: "Outlook Traveller",
+    logoSrc: PRESS_MEDIA_LOGOS["Outlook Traveller"],
+  },
   { name: "Hindustan Times", logoSrc: PRESS_MEDIA_LOGOS["Hindustan Times"] },
   { name: "India Today", logoSrc: PRESS_MEDIA_LOGOS["India Today"] },
 ];

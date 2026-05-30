@@ -1,10 +1,10 @@
 import {
   CURATED_PACKAGES,
-  getCuratedPackageBySlug,
-  packageItemLabel,
   type CuratedPackage,
   type CuratedPackageItem,
   type CuratedPackageTier,
+  getCuratedPackageBySlug,
+  packageItemLabel,
 } from "../data/curated-packages";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
@@ -211,16 +211,17 @@ export function resolveBookableFromTrekSearchParam(
   return findBookableProductForPrefill(trekParam, undefined);
 }
 
-export const BOOKABLE_TREKS: BookableProduct[] = TREKS.filter((t) => t.isActive).map(
-  (trek) => trekToBookable(trek),
-);
+export const BOOKABLE_TREKS: BookableProduct[] = TREKS.filter(
+  (t) => t.isActive,
+).map((trek) => trekToBookable(trek));
 
-export const BOOKABLE_YATRAS: BookableProduct[] = YATRAS.filter((y) => y.isActive).map(
-  (yatra) => yatraToBookable(yatra),
-);
+export const BOOKABLE_YATRAS: BookableProduct[] = YATRAS.filter(
+  (y) => y.isActive,
+).map((yatra) => yatraToBookable(yatra));
 
-export const BOOKABLE_PACKAGES: BookableProduct[] =
-  CURATED_PACKAGES.map(curatedPackageToBookable);
+export const BOOKABLE_PACKAGES: BookableProduct[] = CURATED_PACKAGES.map(
+  curatedPackageToBookable,
+);
 
 export function isPackageBooking(
   product: BookableProduct | undefined,

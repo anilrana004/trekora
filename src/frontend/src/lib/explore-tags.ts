@@ -10,7 +10,11 @@ export type ExploreTag = {
   matchPaths?: string[];
 };
 
-const trek = (slug: string, label: string, matchPaths?: string[]): ExploreTag => ({
+const trek = (
+  slug: string,
+  label: string,
+  matchPaths?: string[],
+): ExploreTag => ({
   id: `trek-${slug}`,
   label,
   to: `/treks/${slug}`,
@@ -140,15 +144,23 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
 
   // ── Trek list filters & hubs (20) ──
   treksList("Best Treks in Uttarakhand", { state: "uttarakhand" }, "uk-treks"),
+  treksList("Himachal Pradesh Treks", { state: "himachal" }, "hp-treks"),
   treksList(
-    "Himachal Pradesh Treks",
-    { state: "himachal" },
-    "hp-treks",
+    "Uttarakhand Adventure Treks",
+    { state: "uttarakhand" },
+    "uk-adventure",
   ),
-  treksList("Uttarakhand Adventure Treks", { state: "uttarakhand" }, "uk-adventure"),
   treksList("Easy Treks India", { difficulty: "easy" }, "easy-treks"),
-  treksList("Moderate Treks India", { difficulty: "moderate" }, "moderate-treks"),
-  treksList("Difficult Himalayan Treks", { difficulty: "difficult" }, "difficult-treks"),
+  treksList(
+    "Moderate Treks India",
+    { difficulty: "moderate" },
+    "moderate-treks",
+  ),
+  treksList(
+    "Difficult Himalayan Treks",
+    { difficulty: "difficult" },
+    "difficult-treks",
+  ),
   treksList("Extreme Treks India", { difficulty: "extreme" }, "extreme-treks"),
   treksList("Summer Treks India", { season: "summer" }, "summer-treks"),
   treksList("Winter Treks India", { season: "winter" }, "winter-treks"),
@@ -165,9 +177,17 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
   page("hub-hp", "Himachal Trek Hub", "/treks/state/himachal"),
 
   // ── Yatra list (5) ──
-  yatrasList("Best Yatras in Uttarakhand", { state: "uttarakhand" }, "uk-yatras"),
+  yatrasList(
+    "Best Yatras in Uttarakhand",
+    { state: "uttarakhand" },
+    "uk-yatras",
+  ),
   yatrasList("Himachal Pilgrimage", { state: "himachal" }, "hp-yatras"),
-  yatrasList("Uttarakhand Pilgrimage", { state: "uttarakhand" }, "uk-pilgrimage"),
+  yatrasList(
+    "Uttarakhand Pilgrimage",
+    { state: "uttarakhand" },
+    "uk-pilgrimage",
+  ),
   page("yatras-all", "All Himalayan Yatras", "/yatras"),
   page("char-dham-search", "Char Dham Packages", "/yatras/char-dham-yatra"),
 
@@ -233,8 +253,12 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
   page("small-group", "Small Group Treks", "/packages"),
 
   // ── Long-tail SEO (30) — mapped to best matching pages ──
-  trek("valley-of-flowers", "Valley of Flowers 2026", ["/treks/valley-of-flowers"]),
-  trek("valley-of-flowers", "Valley of Flowers 2027", ["/treks/valley-of-flowers"]),
+  trek("valley-of-flowers", "Valley of Flowers 2026", [
+    "/treks/valley-of-flowers",
+  ]),
+  trek("valley-of-flowers", "Valley of Flowers 2027", [
+    "/treks/valley-of-flowers",
+  ]),
   trek("valley-of-flowers", "Valley of Flowers from Delhi", [
     "/treks/valley-of-flowers",
   ]),
@@ -242,11 +266,17 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
     "/treks/valley-of-flowers",
   ]),
   trek("roopkund-trek", "Roopkund Package 2026", ["/treks/roopkund-trek"]),
-  trek("kedarkantha-trek", "Kedarkantha Snow Trek", ["/treks/kedarkantha-trek"]),
+  trek("kedarkantha-trek", "Kedarkantha Snow Trek", [
+    "/treks/kedarkantha-trek",
+  ]),
   trek("hampta-pass", "Hampta Pass from Manali", ["/treks/hampta-pass"]),
   trek("triund-trek", "Triund Weekend Trek", ["/treks/triund-trek"]),
-  trek("chandratal-lake", "Chandratal Camping Trek", ["/treks/chandratal-lake"]),
-  trek("spiti-valley-trek", "Spiti Summer Expedition", ["/treks/spiti-valley-trek"]),
+  trek("chandratal-lake", "Chandratal Camping Trek", [
+    "/treks/chandratal-lake",
+  ]),
+  trek("spiti-valley-trek", "Spiti Summer Expedition", [
+    "/treks/spiti-valley-trek",
+  ]),
   yatra("char-dham-yatra", "Char Dham Yatra 2026"),
   yatra("char-dham-yatra", "Char Dham from Haridwar"),
   yatra("kedarnath-yatra", "Kedarnath Helicopter Package"),
@@ -256,7 +286,11 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
   treksList("5000m Altitude Treks", { q: "5000" }, "q-5k"),
   treksList("Himalayan Treks India", { q: "himalaya" }, "q-himalaya"),
   treksList("Trek Packages 2026", { season: "summer" }, "packages-2026"),
-  treksList("Adventure Tourism India", { state: "uttarakhand" }, "adventure-in"),
+  treksList(
+    "Adventure Tourism India",
+    { state: "uttarakhand" },
+    "adventure-in",
+  ),
   page("plan-trek", "Plan My Custom Trek", "/contact"),
   page("whatsapp", "WhatsApp Trek Enquiry", "/contact"),
   page("delhi-treks", "Treks Near Delhi NCR", "/treks?state=uttarakhand"),
@@ -265,7 +299,11 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
   page("rishikesh-yatra", "Yatra from Rishikesh", "/destinations/rishikesh"),
   page("vip-yatra", "VIP Darshan Yatra", "/yatras/char-dham-yatra"),
   page("senior-yatra", "Senior Friendly Yatra", "/yatras/char-dham-yatra"),
-  page("helicopter-yatra", "Helicopter Yatra Packages", "/yatras/kedarnath-yatra"),
+  page(
+    "helicopter-yatra",
+    "Helicopter Yatra Packages",
+    "/yatras/kedarnath-yatra",
+  ),
   page("group-pilgrimage", "Group Pilgrimage India", "/yatras"),
 ];
 

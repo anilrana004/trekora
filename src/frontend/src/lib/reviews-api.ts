@@ -131,9 +131,12 @@ export async function fetchGallery(params?: {
   }
   if (params?.includeReviews === false) q.set("includeReviews", "0");
   const qs = q.toString();
-  return fetchJsonLenient<GalleryResponse>(`/api/gallery${qs ? `?${qs}` : ""}`, {
-    timeoutMs: 28_000,
-  });
+  return fetchJsonLenient<GalleryResponse>(
+    `/api/gallery${qs ? `?${qs}` : ""}`,
+    {
+      timeoutMs: 28_000,
+    },
+  );
 }
 
 export async function fetchPendingReviews(): Promise<{

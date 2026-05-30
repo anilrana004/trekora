@@ -165,7 +165,10 @@ export default function ProductDetailItinerarySection({
           })}
         </div>
 
-        <div className="mt-6 border-t pt-5" style={{ borderColor: "var(--ew-gray-mid)" }}>
+        <div
+          className="mt-6 border-t pt-5"
+          style={{ borderColor: "var(--ew-gray-mid)" }}
+        >
           <button
             type="button"
             onClick={() => void onDownloadPdf()}

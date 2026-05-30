@@ -1,15 +1,15 @@
+import OptimizedImage from "@/components/media/OptimizedImage";
 import { hasAdminSession } from "@/lib/admin-access";
 import {
+  type TrekoraReview,
   approveReview,
   deleteReview,
   fetchPendingReviews,
   formatReviewDate,
-  type TrekoraReview,
 } from "@/lib/reviews-api";
 import { Loader2, Star, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import OptimizedImage from "@/components/media/OptimizedImage";
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState<TrekoraReview[]>([]);
@@ -112,7 +112,10 @@ export default function AdminReviewsPage() {
       {!loading && reviews.length === 0 ? (
         <p
           className="text-sm rounded-xl px-4 py-8 text-center"
-          style={{ background: "var(--ew-gray-lt)", color: "var(--ew-text-lt)" }}
+          style={{
+            background: "var(--ew-gray-lt)",
+            color: "var(--ew-text-lt)",
+          }}
         >
           No reviews awaiting approval.
         </p>
@@ -161,7 +164,10 @@ export default function AdminReviewsPage() {
                   disabled={actingId === r.id}
                   onClick={() => void handleDelete(r.id)}
                   className="text-sm font-semibold px-3 py-2 rounded-full border-2 min-h-11 inline-flex items-center gap-1"
-                  style={{ borderColor: "var(--ew-red)", color: "var(--ew-red)" }}
+                  style={{
+                    borderColor: "var(--ew-red)",
+                    color: "var(--ew-red)",
+                  }}
                   aria-label="Delete review"
                 >
                   <Trash2 size={16} />

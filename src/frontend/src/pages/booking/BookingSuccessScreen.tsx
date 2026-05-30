@@ -1,11 +1,23 @@
-import { Link } from "@tanstack/react-router";
-import { Check, ChevronLeft, ChevronRight, ClipboardCopy, Loader2, MessageCircle } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import type { BookingDeliveryStatus } from "@/lib/booking-optimistic";
+import {
+  CTA_COMPACT_GREEN,
+  CTA_OUTLINE_RED_BLOCK,
+  CTA_OUTLINE_WHATSAPP_BLOCK,
+  ctaMerge,
+} from "@/lib/cta-buttons";
 import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { bookingEmailSuccessMessage } from "@/services/booking-email-api";
-import type { BookingDeliveryStatus } from "@/lib/booking-optimistic";
-import { CTA_COMPACT_GREEN, CTA_OUTLINE_RED_BLOCK, CTA_OUTLINE_WHATSAPP_BLOCK, ctaMerge } from "@/lib/cta-buttons";
+import { Link } from "@tanstack/react-router";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCopy,
+  Loader2,
+  MessageCircle,
+} from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 function SuccessScreen({
   bookingRef,
@@ -93,10 +105,7 @@ function SuccessScreen({
           <button
             type="button"
             onClick={copyRef}
-            className={ctaMerge(
-              CTA_COMPACT_GREEN,
-              copied && "!bg-[#22C55E]",
-            )}
+            className={ctaMerge(CTA_COMPACT_GREEN, copied && "!bg-[#22C55E]")}
             data-ocid="booking.copy_ref_button"
           >
             {copied ? <Check size={12} /> : <ClipboardCopy size={12} />}

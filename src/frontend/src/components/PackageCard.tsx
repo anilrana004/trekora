@@ -1,11 +1,11 @@
-import { Link } from "@tanstack/react-router";
-import { bookSearch } from "@/lib/book-search";
 import {
+  type CuratedPackage,
   packageBookParams,
   packageItemLabel,
   packageItemPath,
-  type CuratedPackage,
 } from "@/data/curated-packages";
+import { bookSearch } from "@/lib/book-search";
+import { Link } from "@tanstack/react-router";
 import { Check, ChevronRight, Clock, MapPin } from "lucide-react";
 import OptimizedImage from "./media/OptimizedImage";
 

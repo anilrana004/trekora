@@ -1,13 +1,19 @@
-import { buildSeoImageUrl } from "@/lib/images";
-import { bookSearch } from "@/lib/book-search";
 import { usePrefetchProductGallery } from "@/hooks/usePrefetchProductGallery";
 import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
+import { bookSearch } from "@/lib/book-search";
 import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
+import { buildSeoImageUrl } from "@/lib/images";
 import { mergeProductGalleryPhotos } from "@/lib/merge-gallery-photos";
+import { formatWeatherLocation } from "@/lib/openweather";
+import { buildYatraPageSEO, getRelatedYatras } from "@/lib/product-seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
+import { SITE_PHONE_TEL, buildWhatsAppUrl } from "@/lib/site-contact";
 import {
-  SITE_PHONE_TEL,
-  buildWhatsAppUrl,
-} from "@/lib/site-contact";
+  yatraAltitudeLabel,
+  yatraAltitudeMeters,
+  yatraDifficultyLabel,
+  yatraFitnessDifficulty,
+} from "@/lib/yatra-booking-stats";
 import { Link, useParams } from "@tanstack/react-router";
 import {
   AlertTriangle,
@@ -29,17 +35,17 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BookingQuickStats from "../components/BookingQuickStats";
+import DetailPageTabBar from "../components/DetailPageTabBar";
 import FitnessCalculator from "../components/FitnessCalculator";
 import MobileStickyBookBar from "../components/MobileStickyBookBar";
 import QueryBottomSheet from "../components/QueryBottomSheet";
-import DetailPageTabBar from "../components/DetailPageTabBar";
 import { SEOHead } from "../components/SEOHead";
-import TrekMap from "../components/TrekMap";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
-import YatraCard from "../components/YatraCard";
+import TrekMap from "../components/TrekMap";
 import WeatherWidget from "../components/WeatherWidget";
+import YatraCard from "../components/YatraCard";
 import YatraInclusions from "../components/YatraInclusions";
 import OptimizedImage from "../components/media/OptimizedImage";
 import {
@@ -58,17 +64,8 @@ import {
   yatraItineraryToDisplayDays,
 } from "../components/product-detail";
 import { YATRAS } from "../data/yatras";
-import { formatWeatherLocation } from "@/lib/openweather";
-import {
-  yatraAltitudeLabel,
-  yatraAltitudeMeters,
-  yatraDifficultyLabel,
-  yatraFitnessDifficulty,
-} from "@/lib/yatra-booking-stats";
 import type { YatraHowToReach } from "../data/yatras";
 import { downloadYatraItineraryPDF } from "../lib/pdfGenerator";
-import { buildYatraPageSEO, getRelatedYatras } from "@/lib/product-seo";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import {
   generateBreadcrumbJSONLD,
   generateFAQJSONLD,
@@ -90,7 +87,11 @@ type TabKey =
 const TABS: { key: TabKey; label: string; shortLabel?: string }[] = [
   { key: "overview", label: "Overview" },
   { key: "itinerary", label: "Itinerary" },
-  { key: "inclusions", label: "Inclusions & Exclusions", shortLabel: "Inclusions" },
+  {
+    key: "inclusions",
+    label: "Inclusions & Exclusions",
+    shortLabel: "Inclusions",
+  },
   { key: "map-route", label: "Map & Route", shortLabel: "Map" },
   { key: "significance", label: "Significance", shortLabel: "Sacred" },
   { key: "how-to-reach", label: "How to Reach", shortLabel: "Reach" },
@@ -105,7 +106,7 @@ const YATRA_DETAIL_TABS = TABS.map((t) => ({
   shortLabel: t.shortLabel,
 }));
 
-const REVIEWS = [
+const _REVIEWS = [
   {
     name: "Suresh Patel",
     city: "Ahmedabad",
@@ -189,7 +190,10 @@ export default function YatraDetailPage() {
 
   usePrefetchProductGallery(slug, "yatra");
 
-  const { photos: communityGalleryItems } = useTrekkerPhotos(slug ?? "", "yatra");
+  const { photos: communityGalleryItems } = useTrekkerPhotos(
+    slug ?? "",
+    "yatra",
+  );
 
   const photosForLightbox = useMemo(() => {
     if (!yatra) return [];
@@ -216,7 +220,6 @@ export default function YatraDetailPage() {
     return () => clearInterval(t);
   }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: slug triggers full content reset; state setters are stable
   useEffect(() => {
     setActiveTab("overview");
     setHeroImg(0);
@@ -228,7 +231,6 @@ export default function YatraDetailPage() {
   }, [slug]);
 
   // SEO: inject structured JSON-LD schemas on mount and when yatra changes
-  // biome-ignore lint/correctness/useExhaustiveDependencies: slug is the stable dep for re-inject
   useEffect(() => {
     if (!yatra) return;
     const faqList = (yatra.faqs ?? []).map((f) => ({
@@ -435,7 +437,9 @@ export default function YatraDetailPage() {
           </>
         }
         subtitle={
-          <p className="text-sm text-white/80">{yatra.description.slice(0, 120)}…</p>
+          <p className="text-sm text-white/80">
+            {yatra.description.slice(0, 120)}…
+          </p>
         }
         renderSlide={(src, index) => (
           <OptimizedImage
@@ -547,335 +551,241 @@ export default function YatraDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* LEFT: Tab content */}
           <div key={activeTab} className="lg:col-span-8 min-w-0 space-y-6">
-              {/* ══ OVERVIEW ══ */}
-              {activeTab === "overview" && (
-                <DetailTabPanel tabKey="overview" className="space-y-6">
-                  <h2 className="section-title mb-5">Overview</h2>
-                  <div>
-                    <h3
-                      className="mb-3 text-base font-bold"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      About this Yatra
-                    </h3>
-                    <p
-                      className="text-base leading-relaxed"
-                      style={{ color: "var(--ew-text-lt)" }}
-                    >
-                      {yatra.description}
-                    </p>
-                  </div>
-
-                  {/* Spiritual significance box */}
-                  <div
-                    className="rounded-xl p-5"
-                    style={{ backgroundColor: "#FFF8E1" }}
+            {/* ══ OVERVIEW ══ */}
+            {activeTab === "overview" && (
+              <DetailTabPanel tabKey="overview" className="space-y-6">
+                <h2 className="section-title mb-5">Overview</h2>
+                <div>
+                  <h3
+                    className="mb-3 text-base font-bold"
+                    style={{ color: "var(--ew-text)" }}
                   >
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xl">🛕</span>
-                      <h3
-                        className="font-bold text-base"
-                        style={{ color: "#B45309" }}
-                      >
-                        Spiritual Significance
-                      </h3>
-                    </div>
-                    <p
-                      className="text-sm leading-relaxed"
-                      style={{ color: "#92400E" }}
-                    >
-                      {yatra.significance?.substring(0, 400)}
-                      {(yatra.significance?.length ?? 0) > 400 ? "…" : ""}
-                    </p>
-                  </div>
+                    About this Yatra
+                  </h3>
+                  <p
+                    className="text-base leading-relaxed"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    {yatra.description}
+                  </p>
+                </div>
 
-                  {/* Stats grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {[
-                      { label: "Duration", value: `${yatra.duration} Days` },
-                      { label: "Distance", value: `${yatra.distance} km` },
-                      { label: "Start Point", value: yatra.startPoint },
-                      { label: "Best Time", value: yatra.bestTime },
-                    ].map((s) => (
+                {/* Spiritual significance box */}
+                <div
+                  className="rounded-xl p-5"
+                  style={{ backgroundColor: "#FFF8E1" }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xl">🛕</span>
+                    <h3
+                      className="font-bold text-base"
+                      style={{ color: "#B45309" }}
+                    >
+                      Spiritual Significance
+                    </h3>
+                  </div>
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: "#92400E" }}
+                  >
+                    {yatra.significance?.substring(0, 400)}
+                    {(yatra.significance?.length ?? 0) > 400 ? "…" : ""}
+                  </p>
+                </div>
+
+                {/* Stats grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    { label: "Duration", value: `${yatra.duration} Days` },
+                    { label: "Distance", value: `${yatra.distance} km` },
+                    { label: "Start Point", value: yatra.startPoint },
+                    { label: "Best Time", value: yatra.bestTime },
+                  ].map((s) => (
+                    <div
+                      key={s.label}
+                      className="rounded-lg p-3 text-center"
+                      style={{ backgroundColor: "var(--ew-gray-lt)" }}
+                    >
                       <div
-                        key={s.label}
-                        className="rounded-lg p-3 text-center"
-                        style={{ backgroundColor: "var(--ew-gray-lt)" }}
+                        className="text-xs mb-0.5"
+                        style={{ color: "var(--ew-gray-dark)" }}
                       >
-                        <div
-                          className="text-xs mb-0.5"
-                          style={{ color: "var(--ew-gray-dark)" }}
-                        >
-                          {s.label}
-                        </div>
-                        <div
-                          className="font-bold text-sm"
-                          style={{ color: "var(--ew-text)" }}
-                        >
-                          {s.value}
-                        </div>
+                        {s.label}
                       </div>
+                      <div
+                        className="font-bold text-sm"
+                        style={{ color: "var(--ew-text)" }}
+                      >
+                        {s.value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Highlights */}
+                <div
+                  className="rounded-xl p-5"
+                  style={{ backgroundColor: "var(--ew-red-lt)" }}
+                >
+                  <h3
+                    className="font-bold text-base mb-3"
+                    style={{ color: "var(--ew-red)" }}
+                  >
+                    Key Highlights
+                  </h3>
+                  <ul className="space-y-2">
+                    {highlights.map((h) => (
+                      <li
+                        key={h}
+                        className="flex items-start gap-2.5 text-sm"
+                        style={{ color: "var(--ew-text)" }}
+                      >
+                        <CheckCircle2
+                          size={16}
+                          className="mt-0.5 shrink-0"
+                          style={{ color: "var(--ew-red)" }}
+                        />
+                        {h}
+                      </li>
                     ))}
-                  </div>
+                  </ul>
+                </div>
 
-                  {/* Highlights */}
-                  <div
-                    className="rounded-xl p-5"
-                    style={{ backgroundColor: "var(--ew-red-lt)" }}
-                  >
-                    <h3
-                      className="font-bold text-base mb-3"
-                      style={{ color: "var(--ew-red)" }}
-                    >
-                      Key Highlights
-                    </h3>
-                    <ul className="space-y-2">
-                      {highlights.map((h) => (
-                        <li
-                          key={h}
-                          className="flex items-start gap-2.5 text-sm"
-                          style={{ color: "var(--ew-text)" }}
-                        >
-                          <CheckCircle2
-                            size={16}
-                            className="mt-0.5 shrink-0"
-                            style={{ color: "var(--ew-red)" }}
-                          />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                {/* Live weather at start point */}
+                <WeatherWidget
+                  trekName={yatra.name}
+                  location={formatWeatherLocation(
+                    yatra.startPoint,
+                    yatra.state,
+                  )}
+                />
 
-                  {/* Live weather at start point */}
-                  <WeatherWidget
-                    trekName={yatra.name}
-                    location={formatWeatherLocation(
-                      yatra.startPoint,
-                      yatra.state,
-                    )}
-                  />
-
-                  <ProductDetailBestSeasonGrid
-                    bestSeasonLabel={yatra.bestTime}
-                    activeMonths={
-                      bestSeasonMonths.length > 0
-                        ? bestSeasonMonths
-                        : ["May", "Jun", "Sep", "Oct"]
-                    }
-                  />
-
-                  {/* Fitness requirements */}
-                  <div
-                    className="rounded-xl border-l-4 p-5"
-                    style={{
-                      borderColor: "var(--ew-orange)",
-                      backgroundColor: "var(--ew-orange-lt)",
-                    }}
-                  >
-                    <h3
-                      className="font-bold text-sm mb-1.5"
-                      style={{ color: "var(--ew-text)" }}
-                    >
-                      Fitness Requirements
-                    </h3>
-                    <p
-                      className="text-sm"
-                      style={{ color: "var(--ew-text-lt)" }}
-                    >
-                      {yatra.distance > 200
-                        ? "Moderate fitness required. Daily 30-minute walks for 4 weeks before departure recommended. High-altitude sections need good cardiovascular health."
-                        : yatra.distance > 50
-                          ? "Easy-moderate fitness. Comfortable walking for 5–10 km per day. Senior pilgrims with helicopter option face minimal physical challenge."
-                          : "Easy — suitable for most ages. Short trails of 3–10 km. Helicopter options available. No prior trekking experience required."}
-                    </p>
-                  </div>
-                </DetailTabPanel>
-              )}
-
-              {activeTab === "itinerary" && (
-                <ProductDetailItinerarySection
-                  days={itineraryDays}
-                  openDay={openDay}
-                  onOpenDayChange={setOpenDay}
-                  onDownloadPdf={handleDownloadItineraryPdf}
-                  ocidPrefix="yatra_detail"
-                  footer={
-                    <FitnessCalculator
-                      trekName={yatra.name}
-                      trekSlug={slug}
-                      trekDifficulty={yatraFitnessDifficulty(yatra)}
-                      trekAltitude={yatraAltitudeMeters(yatra)}
-                      trekDuration={yatra.duration}
-                      productKind="yatra"
-                    />
+                <ProductDetailBestSeasonGrid
+                  bestSeasonLabel={yatra.bestTime}
+                  activeMonths={
+                    bestSeasonMonths.length > 0
+                      ? bestSeasonMonths
+                      : ["May", "Jun", "Sep", "Oct"]
                   }
                 />
-              )}
 
-              {/* ══ INCLUSIONS ══ */}
-              {activeTab === "inclusions" && (
-                <DetailTabPanel tabKey="inclusions" className="!p-0 overflow-hidden">
-                  <YatraInclusions />
-                </DetailTabPanel>
-              )}
-
-              {/* ══ MAP & ROUTE ══ */}
-              {activeTab === "map-route" && (
-                <motion.div
-                  key="map-route"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white rounded-2xl p-6 shadow-card"
+                {/* Fitness requirements */}
+                <div
+                  className="rounded-xl border-l-4 p-5"
+                  style={{
+                    borderColor: "var(--ew-orange)",
+                    backgroundColor: "var(--ew-orange-lt)",
+                  }}
                 >
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                    Map &amp; Route
+                  <h3
+                    className="font-bold text-sm mb-1.5"
+                    style={{ color: "var(--ew-text)" }}
+                  >
+                    Fitness Requirements
+                  </h3>
+                  <p className="text-sm" style={{ color: "var(--ew-text-lt)" }}>
+                    {yatra.distance > 200
+                      ? "Moderate fitness required. Daily 30-minute walks for 4 weeks before departure recommended. High-altitude sections need good cardiovascular health."
+                      : yatra.distance > 50
+                        ? "Easy-moderate fitness. Comfortable walking for 5–10 km per day. Senior pilgrims with helicopter option face minimal physical challenge."
+                        : "Easy — suitable for most ages. Short trails of 3–10 km. Helicopter options available. No prior trekking experience required."}
+                  </p>
+                </div>
+              </DetailTabPanel>
+            )}
+
+            {activeTab === "itinerary" && (
+              <ProductDetailItinerarySection
+                days={itineraryDays}
+                openDay={openDay}
+                onOpenDayChange={setOpenDay}
+                onDownloadPdf={handleDownloadItineraryPdf}
+                ocidPrefix="yatra_detail"
+                footer={
+                  <FitnessCalculator
+                    trekName={yatra.name}
+                    trekSlug={slug}
+                    trekDifficulty={yatraFitnessDifficulty(yatra)}
+                    trekAltitude={yatraAltitudeMeters(yatra)}
+                    trekDuration={yatra.duration}
+                    productKind="yatra"
+                  />
+                }
+              />
+            )}
+
+            {/* ══ INCLUSIONS ══ */}
+            {activeTab === "inclusions" && (
+              <DetailTabPanel
+                tabKey="inclusions"
+                className="!p-0 overflow-hidden"
+              >
+                <YatraInclusions />
+              </DetailTabPanel>
+            )}
+
+            {/* ══ MAP & ROUTE ══ */}
+            {activeTab === "map-route" && (
+              <motion.div
+                key="map-route"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="bg-white rounded-2xl p-6 shadow-card"
+              >
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Map &amp; Route
+                </h2>
+                <TrekMap yatra={yatra} />
+              </motion.div>
+            )}
+
+            {/* ══ SIGNIFICANCE ══ */}
+            {activeTab === "significance" && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-7"
+              >
+                <div>
+                  <h2 className="section-title mb-4">
+                    Spiritual &amp; Mythological Significance
                   </h2>
-                  <TrekMap yatra={yatra} />
-                </motion.div>
-              )}
+                  <p
+                    className="text-base leading-relaxed"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    {yatra.significance}
+                  </p>
+                </div>
 
-              {/* ══ SIGNIFICANCE ══ */}
-              {activeTab === "significance" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-7"
-                >
-                  <div>
-                    <h2 className="section-title mb-4">
-                      Spiritual &amp; Mythological Significance
-                    </h2>
-                    <p
-                      className="text-base leading-relaxed"
-                      style={{ color: "var(--ew-text-lt)" }}
-                    >
-                      {yatra.significance}
-                    </p>
-                  </div>
-
-                  {yatra.spiritualBenefits &&
-                    yatra.spiritualBenefits.length > 0 && (
-                      <div>
-                        <h3
-                          className="font-bold text-lg mb-4"
-                          style={{ color: "var(--ew-text)" }}
-                        >
-                          Why Undertake This Yatra — 5 Spiritual Benefits
-                        </h3>
-                        <div className="space-y-3">
-                          {yatra.spiritualBenefits.map((benefit, i) => (
-                            <div
-                              key={benefit.slice(0, 40)}
-                              className="flex items-start gap-3 rounded-xl p-4"
-                              style={{ backgroundColor: "var(--ew-gray-lt)" }}
+                {yatra.spiritualBenefits &&
+                  yatra.spiritualBenefits.length > 0 && (
+                    <div>
+                      <h3
+                        className="font-bold text-lg mb-4"
+                        style={{ color: "var(--ew-text)" }}
+                      >
+                        Why Undertake This Yatra — 5 Spiritual Benefits
+                      </h3>
+                      <div className="space-y-3">
+                        {yatra.spiritualBenefits.map((benefit, i) => (
+                          <div
+                            key={benefit.slice(0, 40)}
+                            className="flex items-start gap-3 rounded-xl p-4"
+                            style={{ backgroundColor: "var(--ew-gray-lt)" }}
+                          >
+                            <span
+                              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
+                              style={{ backgroundColor: "var(--ew-red)" }}
                             >
-                              <span
-                                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                                style={{ backgroundColor: "var(--ew-red)" }}
-                              >
-                                {i + 1}
-                              </span>
-                              <span
-                                className="text-sm"
-                                style={{ color: "var(--ew-text-lt)" }}
-                              >
-                                {benefit}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                  {yatra.deities && yatra.deities.length > 0 && (
-                    <div>
-                      <h3
-                        className="font-bold text-lg mb-3"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        Deities Worshipped
-                      </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {yatra.deities.map((deity) => (
-                          <div
-                            key={deity}
-                            className="flex items-center gap-2.5 text-sm rounded-lg px-4 py-3 border"
-                            style={{
-                              borderColor: "var(--ew-gray-mid)",
-                              color: "var(--ew-text-lt)",
-                            }}
-                          >
-                            <span className="text-base">🛕</span>
-                            {deity}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {yatra.rituals && yatra.rituals.length > 0 && (
-                    <div>
-                      <h3
-                        className="font-bold text-lg mb-3"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        Religious Rituals Performed
-                      </h3>
-                      <ul className="space-y-2">
-                        {yatra.rituals.map((ritual) => (
-                          <li
-                            key={ritual}
-                            className="flex items-start gap-2 text-sm"
-                            style={{ color: "var(--ew-text-lt)" }}
-                          >
-                            <CheckCircle2
-                              size={14}
-                              className="mt-0.5 shrink-0"
-                              style={{ color: "var(--ew-orange)" }}
-                            />
-                            {ritual}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {(yatra.auspiciousDates2025 ??
-                    yatra.auspicious_dates_2025) && (
-                    <div>
-                      <h3
-                        className="font-bold text-lg mb-3"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        Auspicious Dates 2025
-                      </h3>
-                      <div
-                        className="rounded-xl border overflow-hidden"
-                        style={{ borderColor: "var(--ew-gray-mid)" }}
-                      >
-                        {(
-                          yatra.auspiciousDates2025 ??
-                          yatra.auspicious_dates_2025 ??
-                          []
-                        ).map((date, i) => (
-                          <div
-                            key={date || String(i)}
-                            className="flex items-start gap-3 px-4 py-3 text-sm border-b last:border-b-0"
-                            style={{
-                              borderColor: "var(--ew-gray-mid)",
-                              backgroundColor:
-                                i % 2 === 0 ? "var(--ew-gray-lt)" : "white",
-                            }}
-                          >
-                            <Star
-                              size={13}
-                              className="mt-0.5 shrink-0 fill-[var(--ew-gold)]"
-                              style={{ color: "var(--ew-gold)" }}
-                            />
-                            <span style={{ color: "var(--ew-text-lt)" }}>
-                              {date}
+                              {i + 1}
+                            </span>
+                            <span
+                              className="text-sm"
+                              style={{ color: "var(--ew-text-lt)" }}
+                            >
+                              {benefit}
                             </span>
                           </div>
                         ))}
@@ -883,309 +793,388 @@ export default function YatraDetailPage() {
                     </div>
                   )}
 
-                  {(yatra.pujaItems ?? yatra.puja_items) && (
-                    <div>
-                      <h3
-                        className="font-bold text-lg mb-3"
-                        style={{ color: "var(--ew-text)" }}
-                      >
-                        Required Items for Puja
-                      </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {(yatra.pujaItems ?? yatra.puja_items ?? []).map(
-                          (item) => (
-                            <div
-                              key={item}
-                              className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg"
-                              style={{
-                                backgroundColor: "var(--ew-orange-lt)",
-                                color: "var(--ew-text-lt)",
-                              }}
-                            >
-                              <span>🌸</span>
-                              {item}
-                            </div>
-                          ),
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-
-              {/* ══ HOW TO REACH ══ */}
-              {activeTab === "how-to-reach" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-6"
-                >
-                  <h2 className="section-title mb-5">How to Reach</h2>
-
-                  {howToReach ? (
-                    <>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {yatra.deities && yatra.deities.length > 0 && (
+                  <div>
+                    <h3
+                      className="font-bold text-lg mb-3"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      Deities Worshipped
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {yatra.deities.map((deity) => (
                         <div
-                          className="rounded-xl border p-5"
-                          style={{ borderColor: "var(--ew-gray-mid)" }}
-                        >
-                          <div className="flex items-center gap-2 mb-3">
-                            <Plane
-                              size={18}
-                              style={{ color: "var(--ew-red)" }}
-                            />
-                            <h3
-                              className="font-bold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              By Air
-                            </h3>
-                          </div>
-                          <p
-                            className="text-sm leading-relaxed"
-                            style={{ color: "var(--ew-text-lt)" }}
-                          >
-                            {howToReach.byAir}
-                          </p>
-                        </div>
-                        <div
-                          className="rounded-xl border p-5"
-                          style={{ borderColor: "var(--ew-gray-mid)" }}
-                        >
-                          <div className="flex items-center gap-2 mb-3">
-                            <Train
-                              size={18}
-                              style={{ color: "var(--ew-red)" }}
-                            />
-                            <h3
-                              className="font-bold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              By Train
-                            </h3>
-                          </div>
-                          <p
-                            className="text-sm leading-relaxed"
-                            style={{ color: "var(--ew-text-lt)" }}
-                          >
-                            {howToReach.byTrain}
-                          </p>
-                        </div>
-                        <div
-                          className="rounded-xl border p-5"
-                          style={{ borderColor: "var(--ew-gray-mid)" }}
-                        >
-                          <div className="flex items-center gap-2 mb-3">
-                            <Truck
-                              size={18}
-                              style={{ color: "var(--ew-red)" }}
-                            />
-                            <h3
-                              className="font-bold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              By Road
-                            </h3>
-                          </div>
-                          <p
-                            className="text-sm leading-relaxed"
-                            style={{ color: "var(--ew-text-lt)" }}
-                          >
-                            {howToReach.byRoad}
-                          </p>
-                        </div>
-                        <div
-                          className="rounded-xl border p-5"
-                          style={{ borderColor: "var(--ew-gray-mid)" }}
-                        >
-                          <div className="flex items-center gap-2 mb-3">
-                            <MapPin
-                              size={18}
-                              style={{ color: "var(--ew-red)" }}
-                            />
-                            <h3
-                              className="font-bold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              Local Transport
-                            </h3>
-                          </div>
-                          <p
-                            className="text-sm leading-relaxed"
-                            style={{ color: "var(--ew-text-lt)" }}
-                          >
-                            {howToReach.localTransport}
-                          </p>
-                        </div>
-                      </div>
-
-                      {yatra.helicopterAvailable && howToReach.helicopter && (
-                        <div
-                          className="rounded-xl p-5 border-l-4"
+                          key={deity}
+                          className="flex items-center gap-2.5 text-sm rounded-lg px-4 py-3 border"
                           style={{
-                            backgroundColor: "var(--ew-orange-lt)",
-                            borderColor: "var(--ew-orange)",
+                            borderColor: "var(--ew-gray-mid)",
+                            color: "var(--ew-text-lt)",
                           }}
                         >
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-lg">🚁</span>
-                            <h3
-                              className="font-bold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              Helicopter Options
-                            </h3>
-                          </div>
-                          <p
-                            className="text-sm leading-relaxed"
-                            style={{ color: "var(--ew-text-lt)" }}
-                          >
-                            {howToReach.helicopter}
-                          </p>
+                          <span className="text-base">🛕</span>
+                          {deity}
                         </div>
-                      )}
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-                      {yatra.registrationRequired && yatra.registrationInfo && (
-                        <div
-                          className="rounded-xl border p-5"
-                          style={{ borderColor: "var(--ew-gray-mid)" }}
+                {yatra.rituals && yatra.rituals.length > 0 && (
+                  <div>
+                    <h3
+                      className="font-bold text-lg mb-3"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      Religious Rituals Performed
+                    </h3>
+                    <ul className="space-y-2">
+                      {yatra.rituals.map((ritual) => (
+                        <li
+                          key={ritual}
+                          className="flex items-start gap-2 text-sm"
+                          style={{ color: "var(--ew-text-lt)" }}
                         >
-                          <div className="flex items-center gap-2 mb-3">
-                            <FileText
-                              size={18}
-                              style={{ color: "var(--ew-red)" }}
-                            />
-                            <h3
-                              className="font-bold text-sm"
-                              style={{ color: "var(--ew-text)" }}
-                            >
-                              Registration &amp; Permits
-                            </h3>
-                          </div>
-                          <p
-                            className="text-sm leading-relaxed mb-3"
-                            style={{ color: "var(--ew-text-lt)" }}
-                          >
-                            {yatra.registrationInfo}
-                          </p>
-                          <a
-                            href="https://badrinath-kedarnath.gov.in"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-secondary inline-flex text-sm"
-                            data-ocid="yatra_detail.registration_link"
-                          >
-                            <FileText size={14} /> Devasthanam Board Portal
-                          </a>
-                        </div>
-                      )}
-
-                      <div
-                        className="rounded-xl border-l-4 p-5"
-                        style={{
-                          borderColor: "var(--ew-orange)",
-                          backgroundColor: "var(--ew-orange-lt)",
-                        }}
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle
-                            size={16}
+                          <CheckCircle2
+                            size={14}
+                            className="mt-0.5 shrink-0"
                             style={{ color: "var(--ew-orange)" }}
+                          />
+                          {ritual}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {(yatra.auspiciousDates2025 ?? yatra.auspicious_dates_2025) && (
+                  <div>
+                    <h3
+                      className="font-bold text-lg mb-3"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      Auspicious Dates 2025
+                    </h3>
+                    <div
+                      className="rounded-xl border overflow-hidden"
+                      style={{ borderColor: "var(--ew-gray-mid)" }}
+                    >
+                      {(
+                        yatra.auspiciousDates2025 ??
+                        yatra.auspicious_dates_2025 ??
+                        []
+                      ).map((date, i) => (
+                        <div
+                          key={date || String(i)}
+                          className="flex items-start gap-3 px-4 py-3 text-sm border-b last:border-b-0"
+                          style={{
+                            borderColor: "var(--ew-gray-mid)",
+                            backgroundColor:
+                              i % 2 === 0 ? "var(--ew-gray-lt)" : "white",
+                          }}
+                        >
+                          <Star
+                            size={13}
+                            className="mt-0.5 shrink-0 fill-[var(--ew-gold)]"
+                            style={{ color: "var(--ew-gold)" }}
+                          />
+                          <span style={{ color: "var(--ew-text-lt)" }}>
+                            {date}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {(yatra.pujaItems ?? yatra.puja_items) && (
+                  <div>
+                    <h3
+                      className="font-bold text-lg mb-3"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      Required Items for Puja
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {(yatra.pujaItems ?? yatra.puja_items ?? []).map(
+                        (item) => (
+                          <div
+                            key={item}
+                            className="flex items-center gap-2 text-sm px-3 py-2 rounded-lg"
+                            style={{
+                              backgroundColor: "var(--ew-orange-lt)",
+                              color: "var(--ew-text-lt)",
+                            }}
+                          >
+                            <span>🌸</span>
+                            {item}
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* ══ HOW TO REACH ══ */}
+            {activeTab === "how-to-reach" && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-6"
+              >
+                <h2 className="section-title mb-5">How to Reach</h2>
+
+                {howToReach ? (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div
+                        className="rounded-xl border p-5"
+                        style={{ borderColor: "var(--ew-gray-mid)" }}
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <Plane size={18} style={{ color: "var(--ew-red)" }} />
+                          <h3
+                            className="font-bold text-sm"
+                            style={{ color: "var(--ew-text)" }}
+                          >
+                            By Air
+                          </h3>
+                        </div>
+                        <p
+                          className="text-sm leading-relaxed"
+                          style={{ color: "var(--ew-text-lt)" }}
+                        >
+                          {howToReach.byAir}
+                        </p>
+                      </div>
+                      <div
+                        className="rounded-xl border p-5"
+                        style={{ borderColor: "var(--ew-gray-mid)" }}
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <Train size={18} style={{ color: "var(--ew-red)" }} />
+                          <h3
+                            className="font-bold text-sm"
+                            style={{ color: "var(--ew-text)" }}
+                          >
+                            By Train
+                          </h3>
+                        </div>
+                        <p
+                          className="text-sm leading-relaxed"
+                          style={{ color: "var(--ew-text-lt)" }}
+                        >
+                          {howToReach.byTrain}
+                        </p>
+                      </div>
+                      <div
+                        className="rounded-xl border p-5"
+                        style={{ borderColor: "var(--ew-gray-mid)" }}
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <Truck size={18} style={{ color: "var(--ew-red)" }} />
+                          <h3
+                            className="font-bold text-sm"
+                            style={{ color: "var(--ew-text)" }}
+                          >
+                            By Road
+                          </h3>
+                        </div>
+                        <p
+                          className="text-sm leading-relaxed"
+                          style={{ color: "var(--ew-text-lt)" }}
+                        >
+                          {howToReach.byRoad}
+                        </p>
+                      </div>
+                      <div
+                        className="rounded-xl border p-5"
+                        style={{ borderColor: "var(--ew-gray-mid)" }}
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <MapPin
+                            size={18}
+                            style={{ color: "var(--ew-red)" }}
                           />
                           <h3
                             className="font-bold text-sm"
                             style={{ color: "var(--ew-text)" }}
                           >
-                            Medical Requirements
+                            Local Transport
                           </h3>
                         </div>
-                        <ul
-                          className="space-y-1.5 text-sm"
+                        <p
+                          className="text-sm leading-relaxed"
                           style={{ color: "var(--ew-text-lt)" }}
                         >
-                          <li>
-                            Age limit: Pilgrims below 2 years and above 75 years
-                            not permitted for shrines above 3,000m
-                          </li>
-                          <li>
-                            Mandatory medical certificate from MBBS doctor for
-                            pilgrims aged 60+
-                          </li>
-                          <li>
-                            Persons with heart disease, high BP, asthma, or
-                            diabetes must carry prescriptions
-                          </li>
-                          <li>
-                            AMS (Altitude Mountain Sickness) risk above 3,000m —
-                            acclimatization days mandatory
-                          </li>
-                        </ul>
+                          {howToReach.localTransport}
+                        </p>
                       </div>
-                    </>
-                  ) : (
-                    <p
-                      className="text-sm"
-                      style={{ color: "var(--ew-text-lt)" }}
+                    </div>
+
+                    {yatra.helicopterAvailable && howToReach.helicopter && (
+                      <div
+                        className="rounded-xl p-5 border-l-4"
+                        style={{
+                          backgroundColor: "var(--ew-orange-lt)",
+                          borderColor: "var(--ew-orange)",
+                        }}
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-lg">🚁</span>
+                          <h3
+                            className="font-bold text-sm"
+                            style={{ color: "var(--ew-text)" }}
+                          >
+                            Helicopter Options
+                          </h3>
+                        </div>
+                        <p
+                          className="text-sm leading-relaxed"
+                          style={{ color: "var(--ew-text-lt)" }}
+                        >
+                          {howToReach.helicopter}
+                        </p>
+                      </div>
+                    )}
+
+                    {yatra.registrationRequired && yatra.registrationInfo && (
+                      <div
+                        className="rounded-xl border p-5"
+                        style={{ borderColor: "var(--ew-gray-mid)" }}
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <FileText
+                            size={18}
+                            style={{ color: "var(--ew-red)" }}
+                          />
+                          <h3
+                            className="font-bold text-sm"
+                            style={{ color: "var(--ew-text)" }}
+                          >
+                            Registration &amp; Permits
+                          </h3>
+                        </div>
+                        <p
+                          className="text-sm leading-relaxed mb-3"
+                          style={{ color: "var(--ew-text-lt)" }}
+                        >
+                          {yatra.registrationInfo}
+                        </p>
+                        <a
+                          href="https://badrinath-kedarnath.gov.in"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-secondary inline-flex text-sm"
+                          data-ocid="yatra_detail.registration_link"
+                        >
+                          <FileText size={14} /> Devasthanam Board Portal
+                        </a>
+                      </div>
+                    )}
+
+                    <div
+                      className="rounded-xl border-l-4 p-5"
+                      style={{
+                        borderColor: "var(--ew-orange)",
+                        backgroundColor: "var(--ew-orange-lt)",
+                      }}
                     >
-                      {typeof yatra.howToReach === "string"
-                        ? yatra.howToReach
-                        : "Please contact us for detailed travel information."}
-                    </p>
-                  )}
-                </motion.div>
-              )}
+                      <div className="flex items-center gap-2 mb-2">
+                        <AlertTriangle
+                          size={16}
+                          style={{ color: "var(--ew-orange)" }}
+                        />
+                        <h3
+                          className="font-bold text-sm"
+                          style={{ color: "var(--ew-text)" }}
+                        >
+                          Medical Requirements
+                        </h3>
+                      </div>
+                      <ul
+                        className="space-y-1.5 text-sm"
+                        style={{ color: "var(--ew-text-lt)" }}
+                      >
+                        <li>
+                          Age limit: Pilgrims below 2 years and above 75 years
+                          not permitted for shrines above 3,000m
+                        </li>
+                        <li>
+                          Mandatory medical certificate from MBBS doctor for
+                          pilgrims aged 60+
+                        </li>
+                        <li>
+                          Persons with heart disease, high BP, asthma, or
+                          diabetes must carry prescriptions
+                        </li>
+                        <li>
+                          AMS (Altitude Mountain Sickness) risk above 3,000m —
+                          acclimatization days mandatory
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-sm" style={{ color: "var(--ew-text-lt)" }}>
+                    {typeof yatra.howToReach === "string"
+                      ? yatra.howToReach
+                      : "Please contact us for detailed travel information."}
+                  </p>
+                )}
+              </motion.div>
+            )}
 
-              {/* ══ PHOTOS ══ */}
-              {activeTab === "photos" && (
-                <DetailTabPanel tabKey="photos">
-                  <ProductDetailPhotosSection
-                    key={`yatra-photos-${slug}`}
-                    productName={yatra.name}
-                    productSlug={slug ?? ""}
-                    productType="yatra"
-                    galleryPhotos={galleryPhotos}
-                    coverImage={allImages[0]}
-                    onPhotoClick={setLightboxIdx}
-                    ocidPrefix="yatra_detail"
-                  />
-                </DetailTabPanel>
-              )}
+            {/* ══ PHOTOS ══ */}
+            {activeTab === "photos" && (
+              <DetailTabPanel tabKey="photos">
+                <ProductDetailPhotosSection
+                  key={`yatra-photos-${slug}`}
+                  productName={yatra.name}
+                  productSlug={slug ?? ""}
+                  productType="yatra"
+                  galleryPhotos={galleryPhotos}
+                  coverImage={allImages[0]}
+                  onPhotoClick={setLightboxIdx}
+                  ocidPrefix="yatra_detail"
+                />
+              </DetailTabPanel>
+            )}
 
-              {/* ══ REVIEWS ══ */}
-              {activeTab === "reviews" && (
-                <DetailTabPanel tabKey="reviews">
-                  <ProductDetailReviewsSection
-                    productName={yatra.name}
-                    productSlug={slug}
-                    productType="yatra"
-                    fallbackRating={displayRating}
-                    fallbackReviewCount={displayReviewCount}
-                    ocidPrefix="yatra_detail"
-                    onContentChanged={handleReviewContentChanged}
-                  />
-                </DetailTabPanel>
-              )}
+            {/* ══ REVIEWS ══ */}
+            {activeTab === "reviews" && (
+              <DetailTabPanel tabKey="reviews">
+                <ProductDetailReviewsSection
+                  productName={yatra.name}
+                  productSlug={slug}
+                  productType="yatra"
+                  fallbackRating={displayRating}
+                  fallbackReviewCount={displayReviewCount}
+                  ocidPrefix="yatra_detail"
+                  onContentChanged={handleReviewContentChanged}
+                />
+              </DetailTabPanel>
+            )}
 
-              {/* ══ FAQs ══ */}
-              {activeTab === "faqs" && (
-                <DetailTabPanel tabKey="faqs">
-                  <h2 className="section-title mb-5">
-                    Frequently Asked Questions
-                  </h2>
-                  <ProductDetailFaqList
-                    faqs={faqs.map((f) => ({
-                      question: f.question,
-                      answer: f.answer,
-                    }))}
-                    openIndex={openFaq}
-                    onToggle={(idx) =>
-                      setOpenFaq(openFaq === idx ? null : idx)
-                    }
-                    ocidPrefix="yatra_detail"
-                    emptyMessage="Contact us for any questions about this yatra."
-                  />
-                </DetailTabPanel>
-              )}
+            {/* ══ FAQs ══ */}
+            {activeTab === "faqs" && (
+              <DetailTabPanel tabKey="faqs">
+                <h2 className="section-title mb-5">
+                  Frequently Asked Questions
+                </h2>
+                <ProductDetailFaqList
+                  faqs={faqs.map((f) => ({
+                    question: f.question,
+                    answer: f.answer,
+                  }))}
+                  openIndex={openFaq}
+                  onToggle={(idx) => setOpenFaq(openFaq === idx ? null : idx)}
+                  ocidPrefix="yatra_detail"
+                  emptyMessage="Contact us for any questions about this yatra."
+                />
+              </DetailTabPanel>
+            )}
           </div>
 
           {/* RIGHT: Sticky Booking Sidebar */}

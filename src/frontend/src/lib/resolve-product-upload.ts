@@ -21,7 +21,9 @@ function slugify(input: string): string {
 }
 
 /** Match trek/yatra name or slug from free-text (gallery upload). */
-export function resolveProductForUpload(input: string): ResolvedUploadProduct | null {
+export function resolveProductForUpload(
+  input: string,
+): ResolvedUploadProduct | null {
   const q = normalize(input);
   if (!q) return null;
 
@@ -38,7 +40,11 @@ export function resolveProductForUpload(input: string): ResolvedUploadProduct | 
   const qSlug = slugify(input);
   const trekBySlugGuess = TREKS.find((t) => t.slug === qSlug);
   if (trekBySlugGuess) {
-    return { slug: trekBySlugGuess.slug, name: trekBySlugGuess.name, type: "trek" };
+    return {
+      slug: trekBySlugGuess.slug,
+      name: trekBySlugGuess.name,
+      type: "trek",
+    };
   }
 
   const yatraBySlugGuess = YATRAS.find((y) => y.slug === qSlug);

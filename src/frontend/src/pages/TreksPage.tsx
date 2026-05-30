@@ -1,3 +1,4 @@
+import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
 import { Link, useSearch } from "@tanstack/react-router";
 import { AlertCircle, Mountain } from "lucide-react";
 import { motion } from "motion/react";
@@ -7,19 +8,18 @@ import ListingRegionFilterPills, {
 } from "../components/ListingRegionFilterPills";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import ListingToolbarRegions from "../components/ListingToolbarRegions";
-import TreksListingFilters, {
-  type TreksSortValue,
-} from "../components/TreksListingFilters";
 import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
 import TrekCard from "../components/TrekCard";
+import TreksListingFilters, {
+  type TreksSortValue,
+} from "../components/TreksListingFilters";
 import { getTreksForDestination } from "../data/destination-treks";
 import { getDestinationBySlug } from "../data/destinations";
 import { TREKS } from "../data/treks";
 import type { TrekDifficulty } from "../data/treks";
-import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
 
 function matchDuration(duration: number, filter: string): boolean {
   if (filter === "all") return true;
@@ -31,7 +31,11 @@ function matchDuration(duration: number, filter: string): boolean {
 }
 
 export default function TreksPage() {
-  const { destination: destinationSlug, tag, filter } = useSearch({
+  const {
+    destination: destinationSlug,
+    tag,
+    filter,
+  } = useSearch({
     strict: false,
   }) as {
     destination?: string;
@@ -217,11 +221,7 @@ export default function TreksPage() {
         </div>
       </div>
 
-      <div
-        id={TRAVEL_HERO_SENTINEL_ID}
-        className="h-0 w-full"
-        aria-hidden
-      />
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <TravelSideActionRail variant="listing-treks" />
 
       {/* ── Region tabs + search/filters (single “All Treks” control — no hero duplicate) ── */}

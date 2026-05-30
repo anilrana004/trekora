@@ -23,44 +23,46 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import EMICalculator from "../components/EMICalculator";
 import MobileStickyBookBar from "../components/MobileStickyBookBar";
-import TrekCard from "../components/TrekCard";
-import TrustSignals from "../components/TrustSignals";
-import WeatherWidget from "../components/WeatherWidget";
-import { formatWeatherLocation } from "../lib/openweather";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
 } from "../components/TravelSideActionRail";
+import TrekCard from "../components/TrekCard";
+import TrustSignals from "../components/TrustSignals";
+import WeatherWidget from "../components/WeatherWidget";
 import {
   SPITI_VALLEY_FAQS,
   SPITI_VALLEY_ITINERARY,
   SPITI_VALLEY_TREK_SLUG,
 } from "../data/spitiValleyTrekDetail";
 import { TREKS } from "../data/treks";
+import { formatWeatherLocation } from "../lib/openweather";
 
+import {
+  TREK_REELS_BY_SLUG,
+  enrichReelsForDisplay,
+  homeTrekReelVideo,
+} from "@/data/trek-reels";
+import { usePrefetchProductGallery } from "@/hooks/usePrefetchProductGallery";
+import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
 import { bookSearch } from "@/lib/book-search";
 import {
   GEAR_RENTAL_ADDON_ID,
   TREK_GEAR_RENTAL_ITEMS,
 } from "@/lib/booking-addons";
-import { usePrefetchProductGallery } from "@/hooks/usePrefetchProductGallery";
-import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
 import { refreshTrekkerGallery } from "@/lib/gallery-refresh";
-import { mergeProductGalleryPhotos } from "@/lib/merge-gallery-photos";
 import { buildSeoImageUrl } from "@/lib/images";
+import { mergeProductGalleryPhotos } from "@/lib/merge-gallery-photos";
+import { buildTrekPageSEO, getRelatedTreks } from "@/lib/product-seo";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import { SITE_PHONE_TEL, buildWhatsAppUrl } from "@/lib/site-contact";
 import AltitudeChart from "../components/AltitudeChart";
+import BookingQuickStats from "../components/BookingQuickStats";
 import DetailPageTabBar from "../components/DetailPageTabBar";
 import FitnessCalculator from "../components/FitnessCalculator";
 import QueryBottomSheet from "../components/QueryBottomSheet";
 import { SEOHead } from "../components/SEOHead";
 import TrailConditionBadge from "../components/TrailConditionBadge";
 import TrekMap from "../components/TrekMap";
-import BookingQuickStats from "../components/BookingQuickStats";
-import {
-  TREK_REELS_BY_SLUG,
-  enrichReelsForDisplay,
-  homeTrekReelVideo,
-} from "@/data/trek-reels";
 import HomeTrekFeatureMedia from "../components/media/HomeTrekFeatureMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
 import {
@@ -73,14 +75,12 @@ import {
   ProductDetailPhotosSection,
   ProductDetailReviewsSection,
   ProductDetailThumbnailStrip,
-  trekItineraryToDisplayDays,
   StarRow,
+  trekItineraryToDisplayDays,
 } from "../components/product-detail";
 import { useGTM } from "../hooks/useGTM";
 import { useTrekBatches } from "../hooks/useTrekBatches";
 import { downloadTrekItineraryPDF } from "../lib/pdfGenerator";
-import { buildTrekPageSEO, getRelatedTreks } from "@/lib/product-seo";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import {
   generateBreadcrumbJSONLD,
   generateFAQJSONLD,
@@ -312,7 +312,7 @@ const ALL_MONTHS = [
 ];
 
 /* ── Review sample data ── */
-const REVIEWS = [
+const _REVIEWS = [
   {
     name: "Priya Sharma",
     city: "New Delhi",
@@ -365,7 +365,10 @@ export default function TrekDetailPage() {
 
   usePrefetchProductGallery(slug, "trek");
 
-  const { photos: communityGalleryItems } = useTrekkerPhotos(slug ?? "", "trek");
+  const { photos: communityGalleryItems } = useTrekkerPhotos(
+    slug ?? "",
+    "trek",
+  );
 
   const photosForLightbox = useMemo(() => {
     if (!trek) return [];
@@ -411,7 +414,6 @@ export default function TrekDetailPage() {
   }, []);
 
   // SEO: inject structured JSON-LD schemas on mount and when trek changes
-  // biome-ignore lint/correctness/useExhaustiveDependencies: trek.slug is the stable dep for full re-inject
   useEffect(() => {
     if (!trek) return;
     const cleanupTrek = injectJSONLD(generateTrekJSONLD(trek), "jsonld-trek");
@@ -446,8 +448,7 @@ export default function TrekDetailPage() {
     };
   }, [trek?.slug]);
 
-  // GTM view_item — fire once per trek slug; biome-ignore to keep dep list minimal
-  // biome-ignore lint/correctness/useExhaustiveDependencies: gtmPush is stable; trek fields tracked via trek.slug
+  // GTM view_item — fire once per trek slug
   useEffect(() => {
     if (!trek) return;
     gtmPush({
@@ -1953,9 +1954,7 @@ export default function TrekDetailPage() {
             )
           }
           onNext={() =>
-            setLightboxIndex(
-              (lightboxIndex + 1) % photosForLightbox.length,
-            )
+            setLightboxIndex((lightboxIndex + 1) % photosForLightbox.length)
           }
           ocidPrefix="trek_detail"
         />

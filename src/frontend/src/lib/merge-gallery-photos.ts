@@ -1,5 +1,5 @@
-import type { GalleryApiItem } from "@/lib/reviews-api";
 import type { ProductGalleryPhoto } from "@/lib/product-gallery";
+import type { GalleryApiItem } from "@/lib/reviews-api";
 
 /** Merge API gallery items + static Cloudinary URLs for a trek/yatra Photos tab. */
 export function mergeProductGalleryPhotos(

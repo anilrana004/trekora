@@ -8,10 +8,7 @@ function read(name: string): string {
 }
 
 export function clientEnv(name: string): string {
-  if (
-    !name.startsWith("VITE_") &&
-    !name.startsWith("NEXT_PUBLIC_")
-  ) {
+  if (!name.startsWith("VITE_") && !name.startsWith("NEXT_PUBLIC_")) {
     if (import.meta.env.DEV) {
       console.warn(
         `[env-client] Refusing non-public env key in browser: ${name}`,

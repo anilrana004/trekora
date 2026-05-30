@@ -7,9 +7,9 @@ import type { TrekReel } from "@/data/trek-reels";
 import { reelInstanceKey } from "@/data/trek-reels";
 import { isVideoMediaUrl } from "@/lib/media-url";
 import { buildVideoPosterUrl } from "@/utils/mediaTransform";
-import OptimizedImage from "./media/OptimizedImage";
 import ReelBookButton from "./ReelBookButton";
 import ReelVideoLightbox from "./ReelVideoLightbox";
+import OptimizedImage from "./media/OptimizedImage";
 
 type ReelsShortsRowProps = {
   reels: TrekReel[];
@@ -87,7 +87,8 @@ export default function ReelsShortsRow({
         {reels.map((r, i) => {
           const videoSrc = reelVideoSrc(r);
           const isVideo = Boolean(videoSrc);
-          const previewSrc = isVideo && videoSrc ? reelPreviewSrc(r, videoSrc) : r.thumb;
+          const previewSrc =
+            isVideo && videoSrc ? reelPreviewSrc(r, videoSrc) : r.thumb;
           const hasBook = Boolean(r.productSlug);
           const cardKey = reelInstanceKey(r);
 
@@ -198,14 +199,14 @@ export default function ReelsShortsRow({
         })}
       </div>
 
-      {typeof document !== "undefined" && lightbox
-        ? createPortal(
-            <AnimatePresence>{lightbox}</AnimatePresence>,
-            document.body,
-          )
-        : (
-          <AnimatePresence>{lightbox}</AnimatePresence>
-        )}
+      {typeof document !== "undefined" && lightbox ? (
+        createPortal(
+          <AnimatePresence>{lightbox}</AnimatePresence>,
+          document.body,
+        )
+      ) : (
+        <AnimatePresence>{lightbox}</AnimatePresence>
+      )}
     </>
   );
 }

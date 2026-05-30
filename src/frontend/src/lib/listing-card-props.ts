@@ -3,7 +3,13 @@ import type { Yatra } from "@/data/yatras";
 
 /** Stable compare inputs for memoized trek/yatra listing cards. */
 export function trekCardPropsEqual(
-  prev: { trek: Trek; variant?: string; index?: number; showEmiBadge?: boolean; compactCta?: boolean },
+  prev: {
+    trek: Trek;
+    variant?: string;
+    index?: number;
+    showEmiBadge?: boolean;
+    compactCta?: boolean;
+  },
   next: typeof prev,
 ): boolean {
   return (
@@ -20,7 +26,12 @@ export function trekCardPropsEqual(
 }
 
 export function yatraCardPropsEqual(
-  prev: { yatra: Yatra; variant?: string; index?: number; compactCta?: boolean },
+  prev: {
+    yatra: Yatra;
+    variant?: string;
+    index?: number;
+    compactCta?: boolean;
+  },
   next: typeof prev,
 ): boolean {
   return (

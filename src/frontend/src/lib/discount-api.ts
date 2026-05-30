@@ -37,17 +37,19 @@ export async function validateVoucherCode(payload: {
   packageId: string;
   userId: string;
 }): Promise<DiscountValidationResult> {
-  return postDiscount<DiscountValidationResult>("/api/vouchers/validate", payload);
+  return postDiscount<DiscountValidationResult>(
+    "/api/vouchers/validate",
+    payload,
+  );
 }
 
 export async function validateGiftCardCode(payload: {
   code: string;
   bookingAmount: number;
 }): Promise<DiscountValidationResult> {
-  const data = await postDiscount<DiscountValidationResult & { amountToUse?: number }>(
-    "/api/giftcards/validate",
-    payload,
-  );
+  const data = await postDiscount<
+    DiscountValidationResult & { amountToUse?: number }
+  >("/api/giftcards/validate", payload);
   if (data.success && data.kind === "giftcard") {
     return {
       ...data,

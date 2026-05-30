@@ -113,7 +113,10 @@ const DIETARY_LABELS: Record<string, string> = {
   none_req: "No specific requirement",
 };
 
-function field(label: string, value: string | null | undefined): BookingEmailField | null {
+function field(
+  label: string,
+  value: string | null | undefined,
+): BookingEmailField | null {
   const v = value == null ? "" : String(value).trim();
   if (!v) return null;
   return { label, value: v };
@@ -157,9 +160,7 @@ export function buildBookingEmailSections(
     field("Bundle list price", meta.packageBundleWas),
     field(
       "Package description",
-      meta.packageDescription
-        ? meta.packageDescription.slice(0, 500)
-        : null,
+      meta.packageDescription ? meta.packageDescription.slice(0, 500) : null,
     ),
     field(
       "Included treks & yatras",
@@ -193,7 +194,10 @@ export function buildBookingEmailSections(
       });
     }
     if (p.addOnsTotal > 0) {
-      pricingFields.push({ label: "Add-ons total", value: formatInr(p.addOnsTotal) });
+      pricingFields.push({
+        label: "Add-ons total",
+        value: formatInr(p.addOnsTotal),
+      });
     }
     pricingFields.push({ label: "GST (5%)", value: formatInr(p.gst) });
     if (p.promoSavings > 0) {
@@ -233,10 +237,7 @@ export function buildBookingEmailSections(
     field("Blood group", fd.bloodGroup),
     field("Medical conditions", joinList(medicalLabels)),
     field("Other conditions / medications", fd.medicalOther),
-    field(
-      "Fitness level",
-      FITNESS_LABELS[fd.fitnessLevel] ?? fd.fitnessLevel,
-    ),
+    field("Fitness level", FITNESS_LABELS[fd.fitnessLevel] ?? fd.fitnessLevel),
     field("Prior trekking experience", yesNo(fd.hasTrekked)),
     field("Longest trek completed", fd.longestTrek),
   ].filter(Boolean) as BookingEmailField[];
@@ -283,10 +284,7 @@ export function buildBookingEmailSections(
     field("Transport from city", fd.transportCity),
     field("Transport date", fd.transportDate),
     field("Promo code", fd.promoApplied ? fd.promoCode : null),
-    field(
-      "Promo applied",
-      fd.promoApplied ? yesNo(true) : null,
-    ),
+    field("Promo applied", fd.promoApplied ? yesNo(true) : null),
     field("Other notes / special requests", fd.otherNotes),
     field("Terms accepted", yesNo(fd.termsAccepted)),
   ].filter(Boolean) as BookingEmailField[];
@@ -309,7 +307,9 @@ export function buildBookingEmailSections(
 }
 
 /** Plain-text block for SMTP `details` and backwards compatibility. */
-export function bookingDetailsPlainText(sections: BookingEmailSection[]): string {
+export function bookingDetailsPlainText(
+  sections: BookingEmailSection[],
+): string {
   return sections
     .map((section) => {
       const lines = section.fields.map((f) => `${f.label}: ${f.value}`);

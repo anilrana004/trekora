@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { TrekBatchPublic } from "@/backend";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   DAYS_OF_WEEK,
   countFutureAvailableSlotsInMonth,
@@ -10,8 +10,7 @@ import {
   parseYmdLocal,
 } from "./booking-form-shared";
 
-
-function BatchCalendar({
+export default function BatchCalendar({
   batches,
   selectedDate,
   onSelectDate,
@@ -318,8 +317,7 @@ function BatchCalendar({
               );
             else labelParts.push("No departure");
 
-            const canSelect =
-              (isAvailable && batch) || isOnRequest;
+            const canSelect = (isAvailable && batch) || isOnRequest;
 
             if (canSelect) {
               const pickBatch = isAvailable && batch ? batch : null;
@@ -422,4 +420,3 @@ function BatchCalendar({
     </div>
   );
 }
-

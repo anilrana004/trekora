@@ -1,11 +1,11 @@
 import { bookSearch } from "@/lib/book-search";
+import { PRIMARY_SITE_NAV, generateHomePageSchema } from "@/lib/brand-seo";
 import { isFeatureLive } from "@/lib/dormant-features";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
-import { generateHomePageSchema, PRIMARY_SITE_NAV } from "@/lib/brand-seo";
+import { HOME_PRESS_PARTNERS, pressLogoForName } from "@/lib/press-media-logos";
 import { buildHomePageSEO } from "@/lib/product-seo";
 import { buildLeadMagnetPayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
-import { toast } from "sonner";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -20,7 +20,6 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import FormSuccessMessage from "../components/FormSuccessMessage";
 import { motion } from "motion/react";
 import {
   type CSSProperties,
@@ -29,42 +28,38 @@ import {
   useRef,
   useState,
 } from "react";
+import { toast } from "sonner";
+import FeaturedInMedia from "../components/FeaturedInMedia";
+import FormSuccessMessage from "../components/FormSuccessMessage";
 import GoogleReviewsSection from "../components/GoogleReviewsSection";
+import HomeMobileSearchPanel from "../components/HomeMobileSearchPanel";
 import HomepageReviews from "../components/HomepageReviews";
 import InstagramSection from "../components/InstagramSection";
+import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import { SEOHead } from "../components/SEOHead";
 import SocialProofTicker from "../components/SocialProofTicker";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 import TrekCard from "../components/TrekCard";
 import UpcomingBatchesSection from "../components/UpcomingBatchesSection";
 import YatraCard from "../components/YatraCard";
 import YouTubeSection from "../components/YouTubeSection";
 import HomeTrekFeatureMedia from "../components/media/HomeTrekFeatureMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
-import ListingStickyToolbar from "../components/ListingStickyToolbar";
-import TravelSideActionRail, {
-  TRAVEL_HERO_SENTINEL_ID,
-} from "../components/TravelSideActionRail";
-import HomeMobileSearchPanel from "../components/HomeMobileSearchPanel";
 import TrustBadgesStrip from "../components/ui/TrustBadgesStrip";
-import {
-  HOME_PRESS_PARTNERS,
-  pressLogoForName,
-} from "@/lib/press-media-logos";
-import FeaturedInMedia from "../components/FeaturedInMedia";
 import { BLOGS } from "../data/blogs";
-import { resolveBlogCardImage } from "../lib/blog-product-images";
 import { homeTrekReelVideo } from "../data/trek-reels";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
+import { resolveBlogCardImage } from "../lib/blog-product-images";
 
 const PANCH_KEDAR_YATRA = YATRAS.find((y) => y.slug === "panch-kedar-yatra");
 const PANCH_BADRI_YATRA = YATRAS.find((y) => y.slug === "panch-badri-yatra");
 const HEMKUND_SAHIB_YATRA = YATRAS.find(
   (y) => y.slug === "hemkund-sahib-yatra",
 );
-const KARTIK_SWAMI_YATRA = YATRAS.find(
-  (y) => y.slug === "kartik-swami-temple",
-);
+const KARTIK_SWAMI_YATRA = YATRAS.find((y) => y.slug === "kartik-swami-temple");
 const CHURDHAR_YATRA = YATRAS.find((y) => y.slug === "churdhar-yatra");
 const SHRIKHAND_MAHADEV_YATRA = YATRAS.find(
   (y) => y.slug === "shrikhand-mahadev-yatra",
@@ -338,7 +333,9 @@ const HOME_HERO_ROOPKUND_MAIN_IMAGE =
 const HOME_HERO_VALLEY_OF_FLOWERS_MAIN_IMAGE =
   "https://res.cloudinary.com/ddbcauxef/image/upload/v1778700231/pkew3vrpnvqbwbdxltff.jpg";
 
-const VALLEY_OF_FLOWERS_TREK = TREKS.find((t) => t.slug === "valley-of-flowers");
+const VALLEY_OF_FLOWERS_TREK = TREKS.find(
+  (t) => t.slug === "valley-of-flowers",
+);
 
 /** Valley of Flowers — UNESCO meadow gallery (Uttarakhand feature strip). */
 const VALLEY_OF_FLOWERS_PHOTO_GALLERY: { src: string; alt: string }[] = (
@@ -462,7 +459,10 @@ const HOME_HERO_PANGARCHULLA_PEAK_IMAGE = PANGARCHULLA_PEAK_TREK_IMAGES[0].src;
 
 /** Pangarchulla Peak — summit climb · Kuari region (Uttarakhand feature strip). */
 const PANGARCHULLA_PHOTO_GALLERY: { src: string; alt: string }[] =
-  PANGARCHULLA_PEAK_TREK_IMAGES.map((item) => ({ src: item.src, alt: item.alt }));
+  PANGARCHULLA_PEAK_TREK_IMAGES.map((item) => ({
+    src: item.src,
+    alt: item.alt,
+  }));
 
 /** Deoriatal Chandrashila trek — `hero/treks/deoriatal-chandrashila`. */
 const DEORIATAL_CHANDRASHILA_TREK_IMAGES = [
@@ -522,7 +522,7 @@ const AUDENS_COL_TREK_IMAGES = [
   },
 ] as const;
 
-const HOME_HERO_AUDENS_COL_IMAGE = AUDENS_COL_TREK_IMAGES[0].src;
+const _HOME_HERO_AUDENS_COL_IMAGE = AUDENS_COL_TREK_IMAGES[0].src;
 
 /** Auden's Col — extreme glacier pass (Uttarakhand feature strip). */
 const AUDENS_COL_PHOTO_GALLERY: { src: string; alt: string }[] =
@@ -778,7 +778,8 @@ const SPITI_VALLEY_CIRCUIT_TREK_IMAGES = [
   },
 ] as const;
 
-const HOME_HERO_SPITI_VALLEY_CIRCUIT_IMAGE = SPITI_VALLEY_CIRCUIT_TREK_IMAGES[0].src;
+const _HOME_HERO_SPITI_VALLEY_CIRCUIT_IMAGE =
+  SPITI_VALLEY_CIRCUIT_TREK_IMAGES[0].src;
 
 /** Pin Parvati Pass trek — `hero/treks/pin-parvati-pass`. */
 const PIN_PARVATI_PASS_TREK_IMAGES = [
@@ -902,7 +903,7 @@ const KINNAUR_KAILASH_PHOTO_GALLERY: { src: string; alt: string }[] = [
   },
 ];
 
-const HOME_HERO_KINNAUR_KAILASH_IMAGE = KINNAUR_KAILASH_PHOTO_GALLERY[0].src;
+const _HOME_HERO_KINNAUR_KAILASH_IMAGE = KINNAUR_KAILASH_PHOTO_GALLERY[0].src;
 
 /** Panch Kedar Yatra — five-shrine collage (yatras section banner). */
 const HOME_HERO_PANCH_KEDAR_YATRA_IMAGE =
@@ -2221,7 +2222,9 @@ export default function HomePage() {
       () => {
         setNewsSubmitted(true);
         setNewsEmail("");
-        toast.success("Success! Your free guide is on the way — check your inbox.");
+        toast.success(
+          "Success! Your free guide is on the way — check your inbox.",
+        );
       },
       (message) => {
         setNewsSubmitted(false);
@@ -2655,8 +2658,8 @@ export default function HomePage() {
                     className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
                     style={{ color: "var(--ew-text-lt)" }}
                   >
-                    Brahmatal Winter Trek — frozen lakes · Trishul & Nanda Ghunti
-                    views
+                    Brahmatal Winter Trek — frozen lakes · Trishul & Nanda
+                    Ghunti views
                   </p>
                   <Link
                     to="/treks/$slug"
@@ -3673,7 +3676,8 @@ export default function HomePage() {
                 className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
                 style={{ color: "rgba(255,255,255,0.85)" }}
               >
-                Kartik Swami Temple Trek — Kartikeya shrine at 3,048m · Rudraprayag
+                Kartik Swami Temple Trek — Kartikeya shrine at 3,048m ·
+                Rudraprayag
               </p>
               <Link
                 to="/yatras/$slug"
@@ -4072,9 +4076,12 @@ export default function HomePage() {
               </div>
               <div className="offer-banner__content">
                 <span className="offer-banner__eyebrow">Limited Offer</span>
-                <h3 className="offer-banner__title">Buy 1 Get 1 Trek Packages</h3>
+                <h3 className="offer-banner__title">
+                  Buy 1 Get 1 Trek Packages
+                </h3>
                 <p className="offer-banner__desc">
-                  Book any trek and bring a friend free — limited seats available
+                  Book any trek and bring a friend free — limited seats
+                  available
                 </p>
                 <Link
                   to="/treks"

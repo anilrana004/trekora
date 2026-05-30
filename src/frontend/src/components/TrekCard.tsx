@@ -1,9 +1,9 @@
+import { isFeatureLive } from "@/lib/dormant-features";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, Clock, MapPin, Star } from "lucide-react";
 import TrailConditionBadge from "../components/TrailConditionBadge";
 import { CompareButton } from "../components/TrekCompare";
 import WishlistHeart from "../components/WishlistHeart";
-import { isFeatureLive } from "@/lib/dormant-features";
 import type { Trek } from "../data/treks";
 import OptimizedImage from "./media/OptimizedImage";
 

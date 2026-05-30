@@ -48,7 +48,11 @@ export function setScrollY(root: ScrollRoot, y: number): void {
   root.scrollTop = top;
 }
 
-export function saveRouteScroll(key: string, y: number, root: ScrollRoot = window): void {
+export function saveRouteScroll(
+  key: string,
+  y: number,
+  root: ScrollRoot = window,
+): void {
   const top = Math.max(0, Math.round(y));
   MEMORY_CACHE.set(key, top);
   trimCache();
@@ -60,9 +64,7 @@ export function saveRouteScroll(key: string, y: number, root: ScrollRoot = windo
   if (isWindowRoot(root) && typeof history !== "undefined") {
     try {
       const prev =
-        history.state && typeof history.state === "object"
-          ? history.state
-          : {};
+        history.state && typeof history.state === "object" ? history.state : {};
       history.replaceState({ ...prev, trekoraScrollY: top }, "");
     } catch {
       // ignore
@@ -95,7 +97,7 @@ export function consumePopNavigation(): boolean {
 export function scrollToHash(
   hash: string,
   smooth: boolean,
-  root: ScrollRoot = window,
+  _root: ScrollRoot = window,
 ): boolean {
   const id = hash.replace(/^#/, "");
   if (!id) return false;

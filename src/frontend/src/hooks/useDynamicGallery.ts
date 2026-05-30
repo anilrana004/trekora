@@ -1,14 +1,14 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
 import { filterCommunityGalleryItems } from "@/lib/gallery-community";
 import { mergeGalleryItems } from "@/lib/merge-gallery-items";
 import { queryKeys } from "@/lib/query-keys";
 import {
-  fetchGallery,
   type GalleryApiItem,
   type GalleryResponse,
   type ProductKind,
+  fetchGallery,
 } from "@/lib/reviews-api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect } from "react";
 
 export function useDynamicGallery(params?: {
   trekSlug?: string;
@@ -65,7 +65,8 @@ export function useDynamicGallery(params?: {
       void queryClient.invalidateQueries({ queryKey: queryKeys.gallery.all });
     };
     window.addEventListener("trekora-gallery-refresh", onRefresh);
-    return () => window.removeEventListener("trekora-gallery-refresh", onRefresh);
+    return () =>
+      window.removeEventListener("trekora-gallery-refresh", onRefresh);
   }, [queryClient]);
 
   const items: GalleryApiItem[] = data?.success ? (data.items ?? []) : [];

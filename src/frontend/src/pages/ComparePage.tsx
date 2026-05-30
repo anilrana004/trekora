@@ -1,5 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, CheckCircle2, ChevronRight, Scale, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ChevronRight,
+  Scale,
+  Trash2,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import CompareTrekActions from "../components/CompareTrekActions";
 import TravelSideActionRail, {
@@ -7,7 +13,7 @@ import TravelSideActionRail, {
 } from "../components/TravelSideActionRail";
 import { useCompare } from "../components/TrekCompare";
 import OptimizedImage from "../components/media/OptimizedImage";
-import { TREKS, type Trek } from "../data/treks";
+import type { TREKS, Trek } from "../data/treks";
 import { resolveCompareTreks } from "../lib/compare-treks";
 
 function DifficultyStars({ level }: { level: string }) {

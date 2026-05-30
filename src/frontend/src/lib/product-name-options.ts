@@ -130,10 +130,7 @@ function scoreOption(opt: ProductNameOption, q: string): number {
 
   if (tokens.length > 1) {
     const allTokens = tokens.every(
-      (t) =>
-        name.includes(t) ||
-        slug.includes(t) ||
-        opt.searchText.includes(t),
+      (t) => name.includes(t) || slug.includes(t) || opt.searchText.includes(t),
     );
     if (allTokens) return 580;
   }
@@ -153,7 +150,9 @@ export type ProductNameSearchResult = {
  * Phone-style search: type to narrow the full catalog (all treks + yatras).
  * Empty query returns quick picks only — not the entire scrollable list.
  */
-export function searchProductNameOptions(query: string): ProductNameSearchResult {
+export function searchProductNameOptions(
+  query: string,
+): ProductNameSearchResult {
   const q = normalizeQuery(query);
   const totalCatalog = PRODUCT_NAME_TOTAL;
 
@@ -172,9 +171,7 @@ export function searchProductNameOptions(query: string): ProductNameSearchResult
   }))
     .filter((x) => x.score > 0)
     .sort(
-      (a, b) =>
-        b.score - a.score ||
-        a.opt.name.localeCompare(b.opt.name, "en"),
+      (a, b) => b.score - a.score || a.opt.name.localeCompare(b.opt.name, "en"),
     )
     .map((x) => x.opt);
 

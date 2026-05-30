@@ -25,7 +25,11 @@ export default function LiveChatWidget() {
       className="fixed left-5 z-50 flex flex-col items-start gap-3 bottom-[calc(var(--mobile-nav-height,56px)+env(safe-area-inset-bottom,0px)+1rem)] md:bottom-[7.25rem]"
       aria-live="polite"
     >
-      <LiveChatPanel open={open} onClose={() => setOpen(false)} placement="floating-left" />
+      <LiveChatPanel
+        open={open}
+        onClose={() => setOpen(false)}
+        placement="floating-left"
+      />
 
       <button
         type="button"

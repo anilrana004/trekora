@@ -1,5 +1,6 @@
 /** Shared class names for listing cards — one hit target, isolated action controls. */
-export const listingCardShellClass = "listing-card-shell relative flex flex-col h-full";
+export const listingCardShellClass =
+  "listing-card-shell relative flex flex-col h-full";
 export const listingCardHitClass =
   "listing-card-shell__hit absolute inset-0 z-0 rounded-[inherit]";
 export const listingCardContentClass =

@@ -1,5 +1,5 @@
-import { uploadToCloudinary } from "@/lib/images/cloudinary-upload";
 import { getCloudinaryCloudName } from "@/lib/images/cloudinary-config";
+import { uploadToCloudinary } from "@/lib/images/cloudinary-upload";
 import type {
   CloudinaryAsset,
   CloudinaryFolderKey,
@@ -29,12 +29,7 @@ function createUploadId() {
 }
 
 export function useImageUpload(options: UseCloudinaryUploadOptions = {}) {
-  const {
-    folder = "gallery",
-    folderPath,
-    tags,
-    context,
-  } = options;
+  const { folder = "gallery", folderPath, tags, context } = options;
   const [items, setItems] = useState<UploadItem[]>([]);
   const itemsRef = useRef<UploadItem[]>([]);
   const controllersRef = useRef(new Map<string, AbortController>());

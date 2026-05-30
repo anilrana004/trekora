@@ -6,22 +6,28 @@
     --mobile-fab-gap: 0.75rem;
     --mobile-fab-left-step: calc(var(--mobile-fab-size) + var(--mobile-fab-gap));
     --mobile-fab-bottom: calc(
-      var(--mobile-nav-height, 56px) + 0.75rem + env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 56px) +
+      0.75rem +
+      env(safe-area-inset-bottom, 0px)
     );
   }
 
   body:has(.mobile-detail-page-pad) {
     --mobile-fab-bottom: calc(
-      var(--mobile-nav-height, 44px) + var(--mobile-book-bar-height, 3rem) +
-        0.75rem + env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 44px) +
+      var(--mobile-book-bar-height, 3rem) +
+      0.75rem +
+      env(safe-area-inset-bottom, 0px)
     );
   }
 
   body:has(.mobile-detail-page-pad).compare-bar-visible {
     --mobile-fab-bottom: calc(
-      var(--mobile-nav-height, 44px) + var(--mobile-book-bar-height, 3rem) +
-        var(--compare-bar-compact-height, 2.5rem) + 0.75rem +
-        env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 44px) +
+      var(--mobile-book-bar-height, 3rem) +
+      var(--compare-bar-compact-height, 2.5rem) +
+      0.75rem +
+      env(safe-area-inset-bottom, 0px)
     );
   }
 
@@ -51,25 +57,19 @@
   }
 
   .fab-left-stack-1 {
-    bottom: calc(
-      var(--mobile-fab-bottom) + var(--mobile-fab-left-step)
-    ) !important;
+    bottom: calc(var(--mobile-fab-bottom) + var(--mobile-fab-left-step)) !important;
     left: max(1rem, env(safe-area-inset-left, 0px)) !important;
     right: auto !important;
   }
 
   .fab-left-stack-2 {
-    bottom: calc(
-      var(--mobile-fab-bottom) + var(--mobile-fab-left-step) * 2
-    ) !important;
+    bottom: calc(var(--mobile-fab-bottom) + var(--mobile-fab-left-step) * 2) !important;
     left: max(1rem, env(safe-area-inset-left, 0px)) !important;
     right: auto !important;
   }
 
   body.cookie-consent-visible .floating-cta-tray,
   body.cookie-consent-visible .floating-cta-callback {
-    bottom: calc(
-      var(--mobile-fab-bottom) + var(--cookie-bar-height, 5.5rem)
-    ) !important;
+    bottom: calc(var(--mobile-fab-bottom) + var(--cookie-bar-height, 5.5rem)) !important;
   }
 }

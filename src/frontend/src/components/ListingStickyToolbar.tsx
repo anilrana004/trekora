@@ -1,12 +1,12 @@
 import { useListingScrollChromeContext } from "@/contexts/ListingScrollChromeContext";
 import { LISTING_CHROME_PIN_MEDIA } from "@/lib/listing-scroll-chrome";
 import {
+  type CSSProperties,
+  type ReactNode,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  type CSSProperties,
-  type ReactNode,
 } from "react";
 
 /** Matches Navbar show animation duration in Navbar.tsx. */
@@ -73,11 +73,15 @@ export default function ListingStickyToolbar({
       return;
     }
     if (!holdSpacer) return;
-    const t = window.setTimeout(() => setHoldSpacer(false), CHROME_UNPIN_HOLD_MS);
+    const t = window.setTimeout(
+      () => setHoldSpacer(false),
+      CHROME_UNPIN_HOLD_MS,
+    );
     return () => window.clearTimeout(t);
   }, [chromeActive, holdSpacer, usePinLayout]);
 
-  const showSpacer = usePinLayout && (chromeActive || holdSpacer) && spacerHeight > 0;
+  const showSpacer =
+    usePinLayout && (chromeActive || holdSpacer) && spacerHeight > 0;
 
   const toolbarClass = [
     "listing-sticky-toolbar",

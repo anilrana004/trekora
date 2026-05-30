@@ -1,4 +1,7 @@
-import type { PlanTrekEmailPayload, QueryFormType } from "@/services/query-email-api";
+import type {
+  PlanTrekEmailPayload,
+  QueryFormType,
+} from "@/services/query-email-api";
 
 function currentPagePath(): string {
   if (typeof window === "undefined") return "";

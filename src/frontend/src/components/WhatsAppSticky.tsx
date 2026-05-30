@@ -1,7 +1,4 @@
-import {
-  SITE_PHONE_DISPLAY,
-  WHATSAPP_CHAT_URL,
-} from "@/lib/site-contact";
+import { SITE_PHONE_DISPLAY, WHATSAPP_CHAT_URL } from "@/lib/site-contact";
 import { useState } from "react";
 
 const _WA_ICON = (

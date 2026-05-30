@@ -1,7 +1,5 @@
-import { useRouterState } from "@tanstack/react-router";
-import { useReducedMotion } from "motion/react";
-import { useEffect, useLayoutEffect, useRef } from "react";
 import {
+  type ScrollRoot,
   consumePopNavigation,
   getScrollY,
   readRouteScroll,
@@ -10,8 +8,10 @@ import {
   saveRouteScroll,
   scrollToHash,
   scrollToPageTop,
-  type ScrollRoot,
 } from "@/lib/route-scroll";
+import { useRouterState } from "@tanstack/react-router";
+import { useReducedMotion } from "motion/react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 type UseRouteScrollManagerOptions = {
   /** When set, scroll is tracked on this element (e.g. admin main panel). */

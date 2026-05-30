@@ -13,7 +13,9 @@
   right: 0;
   z-index: 51;
   bottom: calc(
-    var(--mobile-nav-height, 56px) + env(safe-area-inset-bottom, 0px) + 0.625rem
+    var(--mobile-nav-height, 56px) +
+    env(safe-area-inset-bottom, 0px) +
+    0.625rem
   );
   display: flex;
   justify-content: center;
@@ -196,25 +198,30 @@
 
   body.compare-bar-visible #main-content {
     padding-bottom: calc(
-      var(--mobile-nav-height, 48px) + var(--compare-bar-offset) +
-        env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 48px) +
+      var(--compare-bar-offset) +
+      env(safe-area-inset-bottom, 0px)
     ) !important;
   }
 
   /* Trek / yatra detail: stack compare strip above book bar (no overlap) */
   body:has(.mobile-detail-page-pad).compare-bar-visible .compare-bar-anchor {
     bottom: calc(
-      var(--mobile-nav-height, 48px) + var(--mobile-book-bar-height, 3rem) +
-        env(safe-area-inset-bottom, 0px) + 0.125rem
+      var(--mobile-nav-height, 48px) +
+      var(--mobile-book-bar-height, 3rem) +
+      env(safe-area-inset-bottom, 0px) +
+      0.125rem
     );
     z-index: 54;
   }
 
   body:has(.mobile-detail-page-pad).compare-bar-visible #main-content {
     padding-bottom: calc(
-      var(--mobile-nav-height, 48px) + var(--mobile-book-bar-height, 3rem) +
-        var(--compare-bar-compact-height, 2.5rem) + 0.375rem +
-        env(safe-area-inset-bottom, 0px)
+      var(--mobile-nav-height, 48px) +
+      var(--mobile-book-bar-height, 3rem) +
+      var(--compare-bar-compact-height, 2.5rem) +
+      0.375rem +
+      env(safe-area-inset-bottom, 0px)
     ) !important;
   }
 

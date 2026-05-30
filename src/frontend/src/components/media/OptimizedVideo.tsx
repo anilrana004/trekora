@@ -1,7 +1,7 @@
 import { buildOptimizedImageUrl } from "@/lib/images/cloudinary-url";
 import {
-  buildOptimizedVideoUrl,
   type VideoDeliveryProfile,
+  buildOptimizedVideoUrl,
   videoWidthForProfile,
 } from "@/utils/mediaTransform";
 import {
@@ -60,8 +60,7 @@ export default function OptimizedVideo({
   const activeSrc = useRawSrc ? src : optimizedSrc;
 
   const optimizedPoster = useMemo(
-    () =>
-      poster ? buildOptimizedImageUrl(poster, { width: 720 }) : undefined,
+    () => (poster ? buildOptimizedImageUrl(poster, { width: 720 }) : undefined),
     [poster],
   );
 

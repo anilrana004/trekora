@@ -1,9 +1,12 @@
-import type { BookingEmailPayload, BookingEmailResult } from "@/services/booking-email-api";
-import { submitBookingEmail } from "@/services/booking-email-api";
 import {
-  submitEmailOptimistic,
   type EmailSubmitResult,
+  submitEmailOptimistic,
 } from "@/lib/optimistic-email";
+import type {
+  BookingEmailPayload,
+  BookingEmailResult,
+} from "@/services/booking-email-api";
+import { submitBookingEmail } from "@/services/booking-email-api";
 
 export type BookingDeliveryStatus = "sending" | "delivered" | "failed";
 
@@ -21,7 +24,9 @@ export type BookingBackgroundJob = {
     advanceAmount: bigint;
     batchDate: bigint;
   } | null;
-  createBooking?: (payload: NonNullable<BookingBackgroundJob["canisterPayload"]>) => Promise<unknown>;
+  createBooking?: (
+    payload: NonNullable<BookingBackgroundJob["canisterPayload"]>,
+  ) => Promise<unknown>;
 };
 
 /** Instant success UI; email + optional canister run on the next microtask in parallel. */

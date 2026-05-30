@@ -92,9 +92,7 @@ export default function ErrorPage() {
                 data-ocid="error.call_link"
               >
                 <Phone size={16} style={{ color: "var(--ew-red)" }} />
-                <span>
-                  {SITE_PHONE_DISPLAY} (9AM–9PM Daily)
-                </span>
+                <span>{SITE_PHONE_DISPLAY} (9AM–9PM Daily)</span>
               </a>
               <a
                 href={`mailto:${SITE_EMAIL}`}

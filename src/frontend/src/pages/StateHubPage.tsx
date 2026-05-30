@@ -349,11 +349,7 @@ export default function StateHubPage() {
         </div>
       </div>
 
-      <div
-        id={TRAVEL_HERO_SENTINEL_ID}
-        className="h-0 w-full"
-        aria-hidden
-      />
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
       <TravelSideActionRail
         variant="listing-treks"
         productName={`${config.title} treks`}

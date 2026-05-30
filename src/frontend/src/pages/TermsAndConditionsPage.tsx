@@ -1,3 +1,4 @@
+import { SITE_ORIGIN } from "@/lib/site-config";
 import {
   SITE_EMAIL,
   SITE_PHONE_DISPLAY,
@@ -5,7 +6,6 @@ import {
 } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
 import { SEOHead } from "../components/SEOHead";
-import { SITE_ORIGIN } from "@/lib/site-config";
 
 const LAST_UPDATED = "May 13, 2026";
 

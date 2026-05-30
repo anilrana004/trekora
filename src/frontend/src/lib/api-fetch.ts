@@ -49,7 +49,10 @@ type DedupeEntry = {
 const inflightGet = new Map<string, DedupeEntry>();
 const DEDUPE_TTL_MS = 800;
 
-function dedupeKey(input: RequestInfo | URL, init?: RequestInit): string | null {
+function dedupeKey(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): string | null {
   const method = (init?.method ?? "GET").toUpperCase();
   if (method !== "GET") return null;
   const url = typeof input === "string" ? input : input.toString();
@@ -94,7 +97,8 @@ export async function fetchJson<T>(
             ? (data as { message: string }).message
             : `Request failed (${res.status})`;
         const retryable =
-          attempt === 0 && (res.status === 408 || res.status === 429 || res.status >= 500);
+          attempt === 0 &&
+          (res.status === 408 || res.status === 429 || res.status >= 500);
         if (retryable) {
           await new Promise((r) => globalThis.setTimeout(r, 350));
           return run(attempt + 1);

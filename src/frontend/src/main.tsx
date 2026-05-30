@@ -1,9 +1,9 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createAppQueryClient } from "./lib/query-client";
 import { InternetIdentityProvider } from "@trekora/icp";
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { createAppQueryClient } from "./lib/query-client";
 import "./index.css";
 import "./styles/booking-mobile.css";
 import "leaflet/dist/leaflet.css";

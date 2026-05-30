@@ -22,9 +22,7 @@ export function openQueryModalFromLayout() {
     openQueryModalOpener();
     return;
   }
-  window.dispatchEvent(
-    new CustomEvent("open-query-modal", { bubbles: true }),
-  );
+  window.dispatchEvent(new CustomEvent("open-query-modal", { bubbles: true }));
 }
 
 export function openTrekQuizFromLayout() {
@@ -32,9 +30,7 @@ export function openTrekQuizFromLayout() {
     openTrekQuizOpener();
     return;
   }
-  window.dispatchEvent(
-    new CustomEvent("open-trek-quiz", { bubbles: true }),
-  );
+  window.dispatchEvent(new CustomEvent("open-trek-quiz", { bubbles: true }));
 }
 
 export function openCallbackFromLayout() {

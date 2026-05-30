@@ -2,10 +2,7 @@
 export function isVideoMediaUrl(url: string): boolean {
   const u = url.trim().toLowerCase();
   if (!u) return false;
-  return (
-    /\/video\/upload\//.test(u) ||
-    /\.(mp4|webm|mov|m4v)(\?|#|$)/.test(u)
-  );
+  return /\/video\/upload\//.test(u) || /\.(mp4|webm|mov|m4v)(\?|#|$)/.test(u);
 }
 
 /** True for image delivery URLs and common image file extensions. */

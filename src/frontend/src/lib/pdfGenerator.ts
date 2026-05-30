@@ -37,8 +37,6 @@ export type TrekItineraryDay = {
   highlights?: string;
 };
 
-type ItineraryDay = TrekItineraryDay;
-
 function sanitizePdfText(text: string): string {
   return text
     .replace(/\u20B9/g, "Rs.")
@@ -47,7 +45,11 @@ function sanitizePdfText(text: string): string {
     .replace(/[^\x00-\xFF]/g, "?");
 }
 
-function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {
+function withTimeout<T>(
+  promise: Promise<T>,
+  ms: number,
+  fallback: T,
+): Promise<T> {
   return Promise.race([
     promise,
     new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms)),
@@ -74,14 +76,20 @@ async function rasterizeToJpeg(dataUrl: string): Promise<PdfImage> {
         return;
       }
       ctx.drawImage(img, 0, 0);
-      resolve({ dataUrl: canvas.toDataURL("image/jpeg", 0.85), format: "JPEG" });
+      resolve({
+        dataUrl: canvas.toDataURL("image/jpeg", 0.85),
+        format: "JPEG",
+      });
     };
     img.onerror = () => reject(new Error("Image decode failed"));
     img.src = dataUrl;
   });
 }
 
-async function fetchWithTimeout(url: string, ms = IMAGE_LOAD_TIMEOUT_MS): Promise<Response> {
+async function fetchWithTimeout(
+  url: string,
+  ms = IMAGE_LOAD_TIMEOUT_MS,
+): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
   try {
@@ -112,7 +120,10 @@ async function fetchRawPdfImage(url: string): Promise<PdfImage | null> {
   }
 }
 
-async function loadImageForPdf(src: string, width = 800): Promise<PdfImage | null> {
+async function loadImageForPdf(
+  src: string,
+  width = 800,
+): Promise<PdfImage | null> {
   try {
     const res = await fetchWithTimeout(buildSeoImageUrl(src, width));
     if (!res.ok) return null;
@@ -201,7 +212,14 @@ async function loadYatraPdfImages(yatra: Yatra): Promise<PdfImage[]> {
   return loaded.filter((img): img is PdfImage => img !== null);
 }
 
-function drawPdfImage(doc: JsPDFDoc, img: PdfImage, x: number, y: number, w: number, h: number): void {
+function drawPdfImage(
+  doc: JsPDFDoc,
+  img: PdfImage,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+): void {
   try {
     doc.addImage(img.dataUrl, img.format, x, y, w, h);
   } catch {
@@ -209,23 +227,42 @@ function drawPdfImage(doc: JsPDFDoc, img: PdfImage, x: number, y: number, w: num
   }
 }
 
-function pdfText(doc: JsPDFDoc, text: string, x: number, y: number, options?: Parameters<JsPDFDoc["text"]>[3]): void {
+function pdfText(
+  doc: JsPDFDoc,
+  text: string,
+  x: number,
+  y: number,
+  options?: Parameters<JsPDFDoc["text"]>[3],
+): void {
   doc.text(sanitizePdfText(text), x, y, options);
 }
 
-function drawHeaderLogo(doc: JsPDFDoc, logo: PdfImage | null, margin: number): void {
+function drawHeaderLogo(
+  doc: JsPDFDoc,
+  logo: PdfImage | null,
+  margin: number,
+): void {
   if (!logo) return;
   drawPdfImage(doc, logo, margin, 5, 38, 14);
 }
 
-function drawWatermarkLogo(doc: JsPDFDoc, watermark: PdfImage | null, width: number): void {
+function drawWatermarkLogo(
+  doc: JsPDFDoc,
+  watermark: PdfImage | null,
+  width: number,
+): void {
   if (!watermark) return;
   const w = 128;
   const h = 46;
   drawPdfImage(doc, watermark, (width - w) / 2, 297 / 2 - h / 2 - 8, w, h);
 }
 
-function drawPdfPageFooter(doc: JsPDFDoc, width: number, margin: number, accent: readonly [number, number, number]): void {
+function drawPdfPageFooter(
+  doc: JsPDFDoc,
+  width: number,
+  margin: number,
+  accent: readonly [number, number, number],
+): void {
   const footerTop = 265;
   doc.setDrawColor(...accent);
   doc.setLineWidth(0.3);
@@ -242,14 +279,24 @@ function drawPdfPageFooter(doc: JsPDFDoc, width: number, margin: number, accent:
   );
   doc.setFontSize(6);
   doc.setTextColor(110, 110, 110);
-  pdfText(doc, PDF_COMPANY.trustLine, width / 2, footerTop + 10, { align: "center", maxWidth: width - margin * 2 });
+  pdfText(doc, PDF_COMPANY.trustLine, width / 2, footerTop + 10, {
+    align: "center",
+    maxWidth: width - margin * 2,
+  });
 }
 
-function drawAuthorizationLine(doc: JsPDFDoc, width: number, margin: number): void {
+function drawAuthorizationLine(
+  doc: JsPDFDoc,
+  width: number,
+  margin: number,
+): void {
   doc.setFontSize(5.5);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(90, 90, 90);
-  pdfText(doc, PDF_COMPANY.authorization, width / 2, 292, { align: "center", maxWidth: width - margin * 2 });
+  pdfText(doc, PDF_COMPANY.authorization, width / 2, 292, {
+    align: "center",
+    maxWidth: width - margin * 2,
+  });
 }
 
 function applyFootersToAllPages(
@@ -268,7 +315,11 @@ function applyFootersToAllPages(
   }
 }
 
-type PdfColors = { red: readonly [number, number, number]; orange: readonly [number, number, number]; navy: readonly [number, number, number] };
+type PdfColors = {
+  red: readonly [number, number, number];
+  orange: readonly [number, number, number];
+  navy: readonly [number, number, number];
+};
 
 type PdfLayoutState = {
   doc: JsPDFDoc;
@@ -293,7 +344,10 @@ function drawSectionTitle(state: PdfLayoutState, title: string): void {
 }
 
 function trekRegionLabel(trek: Trek): string {
-  return trek.region ?? (trek.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh");
+  return (
+    trek.region ??
+    (trek.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh")
+  );
 }
 
 function trekTagline(trek: Trek): string {
@@ -339,7 +393,11 @@ const PDF_SPEC_EXCLUSIONS = [
   "Anything not mentioned in inclusions",
 ];
 
-function drawBulletList(state: PdfLayoutState, items: string[], color: readonly [number, number, number]): void {
+function drawBulletList(
+  state: PdfLayoutState,
+  items: string[],
+  color: readonly [number, number, number],
+): void {
   const { doc, margin, contentW, yRef } = state;
   for (const item of items) {
     state.checkY(7);
@@ -383,7 +441,10 @@ function drawContentHeader(state: PdfLayoutState, trek: Trek): void {
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(60, 60, 60);
-  const intro = doc.splitTextToSize(sanitizePdfText(trek.shortDesc || trek.description), contentW);
+  const intro = doc.splitTextToSize(
+    sanitizePdfText(trek.shortDesc || trek.description),
+    contentW,
+  );
   state.checkY(intro.length * 4 + 4);
   doc.text(intro, margin, yRef.y);
   yRef.y += intro.length * 4 + 8;
@@ -456,11 +517,22 @@ function drawQuickInfoBox(state: PdfLayoutState, trek: Trek): void {
   yRef.y += 22;
 }
 
-function drawItineraryTable(state: PdfLayoutState, itinerary: TrekItineraryDay[]): void {
+function drawItineraryTable(
+  state: PdfLayoutState,
+  itinerary: TrekItineraryDay[],
+): void {
   const { doc, margin, contentW, colors, yRef } = state;
   if (!itinerary.length) return;
   drawSectionTitle(state, "Day Wise Itinerary");
-  const cols = { day: margin, route: margin + 10, dist: margin + 58, time: margin + 76, alt: margin + 98, stay: margin + 118, hi: margin + 148 };
+  const cols = {
+    day: margin,
+    route: margin + 10,
+    dist: margin + 58,
+    time: margin + 76,
+    alt: margin + 98,
+    stay: margin + 118,
+    hi: margin + 148,
+  };
   state.checkY(10);
   doc.setFillColor(240, 240, 240);
   doc.rect(margin, yRef.y, contentW, 7, "F");
@@ -493,12 +565,18 @@ function drawItineraryTable(state: PdfLayoutState, itinerary: TrekItineraryDay[]
     doc.setTextColor(40, 40, 40);
     pdfText(doc, day.title, cols.route, yRef.y + 4, { maxWidth: 46 });
     pdfText(doc, day.distance ?? "-", cols.dist, yRef.y + 4, { maxWidth: 16 });
-    pdfText(doc, day.trekTime ?? "5-7 hrs", cols.time, yRef.y + 4, { maxWidth: 20 });
-    const alt = typeof day.altitude === "number" ? `${day.altitude.toLocaleString()}m` : (day.altitude ?? "-");
+    pdfText(doc, day.trekTime ?? "5-7 hrs", cols.time, yRef.y + 4, {
+      maxWidth: 20,
+    });
+    const alt =
+      typeof day.altitude === "number"
+        ? `${day.altitude.toLocaleString()}m`
+        : (day.altitude ?? "-");
     pdfText(doc, alt, cols.alt, yRef.y + 4, { maxWidth: 18 });
     pdfText(doc, day.stay ?? "-", cols.stay, yRef.y + 4, { maxWidth: 28 });
     const hi =
-      day.highlights ?? ((day.desc ?? day.description ?? "").slice(0, 60) || "-");
+      day.highlights ??
+      ((day.desc ?? day.description ?? "").slice(0, 60) || "-");
     pdfText(doc, hi, cols.hi, yRef.y + 4, { maxWidth: contentW - 150 });
     yRef.y += 8;
   }
@@ -521,39 +599,71 @@ function drawBottomStatsBar(state: PdfLayoutState, trek: Trek): void {
     "Permits: Yes (as required)",
     "Safety First: AMS-aware guides, oxygen & first aid on trek",
   ];
-  pdfText(doc, row.slice(0, 3).join("  |  "), margin + contentW / 2, yRef.y + 7, { align: "center", maxWidth: contentW - 4 });
-  pdfText(doc, row.slice(3).join("  |  "), margin + contentW / 2, yRef.y + 12, { align: "center", maxWidth: contentW - 4 });
+  pdfText(
+    doc,
+    row.slice(0, 3).join("  |  "),
+    margin + contentW / 2,
+    yRef.y + 7,
+    { align: "center", maxWidth: contentW - 4 },
+  );
+  pdfText(doc, row.slice(3).join("  |  "), margin + contentW / 2, yRef.y + 12, {
+    align: "center",
+    maxWidth: contentW - 4,
+  });
   yRef.y += 20;
 }
 
 function yatraRegionLabel(yatra: Yatra): string {
-  return yatra.district ?? (yatra.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh");
+  return (
+    yatra.district ??
+    (yatra.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh")
+  );
 }
 
 function yatraItineraryDays(yatra: Yatra): TrekItineraryDay[] {
   if (!yatra.itinerary) return [];
-  return Object.entries(yatra.itinerary).map(([title, desc], i) => ({ day: i + 1, title, desc }));
+  return Object.entries(yatra.itinerary).map(([title, desc], i) => ({
+    day: i + 1,
+    title,
+    desc,
+  }));
 }
 
 function getYatraHighlights(yatra: Yatra): string[] {
-  if (yatra.spiritualBenefits?.length) return yatra.spiritualBenefits.slice(0, 6);
+  if (yatra.spiritualBenefits?.length)
+    return yatra.spiritualBenefits.slice(0, 6);
   if (yatra.tags?.length) return yatra.tags.slice(0, 6);
-  return ["[Populate yatra highlights in data when available]", `Sacred journey in ${yatraRegionLabel(yatra)}`];
+  return [
+    "[Populate yatra highlights in data when available]",
+    `Sacred journey in ${yatraRegionLabel(yatra)}`,
+  ];
 }
 
-export async function downloadTrekItineraryPDF(trek: Trek, itinerary: TrekItineraryDay[]): Promise<void> {
+export async function downloadTrekItineraryPDF(
+  trek: Trek,
+  itinerary: TrekItineraryDay[],
+): Promise<void> {
   try {
     await generateTrekItineraryPDF(trek, itinerary);
   } catch (err) {
     console.error("Trek itinerary PDF failed:", err);
-    throw new Error("Could not generate the itinerary PDF. Please try again in a moment.");
+    throw new Error(
+      "Could not generate the itinerary PDF. Please try again in a moment.",
+    );
   }
 }
 
-async function generateTrekItineraryPDF(trek: Trek, itinerary: TrekItineraryDay[]): Promise<void> {
+async function generateTrekItineraryPDF(
+  trek: Trek,
+  itinerary: TrekItineraryDay[],
+): Promise<void> {
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  const logo = await withTimeout(resolveLogoDataUrl(), IMAGE_LOAD_TIMEOUT_MS, null);
+  const logo = await withTimeout(
+    resolveLogoDataUrl(),
+    IMAGE_LOAD_TIMEOUT_MS,
+    null,
+  );
   const [watermark, trekImages] = await Promise.all([
     logo ? buildWatermarkLogo(logo) : Promise.resolve(null),
     loadTrekPdfImages(trek),
@@ -660,7 +770,10 @@ async function generateTrekItineraryPDF(trek: Trek, itinerary: TrekItineraryDay[
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(60, 60, 60);
-  const descLines = doc.splitTextToSize(sanitizePdfText(trek.description), CONTENT_W);
+  const descLines = doc.splitTextToSize(
+    sanitizePdfText(trek.description),
+    CONTENT_W,
+  );
   checkY(descLines.length * 5 + 4);
   doc.text(descLines, MARGIN, yRef.y);
   yRef.y += descLines.length * 5 + 8;
@@ -690,10 +803,11 @@ async function generateTrekItineraryPDF(trek: Trek, itinerary: TrekItineraryDay[
 
   const inlinePhotos = trekImages.slice(3);
   const photoEvery =
-    inlinePhotos.length > 0 ? Math.max(1, Math.floor(itinerary.length / inlinePhotos.length)) : 0;
+    inlinePhotos.length > 0
+      ? Math.max(1, Math.floor(itinerary.length / inlinePhotos.length))
+      : 0;
   let inlinePhotoIndex = 0;
 
-  // biome-ignore lint/complexity/noForEach: sequential PDF state mutation, not array transform
   itinerary.forEach((day, i) => {
     const dayNum = day.day ?? i + 1;
     checkY(22);
@@ -712,8 +826,11 @@ async function generateTrekItineraryPDF(trek: Trek, itinerary: TrekItineraryDay[
     doc.setTextColor(100, 100, 100);
     const sub = [
       day.stay && `Stay: ${day.stay}`,
-      typeof day.altitude === "number" && `Alt: ${day.altitude.toLocaleString()}m`,
-      typeof day.altitude === "string" && day.altitude && `Alt: ${day.altitude}`,
+      typeof day.altitude === "number" &&
+        `Alt: ${day.altitude.toLocaleString()}m`,
+      typeof day.altitude === "string" &&
+        day.altitude &&
+        `Alt: ${day.altitude}`,
     ]
       .filter(Boolean)
       .join(" | ");
@@ -728,9 +845,20 @@ async function generateTrekItineraryPDF(trek: Trek, itinerary: TrekItineraryDay[
     } else {
       yRef.y += 14;
     }
-    if (photoEvery > 0 && (i + 1) % photoEvery === 0 && inlinePhotoIndex < inlinePhotos.length) {
+    if (
+      photoEvery > 0 &&
+      (i + 1) % photoEvery === 0 &&
+      inlinePhotoIndex < inlinePhotos.length
+    ) {
       checkY(44);
-      drawPdfImage(doc, inlinePhotos[inlinePhotoIndex], MARGIN, yRef.y, CONTENT_W, 40);
+      drawPdfImage(
+        doc,
+        inlinePhotos[inlinePhotoIndex],
+        MARGIN,
+        yRef.y,
+        CONTENT_W,
+        40,
+      );
       inlinePhotoIndex += 1;
       yRef.y += 44;
     }
@@ -809,14 +937,20 @@ export async function downloadYatraItineraryPDF(yatra: Yatra): Promise<void> {
     await generateYatraItineraryPDF(yatra);
   } catch (err) {
     console.error("Yatra itinerary PDF failed:", err);
-    throw new Error("Could not generate the itinerary PDF. Please try again in a moment.");
+    throw new Error(
+      "Could not generate the itinerary PDF. Please try again in a moment.",
+    );
   }
 }
 
 async function generateYatraItineraryPDF(yatra: Yatra): Promise<void> {
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  const logo = await withTimeout(resolveLogoDataUrl(), IMAGE_LOAD_TIMEOUT_MS, null);
+  const logo = await withTimeout(
+    resolveLogoDataUrl(),
+    IMAGE_LOAD_TIMEOUT_MS,
+    null,
+  );
   const [watermark, yatraImages] = await Promise.all([
     logo ? buildWatermarkLogo(logo) : Promise.resolve(null),
     loadYatraPdfImages(yatra),
@@ -891,7 +1025,14 @@ async function generateYatraItineraryPDF(yatra: Yatra): Promise<void> {
   d.setFontSize(10);
   d.setFont("helvetica", "normal");
   d.setTextColor(90, 90, 90);
-  pdfText(d, (yatra.significance?.slice(0, 120) || `Sacred yatra in ${yatraRegionLabel(yatra)}`), margin, yr.y + 4, { maxWidth: contentW });
+  pdfText(
+    d,
+    yatra.significance?.slice(0, 120) ||
+      `Sacred yatra in ${yatraRegionLabel(yatra)}`,
+    margin,
+    yr.y + 4,
+    { maxWidth: contentW },
+  );
   yr.y += 10;
   d.setFillColor(...colors.orange);
   d.roundedRect(margin, yr.y, contentW, 10, 2, 2, "F");
@@ -989,7 +1130,10 @@ async function generateYatraItineraryPDF(yatra: Yatra): Promise<void> {
     yr.y += 14;
     doc.setFontSize(9);
     doc.setTextColor(60, 60, 60);
-    const sigLines = doc.splitTextToSize(sanitizePdfText(yatra.significance.substring(0, 600)), CONTENT_W);
+    const sigLines = doc.splitTextToSize(
+      sanitizePdfText(yatra.significance.substring(0, 600)),
+      CONTENT_W,
+    );
     layout.checkY(sigLines.length * 5 + 4);
     doc.text(sigLines, MARGIN, yr.y);
     yr.y += sigLines.length * 5 + 8;
@@ -998,10 +1142,18 @@ async function generateYatraItineraryPDF(yatra: Yatra): Promise<void> {
   if (yatraDays.length > 0) drawItineraryTable(layout, yatraDays);
 
   drawSectionTitle(layout, "Inclusions");
-  drawBulletList(layout, yatra.inclusions?.length ? yatra.inclusions : PDF_SPEC_INCLUSIONS, [46, 125, 50]);
+  drawBulletList(
+    layout,
+    yatra.inclusions?.length ? yatra.inclusions : PDF_SPEC_INCLUSIONS,
+    [46, 125, 50],
+  );
   yr.y += 2;
   drawSectionTitle(layout, "Exclusions");
-  drawBulletList(layout, yatra.exclusions?.length ? yatra.exclusions : PDF_SPEC_EXCLUSIONS, [192, 0, 28]);
+  drawBulletList(
+    layout,
+    yatra.exclusions?.length ? yatra.exclusions : PDF_SPEC_EXCLUSIONS,
+    [192, 0, 28],
+  );
   yr.y += 2;
 
   if (yatraDays.length > 0) {
@@ -1017,11 +1169,16 @@ async function generateYatraItineraryPDF(yatra: Yatra): Promise<void> {
       doc.setFontSize(8);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(255, 255, 255);
-      doc.text(`D${day.day ?? ""}`, MARGIN + 5, yr.y + 5.5, { align: "center" });
+      doc.text(`D${day.day ?? ""}`, MARGIN + 5, yr.y + 5.5, {
+        align: "center",
+      });
       pdfText(doc, `Day ${day.day}: ${day.title}`, MARGIN + 13, yr.y + 3);
       const text = day.desc ?? day.description ?? "";
       if (text) {
-        const lines = doc.splitTextToSize(sanitizePdfText(text), CONTENT_W - 13);
+        const lines = doc.splitTextToSize(
+          sanitizePdfText(text),
+          CONTENT_W - 13,
+        );
         doc.setFontSize(8);
         doc.setFont("helvetica", "normal");
         doc.setTextColor(60, 60, 60);
@@ -1041,10 +1198,16 @@ async function generateYatraItineraryPDF(yatra: Yatra): Promise<void> {
   doc.setFont("helvetica", "bold");
   doc.setTextColor(255, 255, 255);
   const permits =
-    yatra.permits && yatra.permits.length > 0 ? `Permits: ${yatra.permits.join(", ")}` : "Permits: As required";
+    yatra.permits && yatra.permits.length > 0
+      ? `Permits: ${yatra.permits.join(", ")}`
+      : "Permits: As required";
   pdfText(
     doc,
-    [`Best: ${yatra.bestTime}`, `Distance: ~${yatra.distance} km`, permits].join("  |  "),
+    [
+      `Best: ${yatra.bestTime}`,
+      `Distance: ~${yatra.distance} km`,
+      permits,
+    ].join("  |  "),
     margin + contentW / 2,
     yr.y + 7,
     { align: "center", maxWidth: contentW - 4 },
@@ -1096,7 +1259,11 @@ async function generateFitnessTrainingPlanPDF(
   const { jsPDF } = await import("jspdf");
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
-  const logo = await withTimeout(resolveLogoDataUrl(), IMAGE_LOAD_TIMEOUT_MS, null);
+  const logo = await withTimeout(
+    resolveLogoDataUrl(),
+    IMAGE_LOAD_TIMEOUT_MS,
+    null,
+  );
   const watermark = logo ? await buildWatermarkLogo(logo) : null;
 
   const RED = [192, 0, 28] as const;
@@ -1152,7 +1319,10 @@ async function generateFitnessTrainingPlanPDF(
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(60, 60, 60);
-  const labelLines = doc.splitTextToSize(sanitizePdfText(input.readinessLabel), CONTENT_W - 8);
+  const labelLines = doc.splitTextToSize(
+    sanitizePdfText(input.readinessLabel),
+    CONTENT_W - 8,
+  );
   doc.text(labelLines, MARGIN + 4, y + 15);
   doc.setFontSize(8);
   pdfText(
@@ -1173,7 +1343,10 @@ async function generateFitnessTrainingPlanPDF(
   y += 14;
 
   for (const week of input.trainingWeeks) {
-    const planLines = doc.splitTextToSize(sanitizePdfText(week.plan), CONTENT_W - 20);
+    const planLines = doc.splitTextToSize(
+      sanitizePdfText(week.plan),
+      CONTENT_W - 20,
+    );
     const boxH = Math.max(18, planLines.length * 4 + 10);
     checkY(boxH + 4);
 

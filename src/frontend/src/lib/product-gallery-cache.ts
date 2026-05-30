@@ -1,7 +1,11 @@
-import type { QueryClient } from "@tanstack/react-query";
 import { mergeGalleryItems } from "@/lib/merge-gallery-items";
 import { queryKeys } from "@/lib/query-keys";
-import type { GalleryApiItem, GalleryResponse, ProductKind } from "@/lib/reviews-api";
+import type {
+  GalleryApiItem,
+  GalleryResponse,
+  ProductKind,
+} from "@/lib/reviews-api";
+import type { QueryClient } from "@tanstack/react-query";
 
 export function productGalleryQueryKey(
   trekSlug: string,

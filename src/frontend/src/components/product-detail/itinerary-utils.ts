@@ -46,7 +46,9 @@ const FALLBACK_YATRA_DAYS: DisplayItineraryDay[] = [
   },
 ];
 
-export function yatraItineraryToDisplayDays(yatra: Yatra): DisplayItineraryDay[] {
+export function yatraItineraryToDisplayDays(
+  yatra: Yatra,
+): DisplayItineraryDay[] {
   const raw = yatra.itinerary;
   if (!raw) return FALLBACK_YATRA_DAYS;
 

@@ -114,10 +114,7 @@ export async function uploadToCloudinary({
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", uploadPreset);
-  formData.append(
-    "folder",
-    folderPath?.trim() || CLOUDINARY_FOLDERS[folder],
-  );
+  formData.append("folder", folderPath?.trim() || CLOUDINARY_FOLDERS[folder]);
   if (tags?.length) formData.append("tags", tags.join(","));
   if (context && Object.keys(context).length > 0) {
     const contextStr = Object.entries(context)

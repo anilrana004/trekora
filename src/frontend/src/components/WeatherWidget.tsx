@@ -1,3 +1,4 @@
+import { isWeatherServiceConfigured } from "@/lib/weather-api";
 import {
   ChevronDown,
   ChevronUp,
@@ -8,7 +9,6 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { isWeatherServiceConfigured } from "@/lib/weather-api";
 import { useWeather } from "../hooks/useWeather";
 
 import OptimizedImage from "./media/OptimizedImage";

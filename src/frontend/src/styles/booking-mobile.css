@@ -29,10 +29,8 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   appearance: none;
-  transition:
-    border-color 0.18s ease,
-    background-color 0.18s ease,
-    color 0.18s ease;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s
+    ease;
   text-align: center;
 }
 
@@ -120,9 +118,7 @@ button.booking-choice-pill--active,
   cursor: pointer;
   touch-action: manipulation;
   appearance: none;
-  transition:
-    border-color 0.18s ease,
-    background-color 0.18s ease;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .booking-page .booking-choice-card--active,
@@ -268,7 +264,8 @@ button.booking-choice-pill--active,
 /* Date input + native fields (avoid iOS zoom, consistent tap height) */
 .booking-page .booking-departure-date-input,
 .booking-page select,
-.booking-page input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+.booking-page
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
   min-height: 48px;
   font-size: 16px;
   width: 100%;
@@ -369,14 +366,18 @@ body:has(.booking-page) .floating-cta-callback {
 @media (max-width: 1023px) {
   .booking-page {
     padding-bottom: calc(
-      var(--booking-nav-height, 5.75rem) + env(safe-area-inset-bottom, 0px) + 1.25rem
+      var(--booking-nav-height, 5.75rem) +
+      env(safe-area-inset-bottom, 0px) +
+      1.25rem
     );
   }
 
   body.cookie-consent-visible .booking-page {
     padding-bottom: calc(
-      var(--booking-nav-height, 5.75rem) + var(--cookie-bar-height, 5.5rem) +
-        env(safe-area-inset-bottom, 0px) + 1.25rem
+      var(--booking-nav-height, 5.75rem) +
+      var(--cookie-bar-height, 5.5rem) +
+      env(safe-area-inset-bottom, 0px) +
+      1.25rem
     );
   }
 
@@ -412,14 +413,19 @@ body:has(.booking-page) .floating-cta-callback {
   }
 
   body.cookie-consent-visible .booking-page .booking-nav-bar {
-    bottom: calc(var(--cookie-bar-height, 5.5rem) + env(safe-area-inset-bottom, 0px));
+    bottom: calc(
+      var(--cookie-bar-height, 5.5rem) +
+      env(safe-area-inset-bottom, 0px)
+    );
   }
 
   /* Side rail above sticky nav, below cookie */
   body:has(.booking-page) .travel-side-rail--left,
   body:has(.booking-page) .travel-side-rail--right {
     bottom: calc(
-      var(--booking-nav-height, 5.75rem) + env(safe-area-inset-bottom, 0px) + 0.35rem
+      var(--booking-nav-height, 5.75rem) +
+      env(safe-area-inset-bottom, 0px) +
+      0.35rem
     );
     z-index: 44;
   }
@@ -427,8 +433,10 @@ body:has(.booking-page) .floating-cta-callback {
   body.cookie-consent-visible:has(.booking-page) .travel-side-rail--left,
   body.cookie-consent-visible:has(.booking-page) .travel-side-rail--right {
     bottom: calc(
-      var(--booking-nav-height, 5.75rem) + var(--cookie-bar-height, 5.5rem) +
-        env(safe-area-inset-bottom, 0px) + 0.35rem
+      var(--booking-nav-height, 5.75rem) +
+      var(--cookie-bar-height, 5.5rem) +
+      env(safe-area-inset-bottom, 0px) +
+      0.35rem
     );
   }
 
