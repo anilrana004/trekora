@@ -9,6 +9,7 @@ import {
   enrichYatraJSONLD,
 } from "./product-seo";
 import { SITE_EMAIL, SITE_GEO, SITE_PHONE_TEL } from "./site-contact";
+import { BRAND_LOGO_IMAGE_OBJECT, BRAND_LOGO_URL } from "./brand-seo";
 import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "./site-config";
 
 /* ── DOM helpers ── */
@@ -212,10 +213,7 @@ export function generateBlogJSONLD(blog: Blog): Record<string, unknown> {
     publisher: {
       "@type": "Organization",
       name: "Trekora",
-      logo: {
-        "@type": "ImageObject",
-        url: `${SITE_ORIGIN}/logo.png`,
-      },
+      logo: BRAND_LOGO_IMAGE_OBJECT,
     },
     datePublished: published,
     dateModified: published,
@@ -229,6 +227,8 @@ export function generateContactLocalBusinessJSONLD(): Record<string, unknown> {
     "@type": "LocalBusiness",
     name: "Trekora",
     url: SITE_ORIGIN,
+    logo: BRAND_LOGO_IMAGE_OBJECT,
+    image: BRAND_LOGO_URL,
     telephone: SITE_PHONE_TEL,
     email: SITE_EMAIL,
     address: {

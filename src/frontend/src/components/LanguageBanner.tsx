@@ -26,8 +26,8 @@ export default function LanguageBanner() {
       data-ocid="language.banner"
     >
       <span className="flex-1 text-center">
-        Hindi content coming soon —{" "}
-        <span className="font-bold">हिंदी सामग्री जल्द ही आ रही है</span>
+        Trekora is live in English —{" "}
+        <span className="font-bold">हिंदी गाइड ब्लॉग पर उपलब्ध</span>
       </span>
       <button
         type="button"

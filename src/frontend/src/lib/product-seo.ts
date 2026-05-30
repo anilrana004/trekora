@@ -214,9 +214,9 @@ export function buildGalleryPageSEO(): PageMetaConfig {
 
 export function buildHomePageSEO(): PageMetaConfig {
   return {
-    title: "Trekora — Premium Himalayan Treks & Yatras | Book Online",
+    title: "Trekora | Himalayan Trek & Yatra Packages — Book Online",
     description:
-      "Book world-class trekking and yatra experiences with Trekora. Premium Himalayan adventures, certified guides, and trusted packages across Uttarakhand & Himachal.",
+      "Trekora is a live Himalayan travel agency for guided treks, sacred yatras, and curated packages in Uttarakhand, Himachal Pradesh, and India. Certified guides, fixed departures, book online.",
     keywords: formatMetaKeywords([
       ...TREKORA_BRAND_KEYWORDS,
       ...HIGH_CONVERSION_SEO_KEYWORDS,

@@ -1,9 +1,8 @@
 import { bookSearch } from "@/lib/book-search";
 import { isFeatureLive } from "@/lib/dormant-features";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
+import { generateHomePageSchema, PRIMARY_SITE_NAV } from "@/lib/brand-seo";
 import { buildHomePageSEO } from "@/lib/product-seo";
-import { SITE_ORIGIN } from "@/lib/site-config";
-import { SITE_EMAIL, SITE_PHONE_TEL } from "@/lib/site-contact";
 import { buildLeadMagnetPayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { toast } from "sonner";
@@ -2243,98 +2242,21 @@ export default function HomePage() {
         description={homeSeo.description}
         keywords={homeSeo.keywords}
         canonical={homeSeo.canonical}
-        schema={[
-          {
-            "@context": "https://schema.org",
-            "@type": "TouristInformationCenter",
-            name: "Trekora",
-            description:
-              "Himalayan treks and yatras with certified mountain guides in Uttarakhand and Himachal Pradesh",
-            url: SITE_ORIGIN,
-            telephone: SITE_PHONE_TEL,
-            email: SITE_EMAIL,
-            address: {
-              "@type": "PostalAddress",
-              addressLocality: "Dehradun",
-              addressRegion: "Uttarakhand",
-              addressCountry: "IN",
-            },
-            geo: {
-              "@type": "GeoCoordinates",
-              latitude: 30.3165,
-              longitude: 78.0322,
-            },
-            openingHoursSpecification: {
-              "@type": "OpeningHoursSpecification",
-              dayOfWeek: [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-                "Sunday",
-              ],
-              opens: "08:00",
-              closes: "20:00",
-            },
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue: "4.9",
-              reviewCount: "127",
-            },
-          },
-          {
-            "@context": "https://schema.org",
-            "@type": "TravelAgency",
-            name: "Trekora",
-            url: SITE_ORIGIN,
-            logo: `${SITE_ORIGIN}/favicon-32x32.png`,
-            description:
-              "Expert-led Himalayan treks and sacred yatras in Uttarakhand and Himachal Pradesh.",
-            telephone: SITE_PHONE_TEL,
-            email: SITE_EMAIL,
-            address: {
-              "@type": "PostalAddress",
-              addressLocality: "Dehradun",
-              addressRegion: "Uttarakhand",
-              addressCountry: "IN",
-            },
-            areaServed: ["Uttarakhand", "Himachal Pradesh", "India"],
-          },
-          {
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            name: "Trekora",
-            url: SITE_ORIGIN,
-            logo: `${SITE_ORIGIN}/logo.png`,
-            description:
-              "India's premier Himalayan trekking and yatra company. 40+ treks, 11 yatras across Uttarakhand and Himachal Pradesh.",
-            contactPoint: {
-              "@type": "ContactPoint",
-              telephone: SITE_PHONE_TEL,
-              contactType: "customer service",
-              availableLanguage: ["English", "Hindi"],
-            },
-            sameAs: [
-              "https://www.instagram.com/trekora",
-              "https://www.facebook.com/trekora",
-              "https://www.youtube.com/c/trekora",
-            ],
-          },
-          {
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "Trekora",
-            url: SITE_ORIGIN,
-            potentialAction: {
-              "@type": "SearchAction",
-              target: `${SITE_ORIGIN}/treks?q={search_term_string}`,
-              "query-input": "required name=search_term_string",
-            },
-          },
-        ]}
+        ogImage={homeSeo.ogImage}
+        schema={generateHomePageSchema()}
       />
+      <h1 className="sr-only">
+        Trekora — Book Himalayan Treks, Yatras &amp; Adventure Packages Online
+      </h1>
+      <nav className="sr-only" aria-label="Primary site sections">
+        <ul>
+          {PRIMARY_SITE_NAV.map((item) => (
+            <li key={item.path}>
+              <Link to={item.path}>{item.name}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
       {/* ── SECTION 1: HERO BANNER GRID ── */}
       <HeroBannerGrid />
 
@@ -3473,7 +3395,7 @@ export default function HomePage() {
               className="text-center text-sm"
               style={{ color: "var(--ew-gray-dark)" }}
             >
-              Coming soon — batches being added.
+              View fixed-departure dates on our upcoming batches page.
             </p>
           )}
         </div>
