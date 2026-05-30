@@ -6,14 +6,24 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  resolveSitemapSiteOrigin,
+  TREKORA_PUBLIC_SITE_ORIGIN,
+} from "./lib/public-site-origin.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const frontendRoot = path.join(__dirname, "../src/frontend");
 const viteEntry = path.join(frontendRoot, "node_modules/vite/dist/node/index.js");
 const { createServer } = await import(pathToFileURL(viteEntry).href);
-const siteOrigin =
-  process.env.VITE_SITE_ORIGIN?.replace(/\/$/, "") ||
-  "https://www.trekora.in";
+
+const envOrigin = process.env.VITE_SITE_ORIGIN;
+const siteOrigin = resolveSitemapSiteOrigin(envOrigin);
+
+if (envOrigin?.includes("api.trekora.in")) {
+  console.warn(
+    `[sitemap] VITE_SITE_ORIGIN=${envOrigin} — sitemap/robots forced to ${TREKORA_PUBLIC_SITE_ORIGIN}`,
+  );
+}
 
 function escapeXml(value) {
   return String(value)

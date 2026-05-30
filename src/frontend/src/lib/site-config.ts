@@ -1,11 +1,12 @@
+import { resolvePublicSiteOrigin } from "./public-site-origin";
+
 /**
  * Canonical production site URL. Set VITE_SITE_ORIGIN in src/.env
- * (e.g. https://www.trekora.in).
+ * (e.g. https://www.trekora.in). Never use the API host (api.trekora.in).
  */
-export const SITE_ORIGIN = (
-  import.meta.env.VITE_SITE_ORIGIN?.replace(/\/$/, "") ||
-  "https://www.trekora.in"
-).replace(/\/$/, "");
+export const SITE_ORIGIN = resolvePublicSiteOrigin(
+  import.meta.env.VITE_SITE_ORIGIN,
+);
 
 /** Default Open Graph image (Cloudinary CDN). */
 export const DEFAULT_OG_IMAGE =

@@ -11,7 +11,13 @@ loadEnv({ path: join(root, "src/.env") });
 loadEnv({ path: join(root, "src/.env.local"), override: true });
 
 const required = [
-  ["VITE_SITE_ORIGIN", (v) => v.startsWith("https://")],
+  [
+    "VITE_SITE_ORIGIN",
+    (v) =>
+      v.startsWith("https://") &&
+      !v.includes("api.trekora.in") &&
+      !/^https:\/\/api\./.test(v),
+  ],
   ["VITE_CLOUDINARY_CLOUD_NAME", (v) => v.length > 0],
   ["ADMIN_API_SECRET", (v) => v.length >= 24],
   ["CORS_ORIGINS", (v) => v.includes("trekora")],
