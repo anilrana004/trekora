@@ -1,14 +1,8 @@
-import { config as loadEnv } from "dotenv";
-
-import { dirname, join } from "path";
-
-import { fileURLToPath } from "url";
+import { logTrekoraEnvStatus, loadTrekoraEnv } from "../../backend/lib/load-env.js";
 
 import { resolveApiHandler } from "./api/_lib/resolve-api-handler.mjs";
 
-
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+loadTrekoraEnv();
 
 
 
@@ -110,14 +104,6 @@ function createMockReqRes(req, res) {
 
 export function emailApiPlugin() {
 
-  const envDir = join(__dirname, "..");
-
-  loadEnv({ path: join(envDir, ".env") });
-
-  loadEnv({ path: join(envDir, ".env.local"), override: true });
-
-
-
   return {
 
     name: "trekora-email-api",
@@ -125,6 +111,7 @@ export function emailApiPlugin() {
     enforce: "pre",
 
     configureServer(server) {
+      logTrekoraEnvStatus("vite-api");
 
       server.middlewares.use(async (req, res, next) => {
 

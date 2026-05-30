@@ -2,8 +2,10 @@
  * Server-side Cloudinary Admin API — list images by folder prefix.
  * Requires CLOUDINARY_API_KEY + CLOUDINARY_API_SECRET in src/.env
  */
+import { ensureTrekoraEnv } from "./load-env.js";
 
 function getCloudinaryConfig() {
+  ensureTrekoraEnv();
   const cloud = String(
     process.env.CLOUDINARY_CLOUD_NAME ||
       process.env.VITE_CLOUDINARY_CLOUD_NAME ||

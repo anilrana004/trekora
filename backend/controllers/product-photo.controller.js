@@ -165,7 +165,13 @@ async function handleProductPhotoRoute(req, res) {
 
     try {
       const result = await getProductPhotosBySlugLogic(trekSlug, type);
-      return res.status(result.success ? 200 : 400).json(result);
+      return res.status(
+        result.success
+          ? 200
+          : String(result.message ?? "").includes("temporarily unavailable")
+            ? 503
+            : 400,
+      ).json(result);
     } catch (err) {
       process.stderr.write(
         `[product-photos] GET ${err instanceof Error ? err.message : String(err)}\n`,

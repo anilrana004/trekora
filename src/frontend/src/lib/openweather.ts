@@ -1,51 +1,9 @@
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
 
-/**
- * Dev-only client key resolver. Production should use OPENWEATHER_API_KEY on the
- * server (`/api/v1/weather` proxy) — never ship secrets with the VITE_ prefix.
- */
-export function getOpenWeatherApiKey(): string | undefined {
-  const raw =
-    import.meta.env.VITE_OPENWEATHER_API_KEY ??
-    import.meta.env.VITE_OPENWEATHERMAP_KEY;
-  if (!raw || typeof raw !== "string") return undefined;
-
-  const trimmed = raw.trim();
-  if (!trimmed) return undefined;
-
-  // Key mistakenly pasted as subdomain: https://{key}.openweathermap.org/...
-  const subdomainMatch = trimmed.match(
-    /https?:\/\/([a-f0-9]{32})\.openweathermap\.org/i,
-  );
-  if (subdomainMatch) return subdomainMatch[1];
-
-  // Full URL with appid= query param
-  if (trimmed.includes("openweathermap.org")) {
-    try {
-      const url = new URL(
-        trimmed.startsWith("http") ? trimmed : `https://${trimmed}`,
-      );
-      const appid = url.searchParams.get("appid");
-      if (appid && appid !== "YOUR_API_KEY" && /^[a-f0-9]{32}$/i.test(appid)) {
-        return appid;
-      }
-    } catch {
-      // fall through
-    }
-    const appidMatch = trimmed.match(/appid=([a-f0-9]{32})/i);
-    if (appidMatch) return appidMatch[1];
-  }
-
-  // Plain 32-char hex key
-  if (/^[a-f0-9]{32}$/i.test(trimmed)) return trimmed;
-
-  return trimmed.length <= 64 ? trimmed : undefined;
-}
-
 /** @deprecated Use isWeatherServiceConfigured from @/lib/weather-api */
 export function hasOpenWeatherApiKey(): boolean {
-  return !!getOpenWeatherApiKey();
+  return import.meta.env.DEV;
 }
 
 /** Build a query string OpenWeather accepts for city or coordinates. */

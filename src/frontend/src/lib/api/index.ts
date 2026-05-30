@@ -2,6 +2,7 @@
 export {
   ApiFetchError,
   fetchJson,
+  fetchJsonLenient,
   postJson,
   postJsonLenient,
 } from "@/lib/api-fetch";

@@ -5,10 +5,16 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { config as loadEnv } from "dotenv";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const assetsDir = path.join(__dirname, "../src/frontend/dist/assets");
+const root = path.join(__dirname, "..");
+const assetsDir = path.join(root, "src/frontend/dist/assets");
+const envPath = path.join(root, "src/.env");
+
+loadEnv({ path: envPath });
+loadEnv({ path: path.join(root, "src/.env.local"), override: true });
 
 const RULES = [
   { id: "mongodb-uri", re: /mongodb(\+srv)?:\/\/[^\s"'`]+/i },
@@ -23,6 +29,20 @@ const RULES = [
   { id: "openweather-in-bundle", re: /appid=[a-f0-9]{32}/i },
 ];
 
+/** Env values that must never appear in client bundles (from src/.env at build time). */
+const FORBIDDEN_IN_BUNDLE = [
+  "MONGODB_URI",
+  "CLOUDINARY_API_SECRET",
+  "CLOUDINARY_API_KEY",
+  "SMTP_PASS",
+  "ADMIN_API_SECRET",
+  "OPENWEATHER_API_KEY",
+  "OPENWEATHERMAP_API_KEY",
+  "VITE_OPENWEATHER_API_KEY",
+  "VITE_OPENWEATHERMAP_KEY",
+  "VITE_ADMIN_SECRET",
+];
+
 if (!fs.existsSync(assetsDir)) {
   process.stderr.write(
     "[check-bundle] dist/assets missing — run frontend build first.\n",
@@ -31,13 +51,26 @@ if (!fs.existsSync(assetsDir)) {
 }
 
 const hits = [];
+const bundleText = [];
+
 for (const file of fs.readdirSync(assetsDir)) {
   if (!file.endsWith(".js")) continue;
   const text = fs.readFileSync(path.join(assetsDir, file), "utf8");
+  bundleText.push({ file, text });
   for (const rule of RULES) {
     if (rule.re.test(text)) {
       hits.push({ file, rule: rule.id });
       rule.re.lastIndex = 0;
+    }
+  }
+}
+
+for (const name of FORBIDDEN_IN_BUNDLE) {
+  const value = String(process.env[name] ?? "").trim();
+  if (value.length < 8) continue;
+  for (const { file, text } of bundleText) {
+    if (text.includes(value)) {
+      hits.push({ file, rule: `env-leak:${name}` });
     }
   }
 }

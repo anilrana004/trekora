@@ -1,5 +1,5 @@
 import { getAdminSecret, hasAdminSession } from "@/lib/admin-access";
-import { fetchJson, postJsonLenient } from "@/lib/api-fetch";
+import { fetchJsonLenient, postJsonLenient } from "@/lib/api-fetch";
 import { withRetry } from "@/lib/retry";
 
 export type ProductKind = "trek" | "yatra";
@@ -77,7 +77,7 @@ export async function fetchReviewsBySlug(
   if (options?.limit != null) params.set("limit", String(options.limit));
   if (options?.skip != null) params.set("skip", String(options.skip));
   const qs = params.toString();
-  return fetchJson<ReviewsBySlugResponse>(
+  return fetchJsonLenient<ReviewsBySlugResponse>(
     `/api/reviews/${encodeURIComponent(slug.trim().toLowerCase())}${qs ? `?${qs}` : ""}`,
   );
 }
@@ -131,7 +131,7 @@ export async function fetchGallery(params?: {
   }
   if (params?.includeReviews === false) q.set("includeReviews", "0");
   const qs = q.toString();
-  return fetchJson<GalleryResponse>(`/api/gallery${qs ? `?${qs}` : ""}`, {
+  return fetchJsonLenient<GalleryResponse>(`/api/gallery${qs ? `?${qs}` : ""}`, {
     timeoutMs: 28_000,
   });
 }

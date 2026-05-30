@@ -50,6 +50,12 @@ function productUploadSourceMongoFilter(productUploadSource) {
   };
 }
 
+function serializeCreatedAt(value) {
+  if (value instanceof Date) return value.toISOString();
+  if (value) return String(value);
+  return new Date().toISOString();
+}
+
 function pushItem(items, seen, entry) {
   const src = entry.src;
   if (!src || seen.has(src)) return;
@@ -115,7 +121,7 @@ export async function buildGalleryItems({
       source: "product",
       uploadSource: doc.uploadSource ?? "product-page",
       reviewId: "",
-      createdAt: doc.createdAt,
+      createdAt: serializeCreatedAt(doc.createdAt),
     };
     if (!matchesTagFilter(entry.tags, tagQuery)) continue;
     pushItem(items, seen, entry);
@@ -171,7 +177,7 @@ export async function buildGalleryItems({
         tags,
         source: "review",
         reviewId: String(doc._id),
-        createdAt: doc.createdAt,
+        createdAt: serializeCreatedAt(doc.createdAt),
       };
       if (!matchesTagFilter(entry.tags, tagQuery)) continue;
       pushItem(items, seen, entry);

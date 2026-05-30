@@ -1,16 +1,12 @@
 import { Star } from "lucide-react";
 import { useMemo } from "react";
-import ReviewSectionPhotos from "../ReviewSectionPhotos";
 import ReviewSubmitForm from "../ReviewSubmitForm";
 import ShareSection from "../ShareSection";
 import OptimizedImage from "../media/OptimizedImage";
 import ReviewListSkeleton from "../reviews/ReviewListSkeleton";
 import { useProductReviews } from "@/hooks/useProductReviews";
-import { useTrekkerPhotos } from "@/hooks/useTrekkerPhotos";
-import { reviewToGalleryItems } from "@/lib/review-gallery-items";
 import {
   formatReviewDate,
-  type GalleryApiItem,
   type ProductKind,
   type TrekoraReview,
 } from "@/lib/reviews-api";
@@ -49,23 +45,9 @@ export default function ProductDetailReviewsSection({
     prependReview,
   } = useProductReviews(normalizedSlug);
 
-  const {
-    photos: communityPhotos,
-    loading: photosLoading,
-    error: photosError,
-    prependPhotos,
-    clearOptimistic,
-    reload: reloadGallery,
-  } = useTrekkerPhotos(normalizedSlug, productType);
-
   const handleReviewSubmitted = (review?: TrekoraReview) => {
     if (review) prependReview(review);
     refetch({ silent: true });
-    onContentChanged?.();
-  };
-
-  const handlePhotosPublished = (items: GalleryApiItem[]) => {
-    if (items.length > 0) prependPhotos(items);
     onContentChanged?.();
   };
 
@@ -91,19 +73,6 @@ export default function ProductDetailReviewsSection({
         trekName={productName}
         productType={productType}
         onSubmitted={handleReviewSubmitted}
-        onPhotosPublished={handlePhotosPublished}
-      />
-
-      <ReviewSectionPhotos
-        productName={productName}
-        productSlug={normalizedSlug}
-        productType={productType}
-        communityPhotos={communityPhotos}
-        communityLoading={photosLoading}
-        communityError={photosError}
-        prependPhotos={prependPhotos}
-        clearOptimistic={clearOptimistic}
-        reloadGallery={reloadGallery}
       />
 
       <div
@@ -174,7 +143,7 @@ export default function ProductDetailReviewsSection({
 
       {loading ? <ReviewListSkeleton /> : null}
 
-      {!loading && count === 0 ? (
+      {!loading && !error && count === 0 ? (
         <div
           className="text-center py-10 rounded-2xl"
           style={{ background: "var(--ew-gray-lt)" }}
@@ -191,8 +160,8 @@ export default function ProductDetailReviewsSection({
             className="text-sm max-w-xs mx-auto"
             style={{ color: "var(--ew-text-lt)" }}
           >
-            Share your experience — photos appear in Review Photos and the Photos
-            tab right after you submit.
+            Share your experience — optional photos upload with your review and
+            also appear on the Photos tab.
           </p>
         </div>
       ) : null}

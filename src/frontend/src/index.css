@@ -439,7 +439,7 @@
     background: transparent;
   }
 
-  /* ── Listing pages: sticky filters; pin to top while scrolling (replaces navbar) ── */
+  /* ── Listing pages: sticky filters below navbar (Contact-style mobile flow) ── */
   .listing-sticky-toolbar {
     position: sticky;
     top: var(--site-sticky-top, var(--site-header-height, 3.5rem));

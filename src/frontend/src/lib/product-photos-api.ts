@@ -1,4 +1,4 @@
-import { fetchJson, postJsonLenient } from "@/lib/api-fetch";
+import { fetchJsonLenient, postJsonLenient } from "@/lib/api-fetch";
 import { withRetry } from "@/lib/retry";
 import type { GalleryApiItem, ProductKind, ReviewPhotoMeta } from "@/lib/reviews-api";
 
@@ -61,7 +61,7 @@ export async function fetchProductPhotos(params: {
       type: params.type,
     });
     if (params.uploadSource) q.set("uploadSource", params.uploadSource);
-    return await fetchJson<{
+    return await fetchJsonLenient<{
       success: boolean;
       items?: GalleryApiItem[];
       message?: string;

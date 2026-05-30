@@ -1,4 +1,3 @@
-import { config as loadEnv } from "dotenv";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import express from "express";
@@ -16,10 +15,11 @@ import {
   logEnvValidation,
   validateServerEnv,
 } from "./lib/env-config.js";
+import { loadTrekoraEnv, logTrekoraEnvStatus } from "./lib/load-env.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-loadEnv({ path: join(__dirname, "../src/.env") });
-loadEnv({ path: join(__dirname, "../src/.env.local"), override: true });
+loadTrekoraEnv();
+logTrekoraEnvStatus("discount-api");
 
 const app = express();
 const PORT =

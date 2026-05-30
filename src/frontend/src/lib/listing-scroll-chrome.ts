@@ -1,7 +1,7 @@
-/** Below lg: filters can replace navbar while scrolling. Desktop uses sticky-only (no swap). */
+/** Below lg: legacy pin media query (navbar swap disabled — sticky toolbar stays under header). */
 export const LISTING_CHROME_PIN_MEDIA = "(max-width: 1023px)";
 
-/** Routes with hero + listing sticky toolbar (scroll chrome on mobile + desktop). */
+/** Routes with hero + listing sticky toolbar. */
 const LISTING_CHROME_PATH =
   /^\/(treks|yatras|packages|blog|corporate|upcoming-batches|destinations|gallery)(\/|$)/;
 
@@ -11,11 +11,12 @@ export function isListingScrollChromeRoute(pathname: string): boolean {
   return LISTING_CHROME_PATH.test(pathname);
 }
 
-/** Home uses sticky search only — no navbar swap / fixed toolbar slide-in on scroll. */
-export function isListingChromeNavbarSwapRoute(pathname: string): boolean {
-  const path = pathname.replace(/\/$/, "") || "/";
-  if (path === "/") return false;
-  return isListingScrollChromeRoute(pathname);
+/**
+ * Mobile navbar ↔ filter swap — disabled on all routes.
+ * Contact-style flow: sticky navbar (scroll hide/show) + filters stay below header.
+ */
+export function isListingChromeNavbarSwapRoute(_pathname: string): boolean {
+  return false;
 }
 
 /** Reserved — all listing pages use scroll chrome; kept for API compatibility. */

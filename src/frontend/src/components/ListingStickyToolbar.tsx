@@ -19,8 +19,8 @@ export interface ListingStickyToolbarProps {
 }
 
 /**
- * Listing filters — sticky below navbar when idle; on mobile, pins to top
- * (replaces navbar) while actively scrolling past the hero.
+ * Listing filters — sticky below navbar; when navbar scrolls away on mobile,
+ * toolbar pins to the top (Contact-style chrome flow).
  */
 export default function ListingStickyToolbar({
   children,

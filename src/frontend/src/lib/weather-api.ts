@@ -1,6 +1,5 @@
 import { fetchJson } from "@/lib/api-fetch";
 import type { WeatherData } from "@/lib/weather-types";
-import { getOpenWeatherApiKey } from "@/lib/openweather";
 import { parseForecast, type OpenWeatherCurrentJson } from "@/lib/openweather-parse";
 
 const PROXY_BASE = "/api/v1/weather";
@@ -59,6 +58,8 @@ export async function fetchWeatherForLocation(
 async function fetchWeatherDirectDev(
   location: string,
 ): Promise<WeatherData | null> {
+  if (!import.meta.env.DEV) return null;
+  const { getOpenWeatherApiKey } = await import("@/lib/openweather-dev-key");
   const key = getOpenWeatherApiKey();
   if (!key) return null;
   const base = "https://api.openweathermap.org/data/2.5";
@@ -78,6 +79,7 @@ async function fetchWeatherDirectDev(
   return mapProxyToWeatherData(current, forecast.list);
 }
 
+/** Weather via server proxy in production; dev may fall back to direct API. */
 export function isWeatherServiceConfigured(): boolean {
-  return import.meta.env.PROD || !!getOpenWeatherApiKey();
+  return true;
 }

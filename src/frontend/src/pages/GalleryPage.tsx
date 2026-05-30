@@ -777,6 +777,8 @@ export default function GalleryPage() {
 
         <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
 
+        <TravelSideActionRail variant="listing-gallery" />
+
         <ListingStickyToolbar className="bg-white shadow-sm border-b border-[var(--ew-gray-mid)]">
           <ListingToolbarRegions>
             <div
@@ -800,8 +802,6 @@ export default function GalleryPage() {
             </div>
           </ListingToolbarRegions>
         </ListingStickyToolbar>
-
-        <TravelSideActionRail variant="listing-gallery" />
 
         {/* Masonry grid */}
         <div className="container mx-auto px-4 py-10">

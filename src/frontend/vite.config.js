@@ -2,7 +2,10 @@ import { fileURLToPath, URL } from "url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import environment from "vite-plugin-environment";
+import { loadTrekoraEnv } from "../../backend/lib/load-env.js";
 import { emailApiPlugin } from "./vite-plugin-email-api.mjs";
+
+loadTrekoraEnv();
 
 const ii_url =
   process.env.DFX_NETWORK === "local"

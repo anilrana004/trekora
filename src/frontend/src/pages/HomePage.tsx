@@ -2237,7 +2237,7 @@ export default function HomePage() {
   const homeSeo = buildHomePageSEO();
 
   return (
-    <div className="home-page">
+    <div className="home-page pt-16 min-h-screen md:pt-0">
       <SEOHead
         title={homeSeo.title}
         description={homeSeo.description}
@@ -2344,6 +2344,8 @@ export default function HomePage() {
       <SocialProofTicker />
 
       <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+
+      <TravelSideActionRail variant="home" />
 
       <ListingStickyToolbar className="home-listing-chrome border-b border-[var(--ew-gray-mid)]">
         <HomeMobileSearchPanel />
@@ -2517,8 +2519,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <TravelSideActionRail variant="home" />
 
       {/* ── SECTION 3: TRUST MARQUEE ── */}
       <TrustMarquee />

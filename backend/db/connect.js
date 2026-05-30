@@ -1,21 +1,11 @@
-import dns from "dns";
 import mongoose from "mongoose";
+import { ensureTrekoraEnv, getMongoUri } from "../lib/load-env.js";
 
 const LOG_PREFIX = "[mongodb]";
 
-/** Windows/local resolvers sometimes refuse SRV lookups; optional public DNS fix. */
+/** @deprecated DNS is configured in load-env.js — kept for explicit reconnect calls. */
 function configureMongoDns() {
-  if (process.env.MONGODB_DNS_SERVERS) {
-    dns.setServers(
-      process.env.MONGODB_DNS_SERVERS.split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-    );
-    return;
-  }
-  if (process.env.MONGODB_USE_PUBLIC_DNS === "true") {
-    dns.setServers(["8.8.8.8", "8.8.4.4"]);
-  }
+  ensureTrekoraEnv();
 }
 
 let cached = global.mongoose;
@@ -28,6 +18,8 @@ if (!cached) {
 function registerConnectionHandlers() {
   if (handlersRegistered) return;
   handlersRegistered = true;
+
+  mongoose.connection.setMaxListeners(25);
 
   mongoose.connection.on("connected", () => {
     cached.ready = true;
@@ -63,9 +55,10 @@ export function isMongoReady() {
  * Transient failures are logged; callers should catch and return API errors.
  */
 export async function connectDB() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri || !String(uri).trim()) {
-    throw new Error("MONGODB_URI is not configured");
+  ensureTrekoraEnv();
+  const uri = getMongoUri();
+  if (!uri) {
+    throw new Error("MONGODB_URI is not configured — set it in src/.env");
   }
 
   registerConnectionHandlers();

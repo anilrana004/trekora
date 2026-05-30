@@ -255,8 +255,7 @@ export default function ReviewSubmitForm({
             Review Submitted!
           </p>
           <p className="text-sm mt-1" style={{ color: "var(--ew-text-lt)" }}>
-            Your review and photos are live below, in Review Photos, and on the
-            Photos tab.
+            Your review and photos are live below and on the Photos tab.
           </p>
         </div>
       ) : (

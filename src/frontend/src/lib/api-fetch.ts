@@ -1,3 +1,35 @@
+/**
+ * GET JSON without throwing on 4xx/5xx — for read APIs that encode errors in `{ success: false }`.
+ */
+export async function fetchJsonLenient<T>(
+  input: RequestInfo | URL,
+  init?: RequestInit & { timeoutMs?: number },
+): Promise<T> {
+  const timeoutMs = init?.timeoutMs ?? 25_000;
+  const { timeoutMs: _t, ...rest } = init ?? {};
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(input, { ...rest, signal: controller.signal });
+    try {
+      return (await res.json()) as T;
+    } catch {
+      if (!res.ok) {
+        throw new ApiFetchError(`Request failed (${res.status})`, res.status);
+      }
+      throw new ApiFetchError("Invalid JSON response", res.status);
+    }
+  } catch (err) {
+    if (err instanceof ApiFetchError) throw err;
+    if (err instanceof DOMException && err.name === "AbortError") {
+      throw new ApiFetchError("Request timed out", 408);
+    }
+    throw err;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
 /** JSON fetch with timeout, deduplication, and consistent error handling. */
 
 export class ApiFetchError extends Error {

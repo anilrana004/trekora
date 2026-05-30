@@ -1,12 +1,11 @@
-import { useListingScrollChromeContext } from "@/contexts/ListingScrollChromeContext";
 import { openQueryModalFromLayout } from "@/lib/layout-modals";
-import { isListingScrollChromeRoute } from "@/lib/listing-scroll-chrome";
+import { syncMobileNavHidden } from "@/lib/site-header-offset";
 import { bookSearch } from "@/lib/book-search";
 import { isFeatureLive } from "@/lib/dormant-features";
 import { SiteLogo } from "@/components/SiteLogo";
 import { SITE_LOGO_URL } from "@/lib/site-brand";
 import { SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/lib/site-contact";
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -104,12 +103,7 @@ export default function Navbar() {
   const rafRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isListingChromeRoute = isListingScrollChromeRoute(pathname);
-  const { chromeActive: listingChromeActive } = useListingScrollChromeContext();
-  const hideNavBar = isListingChromeRoute
-    ? listingChromeActive
-    : isMobile && mobileNavHidden;
+  const hideNavBar = isMobile && mobileNavHidden;
 
   function toggleLang() {
     const next = lang === "en" ? "hi" : "en";
@@ -131,12 +125,12 @@ export default function Navbar() {
         const scrolled = y > 10;
         if (isScrollingDown && y > 60) {
           setAnnouncementVisible((v) => (v ? false : v));
-          if (isMobile && !isListingChromeRoute) {
+          if (isMobile) {
             setMobileNavHidden((v) => (v ? v : true));
           }
         } else if (!isScrollingDown) {
           setAnnouncementVisible((v) => (v === false ? true : v));
-          if (isMobile && !isListingChromeRoute) {
+          if (isMobile) {
             setMobileNavHidden((v) => (v ? false : v));
           }
         }
@@ -149,7 +143,12 @@ export default function Navbar() {
       window.removeEventListener("scroll", onScroll);
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
-  }, [isMobile, isListingChromeRoute]);
+  }, [isMobile]);
+
+  useEffect(() => {
+    syncMobileNavHidden(isMobile && mobileNavHidden);
+    return () => syncMobileNavHidden(false);
+  }, [isMobile, mobileNavHidden]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {

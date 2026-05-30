@@ -73,7 +73,12 @@ function serializeReview(doc) {
     photos,
     tags: doc.tags ?? [],
     approved: doc.approved,
-    createdAt: doc.createdAt,
+    createdAt:
+      doc.createdAt instanceof Date
+        ? doc.createdAt.toISOString()
+        : doc.createdAt
+          ? String(doc.createdAt)
+          : new Date().toISOString(),
   };
 }
 
@@ -253,20 +258,42 @@ export async function deleteReviewLogic(id) {
   };
 }
 
+function parseReviewRequest(req) {
+  const raw = req.url ?? "/api/reviews";
+  const q = raw.indexOf("?");
+  const pathname = q >= 0 ? raw.slice(0, q) : raw;
+  const search = q >= 0 ? raw.slice(q + 1) : "";
+  return {
+    pathname,
+    method: req.method ?? "GET",
+    query: new URLSearchParams(search),
+  };
+}
+
+function readStatusForGet(result) {
+  if (result.success) return 200;
+  const msg = String(result.message ?? "");
+  if (
+    msg.includes("temporarily unavailable") ||
+    msg.includes("MongoDB unavailable")
+  ) {
+    return 503;
+  }
+  return 400;
+}
+
 async function handleReviewRoute(req, res) {
   res.setHeader("Content-Type", "application/json");
-  const url = (req.url ?? "").split("?")[0];
-  const method = req.method ?? "GET";
-  const query = new URL(url, "http://local").searchParams;
+  const { pathname, method, query } = parseReviewRequest(req);
 
   try {
-    if (url === "/api/reviews" && method === "POST") {
+    if (pathname === "/api/reviews" && method === "POST") {
       const body = await parseJsonBody(req);
       const result = await createReviewLogic(body);
       return res.status(result.success ? 201 : 400).json(result);
     }
 
-    if (url === "/api/reviews/pending" && method === "GET") {
+    if (pathname === "/api/reviews/pending" && method === "GET") {
       if (!isAdminRequest(req)) {
         return res.status(401).json({ success: false, message: "Unauthorized" });
       }
@@ -274,7 +301,7 @@ async function handleReviewRoute(req, res) {
       return res.status(result.success ? 200 : 503).json(result);
     }
 
-    const approveMatch = url.match(/^\/api\/reviews\/([a-f0-9]{24})\/approve$/i);
+    const approveMatch = pathname.match(/^\/api\/reviews\/([a-f0-9]{24})\/approve$/i);
     if (approveMatch && method === "PATCH") {
       if (!isAdminRequest(req)) {
         return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -283,7 +310,7 @@ async function handleReviewRoute(req, res) {
       return res.status(result.success ? 200 : 400).json(result);
     }
 
-    const deleteMatch = url.match(/^\/api\/reviews\/([a-f0-9]{24})$/i);
+    const deleteMatch = pathname.match(/^\/api\/reviews\/([a-f0-9]{24})$/i);
     if (deleteMatch && method === "DELETE") {
       if (!isAdminRequest(req)) {
         return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -292,7 +319,7 @@ async function handleReviewRoute(req, res) {
       return res.status(result.success ? 200 : 400).json(result);
     }
 
-    const slugMatch = url.match(/^\/api\/reviews\/([^/]+)$/);
+    const slugMatch = pathname.match(/^\/api\/reviews\/([^/]+)$/);
     if (slugMatch && method === "GET") {
       const slug = slugMatch[1];
       if (isObjectId(slug)) {
@@ -307,7 +334,7 @@ async function handleReviewRoute(req, res) {
         limit: limit != null ? Number(limit) : undefined,
         skip: skip != null ? Number(skip) : undefined,
       });
-      return res.status(result.success ? 200 : 400).json(result);
+      return res.status(readStatusForGet(result)).json(result);
     }
 
     return res.status(404).json({ success: false, message: "Not found" });
