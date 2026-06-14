@@ -8,7 +8,7 @@ export type TrekReel = {
   /** Still image preview — only for image-only reels (no videoSrc). */
   thumb?: string;
   duration?: string;
-  /** Cloudinary or remote MP4 — plays inline in the reel card. */
+  /** Cloudflare or Cloudinary MP4 — plays inline in the reel card. */
   videoSrc?: string;
   /** Detail page slug for book / view CTA. */
   productSlug?: string;
@@ -24,8 +24,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       productType: "trek",
       thumb:
         "https://res.cloudinary.com/ddbcauxef/image/upload/v1778728594/qs0zitesubzqzagtwzee.jpg",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779185838/wdablwezwc8bwagf8bkw.mp4",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/roopkund.mp4",
     },
   ],
   "kedarnath-trek": [
@@ -45,7 +44,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       productSlug: "valley-of-flowers",
       productType: "trek",
       videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779185206/dkp7hd4xivfyjbix1nyn.mp4",
+        "https://media.trekora.in/videos/Uttarakhand/valley%20of%20flower.mp4",
     },
   ],
   "hampta-pass": [
@@ -55,7 +54,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       productSlug: "hampta-pass",
       productType: "trek",
       videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779185656/yzu9e7smczz1sxw38djo.mp4",
+        "https://media.trekora.in/videos/Uttarakhand/hampta%20pass.webm",
     },
   ],
   "chandratal-lake": [
@@ -65,7 +64,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       productSlug: "chandratal-lake",
       productType: "trek",
       videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779185402/esk3h3zvxvsuizbaxhpy.mp4",
+        "https://media.trekora.in/videos/Himachal%20Pardesh/chartal.mp4",
     },
   ],
   "triund-trek": [
@@ -74,8 +73,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Triund Trek",
       productSlug: "triund-trek",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779183604/vaoartvqoifelbzsvxkq.mp4",
+      videoSrc: "https://media.trekora.in/videos/Himachal%20Pardesh/truind.mp4",
     },
   ],
   "brahmatal-trek": [
@@ -84,8 +82,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Brahmatal Winter Trek",
       productSlug: "brahmatal-trek",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779302126/xcfjofztgf2xzuxzhizp.mp4",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/bharamtal.mp4",
     },
   ],
   "chopta-tungnath": [
@@ -94,8 +91,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Chopta Tungnath Chandrashila Trek",
       productSlug: "chopta-tungnath",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779337312/ghb8cqlmfnsrrebbxmwq.mp4",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/tungnath.mp4",
     },
   ],
   "har-ki-dun": [
@@ -104,8 +100,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Har Ki Dun Trek",
       productSlug: "har-ki-dun",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779338356/mii8qpwwpswn9yforlqd.mp4",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/harkidun.mp4",
     },
   ],
   "kedarkantha-trek": [
@@ -114,8 +109,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Kedarkantha Trek",
       productSlug: "kedarkantha-trek",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779338751/fjhlqcpouo9g9o2jo0nt.mp4",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/kedarkantha.mp4",
     },
   ],
   "dayara-bugyal": [
@@ -124,8 +118,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Dayara Bugyal Trek",
       productSlug: "dayara-bugyal",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779339015/hdnkkbhtjasrkg9fk9vk.mp4",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/kedarnath.webm",
     },
   ],
   "rupin-pass": [
@@ -134,8 +127,7 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Rupin Pass Trek",
       productSlug: "rupin-pass",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779339748/xqygw0fzutgxjnykzyde.mp4",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/rupin%20pass.mp4",
     },
   ],
 };

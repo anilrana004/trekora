@@ -63,13 +63,13 @@ import QueryBottomSheet from "../components/QueryBottomSheet";
 import { SEOHead } from "../components/SEOHead";
 import TrailConditionBadge from "../components/TrailConditionBadge";
 import TrekMap from "../components/TrekMap";
-import HomeTrekFeatureMedia from "../components/media/HomeTrekFeatureMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
 import {
   DetailTabPanel,
   ProductDetailBookingSidebarHeader,
   ProductDetailGroupSizeStepper,
   ProductDetailHero,
+  ProductDetailHeroMedia,
   ProductDetailItinerarySection,
   ProductDetailLightbox,
   ProductDetailPhotosSection,
@@ -646,11 +646,13 @@ export default function TrekDetailPage() {
           </>
         }
         renderSlide={(src, index) => (
-          <HomeTrekFeatureMedia
+          <ProductDetailHeroMedia
+            key={`${trek.slug}-hero-${heroIndex}`}
             trekSlug={trek.slug}
             image={src}
             alt={`${trek.name} — view ${index + 1}`}
-            priority={index === 0}
+            priority={heroIndex === 0}
+            isPrimaryHeroSlide={heroIndex === 0}
             variant="hero"
             sizes="100vw"
             className="object-cover"

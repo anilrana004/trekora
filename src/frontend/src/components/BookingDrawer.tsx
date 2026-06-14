@@ -16,8 +16,9 @@ import { bookingEmailSuccessMessage } from "@/services/booking-email-api";
 import { submitBookingEmail } from "@/services/booking-email-api";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useReducer, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
-import { useIsMobile } from "../hooks/use-mobile";
+import { isMobileViewport, useIsMobile } from "../hooks/use-mobile";
 import OptimizedImage from "./media/OptimizedImage";
 
 /* ── Types ── */
@@ -115,6 +116,8 @@ export default function BookingDrawer({
 }: BookingDrawerProps) {
   const paymentLive = isFeatureLive("payment");
   const isMobile = useIsMobile();
+  /** Fresh mounts (e.g. upcoming batches) need sync layout — avoid desktop drawer on phone. */
+  const mobileLayout = isOpen ? isMobileViewport() : isMobile;
   const [state, dispatch] = useReducer(reducer, initialState);
   const [phoneCountry, setPhoneCountry] = useState("IN");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -357,10 +360,10 @@ export default function BookingDrawer({
     <div
       ref={drawerRef}
       className="flex flex-col h-full bg-white"
-      style={{ maxWidth: isMobile ? "100vw" : 480 }}
+      style={{ maxWidth: mobileLayout ? "100%" : 480 }}
     >
       {/* Mobile handle bar */}
-      {isMobile && (
+      {mobileLayout && (
         <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
           <div
             className="rounded-full"
@@ -1019,7 +1022,9 @@ export default function BookingDrawer({
     </div>
   );
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -1036,31 +1041,21 @@ export default function BookingDrawer({
             aria-hidden="true"
           />
 
-          {/* Drawer panel */}
+          {/* Drawer panel — portaled + full-width bottom sheet on phone */}
           <motion.div
             key="drawer"
-            initial={isMobile ? { y: "100%" } : { x: "100%" }}
-            animate={isMobile ? { y: 0 } : { x: 0 }}
-            exit={isMobile ? { y: "100%" } : { x: "100%" }}
+            initial={mobileLayout ? { y: "100%" } : { x: "100%" }}
+            animate={mobileLayout ? { y: 0 } : { x: 0 }}
+            exit={mobileLayout ? { y: "100%" } : { x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed z-[120] overflow-hidden shadow-2xl"
+            className="booking-drawer fixed z-[120] overflow-hidden shadow-2xl max-md:inset-x-0 max-md:bottom-0 max-md:w-full max-md:max-w-[100vw] max-md:rounded-t-[20px] md:top-0 md:right-0 md:bottom-0 md:left-auto md:w-[480px] md:rounded-l-[20px]"
             style={{
-              ...(isMobile
+              ...(mobileLayout
                 ? {
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    top: "auto",
-                    maxHeight: "95vh",
-                    borderRadius: "20px 20px 0 0",
+                    maxHeight: "min(95vh, 100dvh)",
+                    paddingBottom: "env(safe-area-inset-bottom, 0px)",
                   }
-                : {
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    width: 480,
-                    borderRadius: "20px 0 0 20px",
-                  }),
+                : {}),
             }}
             role="dialog"
             aria-modal="true"
@@ -1071,6 +1066,7 @@ export default function BookingDrawer({
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

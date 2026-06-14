@@ -15,6 +15,7 @@ import {
   buildSeoImageUrl,
   isCloudinaryUrl,
 } from "@/lib/images/cloudinary-url";
+import { isCloudflareMediaUrl } from "@/lib/media-url";
 
 export type { ImageDeliveryOptions };
 
@@ -85,8 +86,8 @@ export type BuildOptimizedVideoOptions = {
 };
 
 /**
- * Video delivery: adaptive format/quality via Cloudinary (works after deploy when
- * `VITE_CLOUDINARY_CLOUD_NAME` is set — falls back to cloud name in asset URLs).
+ * Video delivery: Cloudflare URLs pass through; Cloudinary gets adaptive transforms
+ * (works after deploy when `VITE_CLOUDINARY_CLOUD_NAME` is set).
  */
 export function buildOptimizedVideoUrl(
   src: string,
@@ -94,6 +95,10 @@ export function buildOptimizedVideoUrl(
 ): string {
   const trimmed = src.trim();
   if (!trimmed || trimmed.startsWith("blob:") || trimmed.startsWith("data:")) {
+    return trimmed;
+  }
+
+  if (isCloudflareMediaUrl(trimmed)) {
     return trimmed;
   }
 

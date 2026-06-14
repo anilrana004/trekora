@@ -1,3 +1,16 @@
+export const CLOUDFLARE_MEDIA_ORIGIN = "https://media.trekora.in";
+
+/** Trekora Cloudflare CDN — videos only; images stay on Cloudinary. */
+export function isCloudflareMediaUrl(url: string): boolean {
+  const u = url.trim();
+  if (!u) return false;
+  try {
+    return new URL(u).hostname === "media.trekora.in";
+  } catch {
+    return false;
+  }
+}
+
 /** True for Cloudinary video delivery URLs and common video file extensions. */
 export function isVideoMediaUrl(url: string): boolean {
   const u = url.trim().toLowerCase();

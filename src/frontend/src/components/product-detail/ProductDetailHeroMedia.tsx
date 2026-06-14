@@ -1,33 +1,35 @@
 import { homeTrekReelVideo } from "@/data/trek-reels";
-import OptimizedImage, { type ImageVariant } from "./OptimizedImage";
-import OptimizedVideo from "./OptimizedVideo";
+import OptimizedImage, { type ImageVariant } from "../media/OptimizedImage";
+import OptimizedVideo from "../media/OptimizedVideo";
 
-type HomeTrekFeatureMediaProps = {
+type ProductDetailHeroMediaProps = {
+  trekSlug: string;
   image: string;
   alt: string;
-  trekSlug: string;
   sizes: string;
   className?: string;
   priority?: boolean;
   variant?: ImageVariant;
-  /** Phone reel video — homepage promos only; use ProductDetailHeroMedia on detail carousels. */
-  showMobileReel?: boolean;
+  /** True when the hero carousel is on slide 1 — only then play the mobile reel. */
+  isPrimaryHeroSlide: boolean;
 };
 
 /**
- * Trek feature frame: reel video on phone (when enabled), photo on desktop (lg+).
+ * Trek detail hero slide: Cloudflare reel on phone for slide 1 only; photos on all other slides.
  */
-export default function HomeTrekFeatureMedia({
+export default function ProductDetailHeroMedia({
+  trekSlug,
   image,
   alt,
-  trekSlug,
   sizes,
-  className = "media-frame__img object-cover",
+  className = "object-cover",
   priority,
   variant = "hero",
-  showMobileReel = true,
-}: HomeTrekFeatureMediaProps) {
-  const reelVideo = showMobileReel ? homeTrekReelVideo(trekSlug) : undefined;
+  isPrimaryHeroSlide,
+}: ProductDetailHeroMediaProps) {
+  const reelVideo = isPrimaryHeroSlide
+    ? homeTrekReelVideo(trekSlug)
+    : undefined;
 
   if (reelVideo) {
     return (

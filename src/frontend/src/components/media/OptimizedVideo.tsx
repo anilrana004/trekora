@@ -68,6 +68,13 @@ export default function OptimizedVideo({
     setUseRawSrc(false);
   }, [src, optimizedSrc]);
 
+  useEffect(() => {
+    const el = videoRef.current;
+    return () => {
+      el?.pause();
+    };
+  }, []);
+
   const tryPlay = useCallback(async (el: HTMLVideoElement) => {
     el.muted = true;
     try {
