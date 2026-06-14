@@ -1,4 +1,5 @@
 import { buildOptimizedImageUrl } from "@/lib/images/cloudinary-url";
+import { isCloudflareMediaUrl } from "@/lib/media-url";
 import {
   type VideoDeliveryProfile,
   buildOptimizedVideoUrl,
@@ -23,6 +24,8 @@ export type OptimizedVideoProps = Omit<
   priority?: boolean;
   maxWidth?: number;
   profile?: VideoDeliveryProfile;
+  /** Fired when both optimized and raw src fail to load. */
+  onVideoError?: () => void;
 };
 
 function cn(...parts: Array<string | false | undefined>) {
@@ -37,6 +40,7 @@ export default function OptimizedVideo({
   className,
   maxWidth,
   profile,
+  onVideoError,
   muted = true,
   playsInline = true,
   loop,
@@ -52,10 +56,11 @@ export default function OptimizedVideo({
     return 720;
   }, [maxWidth, profile]);
 
-  const optimizedSrc = useMemo(
-    () => buildOptimizedVideoUrl(src, { width: deliveryWidth }),
-    [src, deliveryWidth],
-  );
+  const optimizedSrc = useMemo(() => {
+    const trimmed = src.trim();
+    if (isCloudflareMediaUrl(trimmed)) return trimmed;
+    return buildOptimizedVideoUrl(trimmed, { width: deliveryWidth });
+  }, [src, deliveryWidth]);
 
   const activeSrc = useRawSrc ? src : optimizedSrc;
 
@@ -87,8 +92,10 @@ export default function OptimizedVideo({
   const handleError = useCallback(() => {
     if (!useRawSrc) {
       setUseRawSrc(true);
+      return;
     }
-  }, [useRawSrc]);
+    onVideoError?.();
+  }, [useRawSrc, onVideoError]);
 
   useEffect(() => {
     const el = videoRef.current;

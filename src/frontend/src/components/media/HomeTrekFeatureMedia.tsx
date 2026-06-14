@@ -1,4 +1,5 @@
 import { homeTrekReelVideo } from "@/data/trek-reels";
+import { useEffect, useState } from "react";
 import OptimizedImage, { type ImageVariant } from "./OptimizedImage";
 import OptimizedVideo from "./OptimizedVideo";
 
@@ -28,12 +29,18 @@ export default function HomeTrekFeatureMedia({
   showMobileReel = true,
 }: HomeTrekFeatureMediaProps) {
   const reelVideo = showMobileReel ? homeTrekReelVideo(trekSlug) : undefined;
+  const [videoFailed, setVideoFailed] = useState(false);
 
-  if (reelVideo) {
+  useEffect(() => {
+    setVideoFailed(false);
+  }, [reelVideo, trekSlug]);
+
+  if (reelVideo && !videoFailed) {
     return (
       <div className="absolute inset-0 overflow-hidden">
         <OptimizedVideo
           src={reelVideo}
+          poster={image}
           profile="hero-mobile"
           fill
           muted
@@ -43,6 +50,7 @@ export default function HomeTrekFeatureMedia({
           priority={priority}
           className={`${className} lg:hidden`}
           aria-label={`${alt} trek reel`}
+          onVideoError={() => setVideoFailed(true)}
         />
         <OptimizedImage
           src={image}

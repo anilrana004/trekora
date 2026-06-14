@@ -1,5 +1,5 @@
 import { homeTrekReelVideo } from "@/data/trek-reels";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import OptimizedImage, { type ImageVariant } from "./OptimizedImage";
 import OptimizedVideo from "./OptimizedVideo";
 
@@ -32,10 +32,15 @@ export default function ListingCardMedia({
   className,
 }: ListingCardMediaProps) {
   const reelVideo = trekSlug ? homeTrekReelVideo(trekSlug) : undefined;
+  const [videoFailed, setVideoFailed] = useState(false);
+
+  useEffect(() => {
+    setVideoFailed(false);
+  }, [reelVideo, trekSlug]);
 
   return (
     <div className={cn("listing-card-media", className)}>
-      {reelVideo ? (
+      {reelVideo && !videoFailed ? (
         <>
           <OptimizedVideo
             src={reelVideo}
@@ -49,6 +54,7 @@ export default function ListingCardMedia({
             priority={priority}
             className="listing-card-media__img pointer-events-none lg:hidden"
             aria-label={`${alt} trek reel`}
+            onVideoError={() => setVideoFailed(true)}
           />
           <OptimizedImage
             src={src}

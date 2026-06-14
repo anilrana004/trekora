@@ -57,7 +57,7 @@
         { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com https: blob: data:; connect-src 'self' https: wss:; frame-src 'self' https://www.google.com https://maps.google.com https://api.razorpay.com https://checkout.razorpay.com"
+          "value": "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' https://media.trekora.in https://res.cloudinary.com https: blob: data:; connect-src 'self' https: wss:; frame-src 'self' https://www.google.com https://maps.google.com https://api.razorpay.com https://checkout.razorpay.com"
         }
       ]
     },

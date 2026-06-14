@@ -1,4 +1,5 @@
 import { homeTrekReelVideo } from "@/data/trek-reels";
+import { useEffect, useState } from "react";
 import OptimizedImage, { type ImageVariant } from "../media/OptimizedImage";
 import OptimizedVideo from "../media/OptimizedVideo";
 
@@ -30,12 +31,18 @@ export default function ProductDetailHeroMedia({
   const reelVideo = isPrimaryHeroSlide
     ? homeTrekReelVideo(trekSlug)
     : undefined;
+  const [videoFailed, setVideoFailed] = useState(false);
 
-  if (reelVideo) {
+  useEffect(() => {
+    setVideoFailed(false);
+  }, [reelVideo, trekSlug, isPrimaryHeroSlide]);
+
+  if (reelVideo && !videoFailed) {
     return (
       <div className="absolute inset-0 overflow-hidden">
         <OptimizedVideo
           src={reelVideo}
+          poster={image}
           profile="hero-mobile"
           fill
           muted
@@ -45,6 +52,7 @@ export default function ProductDetailHeroMedia({
           priority={priority}
           className={`${className} lg:hidden`}
           aria-label={`${alt} trek reel`}
+          onVideoError={() => setVideoFailed(true)}
         />
         <OptimizedImage
           src={image}

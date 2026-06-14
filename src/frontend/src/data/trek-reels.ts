@@ -33,8 +33,6 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Kedarnath Trek",
       productSlug: "kedarnath-trek",
       productType: "trek",
-      videoSrc:
-        "https://res.cloudinary.com/ddbcauxef/video/upload/v1779186008/ulp8j1ohcab8qjck7uo5.mp4",
     },
   ],
   "valley-of-flowers": [

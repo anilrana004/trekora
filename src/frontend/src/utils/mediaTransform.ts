@@ -117,10 +117,8 @@ export function buildOptimizedVideoUrl(
     return injectVideoTransforms(working, chain);
   }
 
-  if (!/^https?:\/\//i.test(working)) return trimmed;
-
-  const encoded = encodeURIComponent(working);
-  return `https://res.cloudinary.com/${cloud}/video/fetch/${chain}/${encoded}`;
+  // Cloudflare and other remote URLs — direct CDN only (Cloudinary fetch returns 401).
+  return trimmed;
 }
 
 /** Versioned asset path after `/video/upload/` (strips any transform segment). */
