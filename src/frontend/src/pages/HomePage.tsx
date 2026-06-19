@@ -356,7 +356,7 @@ const VALLEY_OF_FLOWERS_PHOTO_GALLERY: { src: string; alt: string }[] = (
             : "Himalayan scenery on the Valley of Flowers and Hemkund circuit",
 }));
 
-/** Brahmatal winter trek — hero slide + UK destinations (`hero/home`). */
+/** Brahmatal winter trek — Trending Uttarakhand grid + feature strip. */
 const HOME_HERO_BRAHMATAL_WINTER_IMAGE =
   "https://res.cloudinary.com/ddbcauxef/image/upload/v1778700831/cqkhz2o0jehuskfikrih.jpg";
 
@@ -979,12 +979,12 @@ const HERO_SETS: HeroSet[] = [
   },
   {
     left: {
-      image: HOME_HERO_BRAHMATAL_WINTER_IMAGE,
-      videoSrc: homeTrekReelVideo("brahmatal-trek"),
-      title: "Brahmatal Winter Trek",
-      subtitle: "Frozen Wonderland Awaits",
-      cta: "Book Winter Trek",
-      ctaLink: "/treks/brahmatal-trek",
+      image: CHOPTA_TUNGNATH_PHOTO_GALLERY[0].src,
+      videoSrc: homeTrekReelVideo("chopta-tungnath"),
+      title: "Chopta Tungnath Trek",
+      subtitle: "Panch Kedar · Chandrashila Summit",
+      cta: "Book Trek",
+      ctaLink: "/treks/chopta-tungnath",
     },
     right: [
       {
@@ -1597,6 +1597,55 @@ function HeroBannerGrid() {
   }, [mediaVisible]);
 
   const set = HERO_SETS[setIdx];
+  const [deskPromoWide, ...deskPromoTall] = set.right;
+
+  const renderDeskPromo = (
+    b: HeroBanner,
+    i: number,
+    layout: "wide" | "tall",
+  ) => (
+    <article
+      key={b.title}
+      className={`home-hero__desk-promo group home-hero__desk-promo--${layout}`}
+    >
+      <div
+        className="home-hero__desk-media"
+        style={{ opacity: mediaVisible ? 1 : 0 }}
+        aria-hidden={!mediaVisible}
+      >
+        <OptimizedImage
+          key={`hero-right-desk-${setIdx}-${i}-${layout}`}
+          src={b.image}
+          alt={b.title}
+          fill
+          variant={layout === "wide" ? "hero" : "destination"}
+          sizes={layout === "wide" ? "28vw" : "14vw"}
+          className="home-hero__desk-img home-hero__desk-img--promo"
+        />
+      </div>
+      <div
+        className="home-hero__desk-scrim home-hero__desk-scrim--promo"
+        aria-hidden
+      />
+      <div className="home-hero__desk-copy home-hero__desk-copy--promo">
+        <h3 className="text-shadow text-sm font-bold leading-snug text-white line-clamp-2">
+          {b.title}
+        </h3>
+        <p className="text-shadow mt-0.5 line-clamp-1 text-[11px] leading-snug text-white">
+          {b.subtitle}
+        </p>
+        <HeroRightPromoCta
+          ctaLink={b.ctaLink}
+          ctaBookSearch={b.ctaBookSearch}
+          className="btn-primary home-hero__cta home-hero__cta--strip mt-1.5 shrink-0 px-3 py-1 text-xs"
+          style={{ width: "fit-content" }}
+          data-ocid={`hero.right_cta.${i + 1}`}
+        >
+          {b.cta}
+        </HeroRightPromoCta>
+      </div>
+    </article>
+  );
 
   const heroDots = (
     <div className="home-hero__dots flex justify-center gap-2">
@@ -1642,7 +1691,7 @@ function HeroBannerGrid() {
         <h2 className="text-shadow mb-1 text-xl font-bold leading-tight text-white sm:text-2xl lg:text-3xl">
           {set.left.title}
         </h2>
-        <p className="text-shadow mb-3 line-clamp-2 text-sm text-white/90">
+        <p className="text-shadow mb-3 line-clamp-2 text-sm text-white">
           {set.left.subtitle}
         </p>
         <HeroRightPromoCta
@@ -1700,7 +1749,7 @@ function HeroBannerGrid() {
                   <h3 className="text-shadow text-sm font-bold leading-tight text-white">
                     {b.title}
                   </h3>
-                  <p className="text-shadow mb-2 line-clamp-1 text-[11px] text-white/85">
+                  <p className="text-shadow mb-2 line-clamp-1 text-[11px] text-white">
                     {b.subtitle}
                   </p>
                   <HeroRightPromoCta
@@ -1719,26 +1768,13 @@ function HeroBannerGrid() {
         </div>
       </div>
 
-      {/* ── Desktop: original 2-column grid (unchanged layout) ── */}
-      <div
-        className="home-hero__desktop hidden lg:block"
-        style={{ minHeight: 520 }}
-      >
+      {/* ── Desktop: premium 2-column hero grid ── */}
+      <div className="home-hero__desktop hidden lg:block">
         <div className="container mx-auto px-4 py-4">
-          <div
-            className="grid gap-2"
-            style={{
-              gridTemplateColumns: "1fr 1fr",
-              gridTemplateRows: "auto",
-              height: "100%",
-            }}
-          >
-            <div
-              className="relative overflow-hidden rounded-lg"
-              style={{ minHeight: 280, height: "clamp(280px, 50vw, 420px)" }}
-            >
+          <div className="home-hero__desk-grid">
+            <article className="home-hero__desk-featured group">
               <div
-                className="absolute inset-0 transition-opacity duration-400 ease-out"
+                className="home-hero__desk-media"
                 style={{ opacity: mediaVisible ? 1 : 0 }}
                 aria-hidden={!mediaVisible}
               >
@@ -1749,77 +1785,43 @@ function HeroBannerGrid() {
                   fill
                   variant="hero"
                   priority
-                  sizes="50vw"
-                  className="min-h-[420px]"
-                  style={{ minHeight: 420 }}
+                  sizes="55vw"
+                  className="home-hero__desk-img"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               </div>
-              <div className="home-hero__copy absolute bottom-0 left-0 right-0 z-[2] p-6">
-                <p className="mb-1 text-xs uppercase tracking-widest text-white/80">
+              <div
+                className="home-hero__desk-scrim home-hero__desk-scrim--featured"
+                aria-hidden
+              />
+              <div className="home-hero__desk-copy home-hero__desk-copy--featured">
+                <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-white/75">
                   Trekora Featured
                 </p>
-                <h2 className="text-shadow mb-1 text-3xl font-bold text-white">
+                <h2 className="text-shadow mb-1.5 max-w-lg text-3xl font-bold leading-tight text-white xl:text-[2rem]">
                   {set.left.title}
                 </h2>
-                <p className="text-shadow mb-4 text-sm text-white/90">
+                <p className="text-shadow mb-4 max-w-md text-sm text-white">
                   {set.left.subtitle}
                 </p>
                 <HeroRightPromoCta
                   ctaLink={set.left.ctaLink}
-                  className="btn-primary home-hero__cta home-hero__cta--featured text-sm"
+                  className="btn-primary home-hero__cta home-hero__cta--featured w-fit text-sm"
+                  style={{ width: "fit-content" }}
                   data-ocid="hero.left_cta"
                 >
                   {set.left.cta}
                 </HeroRightPromoCta>
               </div>
-            </div>
-            <div
-              className="flex flex-col gap-2"
-              style={{ height: "clamp(280px, 50vw, 420px)" }}
-            >
-              {set.right.map((b, i) => (
-                <div
-                  key={b.title}
-                  className="relative flex-1 overflow-hidden rounded-lg"
-                  style={{ minHeight: 128 }}
-                >
-                  <div
-                    className="absolute inset-0 transition-opacity duration-400 ease-out"
-                    style={{ opacity: mediaVisible ? 1 : 0 }}
-                    aria-hidden={!mediaVisible}
-                  >
-                    <OptimizedImage
-                      src={b.image}
-                      alt={b.title}
-                      fill
-                      variant="hero"
-                      sizes="25vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
-                  </div>
-                  <div className="home-hero__copy absolute inset-x-0 bottom-0 z-[2] flex flex-col justify-end px-4 pb-3 pt-10">
-                    <h3 className="text-shadow text-base font-bold leading-tight text-white line-clamp-2">
-                      {b.title}
-                    </h3>
-                    <p className="text-shadow mb-2 line-clamp-2 text-xs text-white/85">
-                      {b.subtitle}
-                    </p>
-                    <HeroRightPromoCta
-                      ctaLink={b.ctaLink}
-                      ctaBookSearch={b.ctaBookSearch}
-                      className="btn-primary home-hero__cta home-hero__cta--strip shrink-0 px-3 py-1 text-xs"
-                      style={{ width: "fit-content" }}
-                      data-ocid={`hero.right_cta.${i + 1}`}
-                    >
-                      {b.cta}
-                    </HeroRightPromoCta>
-                  </div>
-                </div>
-              ))}
+            </article>
+
+            <div className="home-hero__desk-promos">
+              {deskPromoWide ? renderDeskPromo(deskPromoWide, 0, "wide") : null}
+              <div className="home-hero__desk-promo-duo">
+                {deskPromoTall.map((b, i) => renderDeskPromo(b, i + 1, "tall"))}
+              </div>
             </div>
           </div>
-          <div className="mt-3">{heroDots}</div>
+          <div className="mt-4">{heroDots}</div>
         </div>
       </div>
     </section>

@@ -184,7 +184,13 @@ export default function Navbar() {
                 >
                   <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.47 11.47 0 00.57 3.58 1 1 0 01-.25 1.02l-2.2 2.19z" />
                 </svg>
-                Toll Free: 1800-123-4567 &nbsp;|&nbsp; 9AM–9PM Daily
+                <a
+                  href={`tel:${SITE_PHONE_TEL}`}
+                  className="text-white/95 hover:text-white transition-colors no-underline hover:underline"
+                >
+                  Call us: {SITE_PHONE_DISPLAY}
+                </a>
+                &nbsp;|&nbsp; 9AM–9PM Daily
               </span>
               <span className="hidden md:flex items-center gap-4">
                 <Link
@@ -1100,7 +1106,7 @@ export default function Navbar() {
                   WhatsApp Us
                 </a>
                 <a
-                  href="tel:+911800123456"
+                  href={`tel:${SITE_PHONE_TEL}`}
                   className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm text-white"
                   style={{
                     background: "var(--ew-orange)",
