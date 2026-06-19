@@ -1,5 +1,5 @@
 import { homeTrekReelVideo } from "@/data/trek-reels";
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import OptimizedImage, { type ImageVariant } from "./OptimizedImage";
 import OptimizedVideo from "./OptimizedVideo";
 

@@ -55,6 +55,7 @@ import {
   ProductDetailFaqList,
   ProductDetailGroupSizeStepper,
   ProductDetailHero,
+  ProductDetailHeroMedia,
   ProductDetailItinerarySection,
   ProductDetailLightbox,
   ProductDetailPhotosSection,
@@ -65,6 +66,11 @@ import {
 } from "../components/product-detail";
 import { YATRAS } from "../data/yatras";
 import type { YatraHowToReach } from "../data/yatras";
+import {
+  enrichReelsForDisplay,
+  homeTrekReelVideo,
+  TREK_REELS_BY_SLUG,
+} from "../data/trek-reels";
 import { downloadYatraItineraryPDF } from "../lib/pdfGenerator";
 import {
   generateBreadcrumbJSONLD,
@@ -366,6 +372,7 @@ export default function YatraDetailPage() {
   const displayRating = yatra.rating ?? 4.8;
   const displayReviewCount = yatra.reviewCount ?? 84;
   const bestSeasonMonths = monthsFromSeasonLabel(yatra.bestTime);
+  const yatraHeroReel = homeTrekReelVideo(yatra.slug);
 
   return (
     <div
@@ -424,6 +431,7 @@ export default function YatraDetailPage() {
         name={yatra.name}
         rating={displayRating}
         reviewCount={displayReviewCount}
+        hideNavOnLg={Boolean(yatraHeroReel)}
         badges={
           <>
             <span className="badge-orange text-[10px] capitalize">
@@ -442,12 +450,15 @@ export default function YatraDetailPage() {
           </p>
         }
         renderSlide={(src, index) => (
-          <OptimizedImage
-            src={src}
+          <ProductDetailHeroMedia
+            key={`${yatra.slug}-hero-${heroImg}`}
+            trekSlug={yatra.slug}
+            image={src}
             alt={`${yatra.name} — view ${index + 1}`}
-            fill
-            priority={index === 0}
+            priority={heroImg === 0}
+            isPrimaryHeroSlide={heroImg === 0}
             variant="hero"
+            sizes="100vw"
             className="object-cover"
           />
         )}
@@ -1137,6 +1148,11 @@ export default function YatraDetailPage() {
                   galleryPhotos={galleryPhotos}
                   coverImage={allImages[0]}
                   onPhotoClick={setLightboxIdx}
+                  reels={
+                    TREK_REELS_BY_SLUG[yatra.slug]
+                      ? enrichReelsForDisplay(TREK_REELS_BY_SLUG[yatra.slug])
+                      : undefined
+                  }
                   ocidPrefix="yatra_detail"
                 />
               </DetailTabPanel>

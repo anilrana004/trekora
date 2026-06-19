@@ -35,6 +35,15 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       productType: "trek",
     },
   ],
+  "kedarnath-yatra": [
+    {
+      id: 1,
+      title: "Kedarnath Yatra",
+      productSlug: "kedarnath-yatra",
+      productType: "yatra",
+      videoSrc: "https://media.trekora.in/videos/Uttarakhand/kedarnath.webm",
+    },
+  ],
   "valley-of-flowers": [
     {
       id: 1,
@@ -116,7 +125,8 @@ export const TREK_REELS_BY_SLUG: Record<string, TrekReel[]> = {
       title: "Dayara Bugyal Trek",
       productSlug: "dayara-bugyal",
       productType: "trek",
-      videoSrc: "https://media.trekora.in/videos/Uttarakhand/kedarnath.webm",
+      videoSrc:
+        "https://media.trekora.in/videos/Uttarakhand/darya%20bugyal.mp4",
     },
   ],
   "rupin-pass": [
@@ -169,7 +179,10 @@ export const HOMEPAGE_REELS: TrekReel[] = Object.values(
   enrichReelsForDisplay(entries, slugIndex * 10),
 );
 
-/** Reel MP4 for homepage hero, dest grid, feature strips, and cards (phone). */
+/** Reel video for homepage hero, dest grid, feature strips, and cards (phone). */
 export function homeTrekReelVideo(trekSlug: string): string | undefined {
   return TREK_REELS_BY_SLUG[trekSlug]?.[0]?.videoSrc;
 }
+
+/** Same lookup — works for trek and yatra slugs in `TREK_REELS_BY_SLUG`. */
+export const homeProductReelVideo = homeTrekReelVideo;

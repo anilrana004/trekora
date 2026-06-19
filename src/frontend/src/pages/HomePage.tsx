@@ -72,6 +72,7 @@ const TRIYUGINARAYAN_YATRA = YATRAS.find(
   (y) => y.slug === "triyuginarayan-temple",
 );
 const DO_DHAM_YATRA = YATRAS.find((y) => y.slug === "do-dham-yatra");
+const KEDARNATH_YATRA = YATRAS.find((y) => y.slug === "kedarnath-yatra");
 /** Char Dham Yatra — `hero/yatras/char-dham-yatra` (order left-to-right in grid). */
 const CHAR_DHAM_PHOTO_GALLERY: { src: string; alt: string }[] = [
   {
@@ -830,6 +831,27 @@ const DO_DHAM_PHOTO_GALLERY: { src: string; alt: string }[] = [
     alt: "Himalayan confluence and mountain shrines along Do Dham Yatra in Uttarakhand",
   },
 ];
+
+/** Kedarnath Yatra — Jyotirlinga at 3,583m (home yatras strip). */
+const KEDARNATH_YATRA_PHOTO_GALLERY: { src: string; alt: string }[] = (
+  KEDARNATH_YATRA?.images?.length
+    ? KEDARNATH_YATRA.images
+    : KEDARNATH_YATRA
+      ? [KEDARNATH_YATRA.image]
+      : []
+).map((src, idx) => ({
+  src,
+  alt:
+    idx === 0
+      ? "Kedarnath temple at 3,583m with snow-capped Himalayan peaks"
+      : idx === 1
+        ? "Pilgrims on the Kedarnath trek from Gaurikund along the Mandakini valley"
+        : idx === 2
+          ? "Ancient Kedarnath shrine and surrounding Garhwal Himalaya scenery"
+          : idx === 3
+            ? "Mountain trail and prayer flags on the Kedarnath Yatra route"
+            : "Sacred Kedarnath Dham pilgrimage views in Rudraprayag, Uttarakhand",
+}));
 
 /** Triyuginarayan Temple Yatra — Shiva–Parvati wedding site & eternal flame (home strip). */
 const TRIYUGINARAYAN_PHOTO_GALLERY: { src: string; alt: string }[] = [
@@ -3548,6 +3570,56 @@ export default function HomePage() {
                     params={{ slug: "do-dham-yatra" }}
                     className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
                     data-ocid={`yatras.do_dham_thumb.${idx + 1}`}
+                  >
+                    <OptimizedImage
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      variant="gallery-thumb"
+                      className="media-frame__img object-cover"
+                      sizes="(max-width:640px) 50vw, 25vw"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+          {KEDARNATH_YATRA && KEDARNATH_YATRA_PHOTO_GALLERY.length > 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-8"
+              data-ocid="yatras.kedarnath_strip"
+            >
+              <p
+                className="text-center text-[11px] font-bold uppercase tracking-[0.2em] mb-3"
+                style={{ color: "rgba(255,255,255,0.85)" }}
+              >
+                Kedarnath Yatra — Jyotirlinga at 3,583m · Mandakini valley trek
+              </p>
+              <Link
+                to="/yatras/$slug"
+                params={{ slug: "kedarnath-yatra" }}
+                className="media-frame relative mx-auto mb-3 block aspect-[16/9] w-full max-w-3xl overflow-hidden rounded-xl ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                data-ocid="yatras.kedarnath_feature"
+              >
+                <HomeTrekFeatureMedia
+                  trekSlug="kedarnath-yatra"
+                  image={KEDARNATH_YATRA_PHOTO_GALLERY[0].src}
+                  alt={KEDARNATH_YATRA_PHOTO_GALLERY[0].alt}
+                  sizes="(max-width:768px) 100vw, 768px"
+                  variant="hero"
+                />
+              </Link>
+              <div className="mx-auto grid max-w-4xl grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5 lg:grid-cols-5">
+                {KEDARNATH_YATRA_PHOTO_GALLERY.map((item, idx) => (
+                  <Link
+                    key={`${item.src}-${idx}`}
+                    to="/yatras/$slug"
+                    params={{ slug: "kedarnath-yatra" }}
+                    className="media-frame relative aspect-[4/3] overflow-hidden rounded-lg ring-2 ring-white/15 transition-shadow hover:ring-white/45"
+                    data-ocid={`yatras.kedarnath_thumb.${idx + 1}`}
                   >
                     <OptimizedImage
                       src={item.src}
