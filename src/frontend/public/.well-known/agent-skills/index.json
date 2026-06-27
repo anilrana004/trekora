@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "trekora-travel",
+      "type": "skill-md",
+      "description": "Discover Himalayan treks, yatras, and packages on Trekora using public APIs and site structure.",
+      "url": "https://www.trekora.in/.well-known/agent-skills/trekora-travel/SKILL.md",
+      "digest": "sha256:4588c2fc83a740d2cac910665ad96101cddb4a478f3bdf4c2a04e427a0767266"
+    },
+    {
+      "name": "trekora-api",
+      "type": "skill-md",
+      "description": "Call Trekora public REST APIs — reviews, gallery, weather, and inquiry endpoints.",
+      "url": "https://www.trekora.in/.well-known/agent-skills/trekora-api/SKILL.md",
+      "digest": "sha256:a446e480d3c8f465f03611c323d87fc1333141c6a3eb83e90d3eb87fcad670a8"
+    }
+  ]
+}

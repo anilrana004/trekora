@@ -1,3 +1,6 @@
+import agentMarkdownHandler, {
+  wantsMarkdown,
+} from "../agent-markdown.mjs";
 import galleryHandler from "../gallery.mjs";
 import productPhotosHandler from "../product-photos.mjs";
 import reviewsHandler from "../reviews.mjs";
@@ -11,6 +14,7 @@ import giftCardValidateHandler from "../giftcards/validate.mjs";
 import giftCardRedeemHandler from "../giftcards/redeem.mjs";
 
 const EXACT = {
+  "/api/agent-markdown": agentMarkdownHandler,
   "/api/booking": bookingHandler,
   "/api/callback": callbackHandler,
   "/api/corporate-quote": corporateQuoteHandler,

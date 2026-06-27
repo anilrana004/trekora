@@ -65,3 +65,26 @@ curl -I https://www.trekora.in
 ```
 
 Check **SSL Labs** rating after HSTS preload consideration.
+
+## DNS for AI Discovery (DNS-AID)
+
+Publish DNS-AID records so agents can discover Trekora endpoints via DNS (draft [DNS-AID](https://datatracker.ietf.org/doc/draft-mozleywilliams-dnsop-dnsaid/)). Configure in the Cloudflare DNS dashboard for `trekora.in` (requires DNSSEC on the zone).
+
+| Name | Type | Priority | Target | SvcParams |
+|------|------|----------|--------|-----------|
+| `_index._agents` | HTTPS or SVCB | 1 | `www.trekora.in` | `alpn="h2,h3" port=443` |
+| `_index._agents` | TXT | — | — | `api-catalog=https://www.trekora.in/.well-known/api-catalog` |
+
+Example SVCB record:
+
+```dns
+_index._agents.trekora.in. 3600 IN HTTPS 1 www.trekora.in. alpn="h2,h3" port=443
+```
+
+Enable **DNSSEC** (Cloudflare → DNS → Settings → DNSSEC → Enable) so validating resolvers receive authenticated discovery data.
+
+After publishing, verify with DNS-over-HTTPS:
+
+```bash
+curl -s "https://cloudflare-dns.com/dns-query?name=_index._agents.trekora.in&type=HTTPS" -H "accept: application/dns-json"
+```

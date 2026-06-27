@@ -1,6 +1,9 @@
 import { logTrekoraEnvStatus, loadTrekoraEnv } from "../../backend/lib/load-env.js";
 
 import { resolveApiHandler } from "./api/_lib/resolve-api-handler.mjs";
+import agentMarkdownHandler, {
+  wantsMarkdown,
+} from "./api/agent-markdown.mjs";
 
 loadTrekoraEnv();
 
@@ -118,6 +121,23 @@ export function emailApiPlugin() {
         const raw = req.url ?? "";
 
         const pathname = raw.split("?")[0];
+
+        if (
+          wantsMarkdown(req.headers?.accept ?? "") &&
+          !pathname.startsWith("/api/") &&
+          !pathname.startsWith("/.well-known/") &&
+          !pathname.startsWith("/assets/") &&
+          !/\.[a-z0-9]+$/i.test(pathname)
+        ) {
+          const { mockReq, mockRes } = createMockReqRes(req, res);
+          mockReq.url = `/api/agent-markdown?path=${encodeURIComponent(pathname || "/")}`;
+          try {
+            await agentMarkdownHandler(mockReq, mockRes);
+            return;
+          } catch (err) {
+            console.error("[vite api] markdown", pathname, err);
+          }
+        }
 
         const handler = resolveApiHandler(pathname, req.method);
 

@@ -113,6 +113,7 @@ Disallow: /admin
 Disallow: /book
 Disallow: /dashboard
 Disallow: /trekkers
+Content-Signal: ai-train=no, search=yes, ai-input=no
 
 Sitemap: ${siteOrigin}/sitemap.xml
 `;

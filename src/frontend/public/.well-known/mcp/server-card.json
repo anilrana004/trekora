@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/main/schema/server-card.schema.json",
+  "serverInfo": {
+    "name": "trekora",
+    "title": "Trekora Travel Platform",
+    "version": "1.0.0",
+    "description": "Himalayan treks and sacred yatras — WebMCP browser tools plus REST APIs for reviews, gallery, and weather."
+  },
+  "transport": {
+    "type": "web",
+    "url": "https://www.trekora.in"
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    }
+  },
+  "links": [
+    {
+      "rel": "api-catalog",
+      "href": "https://www.trekora.in/.well-known/api-catalog"
+    },
+    {
+      "rel": "service-desc",
+      "href": "https://www.trekora.in/.well-known/openapi.json"
+    },
+    {
+      "rel": "service-doc",
+      "href": "https://www.trekora.in/docs/api.md"
+    }
+  ]
+}

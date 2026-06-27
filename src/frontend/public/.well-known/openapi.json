@@ -1,0 +1,191 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Trekora Public API",
+    "version": "1.0.0",
+    "description": "Public HTTP APIs for Trekora — Himalayan treks, yatras, reviews, gallery, and weather.",
+    "contact": {
+      "name": "Trekora",
+      "url": "https://www.trekora.in",
+      "email": "hello@trekora.in"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.trekora.in/api",
+      "description": "Same-origin (Vercel)"
+    },
+    {
+      "url": "https://www.trekora.in/api/v1",
+      "description": "Versioned alias"
+    },
+    {
+      "url": "https://api.trekora.in",
+      "description": "Direct Mongo API (Railway)"
+    }
+  ],
+  "paths": {
+    "/reviews/{slug}": {
+      "get": {
+        "summary": "List approved reviews for a trek or yatra slug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review list"
+          }
+        }
+      },
+      "post": {
+        "summary": "Submit a new review (moderated)",
+        "requestBody": {
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Review submitted"
+          }
+        }
+      }
+    },
+    "/gallery": {
+      "get": {
+        "summary": "Trekker photo gallery metadata",
+        "parameters": [
+          {
+            "name": "trekSlug",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 120
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gallery payload"
+          }
+        }
+      }
+    },
+    "/weather": {
+      "get": {
+        "summary": "Weather for a trek location (OpenWeather proxy)",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current and forecast weather"
+          }
+        }
+      }
+    },
+    "/product-photos": {
+      "get": {
+        "summary": "Product hero and gallery photos",
+        "responses": {
+          "200": {
+            "description": "Photo metadata"
+          }
+        }
+      }
+    },
+    "/query": {
+      "post": {
+        "summary": "Plan-a-trek / general inquiry email",
+        "responses": {
+          "200": {
+            "description": "Inquiry accepted"
+          }
+        }
+      }
+    },
+    "/callback": {
+      "post": {
+        "summary": "Request a phone callback",
+        "responses": {
+          "200": {
+            "description": "Callback request accepted"
+          }
+        }
+      }
+    },
+    "/booking": {
+      "post": {
+        "summary": "Booking intent submission",
+        "responses": {
+          "200": {
+            "description": "Booking request accepted"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://www.trekora.in/.well-known/api-catalog",
+      "item": [
+        {
+          "href": "https://www.trekora.in/api"
+        },
+        {
+          "href": "https://api.trekora.in"
+        }
+      ]
+    },
+    {
+      "anchor": "https://www.trekora.in/api",
+      "service-desc": [
+        {
+          "href": "https://www.trekora.in/.well-known/openapi.json",
+          "type": "application/json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.trekora.in/docs/api.md",
+          "type": "text/markdown"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.trekora.in/health",
+          "type": "application/json"
+        }
+      ]
+    },
+    {
+      "anchor": "https://api.trekora.in",
+      "service-desc": [
+        {
+          "href": "https://www.trekora.in/.well-known/openapi.json",
+          "type": "application/json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.trekora.in/docs/api.md",
+          "type": "text/markdown"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.trekora.in/health",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}
