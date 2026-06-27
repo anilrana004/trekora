@@ -239,6 +239,51 @@
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
   }
 
+  /* About page — 50/50 image + content hero */
+  .about-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: #fff;
+  }
+
+  @media (min-width: 1024px) {
+    .about-hero {
+      grid-template-columns: 1fr 1fr;
+      min-height: 40rem;
+    }
+  }
+
+  .about-hero__media {
+    position: relative;
+    min-height: 18rem;
+    background: #f3f0ea;
+  }
+
+  @media (min-width: 640px) {
+    .about-hero__media {
+      min-height: 22rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .about-hero__media {
+      min-height: 0;
+      height: 100%;
+    }
+  }
+
+  .about-hero__media .about-hero__image {
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .about-hero__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
   /* Hero promos — copy/CTAs stay visible during carousel image crossfade */
   .home-hero__copy {
     pointer-events: auto;
@@ -581,7 +626,7 @@
 
   .site-logo__img--drawer {
     display: block;
-    max-height: 2.35rem;
+    max-height: 2.5rem;
     width: auto;
     filter: none;
     background: transparent;

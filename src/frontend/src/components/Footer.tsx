@@ -44,6 +44,15 @@ import { SiteLogo } from "./SiteLogo";
 const FOOTER_TAGLINE =
   "Trekora is your trusted travel partner for unforgettable Himalayan treks, spiritual yatras, and adventure experiences.";
 
+const FOOTER_BRAND_STORY = {
+  eyebrow: "Explore More · Live Beyond",
+  headline:
+    "Where every peak tells a story — and every traveler returns changed.",
+  body: "From sacred yatra paths to high Himalayan passes, Trekora guides world travelers who seek more than a summit: perspective, humility, and the quiet courage that only wild places can give.",
+  thought:
+    "The mountains do not rush you. They wait — until you are ready to listen.",
+} as const;
+
 const POPULAR_TREKS = [
   { name: "Roopkund Trek", slug: "roopkund-trek" },
   { name: "Valley of Flowers", slug: "valley-of-flowers" },
@@ -492,12 +501,12 @@ export default function Footer() {
       >
         <FooterHeroBackdrop />
         <div className="container relative z-[2] mx-auto max-w-6xl px-4 pb-10 pt-12 md:pb-12 md:pt-16">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-12">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
             <div className="flex max-w-xl flex-col gap-4">
               <SiteLogo
-                className="max-w-[240px]"
+                className="max-w-[270px]"
                 imgClassName="site-logo__img site-logo__img--footer drop-shadow-md"
-                sizes="240px"
+                sizes="270px"
                 dataOcid="footer.logo"
               />
               <p
@@ -541,6 +550,46 @@ export default function Footer() {
                   </a>
                 ))}
               </div>
+            </div>
+
+            <div
+              className="flex max-w-lg flex-col gap-4 lg:max-w-md lg:flex-1 lg:border-l lg:border-white/10 lg:pl-10 xl:max-w-xl"
+              data-ocid="footer.brand_story"
+            >
+              <div className="flex items-center gap-2">
+                <Compass
+                  size={14}
+                  className="shrink-0"
+                  style={{ color: "var(--ew-orange)" }}
+                  aria-hidden
+                />
+                <p
+                  className="text-[0.6875rem] font-semibold uppercase tracking-[0.22em]"
+                  style={{ color: "var(--ew-orange)" }}
+                >
+                  {FOOTER_BRAND_STORY.eyebrow}
+                </p>
+              </div>
+              <blockquote className="m-0 border-none p-0">
+                <p className="text-xl font-bold leading-snug tracking-tight text-white md:text-[1.375rem] md:leading-snug">
+                  {FOOTER_BRAND_STORY.headline}
+                </p>
+              </blockquote>
+              <p
+                className="text-[0.9375rem] leading-relaxed md:text-base"
+                style={{ color: "rgba(255,255,255,0.72)" }}
+              >
+                {FOOTER_BRAND_STORY.body}
+              </p>
+              <p
+                className="border-t border-white/10 pt-4 text-sm italic leading-relaxed"
+                style={{ color: "rgba(255,255,255,0.55)" }}
+              >
+                &ldquo;{FOOTER_BRAND_STORY.thought}&rdquo;
+                <span className="mt-2 block not-italic text-xs font-medium uppercase tracking-wider text-white/40">
+                  — A thought carried by travelers across the Himalayas
+                </span>
+              </p>
             </div>
           </div>
         </div>

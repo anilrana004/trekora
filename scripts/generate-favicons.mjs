@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const LOGO_URL =
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778744940/wpn00ko2pztesvmf8z76.png";
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1782549426/wr9z3m151trbyg3gf2di.png";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, "../src/frontend/public");

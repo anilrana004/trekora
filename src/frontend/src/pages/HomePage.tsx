@@ -934,12 +934,12 @@ const HOME_HERO_PANCH_KEDAR_YATRA_IMAGE =
 const HERO_SETS: HeroSet[] = [
   {
     left: {
-      image: HOME_HERO_ROOPKUND_MAIN_IMAGE,
-      videoSrc: homeTrekReelVideo("roopkund-trek"),
-      title: "Roopkund Trek",
-      subtitle: "The Skeleton Lake Awaits",
-      cta: "Explore Now",
-      ctaLink: "/treks/roopkund-trek",
+      image: CHOPTA_TUNGNATH_PHOTO_GALLERY[0].src,
+      videoSrc: homeTrekReelVideo("chopta-tungnath"),
+      title: "Chopta Tungnath Trek",
+      subtitle: "Panch Kedar · Chandrashila Summit",
+      cta: "Book Trek",
+      ctaLink: "/treks/chopta-tungnath",
     },
     right: [
       {
@@ -1001,12 +1001,12 @@ const HERO_SETS: HeroSet[] = [
   },
   {
     left: {
-      image: CHOPTA_TUNGNATH_PHOTO_GALLERY[0].src,
-      videoSrc: homeTrekReelVideo("chopta-tungnath"),
-      title: "Chopta Tungnath Trek",
-      subtitle: "Panch Kedar · Chandrashila Summit",
-      cta: "Book Trek",
-      ctaLink: "/treks/chopta-tungnath",
+      image: HOME_HERO_ROOPKUND_MAIN_IMAGE,
+      videoSrc: homeTrekReelVideo("roopkund-trek"),
+      title: "Roopkund Trek",
+      subtitle: "The Skeleton Lake Awaits",
+      cta: "Explore Now",
+      ctaLink: "/treks/roopkund-trek",
     },
     right: [
       {

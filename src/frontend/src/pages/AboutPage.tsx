@@ -18,8 +18,8 @@ import OptimizedImage from "../components/media/OptimizedImage";
 
 const TEAM = [
   {
-    name: "Rahul Sharma",
-    role: "CEO & Lead Guide",
+    name: "Hritik Chauhan",
+    role: "Founder & CEO",
     years: 15,
     bio: "Summited 50+ Himalayan peaks. Former GMVN guide. IMF certified mountaineer.",
     image:
@@ -70,33 +70,33 @@ const TEAM = [
 const TIMELINE = [
   {
     year: "2009",
-    title: "Founded in Rishikesh",
-    desc: "Trekora started with a single Kedarnath trek with 6 friends, driven by a passion for the mountains.",
+    title: "Six Friends, One Trail",
+    desc: "A borrowed tent, a Kedarnath trail, and six friends who had no idea they were starting something that would outlast every summit they would ever climb.",
   },
   {
     year: "2012",
-    title: "First 100 Trekkers",
-    desc: "Word spread through the mountains. We crossed 100 happy trekkers and expanded our Uttarakhand routes.",
+    title: "The First Hundred Hearts",
+    desc: "No ads — just stories passed around campfires and hostel common rooms. A hundred strangers became a hundred believers in what the mountains could do to a person.",
   },
   {
     year: "2016",
-    title: "500 Treks Completed",
-    desc: "Himachal Pradesh treks added. Certified all guides under IMF and wilderness first-aid programs.",
+    title: "Beyond Uttarakhand",
+    desc: "Himachal opened its doors. Every guide earned IMF certification. We learned that trust isn't built in an office — it's earned step by step, at 4,000 metres.",
   },
   {
     year: "2020",
-    title: "Online Booking Launch",
-    desc: "Launched our digital platform, making it easier than ever to book Himalayan adventures from anywhere.",
+    title: "Bringing the Mountains Home",
+    desc: "When the world paused, we built a way for dreamers to plan from their living rooms — because the call of the Himalayas doesn't wait for the right season.",
   },
   {
     year: "2024",
-    title: "10,000+ Trekkers",
-    desc: "A major milestone — 10,000 trekkers have explored the Himalayas with Trekora safely and joyfully.",
+    title: "10,000 Stories Written in Snow",
+    desc: "Ten thousand trekkers. Ten thousand different reasons for climbing. One shared truth: nobody who reaches a Himalayan summit comes back quite the same person.",
   },
   {
     year: "2025",
-    title: "Trekora Relaunch",
-    desc: "Rebranded as Trekora — Where Every Peak Tells a Story. New routes, new experiences, same trusted team.",
+    title: "Trekora — A New Chapter",
+    desc: "Reborn as Trekora: Where Every Peak Tells a Story. New routes, deeper experiences, the same hands that have held yours on every difficult ascent.",
   },
 ];
 
@@ -128,7 +128,7 @@ const VALUES = [
     color: "var(--ew-red)",
     bg: "var(--ew-red-lt)",
     title: "Safety First",
-    desc: "Every route is risk-assessed. Our guides carry oxygen, defibrillators, and satellite phones.",
+    desc: "Your family trusts us with you. We carry oxygen, defibrillators, and satellite phones — because coming home safely is the only summit that truly matters.",
     imageSrc:
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1779187847/bmvejdpd7mcz5bmr6fxh.jpg",
   },
@@ -136,7 +136,7 @@ const VALUES = [
     color: "var(--ew-green)",
     bg: "#e8f5e9",
     title: "Eco-Responsible",
-    desc: "Zero plastic policy on all treks. We partner with local communities and offset our carbon footprint.",
+    desc: "We leave only footprints and take only photographs. Zero plastic on every trail, local partnerships, and a promise to protect the mountains that give us everything.",
     imageSrc:
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1779188004/ag7ytxa8ljuaxifhvehb.jpg",
     imageDelivery: {
@@ -151,7 +151,7 @@ const VALUES = [
     color: "var(--ew-orange)",
     bg: "var(--ew-orange-lt)",
     title: "Community Uplift",
-    desc: "30% of our guides are from local Himalayan villages. We support mountain schools and sanitation.",
+    desc: "The mountains belong to the people who live in their shadow. We hire locally, fund mountain schools, and make sure tourism lifts villages — never leaves them behind.",
     imageSrc:
       "https://res.cloudinary.com/ddbcauxef/image/upload/v1779188101/jn5m3b6yt4pz3ynmihru.webp",
   },
@@ -164,45 +164,42 @@ export default function AboutPage() {
     <div className="pt-16 min-h-screen">
       <SEOHead
         title="About Trekora | Himalayan Trekking & Yatra Experts"
-        description="Learn about Trekora — founded in 2009, 10,000+ trekkers, IMF-certified guides, and responsible Himalayan adventures across Uttarakhand and Himachal."
-        keywords="about Trekora, Himalayan trekking company, certified trek guides India"
+        description="Trekora was born in 2009 from a single Kedarnath trek with six friends. Today, 10,000+ trekkers trust our IMF-certified guides for transformative Himalayan adventures."
+        keywords="about Trekora, Himalayan trekking company, certified trek guides India, mountain adventure stories"
         canonical={`${SITE_ORIGIN}/about`}
       />
 
-      {/* Hero — Our Story watermark background */}
+      {/* Hero — 50% story image, 50% content */}
       <section
-        className="about-hero relative flex min-h-[24rem] items-center justify-center overflow-hidden md:min-h-[28rem]"
+        className="about-hero"
         data-travel-image-section
         data-ocid="about.hero"
       >
-        <OptimizedImage
-          src={ABOUT_STORY_WATERMARK_URL}
-          alt=""
-          fill
-          variant="hero"
-          priority
-          sizes="100vw"
-          delivery={{
-            crop: "c_fill,g_center",
-            format: "f_png",
-            quality: "q_100",
-          }}
-          className="about-hero__watermark pointer-events-none select-none"
-          aria-hidden
-        />
-        <div
-          className="about-hero__veil pointer-events-none absolute inset-0"
-          aria-hidden
-        />
-        <div className="relative z-10 w-full px-4 py-14 text-center">
+        <div className="about-hero__media">
+          <OptimizedImage
+            src={ABOUT_STORY_WATERMARK_URL}
+            alt="Trekora — explore more, live beyond"
+            fill
+            variant="hero"
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            delivery={{
+              crop: "c_fill,g_center",
+              format: "f_png",
+              quality: "q_90",
+            }}
+            className="about-hero__image"
+          />
+        </div>
+        <div className="about-hero__content px-6 py-12 sm:px-10 sm:py-14 lg:px-14">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
-            className="mx-auto max-w-2xl"
+            className="w-full max-w-xl space-y-4"
           >
             <span
-              className="mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest"
+              className="inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest"
               style={{
                 color: "var(--ew-red)",
                 background: "var(--ew-red-lt)",
@@ -211,14 +208,42 @@ export default function AboutPage() {
             >
               Our Story
             </span>
-            <h1 className="about-hero__title mt-2 mb-3 text-4xl font-bold md:text-5xl">
+            <h1
+              className="text-4xl font-bold md:text-5xl"
+              style={{ color: "var(--ew-text)" }}
+            >
               About Trekora
             </h1>
-            <p className="about-hero__lead mx-auto mb-6 max-w-2xl text-base md:text-lg">
-              Founded in 2009 with a single Kedarnath trek, we now lead 150+
-              expeditions per year across the Himalayas.
+            <p
+              className="text-lg font-medium leading-snug md:text-xl"
+              style={{ color: "var(--ew-text)" }}
+            >
+              We travel not to escape life — but so life doesn&apos;t pass us by
+              unnoticed.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <p
+              className="text-base leading-relaxed"
+              style={{ color: "var(--ew-text-lt)" }}
+            >
+              In 2009, six friends set out on a Kedarnath trek with borrowed
+              gear and a pocketful of dreams. That walk through pine forests and
+              thin mountain air changed something in each of us. We came down
+              different people — quieter, braver, more alive. Word spread. More
+              people asked to join. What began as a weekend escape became
+              Trekora.
+            </p>
+            <p
+              className="text-base leading-relaxed"
+              style={{ color: "var(--ew-text-lt)" }}
+            >
+              Today we lead 150+ expeditions every year across Uttarakhand,
+              Himachal, and sacred yatra routes. Over 10,000 trekkers have
+              walked with us — students finding courage, families bonding over
+              campfires, solo travellers discovering stillness above the clouds.
+              Every journey is different. The mountains always seem to know what
+              you need.
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 to="/treks"
                 className={CTA_OUTLINE_RED}
@@ -259,30 +284,41 @@ export default function AboutPage() {
               className="text-3xl font-bold mt-2 mb-4"
               style={{ color: "var(--ew-text)" }}
             >
-              "We believe every peak has a story worth telling"
+              &ldquo;In the silence of mountains, we find ourselves&rdquo;
             </h2>
             <div
               className="w-16 h-1 mx-auto mb-6 rounded-full"
               style={{ background: "var(--ew-red)" }}
             />
             <p
+              className="leading-relaxed mb-4 text-lg"
+              style={{ color: "var(--ew-text-lt)" }}
+            >
+              Trekora was born from a belief that every person deserves to feel
+              the raw, soul-stirring beauty of the Himalayas — not through a
+              screen, but with cold air in their lungs and snow under their
+              boots.
+            </p>
+            <p
               className="leading-relaxed mb-4"
               style={{ color: "var(--ew-text-lt)" }}
             >
-              Trekora was born from a simple belief: every person deserves to
-              experience the raw, soul-stirring beauty of the Himalayas. What
-              started as a weekend trek with 6 friends in 2009 has grown into
-              India's most trusted mountain adventure company.
+              What started as a weekend trek with six friends in 2009 has grown
+              into a family of certified guides, passionate trekkers, and
+              hospitality professionals. We don&apos;t just show you trails — we
+              walk beside you through doubt, altitude, and that breathtaking
+              moment when the clouds part and the valley opens below your feet.
             </p>
             <p
               className="leading-relaxed"
               style={{ color: "var(--ew-text-lt)" }}
             >
-              We are a team of certified guides, passionate trekkers, and
-              hospitality professionals united by one goal — to create
-              unforgettable, safe, and transformative mountain experiences. We
-              practise responsible tourism, leaving no trace and supporting
-              local Himalayan communities.
+              We practise responsible tourism with our whole hearts: leaving no
+              trace on the trails, uplifting local Himalayan communities, and
+              treating every trekker like someone we&apos;d invite to our own
+              dinner table. Because the mountains teach us that we&apos;re all
+              connected — to the land, to each other, and to the quiet voice
+              inside that only speaks above 3,000 metres.
             </p>
           </motion.div>
         </div>
@@ -354,6 +390,15 @@ export default function AboutPage() {
               The People
             </span>
             <h2 className="section-title mt-2 mx-auto block">Meet Our Team</h2>
+            <p
+              className="mt-4 mx-auto max-w-2xl text-base leading-relaxed"
+              style={{ color: "var(--ew-text-lt)" }}
+            >
+              Behind every safe summit is a guide who remembers your name, a
+              cook who serves dal at 4,000 metres, and a team that treats your
+              dream as seriously as you do. These are the people who make
+              Trekora feel like family.
+            </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {TEAM.map((member, i) => (
@@ -415,6 +460,14 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="section-title mx-auto block">Our Values</h2>
+            <p
+              className="mt-4 mx-auto max-w-2xl text-base leading-relaxed"
+              style={{ color: "var(--ew-text-lt)" }}
+            >
+              The mountains don&apos;t negotiate. Neither do we — on safety, on
+              respect for the land, or on the communities whose home we are
+              privileged to visit.
+            </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
             {VALUES.map((v, i) => (
@@ -546,11 +599,14 @@ export default function AboutPage() {
       >
         <div className="container mx-auto px-4 max-w-2xl">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Start Your Himalayan Journey?
+            Your Story Starts at the Trailhead
           </h2>
-          <p className="mb-8 opacity-75">
-            Join 10,000+ trekkers who have discovered the Himalayas with
-            Trekora.
+          <p className="mb-8 opacity-85 leading-relaxed">
+            Somewhere above the treeline, between the ache in your legs and the
+            gasp of a Himalayan sunrise, you&apos;ll find a version of yourself
+            you&apos;ve been searching for. Join 10,000+ trekkers who have
+            discovered that the mountains don&apos;t just change the view — they
+            change you.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

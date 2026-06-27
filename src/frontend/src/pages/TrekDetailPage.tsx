@@ -34,6 +34,7 @@ import {
   SPITI_VALLEY_ITINERARY,
   SPITI_VALLEY_TREK_SLUG,
 } from "../data/spitiValleyTrekDetail";
+import { getTrekDetailContent } from "../data/trek-detail-content";
 import { TREKS } from "../data/treks";
 import { formatWeatherLocation } from "../lib/openweather";
 
@@ -243,6 +244,44 @@ const GEAR_CATEGORIES = [
   },
 ];
 
+const DEFAULT_HIGHLIGHTS = [
+  "Stunning panoramic views of snow-capped Himalayan peaks",
+  "Expert NCISM-certified guides with deep local knowledge",
+  "Well-planned acclimatization schedule for altitude safety",
+  "Small group sizes (max 12) for a personalized experience",
+  "Eco-friendly camping with Leave No Trace practices",
+];
+
+const DEFAULT_INCLUDED = [
+  "Accommodation (tent/guesthouse as per itinerary)",
+  "All meals during the trek (breakfast, lunch, dinner, evening snacks)",
+  "Certified NCISM mountain trek leader",
+  "Trek support staff (cook + helper for groups 5+)",
+  "Forest department permits and national park entry fees",
+  "Quality camping equipment (high-altitude tents, sleeping mats, dining tent)",
+  "First-aid medical kit with AMS (Altitude Mountain Sickness) treatment",
+  "Portable oxygen cylinder (1 per group)",
+  "Trekora branded trek backpack cover (complimentary)",
+  "Safety equipment (rope, harness for technical sections)",
+  "Welcome and farewell meals",
+  "Daily morning tea/coffee at campsite",
+];
+
+const DEFAULT_EXCLUDED = [
+  "Transport to and from the trek base camp",
+  "Personal trekking gear (poles, boots, gaiters, rain gear)",
+  "Travel insurance (strongly recommended — we can arrange for ₹350)",
+  "Personal medication (antacids, paracetamol, personal prescriptions)",
+  "Tips and gratuity for guides and porters (voluntary, recommended)",
+  "Any meals before and after the trek",
+  "Helicopter evacuation charges (unless travel insurance covers it)",
+  "Porter charges for personal luggage (available at extra cost)",
+  "Alcoholic beverages",
+  "Any item of personal nature",
+  "GST 5% on total invoice amount",
+  "Monument/temple entry fees (if applicable)",
+];
+
 /* ── FAQ data ── */
 const FAQS = [
   {
@@ -433,8 +472,11 @@ export default function TrekDetailPage() {
       ]),
       "jsonld-breadcrumb",
     );
-    const faqsForSeo =
-      trek.slug === SPITI_VALLEY_TREK_SLUG ? SPITI_VALLEY_FAQS : FAQS;
+    const faqsForSeo = detailContent?.faqs?.length
+      ? detailContent.faqs
+      : trek.slug === SPITI_VALLEY_TREK_SLUG
+        ? SPITI_VALLEY_FAQS
+        : FAQS;
     const cleanupFaq = injectJSONLD(
       generateFAQJSONLD(
         faqsForSeo.map((f) => ({ question: f.q, answer: f.a })),
@@ -537,12 +579,28 @@ export default function TrekDetailPage() {
 
   const related = getRelatedTreks(trek, 4);
   const trekPageSeo = buildTrekPageSEO(trek);
-  const displayFaqs =
-    trek.slug === SPITI_VALLEY_TREK_SLUG ? SPITI_VALLEY_FAQS : FAQS;
-  const itinerary =
-    trek.slug === SPITI_VALLEY_TREK_SLUG
+  const detailContent = getTrekDetailContent(trek.slug);
+  const overviewText = detailContent?.overview || trek.description;
+  const highlights = detailContent?.highlights?.length
+    ? detailContent.highlights
+    : DEFAULT_HIGHLIGHTS;
+  const displayFaqs = detailContent?.faqs?.length
+    ? detailContent.faqs
+    : trek.slug === SPITI_VALLEY_TREK_SLUG
+      ? SPITI_VALLEY_FAQS
+      : FAQS;
+  const itinerary = detailContent?.itinerary?.length
+    ? detailContent.itinerary
+    : trek.slug === SPITI_VALLEY_TREK_SLUG
       ? SPITI_VALLEY_ITINERARY
       : buildItinerary(trek.duration, trek.startPoint, trek.altitude);
+  const includedItems = detailContent?.inclusions?.length
+    ? detailContent.inclusions
+    : DEFAULT_INCLUDED;
+  const excludedItems = detailContent?.exclusions?.length
+    ? detailContent.exclusions
+    : DEFAULT_EXCLUDED;
+  const howToReachNotes = detailContent?.howToReach ?? [];
 
   const handleDownloadItineraryPdf = async () => {
     try {
@@ -835,7 +893,7 @@ export default function TrekDetailPage() {
                   className="text-sm leading-relaxed mb-6"
                   style={{ color: "var(--ew-text-lt)" }}
                 >
-                  {trek.description}
+                  {overviewText}
                 </p>
 
                 {/* Key highlights */}
@@ -846,13 +904,7 @@ export default function TrekDetailPage() {
                   Key Highlights
                 </h3>
                 <ul className="space-y-2 mb-6">
-                  {[
-                    "Stunning panoramic views of snow-capped Himalayan peaks",
-                    "Expert NCISM-certified guides with deep local knowledge",
-                    "Well-planned acclimatization schedule for altitude safety",
-                    "Small group sizes (max 12) for a personalized experience",
-                    "Eco-friendly camping with Leave No Trace practices",
-                  ].map((point) => (
+                  {highlights.map((point) => (
                     <li
                       key={point}
                       className="flex items-start gap-2 text-sm"
@@ -975,20 +1027,7 @@ export default function TrekDetailPage() {
                     </div>
                     <div className="p-4" style={{ backgroundColor: "#E8F5E9" }}>
                       <ul className="space-y-2.5">
-                        {[
-                          "Accommodation (tent/guesthouse as per itinerary)",
-                          "All meals during the trek (breakfast, lunch, dinner, evening snacks)",
-                          "Certified NCISM mountain trek leader",
-                          "Trek support staff (cook + helper for groups 5+)",
-                          "Forest department permits and national park entry fees",
-                          "Quality camping equipment (high-altitude tents, sleeping mats, dining tent)",
-                          "First-aid medical kit with AMS (Altitude Mountain Sickness) treatment",
-                          "Portable oxygen cylinder (1 per group)",
-                          "Trekora branded trek backpack cover (complimentary)",
-                          "Safety equipment (rope, harness for technical sections)",
-                          "Welcome and farewell meals",
-                          "Daily morning tea/coffee at campsite",
-                        ].map((item) => (
+                        {includedItems.map((item) => (
                           <li
                             key={item}
                             className="flex items-start gap-2 text-sm"
@@ -1023,20 +1062,7 @@ export default function TrekDetailPage() {
                     </div>
                     <div className="p-4" style={{ backgroundColor: "#FFEBEE" }}>
                       <ul className="space-y-2.5">
-                        {[
-                          "Transport to and from the trek base camp",
-                          "Personal trekking gear (poles, boots, gaiters, rain gear)",
-                          "Travel insurance (strongly recommended — we can arrange for ₹350)",
-                          "Personal medication (antacids, paracetamol, personal prescriptions)",
-                          "Tips and gratuity for guides and porters (voluntary, recommended)",
-                          "Any meals before and after the trek",
-                          "Helicopter evacuation charges (unless travel insurance covers it)",
-                          "Porter charges for personal luggage (available at extra cost)",
-                          "Alcoholic beverages",
-                          "Any item of personal nature",
-                          "GST 5% on total invoice amount",
-                          "Monument/temple entry fees (if applicable)",
-                        ].map((item) => (
+                        {excludedItems.map((item) => (
                           <li
                             key={item}
                             className="flex items-start gap-2 text-sm"
@@ -1294,68 +1320,82 @@ export default function TrekDetailPage() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
                   How to Reach
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
-                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Plane className="w-5 h-5 text-red-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
-                        By Air
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {trek.state === "uttarakhand"
-                          ? "Jolly Grant Airport, Dehradun (DED) is the nearest airport, approximately 250-300 km from most trek base camps. Delhi IGI Airport is also accessible via Haridwar/Rishikesh."
-                          : "Bhuntar Airport, Kullu (KUU) is the nearest airport for Himachal treks. Chandigarh Airport (IXC) and Delhi Airport (DEL) are alternative options via road."}
+                {howToReachNotes.length > 0 ? (
+                  <div className="space-y-4">
+                    {howToReachNotes.map((note) => (
+                      <p
+                        key={note.slice(0, 48)}
+                        className="text-sm leading-relaxed"
+                        style={{ color: "var(--ew-text-lt)" }}
+                      >
+                        {note}
                       </p>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Plane className="w-5 h-5 text-red-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">
+                          By Air
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          {trek.state === "uttarakhand"
+                            ? "Jolly Grant Airport, Dehradun (DED) is the nearest airport, approximately 250-300 km from most trek base camps. Delhi IGI Airport is also accessible via Haridwar/Rishikesh."
+                            : "Bhuntar Airport, Kullu (KUU) is the nearest airport for Himachal treks. Chandigarh Airport (IXC) and Delhi Airport (DEL) are alternative options via road."}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Train className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">
+                          By Train
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          {trek.state === "uttarakhand"
+                            ? "Haridwar Railway Station (HW) and Rishikesh Railway Station (RKSH) are the main railheads. Dehradun Station (DDN) is also well-connected from Delhi and major cities."
+                            : "Chandigarh Railway Station (CDG) and Kalka Station (KLK) are the main railheads. The Shimla-Kalka Toy Train offers a scenic mountain journey to Shimla."}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Car className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">
+                          By Road
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          {trek.state === "uttarakhand"
+                            ? `${trek.startPoint} is well-connected by road. Buses and shared taxis operate from Haridwar, Rishikesh, and Dehradun. GMOU buses run daily routes to most base camps.`
+                            : `${trek.startPoint} is accessible via NH-3 (Manali Road) and NH-5 (Hindustan-Tibet Road). HRTC buses and private taxis connect from Shimla, Manali, and Chandigarh.`}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Bus className="w-5 h-5 text-orange-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">
+                          By Bus / Shared Taxi
+                        </h3>
+                        <p className="text-gray-600 text-sm">
+                          {trek.state === "uttarakhand"
+                            ? "GMOU and Uttarakhand Roadways buses operate from ISBT Kashmere Gate (Delhi) and Haridwar to most destinations. Shared jeeps and taxis from Uttarkashi, Chamoli, Rudraprayag cover last-mile connectivity."
+                            : "HRTC (HP Tourism buses) and private operators connect Chandigarh, Delhi, and Manali to Himachal trek bases. Shared taxis from Rampur, Kaza, Recong Peo for high-altitude routes."}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Train className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
-                        By Train
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {trek.state === "uttarakhand"
-                          ? "Haridwar Railway Station (HW) and Rishikesh Railway Station (RKSH) are the main railheads. Dehradun Station (DDN) is also well-connected from Delhi and major cities."
-                          : "Chandigarh Railway Station (CDG) and Kalka Station (KLK) are the main railheads. The Shimla-Kalka Toy Train offers a scenic mountain journey to Shimla."}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Car className="w-5 h-5 text-green-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
-                        By Road
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {trek.state === "uttarakhand"
-                          ? `${trek.startPoint} is well-connected by road. Buses and shared taxis operate from Haridwar, Rishikesh, and Dehradun. GMOU buses run daily routes to most base camps.`
-                          : `${trek.startPoint} is accessible via NH-3 (Manali Road) and NH-5 (Hindustan-Tibet Road). HRTC buses and private taxis connect from Shimla, Manali, and Chandigarh.`}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Bus className="w-5 h-5 text-orange-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">
-                        By Bus / Shared Taxi
-                      </h3>
-                      <p className="text-gray-600 text-sm">
-                        {trek.state === "uttarakhand"
-                          ? "GMOU and Uttarakhand Roadways buses operate from ISBT Kashmere Gate (Delhi) and Haridwar to most destinations. Shared jeeps and taxis from Uttarkashi, Chamoli, Rudraprayag cover last-mile connectivity."
-                          : "HRTC (HP Tourism buses) and private operators connect Chandigarh, Delhi, and Manali to Himachal trek bases. Shared taxis from Rampur, Kaza, Recong Peo for high-altitude routes."}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                )}
               </motion.div>
             )}
 

@@ -33,7 +33,7 @@ const VARIANT_SIZES: Record<ImageVariant, string> = {
   "blog-card": "(max-width: 640px) 85vw, 256px",
   thumbnail: "64px",
   "banner-strip": "(max-width: 768px) 40vw, 200px",
-  "brand-logo": "(max-width: 1023px) 200px, 220px",
+  "brand-logo": "(max-width: 1023px) 220px, 240px",
   default: "100vw",
 };
 

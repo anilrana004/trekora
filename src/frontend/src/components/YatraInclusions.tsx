@@ -60,8 +60,18 @@ const CANCELLATION = [
   },
 ];
 
-export default function YatraInclusions() {
+type YatraInclusionsProps = {
+  inclusions?: string[];
+  exclusions?: string[];
+};
+
+export default function YatraInclusions({
+  inclusions,
+  exclusions,
+}: YatraInclusionsProps) {
   const [cancelOpen, setCancelOpen] = useState(false);
+  const includedItems = inclusions?.length ? inclusions : INCLUSIONS;
+  const excludedItems = exclusions?.length ? exclusions : EXCLUSIONS;
 
   return (
     <motion.div
@@ -91,12 +101,12 @@ export default function YatraInclusions() {
             </h3>
           </div>
           <div className="p-4 space-y-2.5">
-            {INCLUSIONS.map((item) => (
+            {includedItems.map((item) => (
               <motion.div
                 key={item}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: INCLUSIONS.indexOf(item) * 0.04 }}
+                transition={{ delay: includedItems.indexOf(item) * 0.04 }}
                 className="flex items-start gap-2.5 text-sm"
                 style={{ color: "var(--ew-text-lt)" }}
               >
@@ -129,12 +139,12 @@ export default function YatraInclusions() {
             </h3>
           </div>
           <div className="p-4 space-y-2.5">
-            {EXCLUSIONS.map((item) => (
+            {excludedItems.map((item) => (
               <motion.div
                 key={item}
                 initial={{ opacity: 0, x: 8 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: EXCLUSIONS.indexOf(item) * 0.04 }}
+                transition={{ delay: excludedItems.indexOf(item) * 0.04 }}
                 className="flex items-start gap-2.5 text-sm"
                 style={{ color: "var(--ew-text-lt)" }}
               >

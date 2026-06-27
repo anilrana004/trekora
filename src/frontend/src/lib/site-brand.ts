@@ -6,7 +6,7 @@ import { buildOptimizedImageUrl } from "./images/cloudinary-url";
  * Stable versioned delivery URL.
  */
 export const SITE_LOGO_URL =
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1778744940/wpn00ko2pztesvmf8z76.png";
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1782549426/wr9z3m151trbyg3gf2di.png";
 
 /**
  * Sharp PNG — preserves original brand colors (no filters / colorize).
@@ -28,6 +28,6 @@ export function buildSiteLogoUrl(width: number): string {
   });
 }
 
-/** About page — “Our Story” hero watermark (TQ + trek silhouettes). */
+/** About page — “Our Story” hero split image. */
 export const ABOUT_STORY_WATERMARK_URL =
-  "https://res.cloudinary.com/ddbcauxef/image/upload/v1779302570/de2i8ltblwa1wruiylw1.png";
+  "https://res.cloudinary.com/ddbcauxef/image/upload/v1782554386/ievaltyiqc1rwskxrnfv.png";

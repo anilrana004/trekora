@@ -1,0 +1,1963 @@
+{
+  "roopkund-trek": {
+    "slug": "roopkund-trek",
+    "overview": "Roopkund is a famous glacial lake in the state of Uttarakhand in India. This lake is famous due to more than five hundred skeletons of humans that are found at the edge of the lake. It is located in the Himalayas and rests at an altitude of nearly 4,800 meters. Roopkund is located in the Chamoli district of Garhwal. It is closer to hill stations like Nainital and Kathgodam. At a distance of 217 km from Nainital and 235 km from Kathgodam, Roopkund is one of the major adventure attractions for people in the country and those traveling from abroad. Roopkund, which is located in the lap of Trishul massif is also known as the ‘mystery lake’. You can find human skeletons at the bank of the lake, which are believed to belong to the Palaeolithic age. These are believed to be the skeletons of the heroes who had fought here in earlier times. Along with the skeletons of humans, you can also find the skeletal structure of horses and other animals. There are reports that these skeletons belong to the 12th century to the 15th century. It is believed by specialists that the death of many people in this region was a result of landslides, blizzards, or an epidemic. The human skeletons were re-discovered in 1942 by H K Madhwal, who was a Nanda Devi Game reserve ranger. Later in 2004, a team of Indian scientists along with some Europeans visited the area to gain more information about the nature of the skeletons.",
+    "shortDesc": "Roopkund is a famous glacial lake in the state of Uttarakhand in India. This lake is famous due to more than five hundred skeletons of humans that are found…",
+    "highlights": [
+      "The highlights of the Roopkund Trek include the Roopkund Lake",
+      "grand views of Chaukhambha Range",
+      "and Neelkanth Peak",
+      "camping in picturesque campsites"
+    ],
+    "itinerary": [
+      {
+        "title": "Kathgodam to Lohajung",
+        "desc": "Altitude 7,662 ft. Stay in guest house. Drive 210 km (10 hrs drive). Local market and network is available. Pick up time 06:00 am at the parking of Kathgodham railway station. Route:- Kathgodam - Bheem Tal - Almora - Kausani - Gwaldam - Dewal - Lohajung.",
+        "altitude": 2335,
+        "stay": "guest house",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Lohargunj to Didna Village",
+        "desc": "Trek 6.5 km. 7,662 to 8,045 ft. Reach Didna before lunch. accommodation in village home stay. No local market but Network is available. Till ruan bagad bridge gradual descent (4.5 km). Refill your water bottle at ruan bagad bridge from Neel Ganga river. After ruan bagad bridge 2 hours of a steep ascent to Didna Village (2 km).",
+        "altitude": 2452,
+        "stay": "village home stay",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Didna Village to Ali Bugyal",
+        "desc": "Trek 10.5 km. 8,045 to 11,320 ft. Accommodation in tent. Carry water and ors both. Reach Ali Bugyal by late noon. Keep your wind and waterproof handy. Tolpani is the last point for drinking water. First half of is through oak and rhododendron forest (Steep ascent). Second half of the trek is through big alpine meadows (gradual ascent).",
+        "altitude": 3450,
+        "stay": "tent",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Ali Bugyal to Patar Nachauni via Bedni Bugyal and Ghora Lotani",
+        "desc": "Trek 7 km. 11,320 to 12,818 ft. Easiest day of the trek. Accommodation in tent. Reach Patar Nachauni before lunch. Ali Bugyal to Bedni Bugyal (gradual ascent 2 km). Bedni Bugyal to Ghora Lotani (gradual ascent 4 km). Ghora Lotani to Patar Nachauni (gradual descent 1 km). Spend some time at Ghora Lotani good for acclimatization. Ware proper clothing (this is the place where most of the trekkers get AMS).",
+        "altitude": 3907,
+        "stay": "tent",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Patar Nachauni to Bhagwabasa via Kalu Vinayak",
+        "desc": "Trek 4 km. 12,818 to 14,117 ft. Accommodation in tent. Reached Camp site by lunch. Patar Nachauni to Kalu Vinayak Tempel . (first 1 km is gradual ascent and rest 1.5 km is steep ascent). Kalu Vinayak to Bhagwabasa (gradual descent 1.5 km, become tricky in may and June ). There will be snow on the trail in the month of may and jun and in sep and oct it will be a rocky trail.",
+        "altitude": 4303,
+        "stay": "tent",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Bhagwabasa to Roopkund and back to Bedni Bugyal",
+        "desc": "Trek 10 km. 14,117 to 15755 ft. Accommodation in tent. Start your trek by 4:00 am. Climb to Roopkund is 3 km. Challenging day of the trek. Carry energy bars, ors and water. Breakfast will be at Roopkund top. Reach Bhagwabasa back by lunch time. Reach Patar Nachauni camp by evening. In Aug, Sep, Oct can see skeleton but no snow. In May and Jun snow will be there but can't see the skeleton.",
+        "altitude": 4802,
+        "stay": "tent",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Patar Nachauni to Lohajung via Bedni and Wan",
+        "desc": "Trek 15 km. 12,818 to 7,662 ft. Accommodation in guest house. Patar Nachauni to Ghora Lotani (1 km gradual ascent). Ghora Lotani to Bedni Bugyal ( 4 km gradual descent). Bedni Bugyal to Doliya Dhar ( 0.5 km gradual walk). Doliya Dhar to Ghaeroli Patal ( 3 km steep descent ). Ghaeroli Patal to Neel Ganga ( 4 km steep descent ). Neel Ganga to Ranka Dhar ( 1 km moderate ascent ). Ranka Dhat to Wan Village road head ( 1.5 km gradual descent). Wan Village to Loharjung ( 45 minutes drive, road condition is not good). Route :- Patar Nachauni - Ghora Lotani - Bedni Bugyal - Doliya Dhar - Ghaeroli Patal - Neel Ganga - Ranka Dhar - Wan Village - drive to Lohajung.",
+        "altitude": 2335,
+        "stay": "guest house",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Lohajung to kathgodam",
+        "desc": "10 hrs drive. Drive 210 km. Reach Kathgodam by 6:00 pm. On the way to Kathgodam at Kausani you can buy herbal tea and some souvenir.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the Roopkund Trek?",
+        "a": "The Roopkund Trek is a journey of adventure and discovery that takes you through some of the most stunning landscapes of the Indian Himalayas. The trek is named after the mysterious Roopkund Lake, also known as the Skeleton Lake, which is situated at an altitude of 15, 696 feet. The trek is a perfect blend of natural beauty, adventure, and culture, as it takes you through dense forests, alpine meadows, glacial valleys, and traditional Himalayan villages. The highlight of the trek is the Roopkund Lake, which is surrounded by snow-capped peaks and offers breathtaking views of the surrounding mountains. The lake is also known for its mysterious skeletons, which are believed to be the remains of ancient travelers who perished in a hailstorm. The Roopkund Trek is a must-do for anyone seeking an unforgettable trekking experience in the Himalayas."
+      },
+      {
+        "q": "How long is the Roopkund Trek?",
+        "a": "Roopkund Trek is a 53 km trek."
+      },
+      {
+        "q": "What is the duration of the Roopkund Trek?",
+        "a": "Roopkund Trek takes 8 days to complete the trek."
+      },
+      {
+        "q": "What is the best time to do the Roopkund Trek?",
+        "a": "The best time to do the Roopkund Trek is during summer (mid-Apr to Jun) and autumn (Sep to mid-Nov)."
+      },
+      {
+        "q": "What is the maximum altitude reached during the Roopkund Trek?",
+        "a": "The maximum altitude reached during the Roopkund Trek is 15,696 ft."
+      },
+      {
+        "q": "What is the difficulty level of the Roopkund Trek?",
+        "a": "Roopkund Trek is a moderate - difficult grade trek."
+      },
+      {
+        "q": "What are the highlights of the Roopkund Trek?",
+        "a": "The highlights of the Roopkund Trek include the Roopkund Lake, grand views of Chaukhambha Range, Kedarnath, Kedar Dome, and Neelkanth Peak, camping in picturesque campsites."
+      },
+      {
+        "q": "What is the accommodation like during the Roopkund Trek?",
+        "a": "During the Roopkund Trek, you will stay in a guest house in the base camp, and on the slopes you will be staying in tents (twin-sharing)."
+      },
+      {
+        "q": "Is it safe to do the Roopkund Trek?",
+        "a": "Yes, it is safe to do Roopkund Trek with an expert organization. However, it is always advisable to take necessary precautions and follow safety guidelines issued by the Trek Leaders and guide while trekking in the mountains."
+      },
+      {
+        "q": "What are the essential items to carry during the Roopkund Trek?",
+        "a": "Here's a list of essential items to pack for the Roopkund Trek: Trekking shoes: A good pair of trekking shoes with a sturdy sole and ankle support is essential for the trek. Backpack: A backpack with a capacity of 40-50 litres is suitable for carrying your essentials, including clothing, food, and water. Warm clothing: The temperature at high altitudes can drop significantly, so it's important to carry warm clothing, including thermal layers, fleece jackets, and a down jacket. Rain gear: The weather in the mountains can be unpredictable, so it's important to carry a rain jacket and pants to stay dry. Trekking pants: Lightweight, quick-drying pants that are comfortable to walk in are ideal for the trek. Headlamp or flashlight: A headlamp or flashlight with extra batteries is necessary for navigating through dark trails and campsites. Water bottle: A reusable water bottle with a capacity of at least 1 litre is necessary to stay hydrated during the trek. Sunglasses and sunscreen: The sun's UV rays can be strong at high altitudes, so it's important to carry sunglasses and sunscreen with a high SPF. Basic first aid kit: A basic first aid kit with essential items like band-aids, antiseptic cream, and pain relievers can come in handy in case of injuries. Personal hygiene kit: Toiletries like wet wipes, hand sanitizer, and tissues can help you maintain personal hygiene during the trek."
+      },
+      {
+        "q": "Do I need to have the prior trekking experience to go for the Roopkund Trek?",
+        "a": "Yes, it is recommended to have prior trekking experience before attempting the Roopkund Trek as it is considered a moderately difficult trek. The trail involves steep ascents and descents, and the altitude can also be a challenge. It is important to have good physical fitness and stamina to complete the trek comfortably. Prior trekking experience can help you to be better prepared for the challenges of the trek, such as acclimatization, managing your energy levels, and dealing with the rugged terrain. However, if you are in good physical condition and have a positive attitude, with proper guidance and preparation, you can still attempt the Roopkund Trek even if you are a beginner."
+      },
+      {
+        "q": "Is it necessary to take a guide for the Roopkund Trek?",
+        "a": "Yes, it is highly recommended to hire a professional expert for the Roopkund Trek, especially if you are a beginner or have limited trekking experience. A professional can provide you with valuable assistance, including knowledge of the local terrain, weather conditions, and the culture of the region. They can also help you with navigation and ensure your safety throughout the trek."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/roopkund-trek"
+  },
+  "valley-of-flowers": {
+    "slug": "valley-of-flowers",
+    "overview": "- As the name suggests, the highlight of the trek is a stunning valley adorned with vibrant flowers that stretch endlessly across the landscape. - The trek is renowned for its blooming alpine flora, with over 500 species of rare and colorful flowers, including the iconic Brahma Kamal and Himalayan Blue Poppy. - One of the key highlights of the journey is a visit to Hemkund Sahib, one of the highest gurudwaras in the world. It is not only a sacred site but also a stunningly scenic location. - The Valley of Flowers is recognized as a UNESCO World Heritage Site, celebrated for its exceptional natural beauty and surreal environment. - On the way, you pass through Pulna with small local shops and flowing rivers along the trail before reaching Ghangaria, the base camp for both the Valley of Flowers and Hemkund Sahib treks. - The trail has waterfalls, clear streams, green meadows, and mountain scenery. The rich colors of the valley, diverse wildlife, and beautiful landscapes provide endless opportunities for photography. - You’ll witness a dreamlike landscape, standing amidst a natural floral carpet with misty peaks rising all around. - The valley is accessible only for a short window each year, making it a rare and memorable experience, truly a once-a-year opportunity.",
+    "shortDesc": "- As the name suggests, the highlight of the trek is a stunning valley adorned with vibrant flowers that stretch endlessly across the landscape. - The trek i…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Rishikesh to Pipalkoti",
+        "desc": "Altitude Rishikesh: 372 m / 1,220 ft. Pipalkoti: 1,340 m / 4,400 ft.",
+        "altitude": 372,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Drive From Pipalkoti to Govindghat-Pulna and Trek to Ghangaria",
+        "desc": "Altitude Pipalkoti: 1,340 m / 4,400 ft. Govindghat: 1,828 m / 6,000 ft. Pulna: 2,100 m / 6,900 ft. Ghangharia: 3,000 m / 9,800 ft. Altitude Gain: 1,660 m / 5,400 ft.",
+        "altitude": 1341,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Ghangaria to Valley of Flower and back to Ghangaria",
+        "desc": "Altitude Ghangharia: 3,000 m / 9,800 ft. Valley of Flowers: 3,500 m / 11,500 ft. Prominent flowers: Blue Poppy, Snake Foil, White Leaf Hog Foot, Himalayan Rose, Meadow Geranium, Dog Flower, Hooked Stick Seed, and River Anemone.",
+        "altitude": 2987,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Ghangaria to Hemkund Sahib and back to Ghangaria",
+        "desc": "Altitude Ghangharia: 3,000 m / 9,800 ft. Hemkund Sahib: 4,300 m / 14,100 ft.",
+        "altitude": 2987,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Ghangaria to Govindghat and Drive to Pipalkoti (Badrinath optional)",
+        "desc": "Altitude Ghangharia: 3,000 m / 9,800 ft. Govindghat: 1,828 m / 6,000 ft. Pipalkoti: 1,340 m / 4,400 ft. Badrinath: 3,133 m / 10,279 ft.",
+        "altitude": 2987,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Pipalkoti to Rishikesh",
+        "desc": "Altitude Pipalkoti: 1,340 m / 4,400 ft. Rishikesh: 372 m / 1,220 ft. ##### Note: Drive Distance: 200 km | 9–10 hrs. Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Rishikesh. Read the article Things to do in Rishikesh. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by plane.",
+        "altitude": 1341,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Which is the best time to visit the Valley of Flowers?",
+        "a": "The best time to visit the Valley of Flowers is between June and September, right after the snow has melted and the valley comes alive. July and August are peak bloom months when thousands of flowers are in full color. The monsoon rains bring the valley to life, and makes it the most colourful and vibrant during this time."
+      },
+      {
+        "q": "What is the total distance of the Valley of Flowers trek?",
+        "a": "The total distance of the Valley of Flowers trek is around 37 km, including the Hemkund Sahib visit. The trek from Pulna to Ghangaria (base camp) is about 9 km, and from Ghangaria to the Valley of Flowers is another 4 km one way. The Hemkund Sahib trek adds an additional 6 km one way."
+      },
+      {
+        "q": "What is the itinerary for the Valley of Flowers trek?",
+        "a": "The Valley of Flowers trek follows a 6-day itinerary: Day 1: Drive from Rishikesh to Pipalkoti Day 2: Drive from Pipalkoti to Govindghat – Pulna and trek to Ghangaria Day 3: Trek from Ghangaria to the Valley of Flowers and back to Ghangaria Day 4: Trek from Ghangaria to Hemkund Sahib and return to Ghangaria Day 5: Trek from Ghangaria to Govindghat and drive to Pipalkoti (Badrinath visit optional) Day 6: Drive from Pipalkoti to Rishikesh"
+      },
+      {
+        "q": "What is the altitude of the Valley of Flowers and Hemkund Sahib?",
+        "a": "The Valley of Flowers is situated at an altitude of around 12,000 ft, while Hemkund Sahib is located at a higher altitude of about 14,100 ft."
+      },
+      {
+        "q": "Where does the Valley of Flowers trek start?",
+        "a": "The trek starts from Pulna, located close to Govindghat in Uttarakhand. From Pulna, you begin the actual trekking route towards Ghangaria, the base for visiting both the Valley of Flowers and Hemkund Sahib."
+      },
+      {
+        "q": "How much time does the Valley of Flowers trek take?",
+        "a": "The entire Valley of Flowers trek takes around 6 days, including travel from Rishikesh. The trekking part is about 4 days. If you are traveling from Delhi, it is good to keep around a week for the complete journey."
+      },
+      {
+        "q": "Where is the Valley of Flowers located in India?",
+        "a": "The Valley of Flowers is located in Chamoli district of Uttarakhand, in the western Himalayas. It lies within the Nanda Devi Biosphere Reserve and is a UNESCO World Heritage Site."
+      },
+      {
+        "q": "How to reach the Valley of Flowers from Delhi?",
+        "a": "To reach the Valley of Flowers from Delhi, first travel to Rishikesh by train, bus, flight (via Dehradun Airport), or car. From Rishikesh, take a road journey to Pipalkoti or Govindghat, which is the gateway to the trek. From Govindghat, drive to Pulna and then begin the trek towards Ghangaria, the base village for visiting the Valley of Flowers."
+      },
+      {
+        "q": "How long is the trek for Valley of Flowers?",
+        "a": "The Valley of Flowers Trek usually takes about 6 days to complete and covers a distance of approximately 37 kilometers. It includes beautiful trails, scenic landscapes, and a mix of easy and slightly steep sections."
+      },
+      {
+        "q": "Do I need a permit to do the Valley of Flowers Trek?",
+        "a": "Yes, forest permissions and entry permits are required. These permits help regulate footfall and ensure the conservation of the region’s biodiversity. However, you don’t have to worry about arranging them yourself. If you are trekking with an experienced organization like Trekora (Trekora), all necessary permits, forest permissions, and related fees are taken care of and included in your trek package. This allows you to enjoy the trek without the stress of handling logistics."
+      },
+      {
+        "q": "Is the Valley of Flowers trek difficult?",
+        "a": "The Valley of Flowers trek is not very difficult, but it isn’t very easy either. It is generally graded as a moderate to difficult trek. The trail is well-defined and scenic, but it does include steep sections and long walking hours on some days, which can be tiring, especially for those who are not used to trekking in the mountains. One of the challenges of this trek is the altitude. The highest point you reach is Hemkund Sahib, which is situated at around 14,100 feet (4,300 meters). At this height, the air becomes thinner, and some trekkers may feel the effects of altitude sickness. That’s why a good acclimatisation schedule and proper hydration are essential. The weather can also play a big role. Since the trek is open only during the monsoon months (July to September), you should be prepared for rain, wet trails, and slippery paths. Carrying rain gear and waterproof shoes becomes important. Temperatures can vary, pleasant during the day but cold in the early morning and evening, especially in places like Ghangaria or Hemkund Sahib. Despite these factors, with basic fitness, proper preparation, and a positive mindset, most people can complete the trek comfortably."
+      },
+      {
+        "q": "What type of accommodation can be expected during the Valley of Flowers trek?",
+        "a": "During the Valley of Flowers trek, you can expect to stay in simple lodges or guest houses along the way. These places offer basic but comfortable rooms with the necessary things like beds, blankets, and clean washrooms. Camping is not allowed inside the valley itself, so all stays are in nearby villages like Ghangaria. While the facilities are not very fancy, they are good enough to rest and relax after a long day of trekking."
+      },
+      {
+        "q": "What should I pack for the Valley of Flowers Trek?",
+        "a": "Here are some of the essentials you should pack for the trek: - Trekking shoes: A good pair of trekking shoes is essential for a comfortable trek. Make sure your shoes are well-fitted, sturdy and provide good grip on the trail. - Warm Clothing: The weather can be unpredictable in the mountains, so it's important to carry warm clothing, including thermal innerwear, fleece jackets, down jackets, and waterproof jackets. - Trekking pants: Carry comfortable and quick-drying trekking pants that are suitable for the weather conditions. - Backpack: A good quality backpack with a capacity of 40-50 liters is ideal for carrying your essentials during the trek. - Headlamp/Flashlight: Carry a good quality headlamp or flashlight with extra batteries for trekking during early morning or late evening hours. - Water bottle: Carry a reusable water bottle and stay hydrated throughout the trek. - Snacks: Carry energy bars, dry fruits, and snacks for instant energy during the trek. - First aid kit: Carry a basic first aid kit, including band-aids, antiseptic cream, pain relief spray, and medicines for altitude sickness. - Sun protection: Carry sunscreen lotion, sunglasses, and a hat to protect yourself from the harsh sun rays. - Trekking poles: Trekking poles can help in maintaining balance and reduce the strain on your knees while trekking."
+      },
+      {
+        "q": "Is it safe to travel to the Valley of Flowers?",
+        "a": "Yes, the Valley of Flowers is a safe place to visit. The local people are kind, helpful, and welcoming towards tourists. However, like any mountain journey, it's always a good idea to check the weather forecast and road conditions before you start your trip, especially during the rainy season. If you're trekking with us, your safety is our top priority. We follow strict safety measures throughout the trek and make sure our team is always prepared to handle any situation, so you can enjoy your journey with peace of mind."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/valley-of-flowers"
+  },
+  "har-ki-dun": {
+    "slug": "har-ki-dun",
+    "overview": "",
+    "shortDesc": "",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Dehradun to Sankri",
+        "desc": "Altitude Sankri: 1950 m/ 6400 ft Drive Distance: 200 km | 9-10 hrs",
+        "altitude": 1951,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Sankri to Dharkot and trek to Osla Village",
+        "desc": "Altitude: Osla: 2750 m/ 9000 ft Dharkot: 2500 m / 8400 ft",
+        "altitude": 2743,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Osla to Seematra",
+        "desc": "Trek Distance: 8 km | 5-6 hrs Altitude Seematra: 3250 m/ 10800 ft Trek Distance: 7 km | 4-5 hrs",
+        "altitude": 3292,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Seematra to Har Ki Dun and Back to Seematra",
+        "desc": "Altitude Har Ki Dun: 3500 m/ 11600 ft Trek Distance: 8 km (both sides) | 6-7 hrs",
+        "altitude": 3536,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Seematra to Pauni Gharat",
+        "desc": "Altitude Pauni Gharat: 2500 m / 8300 ft Trek Distance: 8-9 km | 4-5 hrs",
+        "altitude": 2530,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Pauni Gharat to Dharkot and drive to Sankri",
+        "desc": "Altitude Sankri: 1950 m / 6400 ft Trek Distance: 3-4 km | 2-3 hrs Drive Distance: 24 km | 2 hrs",
+        "altitude": 1951,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Sankri To Dehradun | Saying Goodbye To The Mountains",
+        "desc": "Drive Distance: 200 km | 9-10 hrs ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Dehradun. Read the article Things to do in Dehradun. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by plane.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the best time to do the Har Ki Dun Trek?",
+        "a": "The best time for the Har Ki dun trek, which is widely known as Valley of God, is from April to June and September to November. This is one of the famous treks of Grahwal Himalayas and can be done most of the time of the year which makes it a more special trek among trekkers. From April to June, trekkers can see the lively greenery, supin river flowing gently, traces of melting snow, and even flowers on the trees. From September to November, trekkers can enjoy the high altitude snow along with the views of Jaundar glacier. Post monsoon, this trek very clearly shows the mighty peaks such as Swargarohini, Bandarpoonch and Kala Nag."
+      },
+      {
+        "q": "Is previous trekking experience necessary for the Har Ki Dun Trek?",
+        "a": "No, previous trekking experience is not necessary for the Har Ki Dun Trek, but a good level of fitness is required due to the steep and rocky terrain."
+      },
+      {
+        "q": "What is the level of physical fitness required for the Har Ki Dun Trek?",
+        "a": "The Har Ki Dun Trek requires a moderate level of physical fitness as the trek involves moderate ascents and descents, rocky terrain, and potential altitude sickness. It is recommended to undergo physical training and preparation before attempting the trek."
+      },
+      {
+        "q": "What permits and paperwork are required for the Har Ki Dun Trek?",
+        "a": "To undertake the Har Ki Dun Trek, you will need to obtain the necessary permits and paperwork from the Forest Department and the local authorities. These may include a trekking permit and a medical certificate. It is recommended to research the specific requirements and apply for the permits well in advance to avoid any delays or issues."
+      },
+      {
+        "q": "What is the altitude of the Har Ki Dun Trek?",
+        "a": "The highest point of the Har Ki Dun Trek is the Har Ki Doon Pass, which stands at an altitude of 3,566 meters (11,700 feet)."
+      },
+      {
+        "q": "Is it safe to do the Har Ki Dun Trek?",
+        "a": "Yes, the Har Ki Dun Trek is generally considered safe, but with any trek, there are inherent risks involved. It is important to follow safety guidelines, such as staying hydrated, wearing appropriate clothing and footwear, and avoiding overexertion."
+      },
+      {
+        "q": "What is the accommodation like on the Har Ki Dun Trek?",
+        "a": "Accommodation on the Har Ki Dun Trek typically includes camping in tents, sleeping bags, camping equipment, or basic lodges."
+      },
+      {
+        "q": "Can I do the Har Ki Dun Trek solo?",
+        "a": "It is recommended to do the Har Ki Dun Trek with a certified guide or trekking agency for safety reasons, but it is possible to do it solo if you have previous trekking experience and the necessary equipment and permits."
+      },
+      {
+        "q": "What is the distance covered on the Har Ki Dun Trek?",
+        "a": "The distance covered on the Har Ki Dun Trek is approximately 44-48 kilometers (34-37 miles), depending on the route taken."
+      },
+      {
+        "q": "What is the level of altitude sickness risk on the Har Ki Dun Trek?",
+        "a": "The altitude sickness risk on the Har Ki Dun Trek is generally considered to be low to moderate. The highest point reached on the trek is approximately 12,000 feet (3,658 meters) at the Har Ki Dun Trek Valley. This altitude is relatively moderate and usually does not pose significant altitude-related challenges for most trekkers. However, individual susceptibility to altitude sickness can vary, and it's important to take necessary precautions such as acclimatizing properly, maintaining a gradual ascent, staying hydrated, and listening to your body for any signs of altitude sickness. It is always recommended to consult with a medical professional before undertaking any high-altitude trek."
+      },
+      {
+        "q": "What makes Har Ki Dun Trek special?",
+        "a": "Har Ki Dun trek in Uttarakhand is one of the most ancient treks in India and is a beautiful journey through a resplendent Himalayan valley. The trek is accessible in both summer and winter, offering fascinating views of the Swargarohini group of peaks. The Har Ki Dun valley features alpine meadows, pine forests, and a major catchment area for the Yamuna River System. The trek also includes historical attractions like the Duryodhana temple in Osla village which is renowned for its picturesque landscapes and rich cultural heritage."
+      },
+      {
+        "q": "What is the Har Ki Dun Trek distance from Sankri?",
+        "a": "The Har Ki Dun Trek covers a total distance of approximately 44 km, starting from Sankri."
+      },
+      {
+        "q": "How difficult is the Har Ki Dun trek?",
+        "a": "The Har Ki dun is a 7 Days trek. It is considered as an easy to moderate trek in difficulty that makes it a popular choice. While it is a beginner friendly trek, it still requires some good level of fitness. The total distance of the trek is around 43 km, and includes all the views and scenery of the Grahwal Himalayas. You will witness the mighty peaks and the mythology connection during this journey. Each day, you will walk around 4-6 hours depending on the pace and day's journey."
+      },
+      {
+        "q": "What is the age limit for Har Ki Dun Trek?",
+        "a": "The Har Ki Dun Trek is suitable for individuals aged 8 to 60 years. However, participants should be in good physical health and fitness to handle the demands of the trek."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/har-ki-dun"
+  },
+  "brahmatal-trek": {
+    "slug": "brahmatal-trek",
+    "overview": "- The Brahmatal Trek is a favourite for winter trekking, with trails often covered in fresh snow. The white landscapes and snow-covered trees create a magical winter trekking experience. - Brahmatal Trek features two pristine alpine lakes, Brahmatal and Bekaltal. These frozen lakes in winter add a mystical charm to the trek, showcasing scenic beauty and creating an incredible spot for photography. - Throughout the trek, you get beautiful views of famous Himalayan peaks like Mt. Trishul, Mt. Nanda Ghunti, and Mrigthuni. These towering giants especially strike from the summit. - The trek is steeped in mythology. It’s believed that Lord Brahma meditated by Brahmatal Lake, which is named in his honour. - The trek route takes you through beautiful oak and rhododendron forests, which burst into vibrant colours. The mix of forests, meadows, and alpine landscapes provides variety and natural beauty throughout. - At a moderate difficulty level, the Brahmatal Trek is suitable for both beginners and experienced trekkers looking for an adventurous yet achievable winter trek. With accessible trails and well-marked paths, it's a fantastic option for those wanting to trek in snow without technical challenges. Major Attractions Along the Brahmatal Trek Jhandi Top: Jhandi Top is one of the most celebrated highlights of the Brahmatal Trek. After trekking through dense forests and tranquil meadows, the trail opens up to reveal sweeping views of some of the most iconic Himalayan peaks. Here, Mount Trishul, Nanda Ghunti, Mrigathuni, and Maiktoli stand tall and magnificent, providing a sight that leaves trekkers awestruck. This vantage point is particularly popular with photographers and shows an uninterrupted 180-degree view of the Himalayan ranges. During winter, snow carpets the landscape, enhancing the majesty of the peaks. If you are someone who aims to experience the raw beauty of these giants, Jhandi Top is a point of perfect reward and reflection. - Gujreni: Gujreni is a peaceful campsite, surrounded by dense forests of Golden Oak, Silver Oak, and Rhododendron trees. Your campsite will be near the Gujreni stream. The campsite is also a perfect spot for bird-watching, you might spot various Himalayan species like Himalayan woodpeckers, Magpies, White-capped redstarts, and many more. - Bekaltal Lake: Nestled among dense oak and rhododendron maple forests, Bekaltal Lake is the first lake trekkers encounter on the Brahmatal route. This high-altitude lake, set within a quiet basin, shows a mirror-like reflection of the surrounding trees. During winter, it transforms into a frozen spectacle, covered in shimmering ice. With a nearby temple dedicated to Nag Devta, Bekaltal holds its charisma. - Tilandi Top: Tilandi Top is known for its panoramic and surrounding views. Situated at a high altitude, it gives trekkers their first wide-angle view of iconic Himalayan peaks like Trishul and Nanda Ghunti. The vast meadow, combined with the unobstructed view of valleys and mountains, makes it an ideal place to stop, rest, and soak in the scenery. The Top is especially beautiful at sunrise and sunset when the peaks are bathed in golden light, and at night provides the best sky experience for stargazing.",
+    "shortDesc": "- The Brahmatal Trek is a favourite for winter trekking, with trails often covered in fresh snow. The white landscapes and snow-covered trees create a magica…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Rishikesh to Lohajung (Drive)",
+        "desc": "Altitude: 2300 m/ 7800 ft Driving distance: 250 km| 10 hrs approximately",
+        "altitude": 2377,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Lohajung to Gujreni",
+        "desc": "Altitude: 2,800 m/ 9,200 ft Trek distance: 4-5 km | 5 hrs approximately",
+        "altitude": 2804,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Gujreni to Tilandi",
+        "desc": "Altitude: 3,200 m/ 10,500 ft Trek distance: 4-5 km | 4 hrs approximately",
+        "altitude": 3200,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Tilandi to Brahmatal via Jhandi top and Brahmatal summit",
+        "desc": "Altitude: Brahmatal summit: 3,750 m / 12,250 ft Jhandi top: 3,400 m / 11,150 ft Brahmatal camp: 3,200 m / 10,700 ft",
+        "altitude": 3734,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Brahmatal to Lohajung",
+        "desc": "Trek distance: 6 km | 7-8 hrs approximately Altitude: 2,300m/ 7,800 ft Trek distance: 10 km | 8 hrs approximately",
+        "altitude": 2377,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Lohajung to Rishikesh",
+        "desc": "Drive Distance: 250 kilometers | 10 hours approximately ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Rishikesh. Read the article Things to do in Rishikesh. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by flight.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What kind of accommodation we’ll get in this trek?",
+        "a": "At Base Camp Natin, we will be staying in guest houses on a triple/quad sharing basis, with separate arrangements for males and females. During camping, we provide twin-sharing, all-season tents along with sleeping bags, mattresses, and tents, which are part of the central equipment provided by us."
+      },
+      {
+        "q": "How many trekkers do you take in a group?",
+        "a": "To run a batch we need 7 people and maximum batch size 25 people."
+      },
+      {
+        "q": "What is the age limit?",
+        "a": "We allow minimum 10 years kid in this trek and maximum depend on trekker’s fitness."
+      },
+      {
+        "q": "If we come prior the trek date, Do you provide accommodation?",
+        "a": "No. We don’t but we can suggest you good hotel/Stay nearby pick up location."
+      },
+      {
+        "q": "Is there an option to offload my backpack on this trek?",
+        "a": "Yes, Offloading facility is available. You should book it in advance and pay us Rs.1200/- in total or book it after reaching there, and for that you need to pay Rs.1500/- in total. Bag weight should not more than 11 kgs."
+      },
+      {
+        "q": "What kind of shoes we should buy for Brahmatal trek?",
+        "a": "You should buy shoes which has these three features –Good grip, Ankle Support and additional water resistant layers. Generally, we advise Quechua Trek 100, MH 500 and MH 100"
+      },
+      {
+        "q": "Is Brahmatal trek advisable for beginners?",
+        "a": "The Brahmatal trek is ideal for both beginners and experienced trekkers. The Brahmatal trek can get a bit rigorous for first-timers. Therefore, it is recommended to the first timers to maintain good physical stamina and read extensively. Any experienced trekker would love to go on this trek for the love of its views and trekking."
+      },
+      {
+        "q": "How to reach at pick up location?",
+        "a": "At first you have to reach Rishikesh, after that Trekora will take care of your further travel plan. Our Pick-up place Pick-up Location - Back Stayz Laxman Jhula Near SBI Bank Tapovan Options to reach Rishikesh 1. Take overnight train/bus to Rishikesh. 2. Take overnight train/bus to Haridwar and drive to Rishikesh (35 min drive with normal traffic). We always recommend to go for the govt. Buses over the private ones outside the bus station as based on the experience we have found that there are very high chances of delay involved with private buses. Also, govt. Buses are always more reliable. Whichever bus you choose, just make sure to reach Rishikesh at least by 05:30 am positively. 3. Take the flight to Dehradun airport (Jolly Grant Airport) and drive to Rishikesh (20 km, 30 min), if coming by flight then come one day early."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/brahmatal-trek"
+  },
+  "kedarkantha-trek": {
+    "slug": "kedarkantha-trek",
+    "overview": "",
+    "shortDesc": "",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Arrival at Sankri",
+        "desc": "Altitude: 1,950m/ 6,400 ft. Drive Distance: 220 km |10 hours approximately",
+        "altitude": 1951,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Sankri to Juda-ka-Talab",
+        "desc": "Altitude: 2800 m/ 9100 ft Trek Distance: 4-5 km | 5 hours approximately",
+        "altitude": 2774,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Juda-ka-Talab to Kedarkantha Base",
+        "desc": "Altitude: 3100 m/ 10,100 ft. Trek Distance: 4 km | 2.5 hours approximately",
+        "altitude": 3078,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Kedarkantha base to Kedarkantha peak, Descend to Hargaon camp",
+        "desc": "Peak - 3,800 m/ 12,500 ft. Hargon - 2,700 m/ 8,900 ft.",
+        "altitude": 3810,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Hargaon camp to Sankri",
+        "desc": "Trek Distance: 6-7 km | 7 hrs approximately Altitude: 1950 m/ 6400 ft. Trek Distance: 4 km | 3-4 hours approximately",
+        "altitude": 1951,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Departure day (Sankri to Dehradun)",
+        "desc": "Drive Distance: 220 km | 10 hours approx ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Dehradun. Read the article Things to do in Dehradun. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by plane.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What are the highlights of Kedarkantha Trek?",
+        "a": "Kedarkantha is the best winter trek in Uttarakhand and is renowned for the breathtaking views of peaks like Yamunotri, Gangotri, Black Peak, Bandarpoonch, and the Swargarohini group of peaks. The Kedarkantha Trek is also famous for its picturesque campsites like Juda Ka Talab, Kedarkantha Base Camp, and Hargaon, which are surrounded by pine forests and offer stunning sunrise and sunset views."
+      },
+      {
+        "q": "Can a beginner go for the Kedarkantha Trek?",
+        "a": "Absolutely, the Kedarkantha Trek is the best trek for beginners in Uttarakhand. The Kedarkantha Trek route is well-marked and the daily trekking distances are manageable. Beginners will find the trek both accessible and rewarding."
+      },
+      {
+        "q": "Can I go on a solo Kedarkantha Trek?",
+        "a": "While it is possible to go on a solo Kedarkantha Trek, it is recommended to join a group or go with a guide for safety reasons. The trails can be challenging to navigate alone, especially in winter when they are covered in snow. If you are a solo trekker, you can opt for our fixed departure groups to Kedarkantha and we will pair you with a group of like-minded trekkers so that you can enjoy the trek while also being safe."
+      },
+      {
+        "q": "Is there electricity on the Kedarkantha trail?",
+        "a": "There is no electricity available on the Kedarkantha trail beyond Sankri village. It is advisable to carry extra batteries or power banks for electronic devices."
+      },
+      {
+        "q": "Do we need to carry cash on the Kedarkantha Trek?",
+        "a": "Yes, it is advisable to carry cash on the Kedarkantha Trek, especially for any personal expenses in Sankri and for emergencies. There are no reliable ATMs available once you leave Dehradun."
+      },
+      {
+        "q": "What is the weather like on the Kedarkantha Trek?",
+        "a": "The weather on the Kedarkantha Trek can be cold, especially during the winter months, with temperatures ranging from 10°C to -3°C. Snowfall is common from December to April, making the trails more challenging but also more beautiful."
+      },
+      {
+        "q": "What should I carry for the Kedarkantha Trek?",
+        "a": "For the Kedarkantha winter trek, you should carry: - Warm clothing (layers, jackets, thermals) - Trekking boots - Woollen socks and gloves - Cap or hat - Sunglasses and sunscreen - Trekking poles - Backpack with rain cover - Water bottles - Personal medication and a first-aid kit - Power banks and spare batteries - Snacks and energy bars"
+      },
+      {
+        "q": "Is there an offloading service at the trek?",
+        "a": "Yes, offloading services for your backpack are available on the Kedarkantha Trek. This service can be arranged in advance with us for an additional fee."
+      },
+      {
+        "q": "Is there a cloakroom where I can store my extra luggage?",
+        "a": "Yes, there is a Trekora guest house at Sankri where you can store extra luggage before you start the trek. You can leave items that you won't need during the trek here."
+      },
+      {
+        "q": "What is the accommodation like on the trek?",
+        "a": "Accommodation on the Kedarkantha Trek includes staying in tents at campsites and a guesthouse at Sankri. The tents are usually shared, and the guesthouses provide basic but comfortable lodging. Meals are provided at the campsites and guesthouse, ensuring you have a warm and hearty diet throughout the trek."
+      },
+      {
+        "q": "What is included in the Kedarkantha Trek Package of Trekora ?",
+        "a": "The Kedarkantha trek package of Trekora includes accommodations, meals, trek equipment, first aid and support staff including local experienced guides, base camp manager, and professional trek leader."
+      },
+      {
+        "q": "What is the total trek distance of Kedarkantha trek?",
+        "a": "The total trek distance of the Kedarkantha trek is 20 kilometers and usually takes 6 days to complete. The trek begins from Sankri and takes you through varied terrains. It passes through beautiful destinations like Juda ka Talab and Hargaon Base, while the highlight of the Kedarkantha trek is the Kedarkantha peak."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/kedarkantha-trek"
+  },
+  "dayara-bugyal": {
+    "slug": "dayara-bugyal",
+    "overview": "- Dayara Bugyal features serene meadows and alpine forests that remain blanketed in snow during the winter. The meadows create beautiful scenery with stunning mountains in the backdrop. - During the Dayara Bugyal trek, you can witness the panoramic views of the Himalayan ranges. From the summit of the Dayara Bugyal trek, you can get a clear view of famous Himalayan peaks like Bandarpoonch, Srikanth, Jaonli, Gangotri Range, and Draupadi ka Danda 2. - You can experience the prime beauty of Dayara Bugyal in winter. During winter it presents an enchanting snow trekking experience, with views of snow-covered trails, meadows, and peaks. - Dayara Bugyal is also visited during the spring and summer season. During this time, the snow melts and the meadows are lush green with wildflowers blooming around. - You can also encounter diverse plant and animal life, offering a good opportunity for wildlife and environment enthusiasts. - You can enjoy camping amidst nature, surrounded by peaceful ambience and nature. - Dayara Bugyal is known for being a beginner-friendly trek and scenic beauty throughout the year.",
+    "shortDesc": "- Dayara Bugyal features serene meadows and alpine forests that remain blanketed in snow during the winter. The meadows create beautiful scenery with stunnin…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Dehradun to Natin village",
+        "desc": "Altitude: Natin Village - 2,250 m/ 7,400 ft. Distance: 180 km | Duration: 7-8 hrs",
+        "altitude": 2256,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Natin to Gui",
+        "desc": "Altitude (Gui): 3000 m/ 9,800 ft Trek Distance: 4-5 km | 4-5 hrs",
+        "altitude": 2987,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Gui to Chilapada",
+        "desc": "Altitude (Chilpada): 3,300 m/ 10,500 ft Trek Distance: 3 km | 2 hrs",
+        "altitude": 3200,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Chilapada To Dayara Top and Trek to Nayata",
+        "desc": "Altitude Dayara Top: 3,700 m/ 12,000 ft Nayata: 2,800 m/ 9,200 ft Trek Distance Chilapada - Dayara Top: 5 km | 5-6 hrs Dayara Top - Nayata: 6 km | 3-4 hrs",
+        "altitude": 3658,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Nayata to Natin village and drive to Dehradun",
+        "desc": "Altitude: 2,250 m/ 7,500 ft Trek Distance: 5 km | 3 hours Drive Distance: 180km | 7-8 hrs",
+        "altitude": 2286,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What kind of accommodation we’ll get in this trek?",
+        "a": "At Base Camp Natin, we will be staying in guest houses on a triple/quad sharing basis, with separate arrangements for males and females. During camping, we provide twin-sharing, all-season tents along with sleeping bags, mattresses, and tents, which are part of the central equipment provided by us."
+      },
+      {
+        "q": "Will you provide us with tents and sleeping bags?",
+        "a": "Yes, we will provide sleeping, tent, mattress. It is among the central equipment."
+      },
+      {
+        "q": "Where and at what time do we have to arrive in Dehradun?",
+        "a": "The reporting point is Prince Chowk, Dehradun, near the railway station. The pick-up time is 6:00 AM."
+      },
+      {
+        "q": "If we come prior the trek date, Do you provide accommodation?",
+        "a": "No. We don’t but we can suggest you good hotels nearby pick up location. Few suggestions: Hotel Star Wood Hotel Vishnu Inn Hotel Aashrya"
+      },
+      {
+        "q": "Is this a good trek for a first timer?",
+        "a": "Yes, This is of the best options. We recommend this trek to first timer as well as experienced one."
+      },
+      {
+        "q": "If not the Dayara Bugyal trek, what is a good alternative trek to do?",
+        "a": "You can look for below mention treks which is available in same time Chopta Chandrashilla trek, Kuari Pass Trek, Brahmatal Trek, Ali Bedni Bugyal Trek and Kedarkantha Peak Trek."
+      },
+      {
+        "q": "What is the age limit?",
+        "a": "We allow minimum 10 yrs kid in this trek and maximum depend on trekker's fitness."
+      },
+      {
+        "q": "Can you give us brief details about served food while on trek?",
+        "a": "We serve Indian vegetarian food with occasional eggs while on trek, to give you general idea it is like this, Dal sabji roti, rice in lunch & dinner and daliya, poha, sandwich etc in breakfast with morning & evening tea."
+      },
+      {
+        "q": "Do we get enough water for drinking?",
+        "a": "Yes, trekkers must carry 2 water bottles 1 litre each so they can fill/refill at campsite so they can drink and keep themselves hydrate. Once you’re in campsite you can refill it from water container available in campsite."
+      },
+      {
+        "q": "What kind of shoes we should buy for this trek?",
+        "a": "You should buy shoes which has these three features –Good grip, Ankle Support and additional water resistant layers. Generally, we advise Quechua Trek 100, MH 500 and MH 100. Watch this video for better understanding: https://www.youtube.com/watch?v=B8cfXGmlO6U"
+      },
+      {
+        "q": "Is Trekking pole necessary?",
+        "a": "Yes, it is necessary. It is additional support which helps you reduce tiredness and give you strength and balance."
+      },
+      {
+        "q": "What all do I need to carry on the trek?",
+        "a": "A) Mandatory documents: 2 xerox of ID having address (addhar card/driving license), 2 Passport size photograph, Medical form signed & sealed by doctor and soft/hard copy of vaccination certificate. B) Essential list: Upper body warmer - 1Quick dry t-shirts -3Fleece jacket -1Down feather/hollow fill jacket -1Rain poncho/rain proof jacket- 1Lower body warmer - 1Quick dry convertible trek pants - 3Rain proof water pants/poncho - 1Suncap- 1Woollen cap/Balaclava - 1Sunglasses (UV protected with side cover)- 1Neck gaiter/muffler - 1Cotton trekking socks 4-5 pairWoollen socks 2-3 pairWaterproof high ankle trekking shoes -1 pairWaterproof hand gloves with fleece layer inside- 1 pairWoollen gloves -1 pairHead torch- 1Lunch box -1Water bottle- 2(1 litre each)Extra batteries for head torchToiletries (toilet paper, wet tissue, sanitizer, tooth brush, tooth paste, hand wash, sunscreen lotion)Menstrual hygiene kit for female trekkers."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/dayara-bugyal"
+  },
+  "rupin-pass": {
+    "slug": "rupin-pass",
+    "overview": "",
+    "shortDesc": "",
+    "highlights": [
+      "The Rupin Pass Trek is a stunning journey through the lesser-known parts of the Indian Himalayas",
+      "The trail is filled with diverse landscapes",
+      "from dense forests of oak and rhododendron to high-altitude meadows and snow-covered slopes",
+      "The Rupin River is a constant companion on the trek",
+      "providing a soothing soundtrack as it rushes through the valleys",
+      "The major highlight of the trek is the Rupin Pass",
+      "which sits at an altitude of 15",
+      "350 feet and offers panoramic views of the surrounding mountains"
+    ],
+    "itinerary": [
+      {
+        "title": "Arrival In Bawta",
+        "desc": "Altitude Bawta: 2,350 m/ 7,700 ft. Drive Distance: 195 km | 8 - 9 hr.",
+        "altitude": 2347,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Bawta to Jakha",
+        "desc": "Altitude Jakha: 2,750 m/ 9,000 ft. Trek Distance: 5 km | 4 hrs.",
+        "altitude": 2743,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Jakha to Saruwas Thatch",
+        "desc": "Altitude saruwas Thatch: 3,261 m / 10,700ft. Trek Distance: 8 km | 5 - 6 hrs. Accommodation: Campsite.",
+        "altitude": 3261,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Saruwas Thatch to Dandreyash Thatch",
+        "desc": "Altitude: 3,550 m / 11,700 ft Accommodation: Campsite",
+        "altitude": 3566,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Dandreyash Thatch to Upper Waterfall",
+        "desc": "Altitude Upper Waterfall: 4,050 m / 13,300 ft) Trek Distance: 2 km | 3-4 hrs Accommodation: Campsite",
+        "altitude": 4054,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Upper Waterfall to Ronti Gad via Rupin Pass",
+        "desc": "Altitude: Rupin Pass: 4,700 m / 15,350 ft Ronti Gad: 3,750 m / 12,300 ft",
+        "altitude": 4679,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Ronti Gad to Sangla & Drive to Shimla",
+        "desc": "Accommodation: Campsite Altitude Sangla: 2,650 m/ 8,700 ft. Trek Distance: 11 km | 5-6 hrs. Drive Distance: 215 km | 9-10 hrs.",
+        "altitude": 2652,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What are the essential items to carry for Rupin Pass Trek?",
+        "a": "Here are some of the essentials you should carry for the trek: 1. Trekking shoes: A good pair of trekking shoes is essential for a comfortable trek. Make sure your shoes are well-fitted, sturdy and provide good grip on the trail. 2. Warm Clothing: The weather can be unpredictable in the mountains, so it's important to carry warm clothing, including thermal innerwear, fleece jackets, down jacket, and waterproof jacket. 3. Trekking pants: Carry comfortable and quick-drying trekking pants that are suitable for the weather conditions. 4. Backpack: A good quality backpack with a capacity of 40-50 liters is ideal for carrying your essentials during the trek. 5. Sleeping bag: A good quality sleeping bag is essential for a comfortable stay during the camping nights. 6. Headlamp/Flashlight: Carry a good quality headlamp or flashlight with extra batteries for trekking during early morning or late evening hours. 7. Water bottle: Carry a reusable water bottle and stay hydrated throughout the trek. 8. Snacks: Carry energy bars, dry fruits, and snacks for instant energy during the trek. 9. First aid kit: Carry a basic first aid kit, including band-aids, antiseptic cream, pain relief spray, and medicines for altitude sickness. 10. Sun protection: Carry sunscreen lotion, sunglasses, and a hat to protect yourself from the harsh sun rays. 11. Trekking poles: Trekking poles can help in maintaining balance and reduce the strain on your knees while trekking."
+      },
+      {
+        "q": "What is the Best Time to do Rupin Pass Trek?",
+        "a": "The best time to do Rupin Pass Trek is during Summer and Autumn, during the months of May, June, September, October and November. During these months, the trails are at their best, they are easy to navigate and trek through. The weather is more favorable, making the trek more enjoyable, with wildflower blooms and lush green meadows that add vibrant colors to the landscape."
+      },
+      {
+        "q": "How difficult is the Rupin Pass Trek?",
+        "a": "Rupin Pass Trek is a moderate to difficult grade trek. The trail includes steep climbs, rocky terrain, and narrow paths and even trekking with a waterfall."
+      },
+      {
+        "q": "What is the duration of the Rupin Pass Trek?",
+        "a": "With Trekora Rupin Pass is a 7 days trek. During these 7 days, you will pass through amazing landscapes, stay at scenic campsites and have a memorable time."
+      },
+      {
+        "q": "What is the starting point of the Rupin Pass Trek?",
+        "a": "Rupin Pass Trek starts from Bawta village in Himachal Pradesh."
+      },
+      {
+        "q": "What is the maximum altitude reached during Rupin Pass Trek?",
+        "a": "The maximum altitude of the Rupin Pass Trek is 15,350 ft, which is achieved at the Rupin Pass."
+      },
+      {
+        "q": "What is the Rupin Pass Trek distance?",
+        "a": "The total distance covered in Rupin Pass Trek is around 41 km. All this distance takes you through stunning landscapes like meadows, waterfalls and vast mountains."
+      },
+      {
+        "q": "Is it necessary to have prior trekking experience for Rupin Pass Trek?",
+        "a": "While it is not mandatory to have prior trekking experience for the Rupin Pass Trek, it is recommended that you have some level of fitness and experience in trekking. The Rupin Pass Trek is moderately difficult and takes you at an altitude of 15,350 feet, so it requires a good level of physical fitness and endurance. The trail includes steep climbs, rocky terrain, and narrow paths, so prior experience in trekking can help you tackle the challenges with ease. Moreover, the Rupin Pass Trek can be unpredictable, and the weather conditions can change quickly, so having prior trekking experience can help you adapt better to the challenges on the trail. However, with proper training and preparation, even first-time trekkers can undertake the Rupin Pass Trek and enjoy the stunning landscapes and cultural experiences along the way. It is always advisable to consult with a trekking company or a professional guide to assess your fitness level and discuss the requirements of the trek before embarking on the journey."
+      },
+      {
+        "q": "Is it safe to do the Rupin Pass Trek?",
+        "a": "The Rupin Pass Trek is generally considered safe, but like any high-altitude trek, it comes with its share of risks and challenges. However, with proper preparation, precautions, and guidance, you can minimize the risks and ensure a safe and enjoyable trek. One of the main risks on the Rupin Pass Trek is altitude sickness, which can affect you at high altitudes. It is important to acclimatize properly and stay hydrated to avoid altitude sickness. We follow a well-planned itinerary with gradual altitude gain to help you acclimatize properly. It is always advisable to undertake the Rupin Pass Trek with a reputable trekking company. It is important to follow safety guidelines and instructions provided by the trek leaders to ensure a safe and enjoyable trek."
+      },
+      {
+        "q": "What is the highest point of the Rupin Pass Trek?",
+        "a": "The highest point of the Rupin Pass Trek is the Rupin Pass at an altitude of 15,350 ft."
+      },
+      {
+        "q": "What are the highlights of the Rupin Pass Trek?",
+        "a": "The Rupin Pass Trek is a stunning journey through the lesser-known parts of the Indian Himalayas. The trail is filled with diverse landscapes, from dense forests of oak and rhododendron to high-altitude meadows and snow-covered slopes. The Rupin River is a constant companion on the trek, providing a soothing soundtrack as it rushes through the valleys. The major highlight of the trek is the Rupin Pass, which sits at an altitude of 15,350 feet and offers panoramic views of the surrounding mountains. Another highlight of the Rupin Pass trek is the Rupin waterfall, a three tier beautiful waterfall. As you make your way up to the pass, the scenery changes dramatically, with the rocky terrain giving way to patches of snow and ice. The Rupin Pass Trek is a challenging trek that requires a good level of fitness and experience, but the rewards are well worth the effort. You'll have the chance to witness the raw beauty of the Himalayas and immerse yourself in the culture of the remote villages that dot the trail."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/rupin-pass"
+  },
+  "bali-pass": {
+    "slug": "bali-pass",
+    "overview": "- The Bali Pass Trek in Uttarakhand is one of the most thrilling and adventurous treks, offering a wealth of unique experiences to you. - This trek connects the famous Har Ki Dun Valley with the Yamunotri Valley, taking you through an offbeat route that passes by scenic locations. - Along the way, you are treated to stunning views of some of the most iconic Himalayan peaks like Swargarohini, Bandarpoonch, and Kala Nag. Watching the sun illuminate these snow-covered peaks in shades of gold and orange at sunrise is a sight that stays with you forever. - The trek also takes you through ancient villages like Dhatmeer, Dharkot, and Gangad, where you get a glimpse of the unique village culture and the simple, peaceful lifestyles of the mountain people. - Throughout the journey, you’ll encounter a variety of terrains, dense forests, lush meadows, rocky moraines, snowy stretches, and even river crossings and steep climbs, keeping the trek exciting and diverse. - Another highlight is trekking through the steep Narma Kandi Ridge, and heading towards bali col campsite. - One of the biggest thrills of the trek is crossing the Bali Pass. Standing at this high point, surrounded by snow-covered peaks, gives you a profound sense of accomplishment and awe. - Unlike more commercialized treks, Bali Pass remains relatively less crowded, offering a more raw, authentic, and peaceful trekking experience.",
+    "shortDesc": "- The Bali Pass Trek in Uttarakhand is one of the most thrilling and adventurous treks, offering a wealth of unique experiences to you. - This trek connects…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Dehradun to Sankri (Drive)",
+        "desc": "Altitude Sankri: 1,950 m/ 6,400 ft. Drive: 200 km | 9-10 hrs.",
+        "altitude": 1951,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Sankri to Seema via Dharkot",
+        "desc": "Altitude: Seema: 2,600 m/ 8,500 ft Dharkot: 2,400 m/ 8,000 ft",
+        "altitude": 2591,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Seema to Devsu Bugyal",
+        "desc": "Drive Distance (Sankri - Dharkot): 24 km | 2 hrs. Altitude: 3,100 m/ 10,200 ft. Trek Distance : 5-6km | 5-6 hr.",
+        "altitude": 3109,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Devsu Bugyal to Ruinsara Tal",
+        "desc": "Altitude Ruinsara Tal: 3,600 m/ 11,800 ft. Trek Distance: 9 km | 5 - 6 hrs.",
+        "altitude": 3597,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Ruinsara Tal to Odari",
+        "desc": "Altitude: 4,000 m/ 13,100 ft. Trek Distance: 4 km | 3- 4 hrs.",
+        "altitude": 3993,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Odari to Bali col camp",
+        "desc": "Altitude: 4,600 m/ 15,100 ft. Trek Distance: 5 km | 6 - 7 hrs.",
+        "altitude": 4602,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Bali col camp to Lower Dhamni via Bali Pass",
+        "desc": "Altitude: Bali Pass: 4,950 m/ 16,200 ft. Lowar Dhamni: 3,350 m/ 11,100 ft.",
+        "altitude": 4938,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Lower Dhamni to Janki Chatti and drive to Dehradun",
+        "desc": "Trek Distance: 14 km | 10 - 11 hrs. Altitude: 2,600 m/ 8,500 ft. (Janki Chatti). Trek Distance (Lower Dhamni - Janki Chatti): 8 km | 4 - 5 hr. Drive Distance (Janki Chatti- Dehradun): 170km | 7-8 hr. ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Dehradun/Mussoorie. Read the article Things to do in Dehradun. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by flight.",
+        "altitude": 2591,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "How many days are required for the Bali Pass Trek?",
+        "a": "Bali Pass Trek is an 8 days trek with Trekora while the total trekking distance you cover during this trek is around 56 kilometers."
+      },
+      {
+        "q": "Is the Bali Pass worth it?",
+        "a": "The Bali Pass Trek is definitely worth every bit of effort you put into it. While the trail can be tough at times and will test your endurance, strength, and patience, the rewards are truly worth it all. From peaceful forests and beautiful meadows to stunning views of snow-covered peaks, every step of the journey has something to be appreciated. The calmness of nature, the fresh mountain air, and the feeling of being far away from the busy world make the whole experience even more meaningful."
+      },
+      {
+        "q": "In which state is the Bali Pass?",
+        "a": "The Bali Pass Trek is a beautiful trekking route in the state of Uttarakhand."
+      },
+      {
+        "q": "What is the Bali Pass Trek Itinerary?",
+        "a": "The Bali Pass Trek Itinerary with Trekora is as follows: Day-1: Dehradun to Sankri (Drive) Day-2: Sankri to Seema via Dhatmeer Day-3: Seema to Devsu Bugyal Day-4: Devsu Bugyal to Ruinsara Tal Day-5: Ruinsara Tal to Odari Day-6: Odari to Bali col camp Day-7: Bali col camp to Lower Dhamni via Bali Pass Day-8: Lower Dhamni to Janki Chatti and drive to Dehradun"
+      },
+      {
+        "q": "What are the major highlights and scenic attractions of the Bali Pass Trek?",
+        "a": "The Bali Pass Trek is one of the most scenic and exciting treks in the Indian Himalayas. Some of the major highlights include crossing the high-altitude Bali Pass itself, walking along the beautiful Narma Kandi ridge and visiting the peaceful Ruinsara Tal, a crystal-clear alpine lake surrounded by mountains. Camping at Devsu Bugyal, a lush green meadow surrounded by forests, is a calming and memorable experience. One of the best parts of this trek is the wide, panoramic views of the snow-covered Himalayan peaks. Along the way, you’ll also pass through remote villages like Gangad, Dharkot, and Dhatmir, where you can experience the simple and rich culture of mountain life. This mix of adventure, natural beauty, and local culture makes the Bali Pass trek truly special."
+      },
+      {
+        "q": "What is the maximum altitude reached during the Bali Pass Trek?",
+        "a": "The Maximum altitude reached during the Bali Pass trek is 16,200 ft. at the Bali Pass itself."
+      },
+      {
+        "q": "Are permits required for the Bali Pass Trek?",
+        "a": "Yes, permits are required for the Bali Pass trek, as it passes through protected areas. These permits help regulate footfall and ensure the conservation of the region’s biodiversity. However, you don’t have to worry about arranging them yourself. If you are trekking with an experienced organization like Trekora (Trekora), all necessary permits, forest permissions, and related fees are taken care of and included in your trek package. This allows you to enjoy the trek without the stress of handling logistics."
+      },
+      {
+        "q": "What fitness level is required for the Bali Pass trek?",
+        "a": "For the Bali Pass Trek, you need to be in good physical health. You should have the stamina to cover 5 km in 30 minutes comfortably, or be able to jog 10 km in 70 minutes without feeling overly tired. If you prefer cycling, you should be able to cycle 20 km in 55 minutes with ease. This level of fitness will help you tackle the trek’s moderate to challenging sections more comfortably and enjoy the experience."
+      },
+      {
+        "q": "Is backpack offloading service available for the Bali Pass Trek?",
+        "a": "Yes, backpack offloading service is available during the Bali Pass Trek. This allows you to have a lighter load while trekking, making your journey more comfortable."
+      },
+      {
+        "q": "Is the Bali Pass Trek recommended for first-time trekkers?",
+        "a": "Yes, the Bali Pass Trek can be suitable for first-time trekkers, but it’s important to have a basic level of fitness. While the trek is manageable for beginners, some sections are moderately challenging, so being prepared physically will make the experience more enjoyable. If you’re new to trekking, it’s a good idea to start training with some shorter hikes to build stamina and strength."
+      },
+      {
+        "q": "Where is the nearest ATM available for the Bali Pass Trek?",
+        "a": "The nearest ATM for the Bali Pass Trek is located in Purol. It's a good idea to withdraw cash from there, as ATM facilities are limited in the villages along the trek. Make sure to carry enough money for your trek, as there are no ATMs available during the hike."
+      },
+      {
+        "q": "How is the Bali Pass Trek experience during September and October?",
+        "a": "In September and October, the Bali Pass Trek offers an amazing experience during the post-monsoon months. The trail is fresh and green after the rains, with crisp autumn air making the trek even more enjoyable. The skies are clearer, providing excellent visibility of the peaks and valleys. You'll also get to see the vibrant autumn colors along the trail, adding to the beauty of the surroundings. The post-monsoon freshness combined with the stunning views makes trekking in these months truly special."
+      },
+      {
+        "q": "When is the best time to book the Bali Pass Trek in advance?",
+        "a": "The best time to book the Bali Pass Trek is 2 to 3 months before your planned trekking date. This gives you enough time to prepare, ensures availability on your preferred dates, and helps you avoid any last-minute rush or hassle. Early booking also allows you to plan your travel and gear more smoothly."
+      },
+      {
+        "q": "Is acclimatization important for the Bali Pass Trek?",
+        "a": "Yes, acclimatization is very important for the Bali Pass Trek, as it is a high-altitude trek. Trekora’ itinerary is carefully designed to help you acclimatize gradually as you trek. To make it even more effective, there are short acclimatization walks around the campsite, which help your body adjust better to the altitude and reduce the chances of altitude sickness."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/bali-pass"
+  },
+  "pindari-glacier": {
+    "slug": "pindari-glacier",
+    "overview": "Your trek to this beautiful Himalayan glacier starts at Kharkia, a small village approximately 100 km from Bageshwar, and after crossing a series of remote Himalayan parts like Dwali and Phurkia, you will touch the zero point of the glacier at an altitude of 12,300 ft. From Kharkiya its a short trek to Khati, where you will get to witness beautiful Rhododendron blooms and views of Himalayan peaks like Nandabaner, Nandakot, and Lapsadhura. BSNL network is available in some parts of the trek. Day 3 is a longer trek to Dwali. Whether here can be unpredictable, so be prepared accordingly. You will pass through a landslide zone and also get glimpses of Kafni Valley on your left. The next day is another short trek to Phurkia and you will get to see the Pindar River flowing below you, the glacier is not too far from here. On clear days, Mt. Nandakhatt & Nanda Devi is vividly visible. You will pass through a meadow where you may spot Himalayan Ibex and also cross a frozen stream. The following day is your summit day as you reach the pinnacle of the trek at 12300 ft. Mt. Nanda Khat is visible from here and you will get to see other mountain peaks like Mt. Bauljuri and Mt. Changuch as well. After spending some time at the glacier you will return to Phurkia. The next days descent begins as you trek down to Khati via Dwali through the same path that you came in and the next day you will descend from Khati to Kharkia and drive back to Kathgodam ending your incredible Himalayan journey. What Can You Expect At The Trek The trek to Pindari Glacier is long but it is easier to complete as compared to other glacier treks in the country. The trek has a medium gradient and from Khati to Phurkia, you will have to cross some caved-in sections and land-slide zones. The glacier itself is 3.2 km in length and 1.5 km in breadth. Mid-April to November is a great time to do the trek, however, it is best to avoid the monsoon season due to landslides and roadblocks. During April and May, the temperature ranges from 15°C to 20°C during the day and drops between 7°C to 2°C at night. From September to November, the daytime temperature ranges between 15°C to 10°C, and at night it ranges between 5°C to -5°C The trail has well-defined paths with only one minor pass-crossing. It starts with flat hikes through Rhododendron covers followed by mountain ridges, spider walls, and stream crossings. You also get to learn about local culture and tradition from the local villages that you will pass on your way. Our mountaineering-certified trek leaders are there to assist you along with the rough patches and all along the way. Our guides are locals who know the mountains like the back of their hands and thus give you a very intimate and comprehensive experience of the Himalayan terrains. Safety is one of our top priorities and our Trek Leaders are also Wilderness First Aid Responders, so you can be assured that you will be safe at all times during the trek. We offer comfortable transfers from Kathgodam to Khati and back, and a cook accompanies us on our trek, who can serve up delicious local cuisine. At night you will stay in comfortable camps. We provide 3-person tents on twin sharing basis to make your stay in the mountains as comfortable as possible. Since it is a high-altitude trek, the weather may get unpredictable at times, so you should dress appropriately in layers so that you are prepared to tackle all kinds of weather.",
+    "shortDesc": "Your trek to this beautiful Himalayan glacier starts at Kharkia, a small village approximately 100 km from Bageshwar, and after crossing a series of remote H…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Drive From Kathgodam To Khati Village | Enjoy The Scenic Beauty Of Kumaon",
+        "desc": "Altitude: 2200 m/ 7300 ft. Distance: 214 km approx. | Duration: 9 to 10 hrs. Pick up: 6 am | Pick up spot: Kathgodam Railway Station. Route: Kathgodam - Bheemtal - Almora - Bageshwar - Kapkot - Loharkhet - Kharkiya - Khati. BSNL network is available. Last ATM point: Kapkot. Stay in tents (twin sharing).",
+        "altitude": 2225,
+        "stay": "tents (twin sharing)",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Trek From Khati To Dwali | Walk By The Beautiful Pindar River",
+        "desc": "Altitude: 2,600 m/ 8,600 ft. Trek Distance: 13 km Duration: 7-8 hr. Altitude Gain: 400 m/ 1,300 ft. Water Source: Multiple water sources on the trek. Cross 6 landslide zones. Stay in camps (twin-sharing).",
+        "altitude": 2621,
+        "stay": "camps (twin-sharing)",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek From Dwali To Phurkia | Cross Spiderwalls And Frozen Streams",
+        "desc": "Altitude: 3,200 m/ 10,500 ft | Distance: 5 km | Duration: 3 hr. Altitude Gain: 600 m/ 1,900 ft. Flora: Rhododendron, Oak. Fauna: Himalayan Ibex. Cross two frozen streams. Peak Views: Nanda Khat (6545 m), Nanda Devi East (7, 434 m). Stay in tents (twin-sharing).",
+        "altitude": 3200,
+        "stay": "tents (twin-sharing)",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek From Phurkia To Zero Point And Back To Phurkia | Summit Day",
+        "desc": "Altitude: 3,700 m/ 12,100 ft. Distance: 16 km | Duration: 6 to 7 hrs. Trek through the inner realms of Pindar Valley. Peak views: Nanda Khat (6545 m), Nanda Kot (6,861 m), Mt. Bauljuri (5,922 m), and Changuch Peak (6,322 m). Stay in tents (twin-sharing).",
+        "altitude": 3688,
+        "stay": "tents (twin-sharing)",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek From Phurkia To Khati Via Dwali | Begin Descending",
+        "desc": "Altitude: 2,200 m/ 7,300 ft. Trek Distance: 18 km | Duration: 7 to 8 hr. Altitude Loss: 1,000 m/ 3,200 ft. Stay in tents (twin-sharing).",
+        "altitude": 2225,
+        "stay": "tents (twin-sharing)",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Drive From Khati To Kathgodam | Say Goodbye To The Mountains",
+        "desc": "Altitude: 2,050 m/ 6,750 ft. Trek Distance: 4 km | Duration: 1 hr. Drive Distance: 210 km | Duration: 9 to 10 hrs.",
+        "altitude": 2057,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is Pindari Glacier Trek?",
+        "a": "The Pindari Glacier Trek is a popular trekking route located in the Kumaon region of Uttarakhand, India. This trek is famous for its spectacular views of the Pindari Glacier, which is one of the most accessible glaciers in the Indian Himalayas. The trek takes you through some of the most picturesque landscapes of the region, including dense forests, rolling meadows, and gushing streams. The highlight of the trek is reaching the Pindari Glacier, which stands at an altitude of 3,820 meters and offers breathtaking views of the surrounding peaks of the Nanda Devi Range. The trek also offers a unique cultural experience as it passes through several remote villages of the region, where you can interact with the locals and learn about their traditions and way of life. The trek is suitable for both experienced and novice trekkers and is a must-do for anyone who wants to witness the stunning natural beauty of the Indian Himalayas."
+      },
+      {
+        "q": "How long is the Pindari Glacier Trek?",
+        "a": "Pindari Glacier Trek is a 50 km long trek."
+      },
+      {
+        "q": "What is the duration of the Pindari Glacier Trek?",
+        "a": "Pindari Glacier Trek is a 6-days long trek."
+      },
+      {
+        "q": "What is the maximum altitude reached during the Pindari Glacier Trek?",
+        "a": "The maximum altitude of the Pindari Glacier Trek is 12,300 ft."
+      },
+      {
+        "q": "What is the best time to do the Pindari Glacier Trek?",
+        "a": "The best time to do Pindari Glacier Trek is Summer (mid- Apr to Jun) and Autumn (Sep to mid-Nov)."
+      },
+      {
+        "q": "Is it necessary to have a guide for the Pindari Glacier Trek?",
+        "a": "While it is not mandatory to have a professional expert for the Pindari Glacier Trek, it is highly recommended, especially if you are not familiar with the area or have limited trekking experience. A guide can provide valuable assistance in navigating the trail and can help you avoid getting lost or injured. They can also provide valuable insights into the local flora and fauna, as well as the cultural aspects of the region. Moreover, having a guide can ensure that you are taking the safest and most efficient route, and they can also provide emergency assistance in case of any unforeseen circumstances. Additionally, guides can help arrange for food and accommodation at various points along the trek, making your journey much smoother and hassle-free."
+      },
+      {
+        "q": "What is the difficulty level of the Pindari Glacier Trek?",
+        "a": "The Pindari Glacier Trek is a moderate-grade trek."
+      },
+      {
+        "q": "What is the maximum altitude reached during the Pindari Glacier Trek?",
+        "a": "The maximum altitude of the Pindari Glacier Trek is 12,300 ft."
+      },
+      {
+        "q": "What are the accommodations like during the Pindari Glacier Trek?",
+        "a": "During the Pindari Glacier Trek, you will stay in a guest house in the base camp, and on the slopes, you will be staying in tents (twin-sharing)."
+      },
+      {
+        "q": "What are the other popular treks in the region?",
+        "a": "Some other popular treks near the Pindari Glacier Trek are Kafni Glacier Trek, Sunderdhunga Treks, and Milam Glacier Trek."
+      },
+      {
+        "q": "Is it necessary to have the prior trekking experience to do the Pindari Glacier Trek?",
+        "a": "While prior trekking experience is always helpful, it is not necessary to have prior experience to do the Pindari Glacier Trek. The trek is suitable for beginners as well as experienced trekkers. The Pindari Glacier Trek is a moderate-level trek and can be completed by anyone who is physically fit and able to walk for several hours a day. The trail is well-defined, and there are many rest points along the way. However, it is important to prepare yourself for the trek by doing some basic physical exercises, such as walking or jogging, to build stamina and endurance."
+      },
+      {
+        "q": "What permits are required to do the Pindari Glacier Trek?",
+        "a": "The permits required for Pindari Glacier Trek are Inner Line Permit, Trekking Permit, and National Park Permit. When you trek with Trekora, we obtain all the permits for you."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/pindari-glacier"
+  },
+  "kuari-pass": {
+    "slug": "kuari-pass",
+    "overview": "",
+    "shortDesc": "",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Rishikesh to Pipalkoti",
+        "desc": "Altitude: 1,350m/4,400ft. Drive Distance: 220 km | 9-10 hours.",
+        "altitude": 1341,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Pipalkoti – Gulling Top",
+        "desc": "Altitude: Tugasi village: 2450m/ 8000 ft. Gulling Top: 2,850 m/ 9,400 ft.",
+        "altitude": 2438,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Gulling Top to Tali Forest Camp",
+        "desc": "Trek Distance: 3km | 2-3 hrs. Altitude: 3,350m (11,100ft). Trek Distance:5 km | 4-5 hours.",
+        "altitude": 3383,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Tali forest camp to Kuari pass and back via Khullara top",
+        "desc": "Altitude: Khulara Top: 3,650m (12,000 ft). Kuari Pass: 3,900m (12,750 ft).",
+        "altitude": 3658,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Tali forest camp - Pipalkoti via Gurson bugyal (11150 ft) and Auli (9680 ft)",
+        "desc": "Altitude: Tali Lake: 3,550m (11,500ft). Gursaon Bugyal:3,400m (11,150ft) Auli: 2900m (9500ft) ##### Note: Drive Distance: 45 km | 1 hr 30 min. If weather and snow conditions allow, we will return via Gorson Bugyal or Auli; otherwise, we will retrace our route through Tugasi.",
+        "altitude": 3505,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Pipalkoti To Rishikesh",
+        "desc": "Drive Distance: 220 km | approx. 9 hours",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "How many days does the Kuari Pass Trek take?",
+        "a": "It takes 6 days to complete the Kuari Pass Trek."
+      },
+      {
+        "q": "What is the maximum altitude of the Kuari Pass Trek?",
+        "a": "The maximum altitude reached during the Kuari Pass Trek is 12,750 ft."
+      },
+      {
+        "q": "What kind of equipment do I need for the Kuari Pass Trek?",
+        "a": "Here are some of the essential items that you should bring for the trek: 1. Mountaineering Boots: Sturdy, waterproof boots with good ankle support and crampon compatibility are a must. 2. Warm Clothing: This includes a warm-down jacket, thermal inner layers, and waterproof outer layers. 3. Backpack: A durable backpack to carry your equipment and personal items. 4. Sunglasses: To protect your eyes from harmful UV rays and snow glare. 5. Gloves: Waterproof and warm gloves that provide dexterity and grip. 6. Headlamp: A powerful headlamp with extra batteries for se during early morning starts or late night hikes."
+      },
+      {
+        "q": "Do I need a permit to do the Kuari Pass Trek?",
+        "a": "The Kuari Pass Trek falls under the jurisdiction of the Forest Department and as such it is necessary to obtain Forest Permit for the trek. When you trek with us, we obtain the permit ourselves."
+      },
+      {
+        "q": "Is it safe to do the Kuari Pass Trek?",
+        "a": "Yes, it is safe to do the Kuari Pass Trek with an expert organization. However, it is always advisable to take necessary precautions and follow safety guidelines issued by the Trek Leaders and guide while trekking in the mountains."
+      },
+      {
+        "q": "What kind of accommodation is available on the Kuari Pass Trek?",
+        "a": "On the Kuari Pass Trek, you will be camping in different campsites. We provide twin-sharing tents for optimum comfort."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/kuari-pass"
+  },
+  "pangarchulla-peak": {
+    "slug": "pangarchulla-peak",
+    "overview": "",
+    "shortDesc": "",
+    "highlights": [
+      "The highlights of the Pangarchulla Peak Trek include splendid views of majestic peaks like Trishul",
+      "and Kedarnath",
+      "as well as the thrilling climb to the 15",
+      "000 ft summit",
+      "navigating steep ridges and snowy trails",
+      "The trek also takes you to the Kuari Pass",
+      "offering stunning vistas of Neelkanth",
+      "surrounded by serene alpine meadows"
+    ],
+    "itinerary": [
+      {
+        "title": "Rishikesh to Pipalkoti",
+        "desc": "Altitude: 1,350m / 4,400ft Drive Distance: 220 km | 9-10 hours",
+        "altitude": 1341,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Drive from Pipalkoti To Tugasi village And Trek To Gulling Top",
+        "desc": "Altitude: Tugasi village: 2450m / 8000 ft. Gulling Top: 2,850 m / 9,400 ft.",
+        "altitude": 2438,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Gulling Top to Khullara",
+        "desc": "Trek Distance: 3km | 2-3 hrs. Altitude (Khullara): 3,350m / 11,000ft Trek Distance: 5-6 km | 4-5 hrs",
+        "altitude": 3353,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Khullara to Kuari Pass via Khullara Top and Back to Khullara",
+        "desc": "Altitude (Kuari Pass): 3,800 m / 12,500 ft Trek Distance: 3-4 km (each way) | 5-6 hrs",
+        "altitude": 3810,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Khullara to Pangarchulla Summit and Back to Khullara Camp | Summit Day",
+        "desc": "Altitude (Pangarchulla Summit): 4,600 m / 15,100 ft Trek Distance: 14 km | 11-12 hrs",
+        "altitude": 4602,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Khullara Camp to Tugasi Village and Drive to Pipalkoti",
+        "desc": "Altitude (Pipalkoti): 1,350 m / 4,400 ft Trek Distance: 7-8 km | 4-5 hrs Drive Distance (Tugasi to Pipalkoti): 50 km | 2-3 hrs",
+        "altitude": 1341,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Drive from Pipalkoti to Rishikesh",
+        "desc": "Drive DIstance(Pipalkoti to Rishikesh): 220 km | 8-9 hrs. ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Rishikesh. Read the article Things to do in Rishikesh. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by flight.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Where is Pangarchulla Peak located?",
+        "a": "Pangarchulla Peak is located in the Garhwal Himalayas in the Chamoli district of Uttarakhand, India. It lies within the beautiful Nanda Devi National Park, a UNESCO World Heritage Site. This stunning peak can be reached through the Pangarchulla Peak Trek, a moderately challenging journey that starts from Pipalkoti village."
+      },
+      {
+        "q": "What is the height of Pangarchulla Peak Trek?",
+        "a": "The altitude of Pangarchulla Peak Trek is approximately 15,100 ft."
+      },
+      {
+        "q": "What is the starting point of the Pangarchulla Peak Trek?",
+        "a": "The trek to Pangarchulla begins from Tugasi village, which is located near Pipalkoti. Tugasi is easy to reach with a short drive from Pipalkoti."
+      },
+      {
+        "q": "How difficult is the Pangarchulla Peak Trek?",
+        "a": "The Pangarchulla Peak Trek is considered a moderately difficult trek. The steep climbs, narrow ridges, and snow-covered trails add a bit of challenge to the journey, making it an exciting adventure for trekkers."
+      },
+      {
+        "q": "What is the best time to do the Pangarchulla Peak Trek?",
+        "a": "Mid-March to April is an ideal time to undertake the Pangarchulla Peak Trek, offering the best chance for a safe and rewarding summit experience."
+      },
+      {
+        "q": "How long does it take to complete the Pangarchulla Peak Trek?",
+        "a": "Pangarchulla Peak Trek is a 7-day long trek."
+      },
+      {
+        "q": "What is the route for the Pangarchulla Peak Trek?",
+        "a": "Trekora follow a well-planned route for the Pangarchulla Peak Trek. The journey begins at Pipalkoti, from where you drive to Tugasi village, the starting point of the trek. From Tugasi, the trail takes you through beautiful landscapes to Gulling Top, offering stunning views of the surrounding peaks. The next stop is Khullara Camp, a serene campsite nestled amidst the mountains. From Khullara, you begin the challenging ascent to the Pangarchulla Summit, the highlight of the trek. After enjoying the breathtaking views from the summit, you descend back to Khullara Camp for an overnight stay. The return journey retraces your steps to Tugasi village and then back to Pipalkoti. Finally, you drive to Rishikesh, marking the end of this unforgettable adventure."
+      },
+      {
+        "q": "What is the accommodation like during the Pangarchulla Peak Trek?",
+        "a": "During the Pangarchulla Peak Trek, you will stay in a guest house in the base camp, and on the slopes, you will be staying in tents (twin-sharing)."
+      },
+      {
+        "q": "What are the highlights of the Pangarchulla Trek?",
+        "a": "The highlights of the Pangarchulla Peak Trek include splendid views of majestic peaks like Trishul, Nanda Devi, Chaukhamba, and Kedarnath, as well as the thrilling climb to the 15,000 ft summit, navigating steep ridges and snowy trails. The trek also takes you to the Kuari Pass, offering stunning vistas of Neelkanth, Kamet, Hathi-Gauri, and Dunagiri, surrounded by serene alpine meadows. The summit provides a 360-degree panoramic view of iconic peaks like Kamet, Hathi-Gauri, and Kedarnath Dome, which is especially magical at sunrise. The ridge walk to the summit adds an adventurous edge, often requiring the use of an ice axe. Along the way, explore the lush forests of Golden Oak, Rhododendron, and Cedar, with chances to spot wildlife like Himalayan Monals, musk deer, and Himalayan Tahr. The trek also includes visits to traditional villages like Tugasi, showcasing Garhwali culture, terraced fields, and charming architecture, adding a unique cultural dimension to the journey."
+      },
+      {
+        "q": "Is it necessary to have the prior trekking experience to do the Pangarchulla Peak Trek?",
+        "a": "Yes, it is recommended to have prior trekking experience before attempting the Pangarchulla Peak Trek as it is considered a moderately difficult trek. The trail involves steep ascents and descents, and the altitude can also be a challenge. It is important to have good physical fitness and stamina to complete the trek comfortably. Prior trekking experience can help you to be better prepared for the challenges of the trek, such as acclimatization, managing your energy levels, and dealing with the rugged terrain. However, if you are in good physical condition and have a positive attitude, with proper guidance and preparation, you can still attempt the Pangarchulla Peak trek even if you are a beginner."
+      },
+      {
+        "q": "Do I need to hire a guide or porter for the Pangarchulla Peak Trek?",
+        "a": "Yes, it is highly recommended to hire a professional expert for the Pangarchulla Peak Trek, especially if you are a beginner or have limited trekking experience. A professional can provide you with valuable assistance, including knowledge of the local terrain, weather conditions, and the culture of the region. They can also help you with navigation and ensure your safety throughout the trek. Hiring a porter is optional, but it can be helpful if you do not want to carry a heavy backpack during the trek. A porter can carry your luggage and equipment, allowing you to trek more comfortably and at your own pace."
+      },
+      {
+        "q": "What does the Pangarchulla Peak Trek Package of Trekora include?",
+        "a": "The Pangarchulla Peak Trek Package of Trekora includes accommodations, meals, trek equipment, first aid and support staff including local experienced guides, base camp manager, and professional trek leader."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/pangarchulla-peak"
+  },
+  "hampta-pass": {
+    "slug": "hampta-pass",
+    "overview": "",
+    "shortDesc": "",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Drive from Manali to Jobra and Trek from Jobra to Chhika",
+        "desc": "Note: Reporting Time: 12:00 PM, Place: The Woodbine, Naggar Rd, Manali, Drop Time: 6:30 pm to 7:30 pm (Timings are subject to change based on weather and road conditions). It’s advisable to reach Manali a day before to avoid any kind of delays. Altitude: Manali - 2,050 m / 6,730 ft Jobra - 2,800 m / 9,300 ft Chhika- 3,100 m / 10,100 ft. Drive Distance (Manli to Jobra): 16km | Duration: 1hr. Trek Distance (Jobra to Chhika): 3km | Duration: 2hrs. Altitude Gain: 3,370 ft.",
+        "altitude": 2051,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Chhika to Balu Ka Ghera",
+        "desc": "Altitude (Balu Ka Ghera): 3,600 m / 12,000 ft. Trek Distance: 7km | Duration: 5-6 hrs. Altitude Gain: 1,900 ft",
+        "altitude": 3658,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Balu Ka Ghera to Shea Goru via Hampta Pass",
+        "desc": "Altitude: Hampta Pass - 4,300 m / 14,100 ft Shea Goru- 3,900 m/ 12,900 ft",
+        "altitude": 4298,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Shea Goru to Chatru and Drive to Chandratal",
+        "desc": "Altitude: Chatru- 3,350 m / 11,000 ft. Chandratal - 4,300 m / 14,100 ft Note: The drive to Chandratal and back to the campsite will be done either on day 4 or day 5, depending on road and weather conditions.",
+        "altitude": 3353,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Drive from Chatru to Manali",
+        "desc": "Altitude gain of 1,200 ft and then loss of 3,100 ft. Altitude (Manali): 2,050 m / 6,730 ft Drive Distance: 65 km | Duration: 4-5 hr. Altitude Loss: 4,270 ft. ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Manali. Read the article Things to do in Manali. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by flight.",
+        "altitude": 366,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Is the Hampta Pass Trek difficult?",
+        "a": "The Hampta Pass trek is considered a moderate difficulty trek. It is not too easy, but not extremely hard either. Most people with average fitness can do it with some preparation. The trail includes a mix of easy walks and a few tricky sections, especially while crossing the pass itself. Since it is a high-altitude trek, you may feel breathless or tired quickly, so proper acclimatization and a steady pace are important. Overall, with the right mindset, physical readiness, and guidance, the Hampta Pass trek is a beautiful and manageable adventure for many trekkers."
+      },
+      {
+        "q": "How long does the Hampta Pass Trek take?",
+        "a": "The Hampta Pass trek takes around 5 days to complete. During these 5 days, you will walk through beautiful landscapes like green valleys, rocky paths, and snowy mountains. Each day covers a certain distance, giving you enough time to rest and enjoy the views. The trek is planned in a way that helps you adjust to the altitude slowly. Though the journey is short, it is filled with adventure, changing scenery, and memorable experiences. With good planning and a positive spirit, 5 days are enough to fully enjoy the beauty of the Hampta Pass trek."
+      },
+      {
+        "q": "What is the Hampta Pass Trek route?",
+        "a": "The Hampta Pass trek route starts from Manali and takes you through some of the most stunning landscapes in Himachal Pradesh. On the first day, you drive from Manali to Jobra and then begin a short trek to Chika, where you camp for the night. The next day, you trek from Chika to Balu Ka Ghera, walking through green meadows and streams. On the third day, the trail becomes a bit more challenging as you cross the Hampta Pass and reach Shea Goru, surrounded by snow and rocky paths. On the fourth day, you trek down to Chatru and then take a drive to the beautiful Chandratal Lake, if the road and weather allow. Finally, on the fifth day, you drive back from Chatru to Manali, ending your journey."
+      },
+      {
+        "q": "What is the Hampta Pass Trek location?",
+        "a": "The Hampta Pass Trek is located in Himachal Pradesh. This trek connects the lush green Kullu Valley to the dry and barren Lahaul Valley, creating a dramatic change in landscape. You start the trek near Manali, in the Kullu region, and slowly make your way across the pass into the stunning and remote areas of Lahaul. The route gives you a chance to see two very different sides of the Himalayas in one trek."
+      },
+      {
+        "q": "What is the altitude of Hampta Pass?",
+        "a": "The height of Hampta Pass is 4,300 m / 14,100 ft, which is also the highest point during the Hampta Pass Trek."
+      },
+      {
+        "q": "Can someone above 60 years do the Hampta Pass trek?",
+        "a": "Yes, someone above 60 years of age can do the Hampta Pass trek, but they need to be physically fit and well-prepared. If the person has done trekking recently and is used to walking in the mountains, it will definitely help. However, even without recent trekking experience, they can still do the trek if they have good stamina and strength. To check their fitness level, they should be able to jog 5 kilometers in around 33 minutes without feeling too tired, or walk 10 kilometers in about 75 minutes without stress. If they prefer cycling, they should be able to cycle 15 kilometers in 45 minutes comfortably. The Hampta Pass trek involves walking at high altitude, so it’s important to prepare the body through regular walking, jogging, or cycling before the trek. With the right preparation, age is not a barrier, and anyone who is determined and fit can enjoy this beautiful journey."
+      },
+      {
+        "q": "Will I get mobile network coverage during the trek?",
+        "a": "No, you will not get mobile network coverage during the Hampta Pass trek. The last place where you’ll find a proper signal is in Manali. Once you begin the journey and move towards the mountains, there won’t be any mobile network. It’s a good idea to inform your family and friends before starting the trek and enjoy a peaceful, disconnected experience in nature."
+      },
+      {
+        "q": "Will I find electricity at the campsites?",
+        "a": "No, there is no electricity available at the campsites on the Hampta Pass trek. Since you’ll be staying in remote mountain areas, it’s best to carry fully charged power banks to keep your phone or camera running. Try to save battery by keeping your devices on airplane mode when not in use."
+      },
+      {
+        "q": "What kind of footwear is required for the Hampta Pass Trek?",
+        "a": "For the Hampta Pass trek, you need to wear strong, high-ankle trekking shoes that have good grip and are waterproof. These shoes will help you walk safely on rocky, slippery, or snowy paths. Also, carry a pair of lightweight sandals to wear while you cross the rivers and stay at the campsite."
+      },
+      {
+        "q": "What is the level of altitude sickness risk on the Hampta Pass Trek?",
+        "a": "The risk of altitude sickness during the Hampta Pass trek is moderate. The highest point you’ll reach is around 14,100 feet (4,300 meters), which is not extremely high but can still cause some people to feel unwell. To stay safe, it’s important to acclimatize properly, walk slowly, stay hydrated, and listen to your body. If you feel dizzy, tired, or breathless, it’s best to rest and inform your trek leader. It’s always a good idea to check with a doctor before going on any high-altitude trek."
+      },
+      {
+        "q": "Is offloading (mule or porter service) available?",
+        "a": "Yes, offloading services are available on the Hampta Pass trek. This means you can hire a mule or porter to carry your backpack, so you can trek more comfortably. If you feel your bag is too heavy or you want to enjoy the trek without carrying much weight, offloading is a helpful option."
+      },
+      {
+        "q": "What is the accommodation like on the Hampta Pass Trek?",
+        "a": "During the Hampta Pass trek, you will stay in tents at the campsites. These tents are usually shared by two people and are set up at different spots along the route. Though basic, the tents provide a comfortable and safe place to sleep in the middle of nature. You’ll also be given sleeping bags and mats to keep warm during cold nights."
+      },
+      {
+        "q": "Is Hampta Pass a monsoon trek?",
+        "a": "Yes, June is a great time to do the Hampta Pass trek. During this month, the weather is mostly pleasant, and the trail is full of beautiful views. There is still some snow on the higher parts, but not too much, which makes it easier and more fun to walk. You also get to see and walk on snow bridges, which adds to the adventure. The mix of green valleys and white snow makes June a perfect time to enjoy the beauty of the mountains."
+      },
+      {
+        "q": "Is June a good time for the Hampta Pass trek?",
+        "a": "Yes, June is a great time to do the Hampta Pass trek. During this month, the weather is mostly pleasant, and the trail is full of beautiful views. There is still snow on the higher parts, but not too much, which makes it easier and more fun to walk. You also get to see and walk on snow bridges, which adds to the adventure. The mix of green valleys and white snow makes June a perfect time to enjoy the beauty of the mountains."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/hampta-pass"
+  },
+  "bhrigu-lake": {
+    "slug": "bhrigu-lake",
+    "overview": "- The Bhrigu Lake trek is widely regarded as one of the best short Himalayan treks in India, completed in just 4 days. - The first thing that surprises you is the landscape. Its meadows are often compared to the famous grasslands of Europe, but what makes them truly special is their untouched Himalayan charm. - Located at an altitude of 13,700 feet, Lake Bhrigu appears deep blue, emerald-green, or partially frozen depending on the season. - According to the Hindu mythology, the lake holds deep spiritual significance as one of the revered sages, Maharishi Bhrigu, meditated here. - One of the defining features of this trek is its stunning campsites, offering a surreal natural beauty during the day and a magical experience of sleeping under a starlit sky. - You will enjoy the breathtaking bird’s-eye views of Manali and Solang Valley. The trek also offers an elevated vantage point, allowing you to admire stunning landscapes and majestic mountain ranges. - As you travel along the route, you'll be treated to sweeping panoramic views of the magnificent Pir Panjal and Dhauladhar mountain ranges. - As you navigate the trek, you step on the endless stretches of green grass spread across the mountains like nature's own carpet. - Wildflowers are like icing on the cake – they appear to bloom in every direction. These low-growing perennial flowers look incredibly beautiful against the stunning backdrop of mighty peaks. - In this journey, trekkers often go through an experience that is difficult to put into words—but impossible to forget. - This is the perfect trek for beginners due to its accessibility. Where many high-altitude treks require proper preparation, Bhrigu Lake offers spectacular beauty without demanding extreme technical skills. - At sunrise and sunset, the sky above Bhrigu Lake becomes a breathtaking spectacle. The golden orange glow casts a stunning reflection on the pristine lake, which is mesmerizing to say the least. - Being a relatively short and beginner-friendly trek, the Bhrigu Lake journey is perfectly suitable for families and friends who are looking for a peaceful adventure.",
+    "shortDesc": "- The Bhrigu Lake trek is widely regarded as one of the best short Himalayan treks in India, completed in just 4 days. - The first thing that surprises you i…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Drive from Manali to Gulaba and Trek to Gulaba Meadows",
+        "desc": "Altitude: Manali: 2,050 m / 6,750 ft Gulaba: 3,000 m / 9,900 ft Gulaba Meadows: 3,200 m / 10,400 ft",
+        "altitude": 2057,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Gulaba to Rola Kholi",
+        "desc": "Altitude: Gulaba: 3,000 m / 9,900 ft Rola Kholi: 3,800 m / 12,500 ft",
+        "altitude": 3018,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Rola Kholi to Bhrigu Lake and back to Rola Kholi",
+        "desc": "Altitude: Rola Kholi: 3,800 m / 12,500 ft Bhrigu Lake: 4,200 m / 13,700 ft",
+        "altitude": 3810,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Rola Kholi to Gulaba & drive to Manali",
+        "desc": "Altitude: Rola Kholi: 3,800 m / 12,500 ft Gulaba: 3,000 m / 9,900 ft ##### Note: Landscape Type: Descent along the meadows, and forest section. Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Manali. Read the article Things to do in Manali. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by flight.",
+        "altitude": 3810,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the Bhrigu Lake height?",
+        "a": "The Bhrigu Lake is perched at a height of around 13,700 feet (4,200 meters) above sea level. This high-altitude glacial lake is surrounded by snow-covered peaks and alpine meadows, making it a beautiful sight to witness, especially during late spring and early summer."
+      },
+      {
+        "q": "What is the Bhrigu Lake trek distance?",
+        "a": "The total trekking distance covered during the Bhrigu Lake Trek is around 24 kilometers. The journey starts with a short drive from Manali to Gulaba, which serves as the base point for the trek. From Gulaba, you’ll begin your walk through dense forests, beautiful open meadows, and varied landscapes before finally reaching the stunning glacial lake. Spread over a few days, the trek offers scenic views and peaceful surroundings throughout the route."
+      },
+      {
+        "q": "How long does it take to complete the Bhrigu Lake Trek?",
+        "a": "It usually takes around 4 days to complete the Bhrigu Lake Trek from Manali and back. The trek is planned over a few days to help trekkers get used to the altitude and enjoy the beautiful landscapes without rushing. These four days include your drive from Manali to the base point, trekking through meadows and forests, reaching Bhrigu Lake, and then returning to Manali."
+      },
+      {
+        "q": "What is the best time to visit Bhrigu Lake?",
+        "a": "The best time to do the Bhrigu Lake Trek is during the months of May and June. At this time, the trail is at its most beautiful, with pleasant weather and ideal walking conditions. The snow is just the right amount, not too much to make the trek difficult, and not too little to miss out on the charm of snow-covered landscapes. You can enjoy clear views of the surrounding mountains, fresh green meadows, and patches of snow along the way, especially near the lake."
+      },
+      {
+        "q": "Can Bhrigu Lake trek be done in 1 day?",
+        "a": "While the Bhrigu Lake Trek covers a relatively short distance compared to other high-altitude treks, it’s not recommended to complete it in a single day. Since the trek reaches an altitude of 13,700 ft, it’s important to give yourself time to acclimatize to the changing heights. Rushing through the trek can lead to tiredness, altitude sickness, and you might miss out on the beautiful landscapes, peaceful meadows, and the chance to camp under the stars. With the Trekora (Trekora) fixed itinerary, this trek is well-planned over 4 days for a safe and enjoyable experience. If you prefer, you can also customize your trek to complete it in fewer or more days according to your fitness and trekking experience, but it’s always better to take your time and soak in the surroundings."
+      },
+      {
+        "q": "Is there snow in Bhrigu Lake in June?",
+        "a": "Whether you’ll find snow on the Bhrigu Lake Trek in June depends entirely on the weather conditions that year. Generally, the lower sections of the trek, especially around Gulaba and the meadows, lose most of their snow by early June. However, as you gain altitude and move closer to Bhrigu Lake, there’s a good chance you’ll still find patches of snow, especially near the lake itself and in shaded areas. June is a great time to experience both lush green meadows and lingering snow, making the trek even more beautiful."
+      },
+      {
+        "q": "What is the Bhrigu Lake trek route?",
+        "a": "The Bhrigu Lake Trek route begins with a short, scenic drive from Manali to Gulaba, which serves as the starting point of the trek. From Gulaba, you’ll trek to Gulaba Meadows, where you’ll set up camp for the night amidst beautiful open grasslands. On the second day, the trek continues from Gulaba Meadows to Rola Kholi, another lovely campsite surrounded by mountains. The next day is the main highlight as you trek from Rola Kholi to Bhrigu Lake, enjoy the amazing views, and then return to Rola Kholi by evening. On the final day, you’ll descend from Rola Kholi to Gulaba and then drive back to Manali. It’s a well-balanced route designed to offer beautiful views, manageable distances, and enough time for acclimatization."
+      },
+      {
+        "q": "What kind of accommodation is available during the Bhrigu Lake Trek?",
+        "a": "During the Bhrigu Lake Trek, trekkers stay in campsites at different points along the trail. Accommodation is provided in comfortable, weatherproof tents. Usually, twin-sharing tents are offered, where two trekkers share one tent. These campsites are set up in beautiful open meadows or clearings surrounded by mountains, giving you a true experience of staying in nature."
+      },
+      {
+        "q": "What is included in the Bhrigu Lake Trek package?",
+        "a": "The Bhrigu Lake Trek Package includes all essential facilities to ensure a smooth and comfortable experience. A comfortable accommodation and all meals are provided, including tea, soup, and snacks. The package also includes a professional trek leader, experienced local guides, a skilled high-altitude chef, and sufficient support staff. High-quality trek equipment like tents, sleeping bags, and essential safety gear is provided. Medical assistance is available with a first aid kit, oxygen cylinder, and other necessary equipment. Transportation for the entire trek route, including pick-up and drop-off, is included. Additionally, mules or porters carry central luggage, a cloakroom facility is available for extra baggage, and all necessary permits and entry fees are covered. A trek completion certificate is also provided."
+      },
+      {
+        "q": "What is the Bhrigu Lake Trek famous for?",
+        "a": "The Bhrigu Lake trek is famous for its sprawling and extending alpine meadows, panoramic Himalayan peaks, and a sacred lake that is named after the legendary sage Maharishi Bhrigu. What sets this trek apart is the opportunity to reach spectacular alpine landscapes above 4,000 meters in just a day's hike from the trailhead."
+      },
+      {
+        "q": "Where is Bhrigu Lake located?",
+        "a": "Located in the scenic Kullu district of Himachal Pradesh, the Bhrigu Lake Trek starts near Manali and stretches toward the eastern slopes of Rohtang Pass. The route passes through vast alpine meadows and breathtaking Himalayan terrain before reaching the crystal-clear Bhrigu Lake, situated at an elevation of about 4,200 meters (13,700 feet)."
+      },
+      {
+        "q": "How difficult is the Bhrigu Lake Trek?",
+        "a": "The trek is generally considered easy to moderate. While it does not involve any technical climbing, the steep ascent and rapid gain in altitude can be physically demanding, especially for beginners. Usually, treks with continuous uphill walks require a reasonable level of fitness as well as endurance."
+      },
+      {
+        "q": "Is the trek suitable for beginners?",
+        "a": "Yes, absolutely! This trek is recommended for beginners because it is short, trail is straightforward, and no technical skills are needed. That said, beginners are still recommended to prepare physically and respect the effects of altitude."
+      },
+      {
+        "q": "Can altitude sickness occur on this trek?",
+        "a": "Yes, the rapid altitude gain on this trek can lead to mild symptoms of altitude sickness in some trekkers. Common symptoms include headaches, nausea, fatigue, and dizziness. While these effects are usually mild and temporary, proper acclimatization, adequate hydration, and a steady pace are essential to minimize the risk and ensure a safe trekking experience."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/bhrigu-lake"
+  },
+  "beas-kund": {
+    "slug": "beas-kund",
+    "overview": "- Beas Kund Trek is packed with lush grasslands, river crossings, and a beautiful spiritual glacial lake. - Moving further in the journey, explore the mystical and dense forest, which is filled with Deodar, Pine, and Birch trees. - Witness the vast high-altitude meadows of Dhundi, where animals feeding on the grass can be seen, reflecting the beauty of nature’s cycle. - Another meadow in this trek region is the meadows of Lady Leg that offer some of the most scenic, postcard-like views. - Get stunned by the beautiful sight of the giant, magnificent peaks like Friendship Peak, Hanuman Tibba, Shitidhar and Ladakhi, which are part of the beautiful Pir Panjal Range and Dhauladhar Range. - Witness the source of the Beas River, which is the beautiful Beas Kund Lake. This lake holds a deep significance in Hindu mythology, and one of the most fascinating features is that it remains partially frozen throughout the year. - This trek offers a perfect blend of nature’s beauty and our culture’s history.",
+    "shortDesc": "- Beas Kund Trek is packed with lush grasslands, river crossings, and a beautiful spiritual glacial lake. - Moving further in the journey, explore the mystic…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Drive from Manali to Dhundi and trek to Palchhani Thacha",
+        "desc": "Altitude: Manali: 2,000 m / 6,400 ft Dhundi: 2,800 m / 9,300 ft Palchani Thach: 3,100 m / 10,100 ft",
+        "altitude": 1951,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Palchhani Thach to Lohali",
+        "desc": "Altitude: Thach: 3,100 m / 10,100 ft Lohali: 3,400 m / 11,100 ft",
+        "altitude": 3078,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Trek from Lohali to Summit point via Lady Leg and Beas Kund and back to Lohali",
+        "desc": "Altitude: Lohali: 3,400 m / 11,100 ft Lady Leg: 3,900 m / 12,700 ft Summit Point: 3,900 m / 12,800 ft",
+        "altitude": 3383,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Move from Lohali to Dhundi and back to Manali",
+        "desc": "Altitude: Lohali: 3,400 m / 11,100 ft Dhundi: 2,800 m / 9,300 ft",
+        "altitude": 3383,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Is the Beas Kund Trek difficult?",
+        "a": "No, the Beas Kund Trek is not at all difficult. In fact it’s a trek that is easy to moderate, which makes it suitable for beginners with basic fitness as well as experienced trekkers."
+      },
+      {
+        "q": "What is the best time for the Beas Kund Trek?",
+        "a": "The best time to do the Beas Kund trek is during the summer months when the trekking conditions are ideal. Beas kund trek in May and June give a beautiful experience of trekking, the meadows are verdant green and blooming with wildflowers. During this time the weather is pleasant, with clear skies and moderate temperatures, making it ideal for trekking and the trail is generally dry and accessible during this period. You could see the emerald Beas Kund sitting like a jewel at the end of the trek."
+      },
+      {
+        "q": "What is special about the Beas Kund Trek?",
+        "a": "The Beas Kund Trek is a special trek in the Indian Himalayas, situated in the Himachal Pradesh region near Manali. It offers a unique combination of natural beauty, cultural significance, and adventure, making it a special experience for trekkers. Here you get to experience scenic beauty of the Himalayas with majestic views of the peaks and alpine meadows. The highlight of the trek is the beautiful Beas Kund, the source for the Beas river. The sight of the pristine water and the surrounding snow-clad mountains makes it a magical spot to visit."
+      },
+      {
+        "q": "What are the challenges during the Beas Kund Trek?",
+        "a": "While the Beas Kund Trek is considered a moderate trek, it still offers some challenges with gradual ascents, rocky paths, and narrow mountain passes. The Beas Kund Glacier and its surroundings provide a thrilling environment for trekkers, adding a touch of wilderness and isolation to the journey. The final stretch to Beas Kund involves trekking through high-altitude terrain, which gives trekkers a sense of achievement when they reach the serene glacial lake."
+      },
+      {
+        "q": "What is the total distance of the Beas Kund Trek?",
+        "a": "The total distance that you will be covering in this trek is around 18 kilometers. It’s a perfect, short, easy, and well-marked Himalayan escape that offers a complete Himalayan experience in one journey."
+      },
+      {
+        "q": "What is the maximum height during the Beas Kund trek?",
+        "a": "The maximum altitude on the Beas Kund trek is around 12,800 feet, reached at the summit point of the trek. Nestled amidst snow-clad peaks and alpine meadows, this serene spot sits at the base of towering mountains like Friendship Peak and Hanuman Tibba, offering trekkers a close view of the high Himalayas. The gradual ascent to this height makes it one of the most accessible high-altitude treks in Himachal, perfect for both beginners and experienced trekkers."
+      },
+      {
+        "q": "What is the starting point for the Beas Kund Trek?",
+        "a": "The Beas Kund Trek begins with a scenic drive from Manali to Palchhani Thach, which serves as the base camp for the trek. Surrounded by lush meadows and towering mountains, Palchhani Thach marks the starting point of the trek, from where adventurers set out on foot, gradually ascending through alpine landscapes, glacial streams, and high-altitude pastures on their way to the summit."
+      },
+      {
+        "q": "What is included in the Beas Kund Trek Package?",
+        "a": "The Beas Kund Trek package covers all essentials that are required for a comfortable experience. Which includes - Accommodation, proper 3-time meals and snacks, and a professional team of trek leaders, local guides, and support staff are provided. - High-quality equipment such as tents, sleeping bags, and safety gear is provided. - Proper medical support, including a first aid kit and oxygen cylinder. - The package also includes transportation with pick-up and drop-off, porter or mule support for central luggage, a cloakroom facility, all permits and entry fees, and a trek completion certificate."
+      },
+      {
+        "q": "What is the duration of the Beas Kund Trek?",
+        "a": "The Beas Kund Trek is a quick 4-day trek that begins and ends in Manali. The whole trek is planned in a way that from being able to explore all the places and beautiful landscapes properly to getting a proper rest, trekkers can enjoy the whole trek without rushing in any way."
+      },
+      {
+        "q": "What is the itinerary of the Beas Kund Trek?",
+        "a": "The Beas Kund Trek is for 4 days, and its complete itinerary is - Day 1- Drive from Manali to Dhundi and trek to Palchhani Thacha Day 2- Trek from Palchhani Thach to Lohali Day 3- Trek from Lohali to Summit point via Lady Leg and Beas Kund and back to Lohali Day 4- Move from Lohali to Dhundi and back to Manali"
+      },
+      {
+        "q": "Which peaks are visible during the Beas kund Trek?",
+        "a": "During the Beas Kund Trek, the trekkers will be rewarded with the stunning view of Himalayan peaks like - Friendship Peak, Hanuman Tibba, Shitidhar and Ladakhi, which are part of the beautiful Pir Panjal Range and Dhauladhar Range."
+      },
+      {
+        "q": "What are other trekking options in Himachal Pradesh?",
+        "a": "Himachal Pradesh Trekking is a trekker’s paradise, offering a plethora of trails that cater to every kind of adventurer. Some of the most popular and rewarding treks in the region include the serene Bhrigu Lake Trek, Friendship Peak Trek, Kareri Lake Trek, and the Buran Ghati Trek. For those seeking high-altitude adventure, the dramatic Rupin Pass Trek and the ever-popular Sar Pass Trek are excellent choices. Beyond these, the state is dotted with countless other trails, each offering its own unique blend of natural beauty, snow-capped mountains and quaint Himalayan villages waiting to be explored."
+      },
+      {
+        "q": "What kind of accommodation is available during the Beas Kund Trek?",
+        "a": "During the Beas Kund Trek, trekkers stay in campsites at different points along the trail. Accommodation is provided in comfortable, weatherproof tents. Usually, twin-sharing tents are offered, where two trekkers share one tent. These campsites are set up in beautiful open meadows or clearings surrounded by mountains, giving you a true experience of staying in nature."
+      },
+      {
+        "q": "What is the Beas kund Trek Route?",
+        "a": "The Beas Kund trek route starts from Manali, followed by a drive to Dhundi. From Dhundi, trekkers trek to Palchhani Thatch, the base camp for the journey. The trail then leads to Lohali, a beautiful high-altitude meadow surrounded by snow-draped peaks. From Lohali, the route ascends towards the summit point at Beas Kund, passing through a steep section famously known as Lady Leg. After soaking in the views at the glacial lake, trekkers descend back to Lohali, retrace their steps to Dhundi, and finally drive back to Manali, completing this memorable Himalayan adventure."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/beas-kund"
+  },
+  "pin-parvati-pass": {
+    "slug": "pin-parvati-pass",
+    "overview": "",
+    "shortDesc": "",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Manali to Barshaini and trek to Kalga",
+        "desc": "Altitude(Kalga): 2300 m/ 7600 ft. Drive Distance(Manali to Barshaini): 4-5 hrs. Trek Distance( Barshaini to Kalga): 1 km | 1/2 hr.",
+        "altitude": 2316,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Kalga to Kheerganga",
+        "desc": "Altitude(Kheerganga): 2,800m/ 9,200ft. Trek Distance: 10 km | 6-7 hrs.",
+        "altitude": 2804,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Kheerganga to Tunda Bhuj",
+        "desc": "Altitude(Tunda Bhuj): 3,350 m/ 11,000 ft. Trek Distance: 13 km | 7-8 hrs.",
+        "altitude": 3353,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Tunda Bhuj to Thakur Kuan",
+        "desc": "Altitude(Thakur Kuan): 3,550 m/ 11,650 ft. Trek Distance: 11 km | 6-7 hrs.",
+        "altitude": 3551,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Thakur Kuan to Odi Thach",
+        "desc": "Altitude(Odi Thatch): 3,800m/ 12,400ft. Trek Distance: 9 km | 5-6hrs.",
+        "altitude": 3780,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Odi Thach to Mantalai Lake",
+        "desc": "Altitude(Mantalai): 4,150 m/ 13,600 ft. Trek Distance: 12 km | 7-8 hrs.",
+        "altitude": 4145,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Mantalai Lake to Summit Camp",
+        "desc": "Altiude(Summit Camp): 4,950 m/ 16,300 ft. Trek Distance: 11 km | 7-8 hrs.",
+        "altitude": 4968,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Summit Camp to Pin Parvati Pass to Pin base/ Bedu Thatch",
+        "desc": "Altitude: Pin Parvati Pass 5,300 m/ 17,450ft | PinBase( Bedu Thatch): 4,450m/ 14,600ft. Trek Distance:15 km | 10-12 hrs.",
+        "altitude": 5319,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Pin Base to Tiya",
+        "desc": "Altitude(Tiya): 3,950 m/ 13,000 ft. Trek Distance: 12 km | 5-6 hrs.",
+        "altitude": 3962,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Tiya to Mud Drive to Kaza",
+        "desc": "Altitude: Mud 3,750 m/ 12,500 ft | Kaza 3,650 m/ 12,000 ft. Trek Distance: 12 km | 4-5 hrs. Drive Distance(Mud - Kaza): 50 km drive 2 hrs.",
+        "altitude": 3810,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Kaza to Manali",
+        "desc": "Drive Distance(Kaza- Manali): 200 km | 9-10 hrs. ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Manali. Read the article Things to do in Manali. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by flight.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the Toughest Trek in India?",
+        "a": "The toughest trek in India is the Pin Parvati Pass Trek in Himachal Pradesh. It is considered the most difficult because of its long trekking distance each day, high altitude, and challenging terrain. Other similar tough treks include Auden’s Col, Kalindi Khal, and Panpatia Col in Uttarakhand. Slightly less difficult, but still challenging, are Bali Pass and Kedartal in Uttarakhand, and Goechala in Sikkim. All of these treks require good fitness, preparation, and experience in the mountains."
+      },
+      {
+        "q": "How long is the Pin Parvati Pass Trek?",
+        "a": "The Pin Parvati Pass trek takes around 11 days to complete, including acclimatization and buffer days. Spread over this duration, trekkers cover various terrains, ranging from dense forests and alpine meadows to rocky mountain passes and glacier sections. It’s a well-paced itinerary that allows you to gradually adjust to the altitude and enjoy the journey fully."
+      },
+      {
+        "q": "What is the maximum altitude during the Pin Parvati Pass Trek?",
+        "a": "The highest point of the trek is the Pin Parvati Pass, which stands tall at around 17,400 feet (5,300 meters). This is where the trek transitions from the lush Parvati Valley to the stark, cold desert landscape of Pin Valley in Spiti. Reaching this altitude requires proper acclimatization and good physical fitness."
+      },
+      {
+        "q": "What is the trekking distance of the Pin Parvati Pass Trek?",
+        "a": "The total trekking distance is approximately 110 kilometers, spread across 10–11 days. The route begins in Parvati Valley (Kullu side) and ends in Pin Valley (Spiti side), taking you through an incredible shift in landscape, from green forests and waterfalls to barren, high-altitude desert. Each day covers roughly 8–15 km depending on the terrain and campsite location."
+      },
+      {
+        "q": "What is the best time to do the Pin Parvati Pass Trek?",
+        "a": "The best time to do the Pin Parvati Pass trek is during the monsoon months, specifically mid July to mid- August. During this time, the snow at higher altitudes begins to melt, making the pass more accessible. The valleys are lush and blooming with greenery, rivers are full, and the skies, though sometimes cloudy, offer dramatic views. The temperatures are relatively moderate, which makes trekking long hours more manageable. However, it’s important to stay updated on weather conditions, as rain in lower regions can sometimes affect the trail."
+      },
+      {
+        "q": "What is the Pin Parvati Pass Trek Route?",
+        "a": "The Pin Parvati Route and Pin Parvati Pass Trek Itinerary is as follows: Day-1: Manali to Barshaini and trek to Kalga Day-2: Kalga to Kheerganga Day-3: Kheerganga to Tunda Bhuj Day-4: Tunda Bhuj to Thakur Kuan Day-5: Thakur Kuan to Odi Thach Day-6: Odi Thach to Mantalai Lake Day-7: Mantalai Lake to Summit Camp Day-8: Summit Camp to Pin Parvati Pass to Pin base/ Bedu Thatch Day-9: Pin Base to Tiya Day-10: Tiya to Mud Drive to Kaza Day-11: Kaza to Manali"
+      },
+      {
+        "q": "What is included in the Pin Parvati Pass Trek Package and what is the cost of the entire trek?",
+        "a": "The trek package is designed to provide a well-organised and comfortable journey, ensuring that every trekker can enjoy trekking without worrying about the logistics. The package includes accommodation throughout the journey, offering comfortable stays at different points of the trek. Meals and all necessary transportation is covered, including drives to and from key locations. For the trekking experience, the package provides high-quality trek equipment, ensuring safety and comfort during the journey. A well-equipped first aid kit is also included, along with medical assistance in case of emergencies. To make the trek smoother and more enriching, a dedicated support team accompanies travelers. This team includes experienced local guides who are familiar with the region, a base camp manager to oversee logistics, and a professional trek leader to ensure safety and coordination throughout the journey. With all these inclusions, the package is designed to offer a hassle-free, safe, and memorable experience for every trekker. Click here to check the Pin Parvati Pass trek cost."
+      },
+      {
+        "q": "What is the Difficulty level of the Pin Parvati Pass Trek?",
+        "a": "The Pin Parvati Pass Trek is graded as a challenging trek and known to be one of the most difficult treks in India. It takes you to very high altitudes, where the chances of altitude mountain sickness (AMS) are quite high if you are not properly acclimatised. The trail includes steep ascents, tricky descents, river crossings with strong currents, and long stretches of walking on glaciers and rocky terrain. The path is often uneven and rough, demanding your full focus at every step. Campsites get colder and windier as you go higher, which can be tough for those not used to such conditions. This trek is physically and mentally demanding, and it is recommended only for trekkers who have previous high-altitude trekking experience."
+      },
+      {
+        "q": "What is the starting point for the Pin Parvati Pass trek?",
+        "a": "The Pin Parvati Pass Trek starts from a small village called Barshaini, which is located near Kasol in Himachal Pradesh. To reach Barshaini, you need to first get to Manali, and from there it’s a drive of around 4 to 5 hours through beautiful forested and mountainous roads. Barshaini is the last motorable point and marks the beginning of your trek into the wilderness of the Himalayas."
+      },
+      {
+        "q": "How many valleys are covered during the Pin Parvati Pass Trek?",
+        "a": "The Pin Parvati Pass Trek takes you through two stunning valleys, Parvati Valley and Pin Valley. Parvati Valley, on the Kullu side, is lush green and filled with forests, meadows, and rivers. As you cross the high-altitude pass, you enter the stark and dry landscape of Pin Valley in Spiti, which is a complete contrast with its barren mountains and colorful rock formations. These two valleys show you completely different sides of the Himalayas."
+      },
+      {
+        "q": "What are the accommodation facilities during the Pin Parvati Pass Trek?",
+        "a": "During the Pin Parvati Pass Trek, you will stay in homestays and tents. On the first day, you’ll rest at a homestay in Kalga, a quiet and scenic village. From the next day, you will camp at beautiful and remote locations. Tents are usually for two people, and sleeping bags and mats are provided. Camping close to nature, under the stars, makes the trek even more special. After the trek ends, you’ll return to a guesthouse to relax before heading back."
+      },
+      {
+        "q": "Is the Pin Parvati Pass Trek suitable for first-time trekkers?",
+        "a": "No, the Pin Parvati Pass Trek is not recommended for beginners. This is a high-altitude and highly demanding trek that requires good physical fitness and prior experience in multi-day Himalayan trekking. It includes steep climbs, river crossings and rough terrain. First-timers are advised to start with easier treks before attempting this one."
+      },
+      {
+        "q": "Where is the last ATM before the Pin Parvati Pass Trek begins?",
+        "a": "The last reliable ATM is in Manali. It is recommended to withdraw enough cash here for the entire duration of your trek, as you won’t find any ATMs beyond this point."
+      },
+      {
+        "q": "Is electricity or a charging facility available during the trek?",
+        "a": "No, there is no electricity or charging facility available during the trek. Make sure to fully charge all your devices in Manali, and carry extra batteries or power banks to stay covered throughout the journey."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/pin-parvati-pass"
+  },
+  "sar-pass": {
+    "slug": "sar-pass",
+    "overview": "- Sar Pass Trek has some of the most stunning views in the Indian Himalayas, from lush meadows to snow-covered peaks, every turn presents a new visual delight, making it a picturesque paradise for you. - The Sar Pass, being at an impressive altitude, provides a jaw-dropping panoramic view of the surrounding mountains and valleys. Standing at the pass, amid the vast meadows you get a sense of victory and awe at the vastness of nature. - The trail takes you through an impressive mix of landscapes, dense forests, alpine meadows, rocky terrain, and snow-covered paths. - Trekking here allows you to witness diverse plant life, rare herbs, and wildlife like the Himalayan tahr, langurs, and various species of birds. - Along the route, you’ll pass through picturesque locations like Grahan and Kasol. These places are rich in culture and offer a glimpse into the local way of life, with wooden houses, fields, and friendly locals who often share stories of the region. - The silence of the mountains, the fresh air, and the serenity of the landscape bring a sense of calm, making the trek as much about inner growth as it is about exploring nature. - One of the unique aspects of the trek is how the weather and landscape evolve along the way. Starting from comparatively warmer climates, you move towards cooler regions, with constant transitions from lush greenery to alpine forests and eventually snow-covered regions. - The Sar Pass trek is located in the Parvati Valley, known for its natural beauty, spirituality, and rejuvenating environment. The crystal-clear Parvati River adds to the charm as you trek beside its serene waters.",
+    "shortDesc": "- Sar Pass Trek has some of the most stunning views in the Indian Himalayas, from lush meadows to snow-covered peaks, every turn presents a new visual deligh…",
+    "highlights": [
+      "The highlight of the trek is Sar Pass",
+      "a high-altitude mountain pass that challenges trekkers with steep ascents and snow-covered trails",
+      "offering a thrilling yet rewarding experience",
+      "As you navigate the terrain",
+      "the breathtaking Himalayan views keep you motivated",
+      "The trek takes you through scenic campsites",
+      "dense forests",
+      "and snowy slopes"
+    ],
+    "itinerary": [
+      {
+        "title": "Kasol To Grahan Village",
+        "desc": "Altitude: Kasol: 1,700 m / 5,600 ft Grahan Stop: 2000 m / 6,500 ft Grahan Village: 2,350 m / 7,700 ft",
+        "altitude": 1707,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Grahan Village To Min Thach",
+        "desc": "Altitude: Grahan Village: 2,350 m / 7,700 ft Min Thatch: 3,400 m / 11,150 ft",
+        "altitude": 2347,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Min Thach To Nagaru",
+        "desc": "Altitude: Min Thatch: 3,400 m / 11,150 ft Nagaru: 3,800 m / 12,400 ft",
+        "altitude": 3399,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Nagaru To Biskeri Thach Via Sar Pass",
+        "desc": "Altitude: Nagaru: 3,800 m / 12,400 ft Sar Pass: 4,200 m / 13,600 ft Biskeri Thach: 3,350 m / 11,000 ft",
+        "altitude": 3780,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Biskeri Thach To Pulga And Drive Back To Kasol",
+        "desc": "Altitude: Biskeri Thach: 3,350 m / 11,000 ft Pulga: 2,400 m / 7,800 ft ##### Note: Drive Distance: 18 km | 1 hr Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Manali. Read the article Things to do in Manali. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by flight.",
+        "altitude": 3353,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What are the essential things to carry on Sar Pass Trek?",
+        "a": "Here are some of the essentials you should carry for the trek: 1. Trekking shoes: A good pair of trekking shoes is essential for a comfortable trek. Make sure your shoes are well-fitted, sturdy, and provide good grip on the trail. 2. Warm Clothing: The weather can be unpredictable in the mountains, so it's important to carry warm clothing, including thermal innerwear, fleece jackets, down jacket, and waterproof jackets. 3. Trekking pants: Carry comfortable and quick-drying trekking pants that are suitable for weather conditions. 4. Backpack: A good quality backpack with a capacity of 40-50 liters is ideal for carrying your essentials during the trek. 5. Sleeping bag: A good quality sleeping bag is essential for a comfortable stay during camping nights. 6. Headlamp/Flashlight: Carry a good quality headlamp or flashlight with extra batteries for trekking during early morning or late evening hours. 7. Water bottle: Carry a reusable water bottle and stay hydrated throughout the trek. 8. Snacks: Carry energy bars, dry fruits, and snacks for instant energy during the trek. 9. First aid kit: Carry a basic first aid kit, including band-aids, antiseptic cream, pain relief spray, and medicines for altitude sickness. 10. Sun protection: Carry sunscreen lotion, sunglasses, and a hat to protect yourself from the harsh sun rays. 11. Trekking poles: Trekking poles can help in maintaining balance and reduce the strain on your knees while trekking."
+      },
+      {
+        "q": "Where is the Sar Pass Trek?",
+        "a": "Sar Pass is a beautiful Himalayan trek located in Himachal Pradesh, beginning from the charming village of Kasol. This trek offers a perfect blend of lush green valleys and pristine white snow-covered landscapes, giving you a glimpse of the untouched beauty of the Himalayas. As you make your way through the stunning Parvati Valley, the trail takes you across remote mountain villages, dense forests of pine and oak, and towering snow-capped peaks. Along the way, you’ll get a chance to experience the local culture, interact with the warm and welcoming villagers, and witness their traditional way of life."
+      },
+      {
+        "q": "When is the best time to do Sar Pass Trek?",
+        "a": "The best time to do the Sar Pass Trek is during the summer months, from mid-April to June. During this period, the weather is pleasant and stable, with clear skies and moderate temperatures, making trekking conditions ideal. The trails are at their most scenic, with lush green meadows, blooming wildflowers, and snow-covered peaks in the distance. By May and June, the higher sections of the trek are still covered in snow, offering a stunning contrast between greenery and white landscapes. Monsoon season (July-August) brings heavy rainfall, making the trails slippery and risky, while winters (October-March) cover the entire region in deep snow, making trekking difficult. Therefore, April to June is the perfect window to experience the beauty, adventure, and thrill of the Sar Pass Trek at its best."
+      },
+      {
+        "q": "What does the Sar Pass Trek package of Trekora include?",
+        "a": "The Sar Pass trek package of Trekora includes accommodations, meals, trek equipment, first aid and support staff including local experienced guides, base camp manager and professional trek leader."
+      },
+      {
+        "q": "What is the maximum altitude of Sar Pass Trek?",
+        "a": "The maximum altitude of Sar Pass Trek is 13,800 feet. You will reach this impressive height when you arrive at Sar Pass, the highest point of the trek. From the top, you will be rewarded with breathtaking panoramic views of the snow-covered Himalayas, with majestic peaks stretching endlessly into the horizon. The scenery includes lush valleys below, deep forests in the distance, and a vast expanse of white snow all around. The feeling of standing at this altitude, surrounded by nature’s raw beauty, is truly unforgettable."
+      },
+      {
+        "q": "What is the total distance covered in Sar Pass Trek?",
+        "a": "The Sar Pass Trek covers a total trekking distance of approximately 50 km. During this journey, you will trek through dense pine and oak forests, vibrant meadows filled with wildflowers, and challenging snowy terrains. The trails vary from gentle slopes to steep ascents, keeping the trek exciting and rewarding. As you walk through scenic villages, high-altitude campsites, and breathtaking landscapes, every step brings a new and beautiful view. The combination of forests, meadows, and snow-covered paths makes this trek an enriching experience."
+      },
+      {
+        "q": "Is it safe to do Sar Pass Trek?",
+        "a": "Yes, the Sar Pass Trek is safe, especially when done with an experienced trekking organization. However, it is important to take necessary precautions and follow the safety guidelines given by trek leaders and guides. The trail includes steep climbs, slippery snow patches, and narrow ridges, so proper guidance is essential. Staying with your group, keeping a steady pace, and following instructions will help ensure a smooth and safe trekking experience."
+      },
+      {
+        "q": "Do I need any prior trekking experience to do Sar Pass Trek?",
+        "a": "The Sar Pass Trek is considered a moderate grade trek, and having prior trekking experience is recommended. The trail involves steep inclines, rocky paths, and unpredictable weather conditions, which can be challenging for beginners. A good fitness level and mental preparedness are necessary to complete the trek comfortably. However, with proper training, basic fitness exercises, and guidance from experienced trek leaders, even first-time trekkers can successfully complete Sar Pass. The key is to be well-prepared, carry the right gear, and maintain a positive mindset throughout the journey."
+      },
+      {
+        "q": "What is the accommodation like during Sar Pass Trek?",
+        "a": "During the Sar Pass Trek, you will stay in a guest house in the base camp and on the slopes you will be staying in tents (twin-sharing)."
+      },
+      {
+        "q": "What is the starting point of Sar Pass Trek?",
+        "a": "The Sar Pass Trek starts from Kasol, a charming village nestled in the heart of Parvati Valley. Known as a backpacker’s paradise, Kasol is famous for its scenic beauty, peaceful atmosphere, and vibrant culture. The village is surrounded by lush green forests, towering mountains, and the soothing Parvati River, making it an ideal starting point for an adventure. Parvati Valley itself is a picturesque region in Himachal Pradesh, known for its breathtaking landscapes, quaint villages, and spiritual significance. The valley is home to dense pine forests, rolling meadows, and snow-covered peaks. Trekkers often spend time in Kasol before starting their journey, exploring its cozy cafes, riverside trails, and warm hospitality."
+      },
+      {
+        "q": "What are the best treks to do in Himachal Pradesh?",
+        "a": "The best Himachal Pradesh Treks include Buran Ghati, Hampta Pass, Bhrigu Lake, Rupin pass and Friendship peak."
+      },
+      {
+        "q": "What are the highlights of the Sar Pass trek?",
+        "a": "The highlight of the trek is Sar Pass, a high-altitude mountain pass that challenges trekkers with steep ascents and snow-covered trails, offering a thrilling yet rewarding experience. As you navigate the terrain, the breathtaking Himalayan views keep you motivated. The trek takes you through scenic campsites, lush meadows, dense forests, and snowy slopes, each adding to the adventure. The crisp mountain air and serene surroundings make every step unforgettable. Reaching the summit of Sar Pass is a moment of pure triumph, rewarding you with panoramic views of endless snow-capped peaks and valleys. Along with being an adventurous trek, Sar Pass is a journey of self-discovery, pushing you beyond your limits while immersing you in the grandeur of nature. Whether you seek challenge, peace, or connection, this trek offers an unforgettable experience, leaving you with memories that will last a lifetime."
+      },
+      {
+        "q": "Can a person over 50 do the Sar Pass Trek?",
+        "a": "Yes, a person over 50 can definitely do the Sar Pass trek, but it’s important to have a good level of physical and mental fitness. The trek involves long walking hours, steep ascents, and high-altitude conditions, so prior preparation is essential. Regular walking, cardio exercises, and strength training can help improve stamina. Additionally, mental endurance plays a key role, as trekking through varying terrains and unpredictable weather requires determination and adaptability. Consulting a doctor before the trek is advisable, especially for those with pre-existing health conditions."
+      },
+      {
+        "q": "How long is the Sar Pass Trek?",
+        "a": "The Sar Pass Trek stretches about 33 kilometers and is completed over 5 days."
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/sar-pass"
+  },
+  "chopta-tungnath": {
+    "slug": "chopta-tungnath",
+    "overview": "- You will explore four iconic destinations: Chopta, Chandrashila, Tungnath, and Deoriatal, all with beautiful views and different experiences. - Witness the most majestic sunrise from Chandrashila Summit, painting the sky with hues of gold, as the Himalayan peaks come alive. - Enjoy the scenic beauty of Deoriatal Lake, reflecting the surrounding peaks for a picture-perfect moment. The tranquil Deoriatal Lake showcases a stunning reflection of the surrounding peaks and makes it a peaceful spot to pause and admire nature. - Visit the ancient Tungnath Temple, the highest Shiva temple in the world, rich with spiritual significance. - Reach the Chandrashila summit at a higher altitude, and enjoy the lifetime views of sunrise. - Witness the breathtaking 360-degree panoramic views of the Himalayas, including peaks like Nanda Devi, Trishul, and Chaukhamba. - Experience serene camping nights under a starlit sky, surrounded by the peaceful ambiance of the mountains. - Spot diverse wildlife and rare bird species that make this region a paradise for birdwatch` ers. - Immerse yourself in the tranquil meadows, rich myth, and captivating trails that make the trek both rejuvenating and adventurous.",
+    "shortDesc": "- You will explore four iconic destinations: Chopta, Chandrashila, Tungnath, and Deoriatal, all with beautiful views and different experiences. - Witness the…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Rishikesh to Sari Village",
+        "desc": "Altitude Sari: 2,000 m/ 6,600 ft Drive Distance: 190 km | 7-8 hrs",
+        "altitude": 2012,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Sari to Alpine Lake Deoriatal",
+        "desc": "Altitude Deoriatal: 2,400 m/ 8,000 ft. Trek Distance: 3 km | 1-2 hrs",
+        "altitude": 2438,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Deoria Tal To Tala Village and drive to Baniyakund",
+        "desc": "Altitude: Tala Village: 2,000 m/ 6,500 ft. Baniyakund: 2,600 m/ 8,500 ft.",
+        "altitude": 1981,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Baniyakund to Chopta (drive) and trek to Tungnath and Chandrashila and Return",
+        "desc": "Altitude: Tungnath: 3,500 m/ 11,500 ft Chandrashila top: 3,700 m/ 12,000 ft Chopta: 2,850 m/ 9,400 ft",
+        "altitude": 3505,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Drive to Rishikesh",
+        "desc": "Drive distance: 5 km | 10 min (One way) Drive Distance: 210 km | 7-8 hrs ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Rishikesh. Read the article Things to do in Rishikesh. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by plane.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the Chopta Chandrashila Trek famous for?",
+        "a": "The Chopta Chandrashila Trek is renowned for its stunning landscapes and breathtaking views of major Himalayan peaks, including Nanda Devi, Bandarpoonch, Chaukhamba, Kedar Peak, and Mt. Trishul. This trek also includes visits to the serene Deoriatal Lake, the sacred Tungnath Temple (the highest Shiva temple in the world), and the Chandrashila summit, offering an all-encompassing experience of natural beauty and spiritual significance."
+      },
+      {
+        "q": "How difficult is the Chopta Chandrashila Trek?",
+        "a": "The Chopta Chandrashila Trek is graded as an Easy to Moderate Trek. This makes it accessible for beginners and families while still providing a rewarding experience for more seasoned trekkers. The trails are well-defined, though some parts, especially the ascent to the Chandrashila summit, can be steep and challenging."
+      },
+      {
+        "q": "How long is the Chopta Chandrashila Trek?",
+        "a": "The Chopta Chandrashila Trek covers an approximate trekking distance of 28 km over five days. This includes trekking from Sari to Deoria Tal, then to Baniyakund via Rohini Bugyal. Then drive to Chopta, then again trek from Chopta to Tunganath, and finally to the Chandrashila peak."
+      },
+      {
+        "q": "What is the best time to visit the Tungnath Temple?",
+        "a": "The best time to visit the Tungnath temple is from May to November. During this time the temple is open. Also during the summer, the weather is pleasant, with clear skies and lush green meadows making it ideal to trek. During these months you would also come across blooming Rhododendrons, that adds more beauty to the trails."
+      },
+      {
+        "q": "Is Chopta Chandrashila Trek Safe?",
+        "a": "Yes, the Chopta Chandrashila Trek is considered safe for trekkers, including beginners and families. The trails are well-marked, and professional guides and trek leaders accompany the groups. Trek leaders are also trained in wilderness first aid to ensure maximum safety."
+      },
+      {
+        "q": "When can I find snow in Chopta Chandrashila Trek?",
+        "a": "You can find snow on the Chopta Chandrashila Trek primarily during the winter months, from December to February. The trails, especially near Tungnath and Chandrashila, are often covered in snow, adding to the challenge and beauty of the trek."
+      },
+      {
+        "q": "What is the physical fitness requirement for Chopta Chandrashila Trek?",
+        "a": "A moderate level of physical fitness is required for the Chopta Chandrashila Trek. Trekkers should be comfortable walking 6-7 hours a day on varied terrain. Prior experience in trekking or regular physical exercise like jogging, running, or cycling can be beneficial."
+      },
+      {
+        "q": "Can I take my children to the Chopta Chandrashila Trek?",
+        "a": "Yes, the Chopta Chandrashila Trek is suitable for children, provided they are physically fit and accustomed to outdoor activities. It’s an excellent trek for families due to its relatively moderate difficulty and the wealth of natural beauty and cultural experiences it offers."
+      },
+      {
+        "q": "Is there a mobile network in the Chopta Chandrashila Trek?",
+        "a": "Mobile network availability is limited along the Chopta Chandrashila Trek. The last reliable point for network coverage is in Sari village. Trekkers are advised to inform their contacts beforehand about the limited connectivity during the trek."
+      },
+      {
+        "q": "Is there a facility to store extra luggage?",
+        "a": "Yes, there is usually a facility to store extra luggage at the base camp or with the trekking organizers. Trekkers are encouraged to travel light and carry only essential items during the trek."
+      },
+      {
+        "q": "What kind of accommodation can I expect on the Chopta Chandrashila Trek?",
+        "a": "Accommodation on the Chopta Chandrashila Trek typically involves camping in high-quality tents. The campsites are set in picturesque locations, offering basic amenities and comfortable sleeping arrangements."
+      },
+      {
+        "q": "What are the washroom facilities like?",
+        "a": "Washroom facilities on the Chopta Chandrashila Trek are basic. At campsites, there are usually portable toilets or dry pit toilets available. Trekkers should carry personal hygiene kits and be prepared for limited facilities in remote areas."
+      },
+      {
+        "q": "Is there an offloading service available for the trek?",
+        "a": "Yes, offloading services are usually available for the Chopta Chandrashila Trek. Trekkers can arrange to have their heavy backpacks transported by porters or mules, allowing them to trek with lighter day packs."
+      },
+      {
+        "q": "What to carry for the Chopta Chandrashila Trek?",
+        "a": "Essential items to carry for the Chopta Chandrashila Trek include: - Warm clothing (layers, jackets, thermals) - Waterproof jacket and pants - Trekking shoes with good grip - Backpack (50-60 liters) with rain cover - Daypack (20-30 liters) - Water bottles or hydration pack - Snacks and energy bars - Personal medical kit - Sun protection (hat, sunglasses, sunscreen) - Trekking poles - Headlamp with extra batteries - Toiletries and personal hygiene items"
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/chopta-tungnath"
+  },
+  "deoriatal-chandrashila": {
+    "slug": "deoriatal-chandrashila",
+    "overview": "- You will explore four iconic destinations: Chopta, Chandrashila, Tungnath, and Deoriatal, all with beautiful views and different experiences. - Witness the most majestic sunrise from Chandrashila Summit, painting the sky with hues of gold, as the Himalayan peaks come alive. - Enjoy the scenic beauty of Deoriatal Lake, reflecting the surrounding peaks for a picture-perfect moment. The tranquil Deoriatal Lake showcases a stunning reflection of the surrounding peaks and makes it a peaceful spot to pause and admire nature. - Visit the ancient Tungnath Temple, the highest Shiva temple in the world, rich with spiritual significance. - Reach the Chandrashila summit at a higher altitude, and enjoy the lifetime views of sunrise. - Witness the breathtaking 360-degree panoramic views of the Himalayas, including peaks like Nanda Devi, Trishul, and Chaukhamba. - Experience serene camping nights under a starlit sky, surrounded by the peaceful ambiance of the mountains. - Spot diverse wildlife and rare bird species that make this region a paradise for birdwatch` ers. - Immerse yourself in the tranquil meadows, rich myth, and captivating trails that make the trek both rejuvenating and adventurous.",
+    "shortDesc": "- You will explore four iconic destinations: Chopta, Chandrashila, Tungnath, and Deoriatal, all with beautiful views and different experiences. - Witness the…",
+    "highlights": [],
+    "itinerary": [
+      {
+        "title": "Rishikesh to Sari Village",
+        "desc": "Altitude Sari: 2,000 m/ 6,600 ft Drive Distance: 190 km | 7-8 hrs",
+        "altitude": 2012,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Sari to Alpine Lake Deoriatal",
+        "desc": "Altitude Deoriatal: 2,400 m/ 8,000 ft. Trek Distance: 3 km | 1-2 hrs",
+        "altitude": 2438,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Deoria Tal To Tala Village and drive to Baniyakund",
+        "desc": "Altitude: Tala Village: 2,000 m/ 6,500 ft. Baniyakund: 2,600 m/ 8,500 ft.",
+        "altitude": 1981,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      },
+      {
+        "title": "Baniyakund to Chopta (drive) and trek to Tungnath and Chandrashila and Return",
+        "desc": "Altitude: Tungnath: 3,500 m/ 11,500 ft Chandrashila top: 3,700 m/ 12,000 ft Chopta: 2,850 m/ 9,400 ft",
+        "altitude": 3505,
+        "stay": "Campsite",
+        "meals": [true, true, true]
+      },
+      {
+        "title": "Drive to Rishikesh",
+        "desc": "Drive distance: 5 km | 10 min (One way) Drive Distance: 210 km | 7-8 hrs ##### Note: Keep a buffer day in your travel plan. If buffer day is not used in the travel then it can be used to Explore Rishikesh. Read the article Things to do in Rishikesh. Distance, Altitude, and Trekking hours are approximate and rounded off. Keep the original and copy of ID proof handy. Come one day early if planning to come by plane.",
+        "altitude": 0,
+        "stay": "Campsite",
+        "meals": [true, false, true]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "What is the Chopta Chandrashila Trek famous for?",
+        "a": "The Chopta Chandrashila Trek is renowned for its stunning landscapes and breathtaking views of major Himalayan peaks, including Nanda Devi, Bandarpoonch, Chaukhamba, Kedar Peak, and Mt. Trishul. This trek also includes visits to the serene Deoriatal Lake, the sacred Tungnath Temple (the highest Shiva temple in the world), and the Chandrashila summit, offering an all-encompassing experience of natural beauty and spiritual significance."
+      },
+      {
+        "q": "How difficult is the Chopta Chandrashila Trek?",
+        "a": "The Chopta Chandrashila Trek is graded as an Easy to Moderate Trek. This makes it accessible for beginners and families while still providing a rewarding experience for more seasoned trekkers. The trails are well-defined, though some parts, especially the ascent to the Chandrashila summit, can be steep and challenging."
+      },
+      {
+        "q": "How long is the Chopta Chandrashila Trek?",
+        "a": "The Chopta Chandrashila Trek covers an approximate trekking distance of 28 km over five days. This includes trekking from Sari to Deoria Tal, then to Baniyakund via Rohini Bugyal. Then drive to Chopta, then again trek from Chopta to Tunganath, and finally to the Chandrashila peak."
+      },
+      {
+        "q": "What is the best time to visit the Tungnath Temple?",
+        "a": "The best time to visit the Tungnath temple is from May to November. During this time the temple is open. Also during the summer, the weather is pleasant, with clear skies and lush green meadows making it ideal to trek. During these months you would also come across blooming Rhododendrons, that adds more beauty to the trails."
+      },
+      {
+        "q": "Is Chopta Chandrashila Trek Safe?",
+        "a": "Yes, the Chopta Chandrashila Trek is considered safe for trekkers, including beginners and families. The trails are well-marked, and professional guides and trek leaders accompany the groups. Trek leaders are also trained in wilderness first aid to ensure maximum safety."
+      },
+      {
+        "q": "When can I find snow in Chopta Chandrashila Trek?",
+        "a": "You can find snow on the Chopta Chandrashila Trek primarily during the winter months, from December to February. The trails, especially near Tungnath and Chandrashila, are often covered in snow, adding to the challenge and beauty of the trek."
+      },
+      {
+        "q": "What is the physical fitness requirement for Chopta Chandrashila Trek?",
+        "a": "A moderate level of physical fitness is required for the Chopta Chandrashila Trek. Trekkers should be comfortable walking 6-7 hours a day on varied terrain. Prior experience in trekking or regular physical exercise like jogging, running, or cycling can be beneficial."
+      },
+      {
+        "q": "Can I take my children to the Chopta Chandrashila Trek?",
+        "a": "Yes, the Chopta Chandrashila Trek is suitable for children, provided they are physically fit and accustomed to outdoor activities. It’s an excellent trek for families due to its relatively moderate difficulty and the wealth of natural beauty and cultural experiences it offers."
+      },
+      {
+        "q": "Is there a mobile network in the Chopta Chandrashila Trek?",
+        "a": "Mobile network availability is limited along the Chopta Chandrashila Trek. The last reliable point for network coverage is in Sari village. Trekkers are advised to inform their contacts beforehand about the limited connectivity during the trek."
+      },
+      {
+        "q": "Is there a facility to store extra luggage?",
+        "a": "Yes, there is usually a facility to store extra luggage at the base camp or with the trekking organizers. Trekkers are encouraged to travel light and carry only essential items during the trek."
+      },
+      {
+        "q": "What kind of accommodation can I expect on the Chopta Chandrashila Trek?",
+        "a": "Accommodation on the Chopta Chandrashila Trek typically involves camping in high-quality tents. The campsites are set in picturesque locations, offering basic amenities and comfortable sleeping arrangements."
+      },
+      {
+        "q": "What are the washroom facilities like?",
+        "a": "Washroom facilities on the Chopta Chandrashila Trek are basic. At campsites, there are usually portable toilets or dry pit toilets available. Trekkers should carry personal hygiene kits and be prepared for limited facilities in remote areas."
+      },
+      {
+        "q": "Is there an offloading service available for the trek?",
+        "a": "Yes, offloading services are usually available for the Chopta Chandrashila Trek. Trekkers can arrange to have their heavy backpacks transported by porters or mules, allowing them to trek with lighter day packs."
+      },
+      {
+        "q": "What to carry for the Chopta Chandrashila Trek?",
+        "a": "Essential items to carry for the Chopta Chandrashila Trek include: - Warm clothing (layers, jackets, thermals) - Waterproof jacket and pants - Trekking shoes with good grip - Backpack (50-60 liters) with rain cover - Daypack (20-30 liters) - Water bottles or hydration pack - Snacks and energy bars - Personal medical kit - Sun protection (hat, sunglasses, sunscreen) - Trekking poles - Headlamp with extra batteries - Toiletries and personal hygiene items"
+      }
+    ],
+    "inclusions": [],
+    "exclusions": [],
+    "howToReach": [],
+    "sourceUrl": "https://trekthehimalayas.com/deoriatal-chandrashila"
+  }
+}

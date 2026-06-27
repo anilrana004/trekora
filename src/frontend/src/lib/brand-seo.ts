@@ -1,9 +1,10 @@
 import { buildHomePageSEO } from "@/lib/product-seo";
+import { SITE_LOGO_URL } from "@/lib/site-brand";
 import { DEFAULT_OG_IMAGE, SITE_ORIGIN } from "@/lib/site-config";
 import { SITE_EMAIL, SITE_GEO, SITE_PHONE_TEL } from "@/lib/site-contact";
 
 /** Absolute brand asset URLs for favicons, schema.org, and social crawlers. */
-export const BRAND_LOGO_URL = `${SITE_ORIGIN}/logo-512.png`;
+export const BRAND_LOGO_URL = SITE_LOGO_URL;
 export const BRAND_LOGO_IMAGE_OBJECT = {
   "@type": "ImageObject" as const,
   url: BRAND_LOGO_URL,

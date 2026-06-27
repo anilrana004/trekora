@@ -74,12 +74,12 @@ function TrekoraLogo() {
       <OptimizedImage
         src={SITE_LOGO_URL}
         alt="Trekora — Where Every Peak Tells a Story"
-        width={200}
-        height={48}
+        width={220}
+        height={52}
         priority
         variant="blog-card"
-        sizes="(max-width: 768px) 46vw, 220px"
-        className="h-10 w-auto max-w-[min(220px,48vw)] object-contain object-left md:h-11 md:max-w-[240px] transition-opacity group-hover:opacity-90 drop-shadow-sm"
+        sizes="(max-width: 768px) 48vw, 240px"
+        className="h-11 w-auto max-w-[min(240px,50vw)] object-contain object-left md:h-12 md:max-w-[260px] transition-opacity group-hover:opacity-90 drop-shadow-sm"
       />
     </Link>
   );
@@ -811,9 +811,9 @@ export default function Navbar() {
                 }}
               >
                 <SiteLogo
-                  className="mobile-drawer-logo min-w-0 max-w-[min(220px,58vw)]"
-                  imgClassName="site-logo__img site-logo__img--drawer h-9 w-auto max-w-full object-contain object-left"
-                  sizes="(max-width: 768px) 58vw, 220px"
+                  className="mobile-drawer-logo min-w-0 max-w-[min(240px,58vw)]"
+                  imgClassName="site-logo__img site-logo__img--drawer h-10 w-auto max-w-full object-contain object-left"
+                  sizes="(max-width: 768px) 58vw, 240px"
                   onNavigate={() => setMobileOpen(false)}
                   dataOcid="nav.mobile_drawer_logo"
                 />

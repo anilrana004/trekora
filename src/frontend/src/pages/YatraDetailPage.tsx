@@ -64,13 +64,17 @@ import {
   monthsFromSeasonLabel,
   yatraItineraryToDisplayDays,
 } from "../components/product-detail";
-import { YATRAS } from "../data/yatras";
-import type { YatraHowToReach } from "../data/yatras";
 import {
+  TREK_REELS_BY_SLUG,
   enrichReelsForDisplay,
   homeTrekReelVideo,
-  TREK_REELS_BY_SLUG,
 } from "../data/trek-reels";
+import {
+  getYatraDetailContent,
+  mergeYatraDisplay,
+} from "../data/yatra-detail-content";
+import { YATRAS } from "../data/yatras";
+import type { YatraHowToReach } from "../data/yatras";
 import { downloadYatraItineraryPDF } from "../lib/pdfGenerator";
 import {
   generateBreadcrumbJSONLD,
@@ -154,6 +158,13 @@ export default function YatraDetailPage() {
   // CRITICAL BUG FIX: correct route path (was "/layout/yatras/$slug")
   const { slug } = useParams({ from: "/layout/yatras/$slug" });
   const yatra = YATRAS.find((y) => y.slug === slug);
+  const displayYatra = useMemo(
+    () =>
+      yatra
+        ? mergeYatraDisplay(yatra, getYatraDetailContent(yatra.slug))
+        : null,
+    [yatra],
+  );
   const handleReviewContentChanged = useCallback(() => {
     if (slug) refreshTrekkerGallery(slug, "yatra");
   }, [slug]);
@@ -238,13 +249,13 @@ export default function YatraDetailPage() {
 
   // SEO: inject structured JSON-LD schemas on mount and when yatra changes
   useEffect(() => {
-    if (!yatra) return;
-    const faqList = (yatra.faqs ?? []).map((f) => ({
+    if (!yatra || !displayYatra) return;
+    const faqList = (displayYatra.faqs ?? []).map((f) => ({
       question: f.question,
       answer: f.answer,
     }));
     const cleanupYatra = injectJSONLD(
-      generateYatraJSONLD(yatra),
+      generateYatraJSONLD(displayYatra),
       "jsonld-yatra",
     );
     const cleanupBreadcrumb = injectJSONLD(
@@ -272,13 +283,13 @@ export default function YatraDetailPage() {
       cleanupBreadcrumb();
       cleanupFaq();
     };
-  }, [slug]);
+  }, [slug, yatra, displayYatra]);
 
   const yatraSchema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "TouristAttraction",
     name: yatra?.name ?? "",
-    description: yatra?.description ?? "",
+    description: displayYatra?.description ?? yatra?.description ?? "",
     provider: {
       "@type": "TouristInformationCenter",
       name: "Trekora",
@@ -317,7 +328,7 @@ export default function YatraDetailPage() {
     ],
   };
 
-  if (!yatra) {
+  if (!yatra || !displayYatra) {
     return (
       <div className="pt-20 min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -343,8 +354,8 @@ export default function YatraDetailPage() {
     );
   }
 
-  const highlights = yatra.spiritualBenefits?.length
-    ? yatra.spiritualBenefits
+  const highlights = displayYatra.spiritualBenefits?.length
+    ? displayYatra.spiritualBenefits
     : [
         "Sacred pilgrimage revered for thousands of years",
         "Expert spiritual guide with Vedic and Puranic knowledge",
@@ -353,19 +364,21 @@ export default function YatraDetailPage() {
         "All rituals and pooja guidance provided throughout",
       ];
 
-  const itineraryDays = yatraItineraryToDisplayDays(yatra);
+  const itineraryDays = yatraItineraryToDisplayDays(displayYatra);
 
   const handleDownloadItineraryPdf = async () => {
     try {
-      await downloadYatraItineraryPDF(yatra);
+      await downloadYatraItineraryPDF(displayYatra);
     } catch {
       window.alert("Could not download itinerary PDF. Please try again.");
     }
   };
 
-  const faqs = yatra.faqs ?? [];
+  const faqs = displayYatra.faqs ?? [];
   const howToReach: YatraHowToReach | null =
-    typeof yatra.howToReach === "object" ? yatra.howToReach : null;
+    typeof displayYatra.howToReach === "object"
+      ? displayYatra.howToReach
+      : null;
   const totalPrice = yatra.price * groupSize + (heliAdd ? 4500 : 0);
   const relatedYatras = getRelatedYatras(yatra, 3);
   const yatraPageSeo = buildYatraPageSEO(yatra);
@@ -446,7 +459,7 @@ export default function YatraDetailPage() {
         }
         subtitle={
           <p className="text-sm text-white/80">
-            {yatra.description.slice(0, 120)}…
+            {displayYatra.description.slice(0, 120)}…
           </p>
         }
         renderSlide={(src, index) => (
@@ -577,7 +590,7 @@ export default function YatraDetailPage() {
                     className="text-base leading-relaxed"
                     style={{ color: "var(--ew-text-lt)" }}
                   >
-                    {yatra.description}
+                    {displayYatra.description}
                   </p>
                 </div>
 
@@ -599,8 +612,8 @@ export default function YatraDetailPage() {
                     className="text-sm leading-relaxed"
                     style={{ color: "#92400E" }}
                   >
-                    {yatra.significance?.substring(0, 400)}
-                    {(yatra.significance?.length ?? 0) > 400 ? "…" : ""}
+                    {displayYatra.significance?.substring(0, 400)}
+                    {(displayYatra.significance?.length ?? 0) > 400 ? "…" : ""}
                   </p>
                 </div>
 
@@ -731,7 +744,10 @@ export default function YatraDetailPage() {
                 tabKey="inclusions"
                 className="!p-0 overflow-hidden"
               >
-                <YatraInclusions />
+                <YatraInclusions
+                  inclusions={displayYatra.inclusions}
+                  exclusions={displayYatra.exclusions}
+                />
               </DetailTabPanel>
             )}
 
@@ -766,12 +782,12 @@ export default function YatraDetailPage() {
                     className="text-base leading-relaxed"
                     style={{ color: "var(--ew-text-lt)" }}
                   >
-                    {yatra.significance}
+                    {displayYatra.significance}
                   </p>
                 </div>
 
-                {yatra.spiritualBenefits &&
-                  yatra.spiritualBenefits.length > 0 && (
+                {displayYatra.spiritualBenefits &&
+                  displayYatra.spiritualBenefits.length > 0 && (
                     <div>
                       <h3
                         className="font-bold text-lg mb-4"
@@ -780,7 +796,7 @@ export default function YatraDetailPage() {
                         Why Undertake This Yatra — 5 Spiritual Benefits
                       </h3>
                       <div className="space-y-3">
-                        {yatra.spiritualBenefits.map((benefit, i) => (
+                        {displayYatra.spiritualBenefits.map((benefit, i) => (
                           <div
                             key={benefit.slice(0, 40)}
                             className="flex items-start gap-3 rounded-xl p-4"

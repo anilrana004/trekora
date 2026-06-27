@@ -20,7 +20,7 @@ function cn(...parts: Array<string | false | undefined>) {
 export function SiteLogo({
   className,
   imgClassName = "site-logo__img",
-  sizes = "(max-width: 1023px) 200px, 240px",
+  sizes = "(max-width: 1023px) 220px, 260px",
   priority = true,
   link = true,
   onNavigate,
