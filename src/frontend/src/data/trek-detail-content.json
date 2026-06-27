@@ -443,9 +443,14 @@
   },
   "kedarkantha-trek": {
     "slug": "kedarkantha-trek",
-    "overview": "",
-    "shortDesc": "",
-    "highlights": [],
+    "overview": "Experience one of India's most iconic winter treks through ancient pine forests and snow-covered meadows.",
+    "shortDesc": "The Ultimate Winter Trek in the Himalayas.",
+    "highlights": [
+      "Beginner Friendly",
+      "Snow Trek Experience",
+      "Frozen Juda Ka Talab",
+      "Summit at 12,500 ft"
+    ],
     "itinerary": [
       {
         "title": "Arrival at Sankri",

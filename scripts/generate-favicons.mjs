@@ -9,32 +9,50 @@ const LOGO_URL =
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, "../src/frontend/public");
 
+async function writeSquareIcon(input, size, dest, { padding = 0.06 } = {}) {
+  const inner = Math.max(1, Math.round(size * (1 - padding * 2)));
+  const mark = await sharp(input)
+    .resize(inner, inner, {
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 1 },
+    })
+    .png()
+    .toBuffer();
+
+  await sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 1 },
+    },
+  })
+    .composite([{ input: mark, gravity: "centre" }])
+    .png()
+    .toFile(dest);
+}
+
 async function main() {
   fs.mkdirSync(publicDir, { recursive: true });
   const res = await fetch(LOGO_URL);
   if (!res.ok) throw new Error(`Failed to fetch logo: ${res.status}`);
   const input = Buffer.from(await res.arrayBuffer());
 
-  for (const { name, size } of [
-    { name: "favicon-16x16.png", size: 16 },
-    { name: "favicon-32x32.png", size: 32 },
-    { name: "favicon-48x48.png", size: 48 },
-    { name: "apple-touch-icon.png", size: 180 },
-    { name: "logo-512.png", size: 512 },
-    { name: "logo.png", size: 512 },
+  for (const { name, size, padding } of [
+    { name: "favicon-16x16.png", size: 16, padding: 0.04 },
+    { name: "favicon-32x32.png", size: 32, padding: 0.05 },
+    { name: "favicon-48x48.png", size: 48, padding: 0.05 },
+    { name: "apple-touch-icon.png", size: 180, padding: 0.06 },
+    { name: "logo-512.png", size: 512, padding: 0.06 },
+    { name: "logo.png", size: 512, padding: 0.06 },
   ]) {
-    await sharp(input)
-      .resize(size, size, { fit: "cover", position: "centre" })
-      .png()
-      .toFile(path.join(publicDir, name));
+    await writeSquareIcon(input, size, path.join(publicDir, name), { padding });
     console.log(`Wrote ${name}`);
   }
 
-  await sharp(input)
-    .resize(32, 32, { fit: "cover", position: "centre" })
-    .png()
-    .toFile(path.join(publicDir, "favicon.ico"));
-
+  await writeSquareIcon(input, 32, path.join(publicDir, "favicon.ico"), {
+    padding: 0.05,
+  });
   console.log("Wrote favicon.ico");
 }
 

@@ -44,24 +44,33 @@ const THEME = {
   w: 210,
   h: 297,
   m: 14,
+  headerBottom: 24,
 } as const;
 
+function contentTop(): number {
+  return THEME.headerBottom + 2;
+}
+
 const DEFAULT_INCLUDED = [
-  "Accommodation during the trek",
-  "Experienced trek / yatra leader",
-  "Local guides and support staff",
-  "All meals while on trek / yatra",
-  "Required permits and entry fees",
-  "First-aid kit and emergency oxygen (treks)",
-  "Camping equipment where applicable",
+  "Accommodation (tent/guesthouse as per itinerary)",
+  "All meals during the trek (breakfast, lunch, dinner, evening snacks)",
+  "Certified NCISM mountain trek leader",
+  "Trek support staff (cook + helper for groups 5+)",
+  "Forest department permits and national park entry fees",
+  "Quality camping equipment (high-altitude tents, sleeping mats, dining tent)",
+  "First-aid medical kit with AMS treatment",
+  "Portable oxygen cylinder (1 per group)",
+  "Safety equipment for technical sections",
 ];
 
 const DEFAULT_EXCLUDED = [
-  "Transport to and from the base point",
-  "Personal expenses and snacks",
+  "Transport to and from the trek base camp",
+  "Personal trekking gear (poles, boots, gaiters, rain gear)",
   "Travel insurance (strongly recommended)",
-  "Porter / offloading charges",
-  "Personal trekking gear",
+  "Personal medication and expenses",
+  "Porter charges for personal luggage",
+  "Tips and gratuity for guides and porters",
+  "Any meals before and after the trek",
   "GST and items not listed in inclusions",
 ];
 
@@ -150,15 +159,40 @@ function card(
 }
 
 function header(doc: JsPDFDoc, logo: PdfImage | null): void {
-  const y = 8;
+  const logoW = 28;
+  const logoH = 9;
+  const logoY = 7;
+  const textX = THEME.m + (logo ? logoW + 5 : 0);
+
+  if (logo) {
+    drawImg(doc, logo, THEME.m, logoY, logoW, logoH);
+  }
+
+  let lineY = logoY + 3;
+  if (!logo) {
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...THEME.primary);
+    txt(doc, "Trekora Expeditions", textX, lineY);
+    lineY += 5;
+  }
+
+  doc.setFontSize(5.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...THEME.muted);
+  txt(doc, PDF_COMPANY.website, textX, lineY);
+  lineY += 3.5;
+  txt(
+    doc,
+    `${PDF_COMPANY.email}  |  ${PDF_COMPANY.phone}`,
+    textX,
+    lineY,
+    { maxWidth: THEME.w - textX - THEME.m },
+  );
+
   doc.setDrawColor(...THEME.ice);
   doc.setLineWidth(0.3);
-  doc.line(THEME.m, 16, THEME.w - THEME.m, 16);
-  if (logo) drawImg(doc, logo, THEME.m, y, 32, 11);
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(...THEME.primary);
-  txt(doc, "Trekora", THEME.m + (logo ? 36 : 0), y + 8);
+  doc.line(THEME.m, THEME.headerBottom, THEME.w - THEME.m, THEME.headerBottom);
 }
 
 function footer(doc: JsPDFDoc): void {
@@ -196,9 +230,73 @@ function altitudeFt(m: number): string {
 function dayMeta(day: TrekItineraryDay): string {
   const parts = [
     day.distance,
-    day.trekTime ? `${day.trekTime}` : undefined,
+    day.trekTime ? day.trekTime : undefined,
   ].filter(Boolean);
-  return parts.join(" * ") || "As per itinerary";
+  if (parts.length) return parts.join(" * ");
+
+  const desc = day.desc ?? day.description ?? "";
+  const dist =
+    desc.match(/(?:Trek|Drive)\s+Distance:\s*([^|#\n]+)/i)?.[1]?.trim() ??
+    desc.match(/Distance:\s*([^|#\n]+)/i)?.[1]?.trim();
+  const time =
+    desc.match(
+      /(\d+(?:\s*-\s*\d+)?\s*(?:hrs?|hours?)(?:\s*(?:approximately|approx))?)/i,
+    )?.[1]?.trim() ??
+    desc.match(/Duration:\s*([^|#\n]+)/i)?.[1]?.trim();
+  const parsed = [dist, time].filter(Boolean);
+  return parsed.length ? parsed.join(" * ") : "As per itinerary";
+}
+
+function parseDayFields(day: TrekItineraryDay): TrekItineraryDay {
+  const desc = day.desc ?? day.description ?? "";
+  return {
+    ...day,
+    distance:
+      day.distance ??
+      desc.match(/(?:Trek|Drive)\s+Distance:\s*([^|#\n]+)/i)?.[1]?.trim() ??
+      desc.match(/Distance:\s*([^|#\n]+)/i)?.[1]?.trim(),
+    trekTime:
+      day.trekTime ??
+      desc.match(
+        /(\d+(?:\s*-\s*\d+)?\s*(?:hrs?|hours?)(?:\s*(?:approximately|approx))?)/i,
+      )?.[1]?.trim() ??
+      desc.match(/Duration:\s*([^|#\n]+)/i)?.[1]?.trim(),
+  };
+}
+
+function enrichItineraryDays(days: TrekItineraryDay[]): TrekItineraryDay[] {
+  return days.map((day, i) =>
+    parseDayFields({ ...day, day: day.day ?? i + 1 }),
+  );
+}
+
+function trekRegionLabel(trek: Trek): string {
+  if (trek.region) return trek.region;
+  const state =
+    trek.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh";
+  return trek.startPoint ? `${trek.startPoint}, ${state}` : state;
+}
+
+function trekHighlights(
+  trek: Trek,
+  detail: ReturnType<typeof getTrekDetailContent>,
+): string[] {
+  const curated = detail?.highlights?.filter(Boolean) ?? [];
+  if (curated.length) return curated.slice(0, 5);
+
+  const fromTags = (trek.tags ?? []).filter(
+    (tag) =>
+      tag.length < 42 &&
+      !/^\d[\d,km+\s-]*$/i.test(tag) &&
+      !/^from\s/i.test(tag),
+  );
+  const peak = `Summit at ${altitudeFt(trek.altitude)}`;
+  const merged = [...fromTags];
+  if (trek.category && !merged.includes(trek.category)) merged.unshift(trek.category);
+  if (trek.trekType && !merged.some((h) => h.includes(trek.trekType)))
+    merged.push(trek.trekType);
+  if (!merged.some((h) => /summit|altitude|ft|m/i.test(h))) merged.push(peak);
+  return merged.filter(Boolean).slice(0, 5);
 }
 
 type ProductMeta = {
@@ -225,15 +323,21 @@ type ProductMeta = {
 
 function trekMeta(trek: Trek): ProductMeta {
   const detail = getTrekDetailContent(trek.slug);
-  const region =
-    trek.region ??
-    (trek.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh");
+  const region = trekRegionLabel(trek);
   return {
     kind: "trek",
     name: trek.name,
     slug: trek.slug,
-    tagline: trek.shortDesc || `The classic trek in ${region}`,
-    blurb: (detail?.overview || trek.description).slice(0, 220),
+    tagline:
+      detail?.shortDesc ||
+      trek.shortDesc ||
+      `The classic trek in ${region}`,
+    blurb: (
+      detail?.overview ||
+      trek.description ||
+      trek.shortDesc ||
+      ""
+    ).slice(0, 220),
     duration: `${trek.duration} Days / ${trek.duration - 1} Nights`,
     region,
     altitude: altitudeFt(trek.altitude),
@@ -245,9 +349,7 @@ function trekMeta(trek: Trek): ProductMeta {
         ? trek.startPoint
         : `${trek.startPoint} - ${trek.endPoint}`,
     price: `Rs.${trek.price.toLocaleString("en-IN")}`,
-    highlights: detail?.highlights?.length
-      ? detail.highlights.slice(0, 5)
-      : (trek.tags ?? []).slice(0, 5),
+    highlights: trekHighlights(trek, detail),
     inclusions: detail?.inclusions?.length
       ? detail.inclusions
       : DEFAULT_INCLUDED,
@@ -320,7 +422,7 @@ function page1(
   logo: PdfImage | null,
 ): void {
   header(doc, logo);
-  const top = 20;
+  const top = contentTop();
   const heroH = 108;
   if (hero) drawImg(doc, hero, 0, top, THEME.w, heroH);
   else {
@@ -385,9 +487,7 @@ function page1(
   doc.setTextColor(...THEME.sunset);
   txt(doc, "Highlights", THEME.m + leftW + 9, gridY + 9);
   let hy = gridY + 16;
-  for (const h of meta.highlights.length
-    ? meta.highlights
-    : ["Expert-led journey", "Stunning Himalayan views"]) {
+  for (const h of meta.highlights) {
     doc.setFillColor(...THEME.sunset);
     doc.circle(THEME.m + leftW + 11, hy, 1.2, "F");
     doc.setFontSize(7.5);
@@ -408,26 +508,26 @@ function page2(
   logo: PdfImage | null,
 ): void {
   let pageStart = true;
-  let y = 22;
+  let y = contentTop() + 4;
   const renderHeader = () => {
     header(doc, logo);
-    y = 22;
+    y = contentTop() + 4;
     doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(...THEME.primary);
     txt(doc, "Detailed Itinerary", THEME.m, y);
     y += 8;
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(...THEME.muted);
-    const intro = doc.splitTextToSize(
-      sanitize(
-        `A carefully curated ${meta.duration.toLowerCase()} journey through ${meta.region}. Each day builds acclimatization and delivers unforgettable Himalayan views.`,
-      ),
-      cw(),
-    );
-    doc.text(intro, THEME.m, y);
-    y += intro.length * 4 + 6;
+    const introSource = meta.tagline?.trim();
+    if (introSource) {
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...THEME.muted);
+      const intro = doc.splitTextToSize(sanitize(introSource), cw());
+      doc.text(intro, THEME.m, y);
+      y += intro.length * 4 + 6;
+    } else {
+      y += 4;
+    }
   };
 
   renderHeader();
@@ -506,7 +606,7 @@ function page3(
   banner: PdfImage | null,
 ): void {
   header(doc, logo);
-  let y = 22;
+  let y = contentTop() + 4;
   const bannerH = 42;
   if (banner) drawImg(doc, banner, THEME.m, y, cw(), bannerH);
   else {
@@ -525,17 +625,6 @@ function page3(
     meta.kind === "yatra" ? "Yatra Information" : "Trek Information",
     THEME.w / 2,
     y + 18,
-    {
-      align: "center",
-    },
-  );
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
-  txt(
-    doc,
-    "Essential details for your Himalayan expedition",
-    THEME.w / 2,
-    y + 26,
     {
       align: "center",
     },
@@ -631,24 +720,11 @@ function page4(
   gearImg: PdfImage | null,
 ): void {
   header(doc, logo);
-  let y = 22;
+  let y = contentTop() + 4;
   doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(...THEME.primary);
   txt(doc, "Essential Information", THEME.m, y);
-  y += 7;
-  doc.setFontSize(9);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(...THEME.muted);
-  txt(
-    doc,
-    "Prepare for your expedition with the right gear and fitness.",
-    THEME.m,
-    y,
-    {
-      maxWidth: cw(),
-    },
-  );
   y += 12;
 
   const imgW = cw() * 0.38;
@@ -754,12 +830,21 @@ export async function renderMagazineTrekPdf(
   deps: MagazinePdfDeps,
 ): Promise<void> {
   const meta = trekMeta(trek);
+  const detail = getTrekDetailContent(trek.slug);
   const urls = [
     ...new Set([...trek.images, ...(trek.galleryImages ?? [])]),
   ].slice(0, 8);
   const logo = await deps.resolveLogo();
   const images = await deps.loadImages(urls);
-  const days = normalizeDays(itinerary, trek.startPoint, meta.blurb);
+  const sourceDays =
+    detail?.itinerary?.length && detail.itinerary.length > 0
+      ? (detail.itinerary as TrekItineraryDay[])
+      : itinerary;
+  const days = normalizeDays(
+    enrichItineraryDays(sourceDays),
+    trek.startPoint,
+    meta.blurb || meta.tagline,
+  );
   const hero = images[0] ?? null;
 
   page1(doc, meta, hero, logo);
@@ -804,7 +889,7 @@ export async function renderMagazineYatraPdf(
   const images = await deps.loadImages(urls);
   const hero = images[0] ?? null;
   const normalized = normalizeDays(
-    days,
+    enrichItineraryDays(days),
     yatra.startPoint,
     meta.blurb || meta.tagline,
   );
