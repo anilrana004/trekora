@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Search, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useRef, useState } from "react";
 
 const CATEGORY_CHIPS = [

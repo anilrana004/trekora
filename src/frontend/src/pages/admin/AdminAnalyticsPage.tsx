@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useActor } from "@trekora/icp";
 import { RefreshCw } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { createActor } from "../../backend";
 import type { Booking, LeadQuery } from "../../backend.d.ts";
 import { Skeleton } from "../../components/ui/skeleton";

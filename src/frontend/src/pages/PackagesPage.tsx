@@ -20,7 +20,7 @@ import {
   MapPinned,
   Phone,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useMemo, useState } from "react";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import ListingToolbarRegions from "../components/ListingToolbarRegions";

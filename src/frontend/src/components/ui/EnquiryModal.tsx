@@ -8,7 +8,7 @@ import { buildEnquiryModalPayload } from "@/lib/query-email-payloads";
 import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { Loader2, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";

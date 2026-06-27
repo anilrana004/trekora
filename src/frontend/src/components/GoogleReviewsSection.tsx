@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 
 const REVIEWS = [
   {

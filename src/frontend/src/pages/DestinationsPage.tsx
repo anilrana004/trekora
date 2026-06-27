@@ -3,7 +3,7 @@ import { buildDestinationPlanPayload } from "@/lib/query-email-payloads";
 import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { Loader2 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import DestinationCard from "../components/DestinationCard";

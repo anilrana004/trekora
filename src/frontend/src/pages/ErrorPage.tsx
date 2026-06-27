@@ -7,7 +7,7 @@ import {
   buildWhatsAppUrl,
 } from "@/lib/site-contact";
 import { AlertTriangle, MessageCircle, Phone, RefreshCw } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 
 export default function ErrorPage() {
   return (

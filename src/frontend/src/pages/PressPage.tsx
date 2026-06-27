@@ -1,7 +1,7 @@
 import { CTA_OUTLINE_RED } from "@/lib/cta-buttons";
 import { pressLogoForName } from "@/lib/press-media-logos";
 import { ArrowUpRight } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import FeaturedInMedia from "../components/FeaturedInMedia";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,

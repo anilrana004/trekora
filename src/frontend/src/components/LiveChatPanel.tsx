@@ -2,7 +2,7 @@ import { buildWhatsAppUrl } from "@/lib/site-contact";
 
 import { X } from "lucide-react";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 
 import { useEffect } from "react";
 

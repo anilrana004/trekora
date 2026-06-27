@@ -1,5 +1,5 @@
 import { Outlet, useRouterState } from "@tanstack/react-router";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "@/lib/motion";
 import { useEffect, useRef } from "react";
 
 /**

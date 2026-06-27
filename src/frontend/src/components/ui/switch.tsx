@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 function Switch({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>) {
+}: React.ComponentProps<typeof SwitchPrimitive.Root>) {
   return (
     <SwitchPrimitive.Root
       data-slot="switch"

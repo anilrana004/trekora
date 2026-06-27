@@ -14,7 +14,7 @@ import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { validateNationalPhone } from "@/lib/phone-countries";
 import { bookingEmailSuccessMessage } from "@/services/booking-email-api";
 import { submitBookingEmail } from "@/services/booking-email-api";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";

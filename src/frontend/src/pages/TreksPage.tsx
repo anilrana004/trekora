@@ -1,7 +1,7 @@
 import { buildListingSEO, matchesSeoTag } from "@/lib/product-seo";
 import { Link, useSearch } from "@tanstack/react-router";
 import { AlertCircle, Mountain } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useState } from "react";
 import ListingRegionFilterPills, {
   type ListingRegionTab,

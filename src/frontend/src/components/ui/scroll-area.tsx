@@ -9,7 +9,7 @@ function ScrollArea({
   className,
   children,
   ...props
-}: React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>) {
+}: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
@@ -32,7 +32,7 @@ function ScrollBar({
   className,
   orientation = "vertical",
   ...props
-}: React.ComponentPropsWithoutRef<
+}: React.ComponentProps<
   typeof ScrollAreaPrimitive.ScrollAreaScrollbar
 >) {
   return (

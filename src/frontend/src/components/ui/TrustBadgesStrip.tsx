@@ -1,5 +1,5 @@
 import { Mountain, Phone, Shield, Star, Users } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 
 const BADGES = [
   { Icon: Mountain, label: "40+ Treks & Yatras" },

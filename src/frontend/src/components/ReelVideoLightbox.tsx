@@ -6,7 +6,7 @@ import {
   buildVideoPosterUrl,
 } from "@/utils/mediaTransform";
 import { Volume2, VolumeX, X } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type ReelVideoLightboxProps = {

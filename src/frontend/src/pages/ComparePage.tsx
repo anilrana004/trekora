@@ -6,7 +6,7 @@ import {
   Scale,
   Trash2,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import CompareTrekActions from "../components/CompareTrekActions";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,

@@ -1,5 +1,5 @@
 import { Play } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 

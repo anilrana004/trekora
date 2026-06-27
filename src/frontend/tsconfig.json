@@ -24,8 +24,7 @@
     "paths": {
       "@trekora/icp": ["./node_modules/@caffeineai/core-infrastructure"],
       "declarations/*": ["../declarations/*"],
-      "@/*": ["./src/*"],
-      "motion/react": ["./node_modules/framer-motion"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],

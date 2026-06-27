@@ -1,5 +1,5 @@
 import { buildWhatsAppUrl } from "@/lib/site-contact";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { toast } from "sonner";
 
 interface ShareSectionProps {

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 function TooltipProvider({
   delayDuration = 0,
   ...props
-}: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Provider>) {
+}: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
     <TooltipPrimitive.Provider
       data-slot="tooltip-provider"
@@ -20,7 +20,7 @@ function TooltipProvider({
 
 function Tooltip({
   ...props
-}: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root>) {
+}: React.ComponentProps<typeof TooltipPrimitive.Root>) {
   return (
     <TooltipProvider>
       <TooltipPrimitive.Root data-slot="tooltip" {...props} />
@@ -30,7 +30,7 @@ function Tooltip({
 
 function TooltipTrigger({
   ...props
-}: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Trigger>) {
+}: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 }
 
@@ -39,7 +39,7 @@ function TooltipContent({
   sideOffset = 0,
   children,
   ...props
-}: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>) {
+}: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
@@ -52,7 +52,7 @@ function TooltipContent({
         {...props}
       >
         {children}
-        <TooltipPrimitive.Arrow width={11} height={5} />
+        <TooltipPrimitive.Arrow className="size-[11px_5px]" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );

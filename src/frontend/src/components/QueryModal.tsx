@@ -9,7 +9,7 @@ import { buildPlanMyTrekPayload } from "@/lib/query-email-payloads";
 import { WHATSAPP_CHAT_URL } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { Clock, Loader2, ShieldCheck, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Controller, useForm } from "react-hook-form";

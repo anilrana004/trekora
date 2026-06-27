@@ -4,7 +4,7 @@ import { icpTimestampNsToMs } from "@/lib/icpTimestamp";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "@tanstack/react-router";
 import { useActor } from "@trekora/icp";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useState } from "react";
 
 function useProfileByCode(code: string) {

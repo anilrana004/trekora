@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 

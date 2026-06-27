@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, Clock, MapPin } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import type { Yatra } from "../data/yatras";
 import OptimizedImage from "./media/OptimizedImage";
 

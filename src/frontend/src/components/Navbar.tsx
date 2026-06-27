@@ -10,7 +10,7 @@ import { SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/lib/site-contact";
 import { syncMobileNavHidden } from "@/lib/site-header-offset";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
 import LanguageBanner from "./LanguageBanner";

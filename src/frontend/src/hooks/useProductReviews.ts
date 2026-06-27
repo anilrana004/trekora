@@ -5,7 +5,6 @@ import {
   fetchReviewsBySlug,
 } from "@/lib/reviews-api";
 import {
-  type InfiniteData,
   useInfiniteQuery,
   useQueryClient,
 } from "@tanstack/react-query";
@@ -65,15 +64,9 @@ export function useProductReviews(
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery<
-    ReviewsBySlugResponse,
-    Error,
-    InfiniteData<ReviewsBySlugResponse, number>,
-    ReturnType<typeof queryKeys.reviews.infinite>,
-    number
-  >({
+  } = useInfiniteQuery({
     queryKey: queryKeys.reviews.infinite(normalized),
-    queryFn: ({ pageParam }: { pageParam: number }) =>
+    queryFn: ({ pageParam = 0 }) =>
       fetchReviewsBySlug(normalized, {
         limit: PAGE_SIZE,
         skip: pageParam,

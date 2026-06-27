@@ -2,7 +2,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { NOT_FOUND_SEO } from "@/lib/route-seo";
 import { Link } from "@tanstack/react-router";
 import { Home, MapPin, Mountain } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import ListingCardMedia from "../components/media/ListingCardMedia";
 import { TREKS } from "../data/treks";
 

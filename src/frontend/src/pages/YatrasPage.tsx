@@ -10,7 +10,7 @@ import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { useSearch } from "@tanstack/react-router";
 import { AlertCircle, Loader2 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import ListingRegionFilterPills, {

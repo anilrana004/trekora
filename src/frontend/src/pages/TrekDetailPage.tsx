@@ -19,7 +19,7 @@ import {
   Train,
   XCircle,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import EMICalculator from "../components/EMICalculator";
 import MobileStickyBookBar from "../components/MobileStickyBookBar";

@@ -9,7 +9,7 @@ import {
 import type { GalleryApiItem, ProductKind } from "@/lib/reviews-api";
 import { saveTrekkerPhotosToApi } from "@/lib/submit-trekker-photos";
 import { Loader2 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 

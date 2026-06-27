@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useState } from "react";
 
 import OptimizedImage from "./media/OptimizedImage";

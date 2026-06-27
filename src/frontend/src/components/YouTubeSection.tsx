@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 
 import { HOMEPAGE_REELS } from "@/data/trek-reels";
 import ReelsShortsRow from "./ReelsShortsRow";

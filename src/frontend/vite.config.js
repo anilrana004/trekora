@@ -35,7 +35,7 @@ export default defineConfig({
           core: ["react", "react-dom"],
           nav: ["@tanstack/react-router"],
           data: ["@tanstack/react-query"],
-          motion: ["motion"],
+          motion: ["framer-motion"],
           icons: ["lucide-react"],
           charts: ["recharts"],
           maps: ["leaflet"],
@@ -107,10 +107,6 @@ export default defineConfig({
       {
         find: "@",
         replacement: fileURLToPath(new URL("./src", import.meta.url)),
-      },
-      {
-        find: "motion/react",
-        replacement: "framer-motion",
       },
     ],
     dedupe: ["@dfinity/agent"]

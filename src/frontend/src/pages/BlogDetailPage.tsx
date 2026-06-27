@@ -1,6 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { Calendar, ChevronRight, Clock, User } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,

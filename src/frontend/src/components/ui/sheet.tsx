@@ -8,32 +8,32 @@ import { cn } from "@/lib/utils";
 
 function Sheet({
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Root>) {
+}: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
 function SheetTrigger({
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Trigger>) {
+}: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
   return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
 }
 
 function SheetClose({
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Close>) {
+}: React.ComponentProps<typeof SheetPrimitive.Close>) {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
 function SheetPortal({
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Portal>) {
+}: React.ComponentProps<typeof SheetPrimitive.Portal>) {
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
 function SheetOverlay({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>) {
+}: React.ComponentProps<typeof SheetPrimitive.Overlay>) {
   return (
     <SheetPrimitive.Overlay
       data-slot="sheet-overlay"
@@ -51,7 +51,7 @@ function SheetContent({
   children,
   side = "right",
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content> & {
+}: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left";
 }) {
   return (
@@ -106,7 +106,7 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
 function SheetTitle({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>) {
+}: React.ComponentProps<typeof SheetPrimitive.Title>) {
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
@@ -119,7 +119,7 @@ function SheetTitle({
 function SheetDescription({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>) {
+}: React.ComponentProps<typeof SheetPrimitive.Description>) {
   return (
     <SheetPrimitive.Description
       data-slot="sheet-description"

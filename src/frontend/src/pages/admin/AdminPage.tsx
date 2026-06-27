@@ -8,7 +8,7 @@ import {
   Mountain,
   TrendingUp,
 } from "lucide-react";
-import { AnimatePresence, motion, useSpring, useTransform } from "motion/react";
+import { AnimatePresence, motion, useSpring, useTransform } from "@/lib/motion";
 import { useEffect, useRef } from "react";
 import { createActor } from "../../backend";
 import type { Booking } from "../../backend.d.ts";
@@ -55,7 +55,7 @@ function useRecentBookings() {
 
 function AnimatedNumber({ value }: { value: number }) {
   const spring = useSpring(0, { stiffness: 50, damping: 20 });
-  const display = useTransform(spring, (v) =>
+  const display = useTransform(spring, (v: number) =>
     Math.round(v).toLocaleString("en-IN"),
   );
   const ref = useRef(false);

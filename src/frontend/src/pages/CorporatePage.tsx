@@ -10,7 +10,7 @@ import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { submitCorporateQuoteEmail } from "@/services/corporate-quote-email-api";
 import { useSearch } from "@tanstack/react-router";
 import { ChevronRight, Loader2, MessageCircle } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";

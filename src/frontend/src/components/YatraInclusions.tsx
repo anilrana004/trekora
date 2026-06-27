@@ -1,5 +1,5 @@
 import { CheckCircle2, ChevronDown, ChevronUp, XCircle } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useState } from "react";
 
 const INCLUSIONS = [

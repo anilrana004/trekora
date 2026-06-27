@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import type { ReactNode } from "react";
 import DetailTabPanel from "./DetailTabPanel";
 import type { DisplayItineraryDay } from "./itinerary-utils";

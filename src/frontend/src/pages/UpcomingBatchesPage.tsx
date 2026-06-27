@@ -1,6 +1,6 @@
 import { buildWhatsAppUrl } from "@/lib/site-contact";
 import { Link } from "@tanstack/react-router";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useState } from "react";
 import BookingDrawer from "../components/BookingDrawer";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";

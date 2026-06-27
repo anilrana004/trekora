@@ -35,7 +35,7 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import type { CSSProperties, ReactNode } from "react";
 import { Fragment, useCallback, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";

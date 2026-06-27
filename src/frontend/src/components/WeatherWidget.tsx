@@ -7,7 +7,7 @@ import {
   Thermometer,
   Wind,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useRef, useState } from "react";
 import { useWeather } from "../hooks/useWeather";
 

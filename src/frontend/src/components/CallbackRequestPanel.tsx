@@ -8,7 +8,7 @@ import { submitCallbackEmail } from "@/services/callback-email-api";
 
 import { X } from "lucide-react";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 
 import { useEffect, useState } from "react";
 

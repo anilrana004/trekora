@@ -1,7 +1,7 @@
 import type { TrailCondition } from "@/backend.d.ts";
 import { useTrailConditions } from "@/hooks/useTrailConditions";
 import { icpTimestampNsToMs } from "@/lib/icpTimestamp";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useState } from "react";
 
 // Local enum mirror — avoids importing runtime values from a .d.ts file

@@ -2,7 +2,7 @@ import { bookSearch } from "@/lib/book-search";
 import { isFeatureLive } from "@/lib/dormant-features";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useState } from "react";
 
 interface EMICalculatorProps {

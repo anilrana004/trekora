@@ -2,7 +2,7 @@ import { bookSearch } from "@/lib/book-search";
 import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { TREKS } from "../data/treks";

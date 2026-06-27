@@ -4,7 +4,7 @@ import {
   ChevronRight,
   Download,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useState } from "react";
 import { toast } from "sonner";
 import { downloadFitnessTrainingPlanPDF } from "../lib/pdfGenerator";

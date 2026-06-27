@@ -41,7 +41,7 @@ import {
   X,
   ZoomIn,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { SEOHead } from "../components/SEOHead";

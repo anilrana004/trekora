@@ -3,7 +3,7 @@ import CookieConsentBar from "@/components/CookieConsentBar";
 import { usesTravelSideActionRail } from "@/lib/travel-side-rail";
 import { useRouterState } from "@tanstack/react-router";
 import { Phone } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useState } from "react";
 
 interface FloatingCTAProps {

@@ -18,7 +18,7 @@ import {
   Wallet,
   XCircle,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useState } from "react";
 import { toast } from "sonner";
 

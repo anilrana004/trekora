@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import type { ReactNode } from "react";
 
 /** White card shell used on trek/yatra detail tabs (Valley of Flowers pattern). */

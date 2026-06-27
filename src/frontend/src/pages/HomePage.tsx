@@ -20,7 +20,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import {
   type CSSProperties,
   type ReactNode,

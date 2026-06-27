@@ -1,7 +1,7 @@
 import type { GalleryItem } from "@/data/gallery";
 import { galleryUploaderLabel } from "@/lib/gallery-community";
 import { ZoomIn } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import OptimizedImage from "../media/OptimizedImage";
 
 /** Trekker community photo tile — trek/yatra name + uploader on every image. */

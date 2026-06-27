@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
 import type { TrekInput } from "../../backend.d.ts";
 import type { BackendTrek } from "../../hooks/useTreks";

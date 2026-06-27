@@ -1,5 +1,5 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import BreadcrumbNav from "../components/BreadcrumbNav";
 import DestinationCard from "../components/DestinationCard";
 import {

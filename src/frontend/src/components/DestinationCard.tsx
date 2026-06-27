@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import type { CSSProperties, ReactNode } from "react";
 import { resolveDestinationNavigation } from "../data/destination-treks";
 import type { Destination } from "../data/destinations";

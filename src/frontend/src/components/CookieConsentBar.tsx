@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "ew-cookie-accepted";

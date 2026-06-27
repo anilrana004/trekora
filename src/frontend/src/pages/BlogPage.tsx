@@ -1,7 +1,7 @@
 import { SITE_ORIGIN } from "@/lib/site-config";
 import { Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useState } from "react";
 import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {

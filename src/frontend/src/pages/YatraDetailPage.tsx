@@ -32,7 +32,7 @@ import {
   Train,
   Truck,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BookingQuickStats from "../components/BookingQuickStats";
 import DetailPageTabBar from "../components/DetailPageTabBar";

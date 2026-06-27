@@ -1,6 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { AlertCircle, Mountain } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import { useEffect, useMemo } from "react";
 import BreadcrumbNav from "../components/BreadcrumbNav";
 import OptimizedImage from "../components/media/OptimizedImage";

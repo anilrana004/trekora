@@ -8,7 +8,7 @@ import { ABOUT_STORY_WATERMARK_URL } from "@/lib/site-brand";
 import { SITE_ORIGIN } from "@/lib/site-config";
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
-import { motion } from "motion/react";
+import { motion } from "@/lib/motion";
 import FeaturedInMedia from "../components/FeaturedInMedia";
 import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {
