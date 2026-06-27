@@ -8,7 +8,7 @@
         "dev:clean": "vite --force",
         "generate:sitemap": "node ../../scripts/generate-sitemap.mjs",
         "generate:agent-discovery": "node ../../scripts/generate-agent-discovery.mjs",
-        "build": "pnpm generate:sitemap && pnpm generate:agent-discovery && vite build && pnpm copy:env && pnpm security:bundle",
+        "build": "node ../../scripts/vercel-preflight.mjs && pnpm generate:sitemap && pnpm generate:agent-discovery && vite build && pnpm copy:env && pnpm security:bundle",
         "copy:env": "node ../../scripts/write-public-env.mjs",
         "security:bundle": "node ../../scripts/check-bundle-secrets.mjs",
         "typecheck": "tsc --noEmit",
