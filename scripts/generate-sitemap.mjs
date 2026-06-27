@@ -82,6 +82,7 @@ async function main() {
   fs.writeFileSync(outPath, xml, "utf8");
 
   const robotsPath = path.join(publicDir, "robots.txt");
+  const contentSignal = "Content-Signal: ai-train=no, search=yes, ai-input=no";
   const robots = `# Trekora — ${siteOrigin}
 # As a condition of accessing this website, you agree to abide by the following content signals:
 # (a)  If a content-signal = yes, you may collect content for the corresponding use.
@@ -93,31 +94,39 @@ async function main() {
 # ai-train: training or fine-tuning AI models.
 
 User-agent: Googlebot
+${contentSignal}
 Allow: /
 
 User-agent: Bingbot
+${contentSignal}
 Allow: /
 
 User-agent: GPTBot
+${contentSignal}
 Allow: /
 
 User-agent: ChatGPT-User
+${contentSignal}
 Allow: /
 
 User-agent: ClaudeBot
+${contentSignal}
 Allow: /
 
 User-agent: anthropic-ai
+${contentSignal}
 Allow: /
 
 User-agent: PerplexityBot
+${contentSignal}
 Allow: /
 
 User-agent: Google-Extended
+${contentSignal}
 Allow: /
 
 User-agent: *
-Content-Signal: ai-train=no, search=yes, ai-input=no
+${contentSignal}
 Allow: /
 Disallow: /admin
 Disallow: /book

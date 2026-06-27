@@ -579,6 +579,16 @@ function main() {
       "/about",
       "Trekora is a Himalayan travel agency based in Dehradun, Uttarakhand.",
     ),
+    "/destinations": buildListingMarkdown(
+      "Destinations",
+      "/destinations",
+      "Explore Himalayan destinations by state — Uttarakhand, Himachal, Kashmir, Ladakh, and more.",
+    ),
+    "/upcoming-batches": buildListingMarkdown(
+      "Upcoming Trek Batches",
+      "/upcoming-batches",
+      "Fixed-departure trek and yatra batches with dates, seats, and pricing.",
+    ),
   };
 
   const apiGenDir = path.join(frontendRoot, "api/_generated");

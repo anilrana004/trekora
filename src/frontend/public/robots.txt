@@ -9,27 +9,35 @@
 # ai-train: training or fine-tuning AI models.
 
 User-agent: Googlebot
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: Bingbot
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: GPTBot
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: ChatGPT-User
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: ClaudeBot
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: anthropic-ai
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: PerplexityBot
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: Google-Extended
+Content-Signal: ai-train=no, search=yes, ai-input=no
 Allow: /
 
 User-agent: *
