@@ -288,12 +288,16 @@ function buildOAuthAuthorizationServer() {
       register_uri: `${siteOrigin}/oauth/register`,
       identity_endpoint: `${siteOrigin}/oauth/agent/identity`,
       claim_endpoint: `${siteOrigin}/oauth/agent/identity/claim`,
+      revocation_uri: `${siteOrigin}/oauth/revoke`,
       identity_types_supported: ["anonymous"],
       credential_types_supported: ["none"],
       anonymous: {
         credential_types_supported: ["none"],
         claim_uri: `${siteOrigin}/auth.md`,
       },
+      events_supported: [
+        "https://schemas.workos.com/events/agent/auth/identity/assertion/revoked",
+      ],
     },
   };
 }

@@ -38,6 +38,7 @@
     "register_uri": "https://www.trekora.in/oauth/register",
     "identity_endpoint": "https://www.trekora.in/oauth/agent/identity",
     "claim_endpoint": "https://www.trekora.in/oauth/agent/identity/claim",
+    "revocation_uri": "https://www.trekora.in/oauth/revoke",
     "identity_types_supported": [
       "anonymous"
     ],
@@ -49,6 +50,9 @@
         "none"
       ],
       "claim_uri": "https://www.trekora.in/auth.md"
-    }
+    },
+    "events_supported": [
+      "https://schemas.workos.com/events/agent/auth/identity/assertion/revoked"
+    ]
   }
 }

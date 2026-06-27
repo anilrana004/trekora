@@ -1,5 +1,5 @@
 import { next } from "@vercel/functions";
-import routes from "./api/_generated/agent-markdown-routes.json" with { type: "json" };
+import routes from "./api/_generated/agent-markdown-routes.json";
 
 type MarkdownRoutes = Record<string, string>;
 
