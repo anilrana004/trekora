@@ -189,29 +189,53 @@ function buildApiCatalog() {
 }
 
 function buildAuthMd() {
-  return `# Trekora — Agent & API Access
+  return `# auth.md — Trekora Agent Registration
 
 Trekora (${siteOrigin}) publishes machine-readable discovery for AI agents and automated clients.
 
-## Public APIs (no registration required)
+## Audience
 
-Read and customer-facing write endpoints under \`/api\` and \`/api/v1\` are open without OAuth. See:
+AI agents, crawlers, and automated HTTP clients accessing Trekora content and APIs.
+
+## Registration
+
+Public read and customer inquiry APIs require **no registration**. Protected operator routes require an operator-issued \`x-admin-secret\` header (not available for self-registration).
+
+For OAuth discovery metadata:
+
+- [Protected Resource Metadata](${siteOrigin}/.well-known/oauth-protected-resource)
+- [Authorization Server Metadata](${siteOrigin}/.well-known/oauth-authorization-server)
+
+### Anonymous access (public APIs)
+
+| Field | Value |
+|-------|-------|
+| Method | \`anonymous\` |
+| Credential | \`none\` — no bearer token required |
+| Claim URI | ${siteOrigin}/auth.md |
+| Register URI | ${siteOrigin}/oauth/register |
+
+Send requests to \`${siteOrigin}/api\` without an \`Authorization\` header for public endpoints listed in [OpenAPI](${siteOrigin}/.well-known/openapi.json).
+
+### Operator access (admin moderation)
+
+| Field | Value |
+|-------|-------|
+| Method | \`api_key_header\` |
+| Header | \`x-admin-secret\` |
+| Scope | \`trekora.admin\` |
+| Provisioning | Operator-issued only — email hello@trekora.in |
+
+## Discovery
 
 - [API catalog](${siteOrigin}/.well-known/api-catalog) (\`application/linkset+json\`)
 - [OpenAPI spec](${siteOrigin}/.well-known/openapi.json)
 - [API documentation](${siteOrigin}/docs/api.md)
-
-## Protected operator endpoints
-
-Admin moderation routes (e.g. \`GET /api/reviews/pending\`) require the \`x-admin-secret\` request header. These credentials are issued to Trekora operators only and are **not** available via public agent self-registration.
+- [Agent skills index](${siteOrigin}/.well-known/agent-skills/index.json)
 
 ## Content negotiation
 
 Send \`Accept: text/markdown\` on HTML page requests to receive markdown representations (homepage and key listing pages).
-
-## Agent skills
-
-Browse published skills at [/.well-known/agent-skills/index.json](${siteOrigin}/.well-known/agent-skills/index.json).
 
 ## Browser tools (WebMCP)
 
@@ -222,6 +246,45 @@ When loaded in a WebMCP-capable browser, Trekora registers tools for trek/yatra 
 - Website: ${siteOrigin}/contact
 - Email: hello@trekora.in
 `;
+}
+
+function buildOAuthAuthorizationServer() {
+  return {
+    issuer: siteOrigin,
+    authorization_endpoint: `${siteOrigin}/oauth/authorize`,
+    token_endpoint: `${siteOrigin}/oauth/token`,
+    registration_endpoint: `${siteOrigin}/oauth/register`,
+    jwks_uri: `${siteOrigin}/.well-known/jwks.json`,
+    grant_types_supported: ["client_credentials", "none"],
+    response_types_supported: ["none"],
+    token_endpoint_auth_methods_supported: ["none", "client_secret_post"],
+    scopes_supported: ["trekora.read", "trekora.write", "trekora.admin"],
+    code_challenge_methods_supported: ["S256"],
+    agent_auth: {
+      skill: `${siteOrigin}/.well-known/agent-skills/trekora-api/SKILL.md`,
+      register_uri: `${siteOrigin}/oauth/register`,
+      identity_types_supported: ["anonymous"],
+      anonymous: {
+        credential_types_supported: ["none"],
+        claim_uri: `${siteOrigin}/auth.md`,
+      },
+    },
+  };
+}
+
+function buildOAuthProtectedResource() {
+  return {
+    resource: `${siteOrigin}/api`,
+    authorization_servers: [siteOrigin],
+    scopes_supported: ["trekora.read", "trekora.write", "trekora.admin"],
+    bearer_methods_supported: ["header"],
+    resource_documentation: `${siteOrigin}/docs/api.md`,
+    resource_signing_alg_values_supported: ["RS256"],
+  };
+}
+
+function buildJwks() {
+  return { keys: [] };
 }
 
 function buildApiDocsMd() {
@@ -427,6 +490,21 @@ function main() {
 
   writeFileEnsuringDir(path.join(publicDir, "auth.md"), buildAuthMd());
   writeFileEnsuringDir(path.join(publicDir, "docs/api.md"), buildApiDocsMd());
+
+  writeFileEnsuringDir(
+    path.join(publicDir, ".well-known/oauth-authorization-server"),
+    `${JSON.stringify(buildOAuthAuthorizationServer(), null, 2)}\n`,
+  );
+
+  writeFileEnsuringDir(
+    path.join(publicDir, ".well-known/oauth-protected-resource"),
+    `${JSON.stringify(buildOAuthProtectedResource(), null, 2)}\n`,
+  );
+
+  writeFileEnsuringDir(
+    path.join(publicDir, ".well-known/jwks.json"),
+    `${JSON.stringify(buildJwks(), null, 2)}\n`,
+  );
 
   writeFileEnsuringDir(
     path.join(publicDir, ".well-known/mcp/server-card.json"),

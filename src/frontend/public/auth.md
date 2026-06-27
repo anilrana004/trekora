@@ -1,26 +1,50 @@
-# Trekora — Agent & API Access
+# auth.md — Trekora Agent Registration
 
 Trekora (https://www.trekora.in) publishes machine-readable discovery for AI agents and automated clients.
 
-## Public APIs (no registration required)
+## Audience
 
-Read and customer-facing write endpoints under `/api` and `/api/v1` are open without OAuth. See:
+AI agents, crawlers, and automated HTTP clients accessing Trekora content and APIs.
+
+## Registration
+
+Public read and customer inquiry APIs require **no registration**. Protected operator routes require an operator-issued `x-admin-secret` header (not available for self-registration).
+
+For OAuth discovery metadata:
+
+- [Protected Resource Metadata](https://www.trekora.in/.well-known/oauth-protected-resource)
+- [Authorization Server Metadata](https://www.trekora.in/.well-known/oauth-authorization-server)
+
+### Anonymous access (public APIs)
+
+| Field | Value |
+|-------|-------|
+| Method | `anonymous` |
+| Credential | `none` — no bearer token required |
+| Claim URI | https://www.trekora.in/auth.md |
+| Register URI | https://www.trekora.in/oauth/register |
+
+Send requests to `https://www.trekora.in/api` without an `Authorization` header for public endpoints listed in [OpenAPI](https://www.trekora.in/.well-known/openapi.json).
+
+### Operator access (admin moderation)
+
+| Field | Value |
+|-------|-------|
+| Method | `api_key_header` |
+| Header | `x-admin-secret` |
+| Scope | `trekora.admin` |
+| Provisioning | Operator-issued only — email hello@trekora.in |
+
+## Discovery
 
 - [API catalog](https://www.trekora.in/.well-known/api-catalog) (`application/linkset+json`)
 - [OpenAPI spec](https://www.trekora.in/.well-known/openapi.json)
 - [API documentation](https://www.trekora.in/docs/api.md)
-
-## Protected operator endpoints
-
-Admin moderation routes (e.g. `GET /api/reviews/pending`) require the `x-admin-secret` request header. These credentials are issued to Trekora operators only and are **not** available via public agent self-registration.
+- [Agent skills index](https://www.trekora.in/.well-known/agent-skills/index.json)
 
 ## Content negotiation
 
 Send `Accept: text/markdown` on HTML page requests to receive markdown representations (homepage and key listing pages).
-
-## Agent skills
-
-Browse published skills at [/.well-known/agent-skills/index.json](https://www.trekora.in/.well-known/agent-skills/index.json).
 
 ## Browser tools (WebMCP)
 

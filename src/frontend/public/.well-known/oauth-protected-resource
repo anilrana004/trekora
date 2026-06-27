@@ -1,0 +1,18 @@
+{
+  "resource": "https://www.trekora.in/api",
+  "authorization_servers": [
+    "https://www.trekora.in"
+  ],
+  "scopes_supported": [
+    "trekora.read",
+    "trekora.write",
+    "trekora.admin"
+  ],
+  "bearer_methods_supported": [
+    "header"
+  ],
+  "resource_documentation": "https://www.trekora.in/docs/api.md",
+  "resource_signing_alg_values_supported": [
+    "RS256"
+  ]
+}

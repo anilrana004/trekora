@@ -83,6 +83,27 @@ _index._agents.trekora.in. 3600 IN HTTPS 1 www.trekora.in. alpn="h2,h3" port=443
 
 Enable **DNSSEC** (Cloudflare → DNS → Settings → DNSSEC → Enable) so validating resolvers receive authenticated discovery data.
 
+### Automated publish (recommended)
+
+From the repo root, with a Cloudflare API token (`Zone.DNS Edit`) and zone ID:
+
+```bash
+CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ZONE_ID=... node scripts/publish-dns-aid-cloudflare.mjs
+```
+
+Dry run:
+
+```bash
+CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ZONE_ID=... node scripts/publish-dns-aid-cloudflare.mjs --dry-run
+```
+
+### Manual (Cloudflare dashboard)
+
+1. DNS → Add record → Type **HTTPS** (or SVCB)
+2. Name: `_index._agents`
+3. Priority: `1`, Target: `www.trekora.in`, ALPN: `h2,h3`, Port: `443`
+4. Add record → Type **TXT**, Name: `_index._agents`, Content: `api-catalog=https://www.trekora.in/.well-known/api-catalog`
+
 After publishing, verify with DNS-over-HTTPS:
 
 ```bash
