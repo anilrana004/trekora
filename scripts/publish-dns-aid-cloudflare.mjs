@@ -23,7 +23,7 @@ const RECORDS = [
     data: {
       priority: 1,
       target: siteHost,
-      params: "alpn=h2,h3 port=443",
+      value: 'alpn="h2,h3" port=443',
     },
     comment: "DNS-AID index entrypoint (RFC 9460 ServiceMode HTTPS)",
   },
