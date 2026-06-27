@@ -1,4 +1,11 @@
-import routes from "./_generated/agent-markdown-routes.json" with { type: "json" };
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const routes = JSON.parse(
+  readFileSync(join(__dirname, "_generated/agent-markdown-routes.json"), "utf8"),
+);
 
 const FALLBACK = `# Trekora
 

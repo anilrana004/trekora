@@ -28,7 +28,7 @@
       "motion/react": ["./node_modules/framer-motion"]
     }
   },
-  "include": ["src", "middleware.ts"],
+  "include": ["src"],
   "exclude": [
     "node_modules",
     "dist",
