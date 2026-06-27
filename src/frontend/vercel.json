@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
       "source": "/",
@@ -241,6 +242,18 @@
         }
       ],
       "dest": "/api/agent-markdown?path=/:path"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html",
+      "transforms": [
+        {
+          "type": "response.headers",
+          "op": "set",
+          "target": { "key": "Link" },
+          "args": "</.well-known/api-catalog>; rel=\"api-catalog\", </.well-known/openapi.json>; rel=\"service-desc\", </docs/api.md>; rel=\"service-doc\", </auth.md>; rel=\"describedby\", </.well-known/agent-skills/index.json>; rel=\"describedby\", </.well-known/oauth-authorization-server>; rel=\"oauth-authorization-server\", </.well-known/oauth-protected-resource>; rel=\"oauth-protected-resource\""
+        }
+      ]
     },
     { "handle": "filesystem" },
     {

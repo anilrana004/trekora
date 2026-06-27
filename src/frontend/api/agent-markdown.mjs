@@ -47,6 +47,10 @@ export default function handler(req, res) {
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/markdown; charset=utf-8");
   res.setHeader("Vary", "Accept");
+  res.setHeader(
+    "Link",
+    '</.well-known/api-catalog>; rel="api-catalog", </.well-known/openapi.json>; rel="service-desc", </docs/api.md>; rel="service-doc", </auth.md>; rel="describedby", </.well-known/agent-skills/index.json>; rel="describedby", </.well-known/oauth-authorization-server>; rel="oauth-authorization-server", </.well-known/oauth-protected-resource>; rel="oauth-protected-resource"',
+  );
   res.setHeader("x-markdown-tokens", String(tokens));
 
   if (req.method === "HEAD") {
