@@ -16,23 +16,30 @@ import TravelSideActionRail, {
 } from "../components/TravelSideActionRail";
 import OptimizedImage from "../components/media/OptimizedImage";
 
-const TEAM = [
+const TEAM_LEADERS = [
   {
     name: "Hritik Chauhan",
     role: "Founder & CEO",
     years: 15,
     bio: "Summited 50+ Himalayan peaks. Former GMVN guide. IMF certified mountaineer.",
     image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1782582322/fi48joagbpjgxlfnxoaa.png",
+    story:
+      "At sixteen I stood on my first Himalayan ridge with borrowed boots and a heart full of doubt. That sunrise did not just change my view — it changed my life. Every trail since has taught me that leadership is not about reaching the summit first; it is about making sure everyone behind you feels brave enough to keep walking.",
   },
   {
-    name: "Priya Negi",
+    name: "Priyesh Singh Rana",
     role: "Operations Head",
     years: 12,
-    bio: "Logistics expert ensuring every trek runs smoothly. Kedarnath specialist.",
+    bio: "Logistics expert ensuring every trek runs smoothly. Kedarnath and high-altitude operations specialist.",
     image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
+      "https://res.cloudinary.com/ddbcauxef/image/upload/v1782582279/nzxm2piwz7igggslbsod.png",
+    story:
+      "Logistics in the mountains is love made visible — a hot meal waiting at camp when legs are shaking, a rope checked twice because someone's mother is waiting at home. Twelve years on the trail have taught me that the invisible work behind every successful trek is what turns strangers into a family that remembers each other for years.",
   },
+] as const;
+
+const TEAM = [
   {
     name: "Vikram Singh",
     role: "Senior Trek Leader",
@@ -400,7 +407,71 @@ export default function AboutPage() {
               Trekora feel like family.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          <div className="about-team-leaders">
+            {TEAM_LEADERS.map((member, i) => (
+              <motion.article
+                key={member.name}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12, duration: 0.5 }}
+                className="about-team-leader-card"
+                data-ocid={`team.leader.${i + 1}`}
+              >
+                <div className="about-team-leader-card__photo">
+                  <OptimizedImage
+                    src={member.image}
+                    alt={`${member.name}, ${member.role}`}
+                    fill
+                    variant="blog-card"
+                    sizes="(max-width: 768px) 100vw, 28rem"
+                    delivery={{
+                      crop: "c_fill,g_face",
+                      quality: "q_90",
+                    }}
+                    className="h-full w-full"
+                  />
+                </div>
+                <div className="about-team-leader-card__body">
+                  <div>
+                    <h3
+                      className="font-bold text-xl tracking-tight"
+                      style={{ color: "var(--ew-text)" }}
+                    >
+                      {member.name}
+                    </h3>
+                    <p
+                      className="text-sm font-semibold mt-1"
+                      style={{ color: "var(--ew-red)" }}
+                    >
+                      {member.role}
+                    </p>
+                    <span
+                      className="inline-block text-xs font-bold px-2.5 py-0.5 rounded-full mt-2"
+                      style={{
+                        background: "var(--ew-orange-lt)",
+                        color: "var(--ew-orange)",
+                      }}
+                    >
+                      {member.years} yrs experience
+                    </span>
+                  </div>
+                  <p
+                    className="text-sm leading-relaxed text-left"
+                    style={{ color: "var(--ew-text-lt)" }}
+                  >
+                    {member.bio}
+                  </p>
+                  <blockquote className="about-team-story">
+                    <span>{member.story}</span>
+                  </blockquote>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             {TEAM.map((member, i) => (
               <motion.div
                 key={member.name}

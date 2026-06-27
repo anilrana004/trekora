@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap&font-display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&display=swap&font-display=swap");
 @import "./styles/travel-side-rail.css";
 @import "./styles/home-mobile.css";
 @import "./styles/plan-trek-modal.css";
@@ -282,6 +282,92 @@
     align-items: center;
     justify-content: center;
     background: #fff;
+  }
+
+  /* About — leadership team stories */
+  .about-team-leaders {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 56rem;
+    margin-inline: auto;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .about-team-leaders {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+
+  .about-team-leader-card {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--ew-gray-mid);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .about-team-leader-card:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .about-team-leader-card__photo {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(180deg, var(--ew-gray-lt) 0%, #fff 100%);
+  }
+
+  .about-team-leader-card__photo img {
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .about-team-leader-card__body {
+    padding: 1.5rem 1.75rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.75rem;
+  }
+
+  .about-team-story {
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ew-text);
+    text-align: left;
+    margin: 0;
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--ew-gray-mid);
+    position: relative;
+  }
+
+  .about-team-story::before {
+    content: "\201C";
+    position: absolute;
+    top: 0.35rem;
+    left: -0.15rem;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--ew-red);
+    opacity: 0.35;
+    font-style: normal;
+  }
+
+  .about-team-story span {
+    display: block;
+    padding-left: 1.25rem;
   }
 
   /* Hero promos — copy/CTAs stay visible during carousel image crossfade */
