@@ -219,46 +219,40 @@
       "includeFiles": "api/_generated/agent-markdown-routes.json"
     }
   },
-  "rewrites": {
-    "beforeFiles": [
-      {
-        "source": "/",
-        "has": [
-          {
-            "type": "header",
-            "key": "accept",
-            "value": "(?i).*text/markdown.*"
-          }
-        ],
-        "destination": "/api/agent-markdown?path=/"
-      },
-      {
-        "source": "/:path((?!api/|\\.well-known/|assets/).+)",
-        "has": [
-          {
-            "type": "header",
-            "key": "accept",
-            "value": "(?i).*text/markdown.*"
-          }
-        ],
-        "destination": "/api/agent-markdown?path=/:path"
-      }
-    ],
-    "afterFiles": [
-      {
-        "source": "/api/reviews",
-        "destination": "https://api.trekora.in/api/reviews"
-      },
-      {
-        "source": "/api/reviews/:path*",
-        "destination": "https://api.trekora.in/api/reviews/:path*"
-      }
-    ],
-    "fallback": [
-      {
-        "source": "/((?!api/).*)",
-        "destination": "/index.html"
-      }
-    ]
-  }
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(?i).*text/markdown.*"
+        }
+      ],
+      "destination": "/api/agent-markdown?path=/"
+    },
+    {
+      "source": "/:path((?!api/|\\.well-known/|assets/).+)",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept",
+          "value": "(?i).*text/markdown.*"
+        }
+      ],
+      "destination": "/api/agent-markdown?path=/:path"
+    },
+    {
+      "source": "/api/reviews",
+      "destination": "https://api.trekora.in/api/reviews"
+    },
+    {
+      "source": "/api/reviews/:path*",
+      "destination": "https://api.trekora.in/api/reviews/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
 }
