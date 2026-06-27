@@ -214,6 +214,11 @@
       ]
     }
   ],
+  "functions": {
+    "api/agent-markdown.mjs": {
+      "includeFiles": "api/_generated/agent-markdown-routes.json"
+    }
+  },
   "rewrites": {
     "beforeFiles": [
       {
