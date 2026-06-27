@@ -24,7 +24,8 @@
         "security:check": "node scripts/check-secrets.mjs",
         "security:bundle": "node scripts/check-bundle-secrets.mjs",
         "security:all": "pnpm security:check && pnpm -C src/frontend security:bundle",
-        "publish:dns-aid": "node scripts/publish-dns-aid-cloudflare.mjs"
+        "publish:dns-aid": "node scripts/publish-dns-aid-cloudflare.mjs",
+        "check:dnssec": "node scripts/check-dnssec-status.mjs"
     },
     "devDependencies": {
         "dotenv": "^16.5.0",

@@ -1,54 +1,68 @@
-# auth.md — Trekora Agent Registration
+# auth.md
 
-Trekora (https://www.trekora.in) publishes machine-readable discovery for AI agents and automated clients.
+You are an agent. Trekora (https://www.trekora.in) supports **agentic registration** for API access: discover → register → use credentials.
 
-## Audience
+## Step 1 — Discover
 
-AI agents, crawlers, and automated HTTP clients accessing Trekora content and APIs.
+### 1a. Protected Resource Metadata
 
-## Registration
+```http
+GET /.well-known/oauth-protected-resource
+```
 
-Public read and customer inquiry APIs require **no registration**. Protected operator routes require an operator-issued `x-admin-secret` header (not available for self-registration).
+Canonical resource: `https://www.trekora.in/api`
 
-For OAuth discovery metadata:
+### 1b. Authorization Server metadata (includes `agent_auth`)
 
-- [Protected Resource Metadata](https://www.trekora.in/.well-known/oauth-protected-resource)
-- [Authorization Server Metadata](https://www.trekora.in/.well-known/oauth-authorization-server)
+```http
+GET /.well-known/oauth-authorization-server
+```
 
-### Anonymous access (public APIs)
+The `agent_auth` block in that document contains:
 
-| Field | Value |
-|-------|-------|
-| Method | `anonymous` |
-| Credential | `none` — no bearer token required |
-| Claim URI | https://www.trekora.in/auth.md |
-| Register URI | https://www.trekora.in/oauth/register |
+- `skill` — this file (https://www.trekora.in/auth.md)
+- `register_uri` — https://www.trekora.in/oauth/register
+- `identity_endpoint` — https://www.trekora.in/oauth/agent/identity
+- `claim_endpoint` — https://www.trekora.in/oauth/agent/identity/claim
+- `identity_types_supported` — `["anonymous"]`
+- `credential_types_supported` — `["none"]`
+- `anonymous.credential_types_supported` — `["none"]`
+- `anonymous.claim_uri` — https://www.trekora.in/auth.md
 
-Send requests to `https://www.trekora.in/api` without an `Authorization` header for public endpoints listed in [OpenAPI](https://www.trekora.in/.well-known/openapi.json).
+## Step 2 — Pick a method
 
-### Operator access (admin moderation)
+| Method | When to use | Credential |
+|--------|-------------|------------|
+| `anonymous` | Public read/inquiry APIs | `none` — no bearer token |
+| `api_key_header` | Operator moderation only | `x-admin-secret` header |
 
-| Field | Value |
-|-------|-------|
-| Method | `api_key_header` |
-| Header | `x-admin-secret` |
-| Scope | `trekora.admin` |
-| Provisioning | Operator-issued only — email hello@trekora.in |
+Public endpoints in [OpenAPI](https://www.trekora.in/.well-known/openapi.json) require **no registration**. Send requests to `https://www.trekora.in/api` without an `Authorization` header.
 
-## Discovery
+Operator routes (e.g. `GET /api/reviews/pending`) require `x-admin-secret` — provisioned by Trekora staff only (hello@trekora.in).
 
-- [API catalog](https://www.trekora.in/.well-known/api-catalog) (`application/linkset+json`)
+## Step 3 — Register (anonymous)
+
+For anonymous public API access, no POST is required. Discovery metadata above is sufficient.
+
+Optional registration endpoint (metadata only; passive scans should not POST):
+
+```http
+POST /oauth/agent/identity
+Content-Type: application/json
+
+{ "type": "anonymous" }
+```
+
+## Discovery links
+
+- [API catalog](https://www.trekora.in/.well-known/api-catalog)
 - [OpenAPI spec](https://www.trekora.in/.well-known/openapi.json)
 - [API documentation](https://www.trekora.in/docs/api.md)
 - [Agent skills index](https://www.trekora.in/.well-known/agent-skills/index.json)
 
 ## Content negotiation
 
-Send `Accept: text/markdown` on HTML page requests to receive markdown representations (homepage and key listing pages).
-
-## Browser tools (WebMCP)
-
-When loaded in a WebMCP-capable browser, Trekora registers tools for trek/yatra search and navigation via `navigator.modelContext`.
+Send `Accept: text/markdown` on HTML page requests for markdown representations.
 
 ## Contact
 

@@ -81,7 +81,23 @@ Example SVCB record:
 _index._agents.trekora.in. 3600 IN HTTPS 1 www.trekora.in. alpn="h2,h3" port=443
 ```
 
-Enable **DNSSEC** (Cloudflare → DNS → Settings → DNSSEC → Enable) so validating resolvers receive authenticated discovery data.
+Enable **DNSSEC** in Cloudflare (DNS → Settings → DNSSEC → Enable). Cloudflare will show a **DS record** — you must add it at **GoDaddy** (Trekora’s registrar) for validation to complete.
+
+| GoDaddy field | Value (from Cloudflare DNSSEC page) |
+|---------------|-------------------------------------|
+| Key Tag | e.g. `2371` |
+| Algorithm | `13` (ECDSAP256SHA256) |
+| Digest Type | `2` (SHA-256) |
+| Digest | 64-char hex from Cloudflare |
+
+Check status:
+
+```bash
+node scripts/check-dnssec-status.mjs
+# requires CLOUDFLARE_API_TOKEN + CLOUDFLARE_ZONE_ID
+```
+
+Until status is **active**, DNS-over-HTTPS returns `"AD": false` and agent scans report DNSSEC as unvalidated.
 
 ### Automated publish (recommended)
 

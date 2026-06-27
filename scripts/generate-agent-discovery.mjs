@@ -189,57 +189,71 @@ function buildApiCatalog() {
 }
 
 function buildAuthMd() {
-  return `# auth.md — Trekora Agent Registration
+  return `# auth.md
 
-Trekora (${siteOrigin}) publishes machine-readable discovery for AI agents and automated clients.
+You are an agent. Trekora (${siteOrigin}) supports **agentic registration** for API access: discover → register → use credentials.
 
-## Audience
+## Step 1 — Discover
 
-AI agents, crawlers, and automated HTTP clients accessing Trekora content and APIs.
+### 1a. Protected Resource Metadata
 
-## Registration
+\`\`\`http
+GET /.well-known/oauth-protected-resource
+\`\`\`
 
-Public read and customer inquiry APIs require **no registration**. Protected operator routes require an operator-issued \`x-admin-secret\` header (not available for self-registration).
+Canonical resource: \`${siteOrigin}/api\`
 
-For OAuth discovery metadata:
+### 1b. Authorization Server metadata (includes \`agent_auth\`)
 
-- [Protected Resource Metadata](${siteOrigin}/.well-known/oauth-protected-resource)
-- [Authorization Server Metadata](${siteOrigin}/.well-known/oauth-authorization-server)
+\`\`\`http
+GET /.well-known/oauth-authorization-server
+\`\`\`
 
-### Anonymous access (public APIs)
+The \`agent_auth\` block in that document contains:
 
-| Field | Value |
-|-------|-------|
-| Method | \`anonymous\` |
-| Credential | \`none\` — no bearer token required |
-| Claim URI | ${siteOrigin}/auth.md |
-| Register URI | ${siteOrigin}/oauth/register |
+- \`skill\` — this file (${siteOrigin}/auth.md)
+- \`register_uri\` — ${siteOrigin}/oauth/register
+- \`identity_endpoint\` — ${siteOrigin}/oauth/agent/identity
+- \`claim_endpoint\` — ${siteOrigin}/oauth/agent/identity/claim
+- \`identity_types_supported\` — \`["anonymous"]\`
+- \`credential_types_supported\` — \`["none"]\`
+- \`anonymous.credential_types_supported\` — \`["none"]\`
+- \`anonymous.claim_uri\` — ${siteOrigin}/auth.md
 
-Send requests to \`${siteOrigin}/api\` without an \`Authorization\` header for public endpoints listed in [OpenAPI](${siteOrigin}/.well-known/openapi.json).
+## Step 2 — Pick a method
 
-### Operator access (admin moderation)
+| Method | When to use | Credential |
+|--------|-------------|------------|
+| \`anonymous\` | Public read/inquiry APIs | \`none\` — no bearer token |
+| \`api_key_header\` | Operator moderation only | \`x-admin-secret\` header |
 
-| Field | Value |
-|-------|-------|
-| Method | \`api_key_header\` |
-| Header | \`x-admin-secret\` |
-| Scope | \`trekora.admin\` |
-| Provisioning | Operator-issued only — email hello@trekora.in |
+Public endpoints in [OpenAPI](${siteOrigin}/.well-known/openapi.json) require **no registration**. Send requests to \`${siteOrigin}/api\` without an \`Authorization\` header.
 
-## Discovery
+Operator routes (e.g. \`GET /api/reviews/pending\`) require \`x-admin-secret\` — provisioned by Trekora staff only (hello@trekora.in).
 
-- [API catalog](${siteOrigin}/.well-known/api-catalog) (\`application/linkset+json\`)
+## Step 3 — Register (anonymous)
+
+For anonymous public API access, no POST is required. Discovery metadata above is sufficient.
+
+Optional registration endpoint (metadata only; passive scans should not POST):
+
+\`\`\`http
+POST /oauth/agent/identity
+Content-Type: application/json
+
+{ "type": "anonymous" }
+\`\`\`
+
+## Discovery links
+
+- [API catalog](${siteOrigin}/.well-known/api-catalog)
 - [OpenAPI spec](${siteOrigin}/.well-known/openapi.json)
 - [API documentation](${siteOrigin}/docs/api.md)
 - [Agent skills index](${siteOrigin}/.well-known/agent-skills/index.json)
 
 ## Content negotiation
 
-Send \`Accept: text/markdown\` on HTML page requests to receive markdown representations (homepage and key listing pages).
-
-## Browser tools (WebMCP)
-
-When loaded in a WebMCP-capable browser, Trekora registers tools for trek/yatra search and navigation via \`navigator.modelContext\`.
+Send \`Accept: text/markdown\` on HTML page requests for markdown representations.
 
 ## Contact
 
@@ -249,21 +263,33 @@ When loaded in a WebMCP-capable browser, Trekora registers tools for trek/yatra 
 }
 
 function buildOAuthAuthorizationServer() {
+  const prm = buildOAuthProtectedResource();
   return {
+    resource: prm.resource,
+    authorization_servers: prm.authorization_servers,
+    scopes_supported: prm.scopes_supported,
+    bearer_methods_supported: prm.bearer_methods_supported,
     issuer: siteOrigin,
     authorization_endpoint: `${siteOrigin}/oauth/authorize`,
     token_endpoint: `${siteOrigin}/oauth/token`,
     registration_endpoint: `${siteOrigin}/oauth/register`,
+    revocation_endpoint: `${siteOrigin}/oauth/revoke`,
     jwks_uri: `${siteOrigin}/.well-known/jwks.json`,
-    grant_types_supported: ["client_credentials", "none"],
-    response_types_supported: ["none"],
+    grant_types_supported: [
+      "none",
+      "client_credentials",
+      "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    ],
+    response_types_supported: ["none", "code"],
     token_endpoint_auth_methods_supported: ["none", "client_secret_post"],
-    scopes_supported: ["trekora.read", "trekora.write", "trekora.admin"],
     code_challenge_methods_supported: ["S256"],
     agent_auth: {
-      skill: `${siteOrigin}/.well-known/agent-skills/trekora-api/SKILL.md`,
+      skill: `${siteOrigin}/auth.md`,
       register_uri: `${siteOrigin}/oauth/register`,
+      identity_endpoint: `${siteOrigin}/oauth/agent/identity`,
+      claim_endpoint: `${siteOrigin}/oauth/agent/identity/claim`,
       identity_types_supported: ["anonymous"],
+      credential_types_supported: ["none"],
       anonymous: {
         credential_types_supported: ["none"],
         claim_uri: `${siteOrigin}/auth.md`,

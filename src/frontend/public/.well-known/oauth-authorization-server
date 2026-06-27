@@ -1,33 +1,48 @@
 {
-  "issuer": "https://www.trekora.in",
-  "authorization_endpoint": "https://www.trekora.in/oauth/authorize",
-  "token_endpoint": "https://www.trekora.in/oauth/token",
-  "registration_endpoint": "https://www.trekora.in/oauth/register",
-  "jwks_uri": "https://www.trekora.in/.well-known/jwks.json",
-  "grant_types_supported": [
-    "client_credentials",
-    "none"
-  ],
-  "response_types_supported": [
-    "none"
-  ],
-  "token_endpoint_auth_methods_supported": [
-    "none",
-    "client_secret_post"
+  "resource": "https://www.trekora.in/api",
+  "authorization_servers": [
+    "https://www.trekora.in"
   ],
   "scopes_supported": [
     "trekora.read",
     "trekora.write",
     "trekora.admin"
   ],
+  "bearer_methods_supported": [
+    "header"
+  ],
+  "issuer": "https://www.trekora.in",
+  "authorization_endpoint": "https://www.trekora.in/oauth/authorize",
+  "token_endpoint": "https://www.trekora.in/oauth/token",
+  "registration_endpoint": "https://www.trekora.in/oauth/register",
+  "revocation_endpoint": "https://www.trekora.in/oauth/revoke",
+  "jwks_uri": "https://www.trekora.in/.well-known/jwks.json",
+  "grant_types_supported": [
+    "none",
+    "client_credentials",
+    "urn:ietf:params:oauth:grant-type:jwt-bearer"
+  ],
+  "response_types_supported": [
+    "none",
+    "code"
+  ],
+  "token_endpoint_auth_methods_supported": [
+    "none",
+    "client_secret_post"
+  ],
   "code_challenge_methods_supported": [
     "S256"
   ],
   "agent_auth": {
-    "skill": "https://www.trekora.in/.well-known/agent-skills/trekora-api/SKILL.md",
+    "skill": "https://www.trekora.in/auth.md",
     "register_uri": "https://www.trekora.in/oauth/register",
+    "identity_endpoint": "https://www.trekora.in/oauth/agent/identity",
+    "claim_endpoint": "https://www.trekora.in/oauth/agent/identity/claim",
     "identity_types_supported": [
       "anonymous"
+    ],
+    "credential_types_supported": [
+      "none"
     ],
     "anonymous": {
       "credential_types_supported": [

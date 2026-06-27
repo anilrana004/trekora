@@ -106,9 +106,24 @@ async function main() {
     await upsertRecord(record);
   }
 
-  console.log("\nNext: enable DNSSEC in Cloudflare → DNS → Settings → DNSSEC.");
+  try {
+    const dnssec = await cfRequest("GET", `/zones/${zoneId}/dnssec`);
+    const { status, ds, digest, key_tag } = dnssec.result ?? {};
+    console.log(`\nDNSSEC status: ${status ?? "unknown"}`);
+    if (status !== "active") {
+      console.log(
+        "\nDNS-AID scans require DNSSEC validation (AD=true). Add this DS record at GoDaddy:\n" +
+          `  Key Tag: ${key_tag}, Algorithm: 13, Digest Type: 2, Digest: ${digest}\n` +
+          `  ${ds}\n` +
+          "Run: node scripts/check-dnssec-status.mjs for details.",
+      );
+    }
+  } catch (err) {
+    console.warn("[dns-aid] Could not read DNSSEC status:", err.message);
+  }
+
   console.log(
-    `Verify: curl -s "https://cloudflare-dns.com/dns-query?name=_index._agents.trekora.in&type=HTTPS" -H "accept: application/dns-json"`,
+    `\nVerify DNS-AID: curl -s "https://cloudflare-dns.com/dns-query?name=_index._agents.trekora.in&type=HTTPS&do=1" -H "accept: application/dns-json"`,
   );
 }
 
