@@ -247,7 +247,7 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
   page("privacy", "Privacy Policy", "/privacy-policy"),
   page("terms", "Terms & Conditions", "/terms-and-conditions"),
   page("treks-all", "All Himalayan Treks", "/treks"),
-  page("reviews", "Trekora Reviews", "/about"),
+  page("reviews", "Trekora Reviews", "/reviews"),
   page("guides", "Certified Mountain Guides", "/about"),
   page("safe-treks", "Safe Himalayan Treks", "/treks?state=uttarakhand"),
   page("small-group", "Small Group Treks", "/packages"),

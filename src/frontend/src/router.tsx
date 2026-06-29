@@ -30,6 +30,7 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const CorporatePage = lazy(() => import("./pages/CorporatePage"));
 const PackagesPage = lazy(() => import("./pages/PackagesPage"));
 const UpcomingBatchesPage = lazy(() => import("./pages/UpcomingBatchesPage"));
+const ReviewsPage = lazy(() => import("./pages/ReviewsPage"));
 const TrekAltitudeProfilePage = lazy(
   () => import("./pages/TrekAltitudeProfilePage"),
 );
@@ -321,6 +322,16 @@ const upcomingBatchesRoute = createRoute({
   ),
 });
 
+const reviewsRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "/reviews",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <ReviewsPage />
+    </Suspense>
+  ),
+});
+
 const privacyPolicyRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "/privacy-policy",
@@ -501,6 +512,7 @@ const routeTree = rootRoute.addChildren([
     corporateRoute,
     packagesRoute,
     upcomingBatchesRoute,
+    reviewsRoute,
     privacyPolicyRoute,
     termsAndConditionsRoute,
   ]),

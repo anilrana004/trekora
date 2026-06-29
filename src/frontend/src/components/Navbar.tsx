@@ -59,7 +59,9 @@ const NAV_LINKS = [
   { label: "Yatras", to: "/yatras", key: "yatras" },
   { label: "Destinations", to: "/destinations", key: null },
   { label: "Packages", to: "/packages", key: null },
+  { label: "Upcoming Treks", to: "/upcoming-batches", key: null },
   { label: "Gallery", to: "/gallery", key: "gallery" },
+  { label: "Reviews", to: "/reviews", key: null },
   { label: "Blog", to: "/blog", key: null },
   { label: "More", to: "/about", key: null },
 ];

@@ -30,6 +30,19 @@ export {
 
 const CURRENT_YEAR = new Date().getFullYear();
 
+/** Google sitelink candidate treks — cross-linked across SEO surfaces. */
+export const SITELINK_CANDIDATE_TREK_SLUGS = [
+  "kedarkantha-trek",
+  "chopta-tungnath",
+  "deoriatal-chandrashila",
+  "hampta-pass",
+  "valley-of-flowers",
+] as const;
+
+const SITELINK_CANDIDATE_SLUG_SET = new Set<string>(
+  SITELINK_CANDIDATE_TREK_SLUGS,
+);
+
 function normalizeTag(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
 }
@@ -236,6 +249,22 @@ export function buildHomePageSEO(): PageMetaConfig {
   };
 }
 
+export function buildReviewsPageSEO(): PageMetaConfig {
+  return {
+    title: "Trekora Reviews | Himalayan Trek & Yatra Ratings",
+    description:
+      "Read verified Trekora reviews from 2,400+ Himalayan trekkers and yatra pilgrims. Google ratings, trekker stories, and real feedback on guided treks across India.",
+    keywords: formatMetaKeywords([
+      "Trekora reviews",
+      "Himalayan trek reviews",
+      "trekora google reviews",
+      "trek operator reviews India",
+      ...TREKORA_BRAND_KEYWORDS.slice(0, 4),
+    ]),
+    canonical: `${SITE_ORIGIN}/reviews`,
+  };
+}
+
 /** Score overlap between two SEO profiles (for recommendations). */
 function seoOverlapScore(a: ProductSEOProfile, b: ProductSEOProfile): number {
   const tagA = new Set(a.tags.map(normalizeTag));
@@ -254,11 +283,15 @@ function seoOverlapScore(a: ProductSEOProfile, b: ProductSEOProfile): number {
 
 export function getRelatedTreks(trek: Trek, limit = 4): Trek[] {
   const profile = resolveTrekSEO(trek);
+  const boostSitelinkPeers = SITELINK_CANDIDATE_SLUG_SET.has(trek.slug);
   return TREKS.filter((t) => t.slug !== trek.slug && t.isActive)
-    .map((t) => ({
-      trek: t,
-      score: seoOverlapScore(profile, resolveTrekSEO(t)),
-    }))
+    .map((t) => {
+      let score = seoOverlapScore(profile, resolveTrekSEO(t));
+      if (boostSitelinkPeers && SITELINK_CANDIDATE_SLUG_SET.has(t.slug)) {
+        score += 12;
+      }
+      return { trek: t, score };
+    })
     .sort((a, b) => b.score - a.score || b.trek.rating - a.trek.rating)
     .slice(0, limit)
     .map(({ trek: t }) => t);

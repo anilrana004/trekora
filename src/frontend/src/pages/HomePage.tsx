@@ -3,7 +3,7 @@ import { PRIMARY_SITE_NAV, generateHomePageSchema } from "@/lib/brand-seo";
 import { isFeatureLive } from "@/lib/dormant-features";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { HOME_PRESS_PARTNERS, pressLogoForName } from "@/lib/press-media-logos";
-import { buildHomePageSEO } from "@/lib/product-seo";
+import { buildHomePageSEO, SITELINK_CANDIDATE_TREK_SLUGS } from "@/lib/product-seo";
 import { buildLeadMagnetPayload } from "@/lib/query-email-payloads";
 import { submitPlanTrekEmail } from "@/services/query-email-api";
 import { Link } from "@tanstack/react-router";
@@ -2094,22 +2094,36 @@ const FILTER_TABS: { label: string; value: TrekFilter }[] = [
   { label: "Premium >Rs.15K", value: "Premium" },
 ];
 
+const SITELINK_FEATURED_TREK_SLUGS = SITELINK_CANDIDATE_TREK_SLUGS;
+
+function prioritizeSitelinkTreks<T extends { slug: string }>(treks: T[]): T[] {
+  const prioritized = SITELINK_FEATURED_TREK_SLUGS.map((slug) =>
+    treks.find((t) => t.slug === slug),
+  ).filter(Boolean) as T[];
+  const rest = treks.filter(
+    (t) => !SITELINK_FEATURED_TREK_SLUGS.includes(t.slug as (typeof SITELINK_FEATURED_TREK_SLUGS)[number]),
+  );
+  return [...prioritized, ...rest];
+}
+
 function RecommendedSection() {
   const [activeFilter, setActiveFilter] = useState<TrekFilter>("All");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const filtered = TREKS.filter((t) => {
-    if (activeFilter === "All") return true;
-    if (activeFilter === "Uttarakhand") return t.state === "uttarakhand";
-    if (activeFilter === "Himachal Pradesh") return t.state === "himachal";
-    if (activeFilter === "Easy") return t.difficulty.startsWith("Easy");
-    if (activeFilter === "Moderate") return t.difficulty.includes("Moderate");
-    if (activeFilter === "Difficult")
-      return t.difficulty.includes("Difficult") || t.difficulty === "Extreme";
-    if (activeFilter === "Budget") return t.price < 8000;
-    if (activeFilter === "Premium") return t.price > 15000;
-    return true;
-  }).slice(0, 16);
+  const filtered = prioritizeSitelinkTreks(
+    TREKS.filter((t) => {
+      if (activeFilter === "All") return true;
+      if (activeFilter === "Uttarakhand") return t.state === "uttarakhand";
+      if (activeFilter === "Himachal Pradesh") return t.state === "himachal";
+      if (activeFilter === "Easy") return t.difficulty.startsWith("Easy");
+      if (activeFilter === "Moderate") return t.difficulty.includes("Moderate");
+      if (activeFilter === "Difficult")
+        return t.difficulty.includes("Difficult") || t.difficulty === "Extreme";
+      if (activeFilter === "Budget") return t.price < 8000;
+      if (activeFilter === "Premium") return t.price > 15000;
+      return true;
+    }),
+  ).slice(0, 16);
 
   const scroll = (dir: "left" | "right") => {
     if (scrollRef.current)

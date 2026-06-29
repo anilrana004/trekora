@@ -26,6 +26,7 @@ export const PRIMARY_SITE_NAV = [
   { name: "Travel Blog", path: "/blog" },
   { name: "Destinations", path: "/destinations" },
   { name: "Upcoming Trek Batches", path: "/upcoming-batches" },
+  { name: "Trekora Reviews", path: "/reviews" },
   { name: "Contact Us", path: "/contact" },
   { name: "About Trekora", path: "/about" },
 ] as const;

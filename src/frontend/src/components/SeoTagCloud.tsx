@@ -77,8 +77,10 @@ export default function SeoTagCloud({
     // Popular treks cross-links
     addPage("Roopkund Trek", "/treks/roopkund-trek");
     addPage("Kedarkantha Trek", "/treks/kedarkantha-trek");
-    addPage("Valley of Flowers Trek", "/treks/valley-of-flowers-trek");
-    addPage("Hampta Pass Trek", "/treks/hampta-pass-trek");
+    addPage("Valley of Flowers Trek", "/treks/valley-of-flowers");
+    addPage("Hampta Pass Trek", "/treks/hampta-pass");
+    addPage("Chopta Tungnath Trek", "/treks/chopta-tungnath");
+    addPage("Deoriatal Chandrashila Trek", "/treks/deoriatal-chandrashila");
     addPage("Triund Trek", "/treks/triund-trek");
     addPage("Har Ki Dun Trek", "/treks/har-ki-dun");
     // Related treks

@@ -47,6 +47,7 @@ export function routeHasOwnSEOHead(pathname: string): boolean {
     pathname === "/about" ||
     pathname === "/blog" ||
     pathname === "/contact" ||
+    pathname === "/reviews" ||
     pathname === "/corporate" ||
     pathname === "/packages" ||
     pathname === "/privacy-policy" ||

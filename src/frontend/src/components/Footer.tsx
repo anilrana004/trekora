@@ -54,14 +54,16 @@ const FOOTER_BRAND_STORY = {
 } as const;
 
 const POPULAR_TREKS = [
-  { name: "Roopkund Trek", slug: "roopkund-trek" },
+  { name: "Kedarkantha Trek", slug: "kedarkantha-trek" },
   { name: "Valley of Flowers", slug: "valley-of-flowers" },
+  { name: "Hampta Pass", slug: "hampta-pass" },
+  { name: "Chopta Tungnath Trek", slug: "chopta-tungnath" },
+  { name: "Deoriatal Chandrashila Trek", slug: "deoriatal-chandrashila" },
+  { name: "Roopkund Trek", slug: "roopkund-trek" },
   { name: "Kedarnath Trek", slug: "kedarnath-trek" },
   { name: "Brahmatal Trek", slug: "brahmatal-trek" },
-  { name: "Hampta Pass", slug: "hampta-pass" },
   { name: "Triund Trek", slug: "triund-trek" },
   { name: "Chandratal Lake", slug: "chandratal-lake" },
-  { name: "Kedarkantha Trek", slug: "kedarkantha-trek" },
   { name: "Har Ki Dun", slug: "har-ki-dun" },
   { name: "Sar Pass", slug: "sar-pass" },
 ];
@@ -77,6 +79,9 @@ const POPULAR_YATRAS = [
 ];
 
 const QUICK_LINKS = [
+  { name: "Treks", to: "/treks" },
+  { name: "Upcoming Treks", to: "/upcoming-batches" },
+  { name: "Reviews", to: "/reviews" },
   { name: "About Us", to: "/about" },
   { name: "Our Team", to: "/about" },
   { name: "Careers", to: "/about" },
