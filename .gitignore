@@ -61,6 +61,10 @@ tmp/
 temp/
 *.tmp
 *.temp
+.tmp-*.html
+.tmp-*
+scripts/.hh-cache/
+scripts/.tth-cache/
 
 # Logs (may leak request payloads)
 *.log
