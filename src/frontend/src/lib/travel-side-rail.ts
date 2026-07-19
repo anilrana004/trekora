@@ -127,6 +127,7 @@ export function usesTravelSideActionRail(pathname: string): boolean {
     path === "/blog" ||
     path === "/press" ||
     path === "/about" ||
+    path === "/reviews" ||
     path === "/contact" ||
     path === "/book" ||
     path === "/compare" ||
@@ -171,6 +172,9 @@ export const PRESS_LISTING_WHATSAPP_MESSAGE =
 export const ABOUT_LISTING_WHATSAPP_MESSAGE =
   "Hi Trekora! I'd like to learn more about Trekora and plan a Himalayan trek.";
 
+export const REVIEWS_LISTING_WHATSAPP_MESSAGE =
+  "Hi Trekora! I saw your trekker reviews and would like help planning a trek or yatra.";
+
 export const CONTACT_LISTING_WHATSAPP_MESSAGE =
   "Hi Trekora! I'd like to get in touch about a trek or yatra.";
 
@@ -191,6 +195,7 @@ export type TravelSideActionRailVariant =
   | "listing-blog"
   | "listing-press"
   | "listing-about"
+  | "listing-reviews"
   | "listing-contact"
   | "listing-booking"
   | "listing-compare"
@@ -252,6 +257,8 @@ export function getRailWhatsAppMessage(
       return PRESS_LISTING_WHATSAPP_MESSAGE;
     case "listing-about":
       return ABOUT_LISTING_WHATSAPP_MESSAGE;
+    case "listing-reviews":
+      return REVIEWS_LISTING_WHATSAPP_MESSAGE;
     case "listing-contact":
       return CONTACT_LISTING_WHATSAPP_MESSAGE;
     case "listing-booking":

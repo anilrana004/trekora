@@ -3,6 +3,9 @@ import { motion } from "@/lib/motion";
 import GoogleReviewsSection from "../components/GoogleReviewsSection";
 import HomepageReviews from "../components/HomepageReviews";
 import { SEOHead } from "../components/SEOHead";
+import TravelSideActionRail, {
+  TRAVEL_HERO_SENTINEL_ID,
+} from "../components/TravelSideActionRail";
 
 const reviewsSeo = buildReviewsPageSEO();
 
@@ -46,6 +49,9 @@ export default function ReviewsPage() {
           </motion.div>
         </div>
       </section>
+
+      <div id={TRAVEL_HERO_SENTINEL_ID} className="h-0 w-full" aria-hidden />
+      <TravelSideActionRail variant="listing-reviews" />
 
       <GoogleReviewsSection />
       <HomepageReviews />

@@ -1567,12 +1567,159 @@
     color: var(--ew-text);
     font-weight: 500;
     transition: color 0.2s ease;
+    white-space: nowrap;
   }
   .nav-link:hover {
     color: var(--ew-red);
   }
   .nav-link-active {
     color: var(--ew-red);
+  }
+
+  /* Tiny marketing pill — top-right above Valley / Hemkund nav links */
+  .nav-selling-fast {
+    position: absolute;
+    top: -2px;
+    right: 2px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 4px;
+    border-radius: 9999px;
+    background: var(--ew-red);
+    color: #fff;
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 1px 2px rgba(192, 0, 28, 0.25);
+  }
+
+  /* Navbar phone + Plan My Trek — fixed height, no wrap, even across breakpoints */
+  .nav-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    color: var(--ew-text);
+    flex-shrink: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  .nav-icon-btn:hover {
+    background-color: var(--ew-gray-lt);
+  }
+
+  .nav-phone-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    height: 36px;
+    padding: 0 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: var(--ew-text);
+    border-radius: 9999px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .nav-phone-link:hover {
+    color: var(--ew-red);
+    background-color: var(--ew-gray-lt);
+  }
+  .nav-phone-link--compact {
+    width: 36px;
+    padding: 0;
+  }
+  /* Full phone number only when there is room (xl+) */
+  .nav-phone-link__number {
+    display: none;
+  }
+  @media (min-width: 1280px) {
+    .nav-phone-link__number {
+      display: inline;
+    }
+  }
+
+  .nav-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 1rem;
+    border-radius: 9999px;
+    background-color: var(--ew-orange);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+    border: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .nav-cta-btn:hover {
+    background-color: #c96a1a;
+    box-shadow: 0 2px 8px rgba(232, 119, 34, 0.35);
+  }
+  .nav-cta-btn:active {
+    background-color: #b85f16;
+  }
+
+  .nav-cta-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    max-width: 140px;
+    flex: 1 1 auto;
+    padding: 0 0.875rem;
+    border-radius: 9999px;
+    border: 1.5px solid var(--ew-red);
+    color: var(--ew-red);
+    background: transparent;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .nav-lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    min-width: 36px;
+    padding: 0 0.625rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--ew-gray-mid);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .nav-right-controls {
+    isolation: isolate;
+  }
+  .nav-desktop-links {
+    overflow: hidden;
   }
 
   /* ── Mega menu ── */

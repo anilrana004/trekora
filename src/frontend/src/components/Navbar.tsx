@@ -59,28 +59,77 @@ const NAV_LINKS: {
   to: string;
   key: string | null;
   params?: Record<string, string>;
+  /** Tailwind visibility — omit = always visible when desktop nav shows */
+  showFrom?: "lg" | "xl" | "2xl";
+  /** Tiny marketing pill above the link (e.g. Selling fast) */
+  badge?: string;
 }[] = [
   { label: "Treks", to: "/treks", key: "treks" },
+  {
+    label: "Valley of Flowers",
+    to: "/treks/$slug",
+    params: { slug: "valley-of-flowers" },
+    key: null,
+    showFrom: "xl",
+    badge: "Selling fast",
+  },
+  {
+    label: "Hemkund Sahib",
+    to: "/yatras/$slug",
+    params: { slug: "hemkund-sahib-yatra" },
+    key: null,
+    showFrom: "xl",
+    badge: "Selling fast",
+  },
+  { label: "Yatras", to: "/yatras", key: "yatras" },
+  {
+    label: "Destinations",
+    to: "/destinations",
+    key: null,
+    showFrom: "2xl",
+  },
+  { label: "Packages", to: "/packages", key: null, showFrom: "xl" },
+  {
+    label: "Upcoming",
+    to: "/upcoming-batches",
+    key: null,
+    showFrom: "2xl",
+  },
+  { label: "Gallery", to: "/gallery", key: "gallery" },
+  { label: "Reviews", to: "/reviews", key: null, showFrom: "2xl" },
+  { label: "Blog", to: "/blog", key: null, showFrom: "xl" },
+  { label: "More", to: "/about", key: "more" },
+];
+
+const NAV_SHOW_FROM_CLASS: Record<"lg" | "xl" | "2xl", string> = {
+  lg: "",
+  xl: "hidden xl:block",
+  "2xl": "hidden 2xl:block",
+};
+
+/** Secondary links shown inside the More mega-menu on smaller desktops. */
+const NAV_MORE_LINKS: {
+  label: string;
+  to: string;
+  params?: Record<string, string>;
+}[] = [
   {
     label: "Valley of Flowers Trek",
     to: "/treks/$slug",
     params: { slug: "valley-of-flowers" },
-    key: null,
   },
   {
     label: "Hemkund Sahib Trek",
     to: "/yatras/$slug",
     params: { slug: "hemkund-sahib-yatra" },
-    key: null,
   },
-  { label: "Yatras", to: "/yatras", key: "yatras" },
-  { label: "Destinations", to: "/destinations", key: null },
-  { label: "Packages", to: "/packages", key: null },
-  { label: "Upcoming Treks", to: "/upcoming-batches", key: null },
-  { label: "Gallery", to: "/gallery", key: "gallery" },
-  { label: "Reviews", to: "/reviews", key: null },
-  { label: "Blog", to: "/blog", key: null },
-  { label: "More", to: "/about", key: null },
+  { label: "Destinations", to: "/destinations" },
+  { label: "Packages", to: "/packages" },
+  { label: "Upcoming Treks", to: "/upcoming-batches" },
+  { label: "Reviews", to: "/reviews" },
+  { label: "Blog", to: "/blog" },
+  { label: "About Us", to: "/about" },
+  { label: "Contact Us", to: "/contact" },
 ];
 
 function TrekoraLogo() {
@@ -98,7 +147,7 @@ function TrekoraLogo() {
         priority
         variant="blog-card"
         sizes="(max-width: 768px) 48vw, 240px"
-        className="h-11 w-auto max-w-[min(240px,50vw)] object-contain object-left md:h-12 md:max-w-[260px] transition-opacity group-hover:opacity-90 drop-shadow-sm"
+        className="h-9 w-auto max-w-[min(160px,42vw)] object-contain object-left md:h-10 md:max-w-[180px] lg:max-w-[160px] xl:max-w-[200px] transition-opacity group-hover:opacity-90 drop-shadow-sm"
       />
     </Link>
   );
@@ -264,39 +313,37 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => openQueryModalFromLayout()}
-              className="flex-1 mx-2 text-xs font-semibold rounded-full px-3 py-1.5 transition-colors"
-              style={{
-                border: "1.5px solid var(--ew-red)",
-                color: "var(--ew-red)",
-                background: "transparent",
-                maxWidth: 140,
-                touchAction: "manipulation",
-              }}
+              className="nav-cta-ghost mx-2"
               data-ocid="nav.mobile.plan_trek_ghost_button"
             >
               Plan My Trek
             </button>
           )}
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav — flex-1 + overflow so it never spills onto phone/CTA */}
           <nav
-            className="hidden lg:flex items-center gap-1"
+            className="nav-desktop-links hidden lg:flex flex-1 min-w-0 items-center justify-end gap-0.5 px-2"
             aria-label="Main navigation"
           >
             {NAV_LINKS.map((link) => (
               <div
                 key={link.label}
-                className="relative"
+                className={`relative ${link.showFrom ? NAV_SHOW_FROM_CLASS[link.showFrom] : ""}`}
                 onMouseEnter={() =>
                   link.key ? setActiveMenu(link.key) : setActiveMenu(null)
                 }
                 onMouseLeave={() => setActiveMenu(null)}
               >
+                {link.badge ? (
+                  <span className="nav-selling-fast" aria-hidden>
+                    {link.badge}
+                  </span>
+                ) : null}
                 <Link
                   to={link.to}
                   params={link.params as never}
-                  className="nav-link flex items-center gap-0.5 px-3 py-1.5 text-sm font-medium rounded-md"
-                  data-ocid={`nav.${link.label.toLowerCase()}.link`}
+                  className="nav-link flex items-center gap-0.5 px-2 py-1.5 text-[13px] font-medium rounded-md"
+                  data-ocid={`nav.${link.label.toLowerCase().replace(/\s+/g, "_")}.link`}
                   aria-haspopup={link.key ? "true" : undefined}
                 >
                   {link.label}
@@ -663,26 +710,60 @@ export default function Navbar() {
                     )}
                   </AnimatePresence>
                 )}
+
+                {/* More — overflow destinations + site pages (always reachable) */}
+                {link.key === "more" && (
+                  <AnimatePresence>
+                    {activeMenu === "more" && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.18 }}
+                        className="mega-menu absolute top-full right-0 mt-1 w-[260px] p-4 rounded-b-xl"
+                        style={{ borderTop: "3px solid var(--ew-red)" }}
+                        data-ocid="nav.more.dropdown"
+                      >
+                        <p className="mega-menu-header mb-3">Explore</p>
+                        <ul className="space-y-1">
+                          {NAV_MORE_LINKS.map((item) => (
+                            <li key={item.label}>
+                              <Link
+                                to={item.to as "/about"}
+                                params={item.params as never}
+                                className="block py-1.5 text-[13px] text-[var(--ew-text-lt)] hover:text-[var(--ew-red)] transition-colors"
+                                style={{ textDecoration: "none" }}
+                                onClick={() => setActiveMenu(null)}
+                              >
+                                {item.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
               </div>
             ))}
           </nav>
 
-          {/* Right Controls */}
-          <div className="hidden lg:flex items-center gap-2">
+          {/* Right Controls — desktop: locked height cluster, never overlaps links */}
+          <div className="nav-right-controls hidden lg:flex items-center gap-1.5 shrink-0 relative z-[2] bg-white pl-2">
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
-              className="p-2 rounded-full hover:bg-[var(--ew-gray-lt)] transition-colors text-[var(--ew-text)]"
+              className="nav-icon-btn"
               aria-label="Search treks and blogs"
               data-ocid="nav.search_button"
             >
-              <Search size={19} />
+              <Search size={18} />
             </button>
             {isFeatureLive("login") ? (
               <button
                 type="button"
                 onClick={() => navigate({ to: "/dashboard" })}
-                className="text-sm font-medium px-4 py-2 rounded-md text-[var(--ew-text)] hover:text-[var(--ew-red)] hover:bg-[var(--ew-red-lt)] transition-colors"
+                className="text-sm font-medium px-3 py-1.5 rounded-md text-[var(--ew-text)] hover:text-[var(--ew-red)] hover:bg-[var(--ew-red-lt)] transition-colors whitespace-nowrap"
                 data-ocid="nav.login_button"
               >
                 Login
@@ -691,7 +772,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={toggleLang}
-              className="text-xs font-bold px-2.5 py-1.5 rounded border transition-colors"
+              className="nav-lang-toggle"
               style={{
                 borderColor:
                   lang === "hi" ? "var(--ew-orange)" : "var(--ew-gray-mid)",
@@ -709,24 +790,42 @@ export default function Navbar() {
             </button>
             <a
               href={`tel:${SITE_PHONE_TEL}`}
-              className="hidden lg:flex items-center gap-1.5 text-sm font-medium transition-colors hover:underline text-[var(--ew-text)]"
+              className="nav-phone-link"
               data-ocid="nav.phone_link"
+              aria-label={`Call ${SITE_PHONE_DISPLAY}`}
             >
-              <Phone size={17} strokeWidth={2} aria-hidden />
-              {SITE_PHONE_DISPLAY}
+              <Phone size={16} strokeWidth={2} aria-hidden />
+              <span className="nav-phone-link__number">{SITE_PHONE_DISPLAY}</span>
             </a>
             <button
               type="button"
               onClick={() => openQueryModalFromLayout()}
-              className="btn-primary text-sm"
+              className="nav-cta-btn"
               data-ocid="nav.plan_trek_button"
             >
               Plan My Trek
             </button>
           </div>
 
-          {/* Mobile Controls: Search + Hamburger */}
-          <div className="flex items-center gap-1 lg:hidden">
+          {/* Tablet / Mobile Controls */}
+          <div className="flex items-center gap-1.5 shrink-0 lg:hidden">
+            {/* Tablet: even phone + CTA (md–lg) */}
+            <a
+              href={`tel:${SITE_PHONE_TEL}`}
+              className="nav-phone-link nav-phone-link--compact hidden md:inline-flex"
+              aria-label={`Call ${SITE_PHONE_DISPLAY}`}
+              data-ocid="nav.tablet.phone_link"
+            >
+              <Phone size={16} strokeWidth={2} aria-hidden />
+            </a>
+            <button
+              type="button"
+              onClick={() => openQueryModalFromLayout()}
+              className="nav-cta-btn hidden md:inline-flex"
+              data-ocid="nav.tablet.plan_trek_button"
+            >
+              Plan My Trek
+            </button>
             <button
               type="button"
               onClick={() => setMobileSearchOpen(true)}
@@ -1035,6 +1134,25 @@ export default function Navbar() {
                                   >
                                     All gallery photos →
                                   </Link>
+                                </div>
+                              )}
+                              {link.key === "more" && (
+                                <div className="px-5 py-4 space-y-1">
+                                  {NAV_MORE_LINKS.map((item) => (
+                                    <Link
+                                      key={item.label}
+                                      to={item.to as "/about"}
+                                      params={item.params as never}
+                                      onClick={() => setMobileOpen(false)}
+                                      className="block py-1.5 text-sm transition-colors"
+                                      style={{
+                                        color: "var(--ew-text-lt)",
+                                        textDecoration: "none",
+                                      }}
+                                    >
+                                      {item.label}
+                                    </Link>
+                                  ))}
                                 </div>
                               )}
                             </motion.div>
