@@ -255,6 +255,11 @@
         }
       ]
     },
+    {
+      "src": "/treks/hemkund-sahib",
+      "status": 301,
+      "dest": "/yatras/hemkund-sahib-yatra"
+    },
     { "handle": "filesystem" },
     {
       "src": "/api/reviews",

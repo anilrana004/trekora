@@ -32,11 +32,11 @@ const CURRENT_YEAR = new Date().getFullYear();
 
 /** Google sitelink candidate treks — cross-linked across SEO surfaces. */
 export const SITELINK_CANDIDATE_TREK_SLUGS = [
+  "valley-of-flowers",
   "kedarkantha-trek",
   "chopta-tungnath",
   "deoriatal-chandrashila",
   "hampta-pass",
-  "valley-of-flowers",
 ] as const;
 
 const SITELINK_CANDIDATE_SLUG_SET = new Set<string>(

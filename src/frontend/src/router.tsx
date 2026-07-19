@@ -3,6 +3,7 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  redirect,
 } from "@tanstack/react-router";
 import { Suspense, lazy } from "react";
 import AdminLayout from "./components/AdminLayout";
@@ -161,6 +162,19 @@ const stateHubRoute = createRoute({
       <StateHubPage />
     </Suspense>
   ),
+});
+
+/** Canonical Hemkund Sahib lives under yatras — preserve common /treks/hemkund-sahib URL. */
+const hemkundSahibTrekAliasRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "/treks/hemkund-sahib",
+  beforeLoad: () => {
+    throw redirect({
+      to: "/yatras/$slug",
+      params: { slug: "hemkund-sahib-yatra" },
+      replace: true,
+    });
+  },
 });
 
 const trekDetailRoute = createRoute({
@@ -493,6 +507,7 @@ const routeTree = rootRoute.addChildren([
     trekDifficultyGuideRoute,
     trekAltitudeProfileRoute,
     stateHubRoute,
+    hemkundSahibTrekAliasRoute,
     trekDetailRoute,
     yatrasRoute,
     yatraDetailRoute,

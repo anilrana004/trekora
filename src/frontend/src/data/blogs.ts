@@ -258,6 +258,12 @@ The standard Valley of Flowers trek includes a side trip to Hemkund Sahib:
 **Day 4**: Ghangaria → Hemkund Sahib → return (day trek, 6km each way)
 **Day 5**: Ghangaria → Govindghat → Joshimath → Haridwar
 
+## Book With Trekora
+
+Plan your UNESCO Valley of Flowers trek with certified guides, fixed monsoon batches, and Hemkund Sahib add-on support:
+- Valley of Flowers Trek: https://www.trekora.in/treks/valley-of-flowers
+- Hemkund Sahib Trek: https://www.trekora.in/yatras/hemkund-sahib-yatra
+
 The valley itself is flat (entry at 3,352m, inner valley around 3,600m), making it one of the easiest high-altitude treks in India.
 
 ## Photography Tips

@@ -7,8 +7,8 @@ export type NavTrekItem = {
 };
 
 const UK_NAV_RAW: NavTrekItem[] = [
-  { name: "Roopkund Trek", slug: "roopkund-trek" },
   { name: "Valley of Flowers Trek", slug: "valley-of-flowers" },
+  { name: "Roopkund Trek", slug: "roopkund-trek" },
   { name: "Kedarnath Trek", slug: "kedarnath-trek" },
   { name: "Brahmatal Trek", slug: "brahmatal-trek" },
   { name: "Rupin Pass", slug: "rupin-pass" },
