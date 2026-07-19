@@ -2293,7 +2293,7 @@ export default function HomePage() {
         <ul>
           {PRIMARY_SITE_NAV.map((item) => (
             <li key={item.path}>
-              <Link to={item.path}>{item.name}</Link>
+              <a href={item.path}>{item.name}</a>
             </li>
           ))}
         </ul>
@@ -2457,26 +2457,30 @@ export default function HomePage() {
             >
               Popular Searches:
             </span>
-            {[
-              "Kedarnath",
-              "Roopkund",
-              "Triund",
-              "Hampta Pass",
-              "Char Dham",
-              "Valley of Flowers",
-              "Spiti",
-            ].map((tag) => (
+            {(
+              [
+                { label: "Valley of Flowers Trek", to: "/treks/$slug", slug: "valley-of-flowers" },
+                { label: "Hemkund Sahib Trek", to: "/yatras/$slug", slug: "hemkund-sahib-yatra" },
+                { label: "Kedarnath", to: "/treks" },
+                { label: "Roopkund", to: "/treks" },
+                { label: "Triund", to: "/treks" },
+                { label: "Hampta Pass", to: "/treks" },
+                { label: "Char Dham", to: "/yatras" },
+                { label: "Spiti", to: "/treks" },
+              ] as const
+            ).map((item) => (
               <Link
-                key={tag}
-                to="/treks"
+                key={item.label}
+                to={item.to}
+                params={"slug" in item ? { slug: item.slug } : undefined}
                 className="text-[12px] px-3 py-1 rounded-full transition-colors hover:text-white"
                 style={{
                   background: "var(--ew-gray-lt)",
                   color: "var(--ew-text-lt)",
                 }}
-                data-ocid={`search.tag.${tag.toLowerCase().replace(/\s+/g, "_")}`}
+                data-ocid={`search.tag.${item.label.toLowerCase().replace(/\s+/g, "_")}`}
               >
-                {tag}
+                {item.label}
               </Link>
             ))}
           </div>
@@ -2490,6 +2494,61 @@ export default function HomePage() {
       <StatsSection />
 
       {/* ── SECTION 5: RECOMMENDED TREKS CAROUSEL (with filter tabs) ── */}
+      <section
+        className="py-6 bg-white border-b"
+        style={{ borderColor: "var(--ew-gray-mid)" }}
+        data-ocid="homepage.featured_destinations"
+        aria-label="Featured treks and yatras"
+      >
+        <div className="container mx-auto px-4">
+          <p
+            className="text-xs font-semibold uppercase tracking-[0.16em] mb-3"
+            style={{ color: "var(--ew-gray-dark)" }}
+          >
+            Featured Destinations
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              to="/treks/$slug"
+              params={{ slug: "valley-of-flowers" }}
+              className="flex-1 rounded-xl border px-4 py-3 no-underline transition-shadow hover:shadow-md"
+              style={{
+                borderColor: "var(--ew-gray-mid)",
+                color: "var(--ew-text)",
+              }}
+              data-ocid="homepage.featured.valley_of_flowers"
+            >
+              <span className="block text-sm font-bold">
+                Valley of Flowers Trek
+              </span>
+              <span
+                className="block text-xs mt-1"
+                style={{ color: "var(--ew-text-lt)" }}
+              >
+                UNESCO alpine flowers · Jul–Sep batches · 6-day itinerary
+              </span>
+            </Link>
+            <Link
+              to="/yatras/$slug"
+              params={{ slug: "hemkund-sahib-yatra" }}
+              className="flex-1 rounded-xl border px-4 py-3 no-underline transition-shadow hover:shadow-md"
+              style={{
+                borderColor: "var(--ew-gray-mid)",
+                color: "var(--ew-text)",
+              }}
+              data-ocid="homepage.featured.hemkund_sahib"
+            >
+              <span className="block text-sm font-bold">Hemkund Sahib Trek</span>
+              <span
+                className="block text-xs mt-1"
+                style={{ color: "var(--ew-text-lt)" }}
+              >
+                World&apos;s highest gurudwara · 4,633m · Govindghat yatra
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
       <RecommendedSection />
 
       {/* ── SECTION 6: TRENDING UTTARAKHAND ── */}

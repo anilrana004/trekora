@@ -6,6 +6,7 @@ import {
 } from "../data/destinations";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
+import { SITELINK_CANDIDATE_TREK_SLUGS } from "./product-seo";
 import {
   HIGH_CONVERSION_SEO_KEYWORDS,
   TREK_SEO_BY_SLUG,
@@ -34,6 +35,12 @@ const TREK_SEO_SUFFIXES = [
   "difficulty-guide",
   "altitude-profile",
 ] as const;
+
+/** High-priority sitelink candidate URLs (Google algorithm signals). */
+const SITELINK_PRIORITY_URLS = new Set([
+  ...SITELINK_CANDIDATE_TREK_SLUGS.map((slug) => `/treks/${slug}`),
+  "/yatras/hemkund-sahib-yatra",
+]);
 
 export function generateSitemapData(): SitemapEntry[] {
   const staticPages: SitemapEntry[] = [
@@ -83,21 +90,28 @@ export function generateSitemapData(): SitemapEntry[] {
 
   const activeTreks = TREKS.filter((t) => t.isActive);
 
-  const trekPages: SitemapEntry[] = activeTreks.flatMap((t) => [
-    { url: `/treks/${t.slug}`, priority: 0.9, changefreq: "weekly" },
-    ...TREK_SEO_SUFFIXES.map((suffix) => ({
-      url: `/treks/${t.slug}/${suffix}`,
-      priority: 0.7,
-      changefreq: "monthly" as const,
-    })),
-  ]);
+  const trekPages: SitemapEntry[] = activeTreks.flatMap((t) => {
+    const trekUrl = `/treks/${t.slug}`;
+    const trekPriority = SITELINK_PRIORITY_URLS.has(trekUrl) ? 0.95 : 0.9;
+    return [
+      { url: trekUrl, priority: trekPriority, changefreq: "weekly" },
+      ...TREK_SEO_SUFFIXES.map((suffix) => ({
+        url: `/treks/${t.slug}/${suffix}`,
+        priority: 0.7,
+        changefreq: "monthly" as const,
+      })),
+    ];
+  });
 
   const yatraPages: SitemapEntry[] = YATRAS.filter((y) => y.isActive).map(
-    (y) => ({
-      url: `/yatras/${y.slug}`,
-      priority: 0.9,
-      changefreq: "weekly",
-    }),
+    (y) => {
+      const yatraUrl = `/yatras/${y.slug}`;
+      return {
+        url: yatraUrl,
+        priority: SITELINK_PRIORITY_URLS.has(yatraUrl) ? 0.95 : 0.9,
+        changefreq: "weekly" as const,
+      };
+    },
   );
 
   const blogPages: SitemapEntry[] = BLOGS.filter((b) => b.isPublished).map(

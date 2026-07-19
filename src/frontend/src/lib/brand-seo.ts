@@ -21,6 +21,8 @@ export const SITE_SAME_AS = [
 /** Primary indexable sections — supports Google sitelinks via internal linking + schema. */
 export const PRIMARY_SITE_NAV = [
   { name: "Himalayan Treks", path: "/treks" },
+  { name: "Valley of Flowers Trek", path: "/treks/valley-of-flowers" },
+  { name: "Hemkund Sahib Trek", path: "/yatras/hemkund-sahib-yatra" },
   { name: "Sacred Yatras", path: "/yatras" },
   { name: "Trek & Yatra Packages", path: "/packages" },
   { name: "Travel Blog", path: "/blog" },

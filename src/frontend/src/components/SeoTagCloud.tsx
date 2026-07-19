@@ -81,6 +81,7 @@ export default function SeoTagCloud({
     addPage("Hampta Pass Trek", "/treks/hampta-pass");
     addPage("Chopta Tungnath Trek", "/treks/chopta-tungnath");
     addPage("Deoriatal Chandrashila Trek", "/treks/deoriatal-chandrashila");
+    addPage("Hemkund Sahib Trek", "/yatras/hemkund-sahib-yatra");
     addPage("Triund Trek", "/treks/triund-trek");
     addPage("Har Ki Dun Trek", "/treks/har-ki-dun");
     // Related treks
@@ -111,6 +112,8 @@ export default function SeoTagCloud({
     addSearch("Group Pilgrimage India");
     addSearch("Senior Friendly Yatra");
     addSearch("Helicopter Yatra Packages");
+    addPage("Hemkund Sahib Yatra", "/yatras/hemkund-sahib-yatra");
+    addPage("Valley of Flowers Trek", "/treks/valley-of-flowers");
     // Popular yatras cross-links
     addPage("Char Dham Yatra", "/yatras/char-dham-yatra");
     addPage("Kedarnath Yatra", "/yatras/kedarnath-yatra");

@@ -54,8 +54,25 @@ const _SEARCH_TAGS = [
   "Spiti",
 ];
 
-const NAV_LINKS = [
+const NAV_LINKS: {
+  label: string;
+  to: string;
+  key: string | null;
+  params?: Record<string, string>;
+}[] = [
   { label: "Treks", to: "/treks", key: "treks" },
+  {
+    label: "Valley of Flowers Trek",
+    to: "/treks/$slug",
+    params: { slug: "valley-of-flowers" },
+    key: null,
+  },
+  {
+    label: "Hemkund Sahib Trek",
+    to: "/yatras/$slug",
+    params: { slug: "hemkund-sahib-yatra" },
+    key: null,
+  },
   { label: "Yatras", to: "/yatras", key: "yatras" },
   { label: "Destinations", to: "/destinations", key: null },
   { label: "Packages", to: "/packages", key: null },
@@ -277,6 +294,7 @@ export default function Navbar() {
               >
                 <Link
                   to={link.to}
+                  params={link.params as never}
                   className="nav-link flex items-center gap-0.5 px-3 py-1.5 text-sm font-medium rounded-md"
                   data-ocid={`nav.${link.label.toLowerCase()}.link`}
                   aria-haspopup={link.key ? "true" : undefined}
@@ -1026,6 +1044,7 @@ export default function Navbar() {
                     ) : (
                       <Link
                         to={link.to}
+                        params={link.params as never}
                         onClick={() => setMobileOpen(false)}
                         className="flex items-center px-5 font-semibold text-base transition-colors"
                         style={{

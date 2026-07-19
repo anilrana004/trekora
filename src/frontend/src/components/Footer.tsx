@@ -54,8 +54,8 @@ const FOOTER_BRAND_STORY = {
 } as const;
 
 const POPULAR_TREKS = [
+  { name: "Valley of Flowers Trek", slug: "valley-of-flowers" },
   { name: "Kedarkantha Trek", slug: "kedarkantha-trek" },
-  { name: "Valley of Flowers", slug: "valley-of-flowers" },
   { name: "Hampta Pass", slug: "hampta-pass" },
   { name: "Chopta Tungnath Trek", slug: "chopta-tungnath" },
   { name: "Deoriatal Chandrashila Trek", slug: "deoriatal-chandrashila" },
@@ -69,11 +69,11 @@ const POPULAR_TREKS = [
 ];
 
 const POPULAR_YATRAS = [
+  { name: "Hemkund Sahib Trek", slug: "hemkund-sahib-yatra" },
   { name: "Char Dham Yatra", slug: "char-dham-yatra" },
   { name: "Panch Kedar", slug: "panch-kedar-yatra" },
   { name: "Mani Mahesh Yatra", slug: "mani-mahesh-yatra" },
   { name: "Kinnaur Kailash", slug: "kinnaur-kailash" },
-  { name: "Hemkund Sahib", slug: "hemkund-sahib-yatra" },
   { name: "Shrikhand Mahadev", slug: "shrikhand-mahadev" },
   { name: "Adi Kailash & Om Parvat", slug: "adi-kailash-om-parvat" },
 ];

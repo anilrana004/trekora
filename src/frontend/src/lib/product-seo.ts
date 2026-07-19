@@ -43,6 +43,25 @@ const SITELINK_CANDIDATE_SLUG_SET = new Set<string>(
   SITELINK_CANDIDATE_TREK_SLUGS,
 );
 
+/** Priority Google sitelink destinations — Valley of Flowers + Hemkund Sahib. */
+export const PRIORITY_SITELINK_DESTINATIONS = [
+  {
+    label: "Valley of Flowers Trek",
+    path: "/treks/valley-of-flowers",
+    kind: "trek" as const,
+    slug: "valley-of-flowers",
+  },
+  {
+    label: "Hemkund Sahib Trek",
+    path: "/yatras/hemkund-sahib-yatra",
+    kind: "yatra" as const,
+    slug: "hemkund-sahib-yatra",
+  },
+] as const;
+
+const PRIORITY_SITELINK_TREK_SLUG = "valley-of-flowers";
+const PRIORITY_SITELINK_YATRA_SLUG = "hemkund-sahib-yatra";
+
 function normalizeTag(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
 }
@@ -165,6 +184,25 @@ export function buildTrekPageSEO(trek: Trek): PageMetaConfig {
   const profile = resolveTrekSEO(trek);
   const stateLabel =
     trek.state === "uttarakhand" ? "Uttarakhand" : "Himachal Pradesh";
+  if (trek.slug === PRIORITY_SITELINK_TREK_SLUG) {
+    return {
+      title: `Valley of Flowers Trek ${CURRENT_YEAR} | Batch Dates & Itinerary | Trekora`,
+      description: `Book Valley of Flowers Trek ${CURRENT_YEAR} with Trekora. UNESCO alpine flowers, ${trek.duration}-day itinerary, Jul–Sep batches, Hemkund Sahib add-on, certified guides. From ₹${trek.price.toLocaleString("en-IN")}/person.`,
+      keywords: formatMetaKeywords([
+        "valley of flowers trek",
+        "valley of flowers trek booking",
+        `valley of flowers trek ${CURRENT_YEAR}`,
+        "hemkund sahib trek",
+        "unesco valley of flowers uttarakhand",
+        ...profile.tags.slice(0, 8),
+        ...profile.seoKeywords,
+        ...TREKORA_BRAND_KEYWORDS.slice(0, 4),
+      ]),
+      canonical: `${SITE_ORIGIN}/treks/${trek.slug}`,
+      ogImage: trek.images?.[0] ?? trek.image,
+      ogType: "article",
+    };
+  }
   return {
     title: `${trek.name} Trek Package | Trekora`,
     description: `Book ${trek.name} with Trekora. Premium ${stateLabel} trekking — ${trek.duration} days, ${trek.altitude.toLocaleString("en-IN")}m, ${trek.difficulty} difficulty. Camping, certified guides, snowfall views & Himalayan adventures. From ₹${trek.price.toLocaleString("en-IN")}/person.`,
@@ -181,6 +219,25 @@ export function buildTrekPageSEO(trek: Trek): PageMetaConfig {
 
 export function buildYatraPageSEO(yatra: Yatra): PageMetaConfig {
   const profile = resolveYatraSEO(yatra);
+  if (yatra.slug === PRIORITY_SITELINK_YATRA_SLUG) {
+    return {
+      title: `Hemkund Sahib Trek ${CURRENT_YEAR} | Yatra Dates & Itinerary | Trekora`,
+      description: `Book Hemkund Sahib Trek ${CURRENT_YEAR} with Trekora. World's highest gurudwara at 4,633m, ${yatra.duration}-day yatra from Govindghat, Jul–Sep batches, langar & guide support. From ₹${yatra.price.toLocaleString("en-IN")}/person.`,
+      keywords: formatMetaKeywords([
+        "hemkund sahib trek",
+        "hemkund sahib yatra",
+        `hemkund sahib trek ${CURRENT_YEAR}`,
+        "valley of flowers trek",
+        "hemkund sahib booking uttarakhand",
+        ...profile.tags.slice(0, 8),
+        ...profile.seoKeywords,
+        ...TREKORA_BRAND_KEYWORDS.slice(0, 4),
+      ]),
+      canonical: `${SITE_ORIGIN}/yatras/${yatra.slug}`,
+      ogImage: yatra.images?.[0] ?? yatra.image,
+      ogType: "article",
+    };
+  }
   return {
     title: `${yatra.name} Package | Trekora`,
     description: `Book ${yatra.name} with Trekora. ${yatra.duration}-day sacred pilgrimage — accommodation, meals, darshan support & certified spiritual guide. From ₹${yatra.price.toLocaleString("en-IN")}/person.`,
@@ -284,11 +341,16 @@ function seoOverlapScore(a: ProductSEOProfile, b: ProductSEOProfile): number {
 export function getRelatedTreks(trek: Trek, limit = 4): Trek[] {
   const profile = resolveTrekSEO(trek);
   const boostSitelinkPeers = SITELINK_CANDIDATE_SLUG_SET.has(trek.slug);
+  const boostValleyPeer =
+    trek.state === "uttarakhand" || trek.slug === PRIORITY_SITELINK_TREK_SLUG;
   return TREKS.filter((t) => t.slug !== trek.slug && t.isActive)
     .map((t) => {
       let score = seoOverlapScore(profile, resolveTrekSEO(t));
       if (boostSitelinkPeers && SITELINK_CANDIDATE_SLUG_SET.has(t.slug)) {
         score += 12;
+      }
+      if (boostValleyPeer && t.slug === PRIORITY_SITELINK_TREK_SLUG) {
+        score += 15;
       }
       return { trek: t, score };
     })
@@ -299,11 +361,17 @@ export function getRelatedTreks(trek: Trek, limit = 4): Trek[] {
 
 export function getRelatedYatras(yatra: Yatra, limit = 3): Yatra[] {
   const profile = resolveYatraSEO(yatra);
+  const boostHemkundPeer =
+    yatra.state === "uttarakhand" ||
+    yatra.slug === PRIORITY_SITELINK_YATRA_SLUG;
   return YATRAS.filter((y) => y.slug !== yatra.slug && y.isActive)
-    .map((y) => ({
-      yatra: y,
-      score: seoOverlapScore(profile, resolveYatraSEO(y)),
-    }))
+    .map((y) => {
+      let score = seoOverlapScore(profile, resolveYatraSEO(y));
+      if (boostHemkundPeer && y.slug === PRIORITY_SITELINK_YATRA_SLUG) {
+        score += 15;
+      }
+      return { yatra: y, score };
+    })
     .sort(
       (a, b) =>
         b.score - a.score || (b.yatra.rating ?? 0) - (a.yatra.rating ?? 0),
