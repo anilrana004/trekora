@@ -1683,9 +1683,11 @@
     align-items: center;
     justify-content: center;
     height: 32px;
-    max-width: 140px;
     flex: 1 1 auto;
-    padding: 0 0.875rem;
+    min-width: 0;
+    max-width: none;
+    margin-inline: 0.375rem;
+    padding: 0 0.75rem;
     border-radius: 9999px;
     border: 1.5px solid var(--ew-red);
     color: var(--ew-red);
@@ -1696,6 +1698,14 @@
     white-space: nowrap;
     cursor: pointer;
     touch-action: manipulation;
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .nav-cta-ghost {
+      height: 36px;
+      font-size: 0.8125rem;
+      max-width: 220px;
+    }
   }
 
   .nav-lang-toggle {

@@ -70,7 +70,14 @@ export default function MobileSearchModal({
           exit={{ y: "100%" }}
           transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
           className="fixed inset-0 z-[110] flex flex-col"
-          style={{ background: "#fff" }}
+          style={{
+            background: "#fff",
+            height: "100dvh",
+            paddingTop: "env(safe-area-inset-top, 0px)",
+            paddingBottom: "env(safe-area-inset-bottom, 0px)",
+            paddingLeft: "env(safe-area-inset-left, 0px)",
+            paddingRight: "env(safe-area-inset-right, 0px)",
+          }}
           data-ocid="mobile_search_modal"
         >
           {/* Header */}

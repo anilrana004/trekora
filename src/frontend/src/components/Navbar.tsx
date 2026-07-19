@@ -302,23 +302,25 @@ export default function Navbar() {
         data-ocid="navbar"
       >
         <div
-          className="container mx-auto px-4 h-full flex items-center justify-between gap-4"
+          className="mx-auto h-full w-full max-w-[1400px] px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-4"
           ref={menuRef}
+          style={{
+            paddingLeft: "max(0.75rem, env(safe-area-inset-left, 0px))",
+            paddingRight: "max(0.75rem, env(safe-area-inset-right, 0px))",
+          }}
         >
           {/* Logo */}
           <TrekoraLogo />
 
-          {/* Mobile Center: Plan My Trek ghost button */}
-          {isMobile && (
-            <button
-              type="button"
-              onClick={() => openQueryModalFromLayout()}
-              className="nav-cta-ghost mx-2"
-              data-ocid="nav.mobile.plan_trek_ghost_button"
-            >
-              Plan My Trek
-            </button>
-          )}
+          {/* Mobile/tablet: one Plan My Trek fills remaining header width */}
+          <button
+            type="button"
+            onClick={() => openQueryModalFromLayout()}
+            className="nav-cta-ghost lg:hidden"
+            data-ocid="nav.mobile.plan_trek_ghost_button"
+          >
+            Plan My Trek
+          </button>
 
           {/* Desktop Nav — flex-1 + overflow so it never spills onto phone/CTA */}
           <nav
@@ -807,25 +809,8 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Tablet / Mobile Controls */}
+          {/* Tablet / Mobile Controls — phone remains available in the drawer */}
           <div className="flex items-center gap-1.5 shrink-0 lg:hidden">
-            {/* Tablet: even phone + CTA (md–lg) */}
-            <a
-              href={`tel:${SITE_PHONE_TEL}`}
-              className="nav-phone-link nav-phone-link--compact hidden md:inline-flex"
-              aria-label={`Call ${SITE_PHONE_DISPLAY}`}
-              data-ocid="nav.tablet.phone_link"
-            >
-              <Phone size={16} strokeWidth={2} aria-hidden />
-            </a>
-            <button
-              type="button"
-              onClick={() => openQueryModalFromLayout()}
-              className="nav-cta-btn hidden md:inline-flex"
-              data-ocid="nav.tablet.plan_trek_button"
-            >
-              Plan My Trek
-            </button>
             <button
               type="button"
               onClick={() => setMobileSearchOpen(true)}
