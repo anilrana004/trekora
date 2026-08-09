@@ -6,7 +6,7 @@ import {
   redirect,
 } from "@tanstack/react-router";
 import { Suspense, lazy } from "react";
-import AdminLayout from "./components/AdminLayout";
+import AdminGate from "./components/AdminGate";
 import DormantFeatureRoute from "./components/DormantFeatureRoute";
 import Layout from "./components/Layout";
 import PageLoader from "./components/PageLoader";
@@ -60,6 +60,21 @@ const AdminTreksPage = lazy(() => import("./pages/admin/AdminTreksPage"));
 const AdminBookingsPage = lazy(() => import("./pages/admin/AdminBookingsPage"));
 const AdminQueriesPage = lazy(() => import("./pages/admin/AdminQueriesPage"));
 const AdminBlogsPage = lazy(() => import("./pages/admin/AdminBlogsPage"));
+const AdminBlogCreatePage = lazy(
+  () => import("./pages/admin/AdminBlogCreatePage"),
+);
+const AdminBlogEditPage = lazy(
+  () => import("./pages/admin/AdminBlogEditPage"),
+);
+const AdminBlogCategoriesPage = lazy(
+  () => import("./pages/admin/AdminBlogCategoriesPage"),
+);
+const AdminBlogTagsPage = lazy(
+  () => import("./pages/admin/AdminBlogTagsPage"),
+);
+const AdminBlogMediaPage = lazy(
+  () => import("./pages/admin/AdminBlogMediaPage"),
+);
 const AdminUsersPage = lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminPromosPage = lazy(() => import("./pages/admin/AdminPromosPage"));
 const AdminAnalyticsPage = lazy(
@@ -83,11 +98,11 @@ const layoutRoute = createRoute({
   component: Layout,
 });
 
-// Admin layout route
+// Admin layout route — gated, separate from storefront chrome
 const adminLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/admin",
-  component: AdminLayout,
+  component: AdminGate,
 });
 
 // Main page routes
@@ -467,6 +482,56 @@ const adminBlogsRoute = createRoute({
   ),
 });
 
+const adminBlogCreateRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/blogs/new",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <AdminBlogCreatePage />
+    </Suspense>
+  ),
+});
+
+const adminBlogEditRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/blogs/$slug/edit",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <AdminBlogEditPage />
+    </Suspense>
+  ),
+});
+
+const adminBlogCategoriesRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/blogs/categories",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <AdminBlogCategoriesPage />
+    </Suspense>
+  ),
+});
+
+const adminBlogTagsRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/blogs/tags",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <AdminBlogTagsPage />
+    </Suspense>
+  ),
+});
+
+const adminBlogMediaRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: "/blogs/media",
+  component: () => (
+    <Suspense fallback={<PageLoader />}>
+      <AdminBlogMediaPage />
+    </Suspense>
+  ),
+});
+
 const adminUsersRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: "/users",
@@ -536,6 +601,11 @@ const routeTree = rootRoute.addChildren([
     adminTreksRoute,
     adminBookingsRoute,
     adminQueriesRoute,
+    adminBlogCreateRoute,
+    adminBlogEditRoute,
+    adminBlogCategoriesRoute,
+    adminBlogTagsRoute,
+    adminBlogMediaRoute,
     adminBlogsRoute,
     adminUsersRoute,
     adminPromosRoute,

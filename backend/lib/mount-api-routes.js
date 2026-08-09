@@ -7,6 +7,7 @@ import productPhotoRoutes from "../routes/product-photo.routes.js";
 import giftCardRoutes from "../routes/giftcard.routes.js";
 import reviewRoutes from "../routes/review.routes.js";
 import voucherRoutes from "../routes/voucher.routes.js";
+import blogRoutes from "../routes/blog.routes.js";
 import {
   apiGeneralLimiter,
   apiWriteLimiter,
@@ -51,6 +52,12 @@ export function mountApiRoutes(app) {
     {
       base: "/api/product-photos",
       router: productPhotoRoutes,
+      limiter: apiWriteLimiter,
+      cache: null,
+    },
+    {
+      base: "/api/blogs",
+      router: blogRoutes,
       limiter: apiWriteLimiter,
       cache: null,
     },

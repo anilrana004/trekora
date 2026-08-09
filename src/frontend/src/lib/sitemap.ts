@@ -1,4 +1,4 @@
-import { BLOGS } from "../data/blogs";
+import { getPublishedBlogs } from "../data/blogs";
 import {
   DESTINATIONS,
   DESTINATION_DISTRICTS_PATH_SLUG,
@@ -114,7 +114,7 @@ export function generateSitemapData(): SitemapEntry[] {
     },
   );
 
-  const blogPages: SitemapEntry[] = BLOGS.filter((b) => b.isPublished).map(
+  const blogPages: SitemapEntry[] = getPublishedBlogs().map(
     (b) => ({
       url: `/blog/${b.slug}`,
       priority: 0.75,

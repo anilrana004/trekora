@@ -1,4 +1,4 @@
-import { BLOGS } from "@/data/blogs";
+import { getBlogBySlug } from "@/data/blogs";
 import type { Blog } from "@/data/blogs";
 import { TREKS } from "@/data/treks";
 import { resolveBlogCardImage } from "@/lib/blog-product-images";
@@ -172,7 +172,7 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
 
   const blogMatch = pathname.match(/^\/blog\/([^/]+)$/);
   if (blogMatch) {
-    const blog = BLOGS.find((b) => b.slug === blogMatch[1]);
+    const blog = getBlogBySlug(blogMatch[1]);
     if (!blog) return null;
     return getBlogDetailSEO(blog);
   }
@@ -295,10 +295,13 @@ export function getRouteSEO(pathname: string): RouteSEOConfig | null {
 /** Shared blog article SEO for RoutePageSEO and BlogDetailPage. */
 export function getBlogDetailSEO(blog: Blog): RouteSEOConfig {
   return {
-    title: `${blog.title} | Trekora Blog`,
-    description: blog.excerpt,
+    title: blog.seoTitle?.trim()
+      ? `${blog.seoTitle} | Trekora`
+      : `${blog.title} | Trekora Blog`,
+    description: blog.seoDescription?.trim() || blog.excerpt,
     keywords: blog.tags.join(", "),
-    canonical: `${SITE_ORIGIN}/blog/${blog.slug}`,
+    canonical:
+      blog.canonicalUrl?.trim() || `${SITE_ORIGIN}/blog/${blog.slug}`,
     ogImage: resolveBlogCardImage(blog) || DEFAULT_OG_IMAGE,
     ogType: "article",
     schema: [

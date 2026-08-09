@@ -718,6 +718,31 @@
     background: transparent;
   }
 
+  /* Admin sidebar — compact wordmark so nav stays above the fold */
+  .admin-sidebar-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .admin-sidebar-brand__logo {
+    display: block;
+    line-height: 0;
+    max-width: 8.5rem;
+  }
+
+  .site-logo__img--admin {
+    display: block;
+    height: 2.125rem;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left center;
+    filter: none;
+    background: transparent;
+  }
+
   /* ── Listing pages: sticky filters below navbar (Contact-style mobile flow) ── */
   .listing-sticky-toolbar {
     position: sticky;
@@ -2210,3 +2235,293 @@ textarea {
     max-width: 9.5rem;
   }
 }
+
+.blog-article-body section[id],
+.blog-article-body h2[id],
+.blog-article-body h3[id],
+#faq {
+  scroll-margin-top: 6rem;
+}
+
+/* In-body TOC is extracted to the sticky rail — hide any leftover nav */
+.blog-article-body > nav,
+.blog-article-body nav:has(a[href^="#"]) {
+  display: none;
+}
+
+/* Storefront blog article — editorial reading shell */
+.blog-article-shell {
+  max-width: 42rem;
+}
+
+.blog-article-page .blog-article-body {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+/* Storefront blog article body (CMS HTML + legacy markdown) */
+.blog-article-body {
+  font-size: 1.015rem;
+  line-height: 1.75;
+  color: var(--ew-text-lt);
+  overflow-wrap: anywhere;
+}
+
+.blog-article-body > *:first-child {
+  margin-top: 0;
+}
+
+.blog-article-body h1,
+.blog-article-body h2 {
+  color: var(--ew-text);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 2rem 0 0.85rem;
+  letter-spacing: -0.01em;
+}
+
+.blog-article-body h3 {
+  color: var(--ew-text);
+  font-size: 1.18rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.55rem;
+}
+
+.blog-article-body h4 {
+  color: var(--ew-text);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 1.1rem 0 0.4rem;
+}
+
+.blog-article-body p {
+  margin: 0 0 1rem;
+  line-height: 1.75;
+}
+
+.blog-article-body strong,
+.blog-article-body b {
+  color: var(--ew-text);
+  font-weight: 700;
+}
+
+/* Bullet / numbered lists — force visible markers (overrides pasted list-style:none) */
+.blog-article-body ul,
+.blog-article-body ul.blog-list,
+.blog-article-body ul.checklist,
+.blog-article-body ul.leave-list {
+  list-style: disc !important;
+  list-style-position: outside !important;
+  margin: 0 0 1.15rem;
+  padding-left: 1.4rem;
+}
+
+.blog-article-body ol,
+.blog-article-body ol.blog-list {
+  list-style: decimal !important;
+  list-style-position: outside !important;
+  margin: 0 0 1.15rem;
+  padding-left: 1.4rem;
+}
+
+.blog-article-body li {
+  margin: 0 0 0.45rem;
+  line-height: 1.65;
+  padding-left: 0.15rem;
+  display: list-item !important;
+}
+
+.blog-article-body li::before,
+.blog-article-body li::after {
+  content: none !important;
+  display: none !important;
+}
+
+.blog-article-body li > p {
+  margin: 0;
+}
+
+.blog-article-body blockquote {
+  margin: 1.25rem 0;
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--ew-red);
+  background: var(--ew-gray-lt);
+  color: var(--ew-text);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.blog-article-body img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.blog-article-body figure {
+  margin: 1.5rem 0;
+}
+
+.blog-article-body figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ew-gray-dark);
+}
+
+.blog-article-body .blog-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  border: 1px solid var(--ew-gray-mid);
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.blog-article-body table,
+.blog-article-body table.blog-table,
+.blog-article-body table.facts {
+  width: 100%;
+  min-width: 280px;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.blog-article-body th,
+.blog-article-body td {
+  border-bottom: 1px solid var(--ew-gray-mid);
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.blog-article-body tr:last-child th,
+.blog-article-body tr:last-child td {
+  border-bottom: none;
+}
+
+.blog-article-body th {
+  font-weight: 700;
+  color: var(--ew-text);
+  background: var(--ew-gray-lt);
+}
+
+.blog-article-body td:first-child {
+  color: var(--ew-gray-dark);
+  width: 42%;
+}
+
+.blog-article-body section {
+  margin: 1.75rem 0 0;
+  padding-top: 0.25rem;
+}
+
+.blog-article-body nav {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--ew-gray-mid);
+  border-radius: 0.75rem;
+  background: var(--ew-gray-lt);
+}
+
+.blog-article-body nav ol {
+  columns: 1;
+}
+
+@media (min-width: 640px) {
+  .blog-article-body nav ol {
+    columns: 2;
+    column-gap: 1.5rem;
+  }
+}
+
+.blog-article-body .callout,
+.blog-article-body .cta-band,
+.blog-article-body .elevation-card {
+  margin: 1.25rem 0;
+  padding: 1rem 1.15rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ew-gray-mid);
+  background: var(--ew-gray-lt);
+  color: var(--ew-text);
+}
+
+.blog-article-body .cta-band {
+  background: var(--ew-footer);
+  color: #f5f5f5;
+  border-color: transparent;
+}
+
+.blog-article-body .cta-band a,
+.blog-article-body .cta-btn {
+  color: #fff;
+  background: var(--ew-orange);
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.blog-article-body .day {
+  display: flex;
+  gap: 0.9rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--ew-gray-mid);
+}
+
+.blog-article-body .day:first-child {
+  border-top: none;
+}
+
+.blog-article-body .day-num {
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: var(--ew-red);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.blog-article-body details {
+  border-bottom: 1px solid var(--ew-gray-mid);
+  padding: 0.75rem 0;
+}
+
+.blog-article-body summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ew-text);
+}
+
+.blog-article-body a {
+  color: var(--ew-red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blog-article-body svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0.75rem 0;
+}
+
+.blog-article-body .hero,
+.blog-article-body .stat-strip,
+.blog-article-body .eyebrow,
+.blog-article-body .img-slot {
+  display: none;
+}
+

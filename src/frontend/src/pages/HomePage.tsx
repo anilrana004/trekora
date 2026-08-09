@@ -48,7 +48,7 @@ import YouTubeSection from "../components/YouTubeSection";
 import HomeTrekFeatureMedia from "../components/media/HomeTrekFeatureMedia";
 import OptimizedImage from "../components/media/OptimizedImage";
 import TrustBadgesStrip from "../components/ui/TrustBadgesStrip";
-import { BLOGS } from "../data/blogs";
+import { getPublishedBlogs } from "../data/blogs";
 import { homeTrekReelVideo } from "../data/trek-reels";
 import { TREKS } from "../data/treks";
 import { YATRAS } from "../data/yatras";
@@ -4403,7 +4403,7 @@ export default function HomePage() {
             <SectionTitle>Travel Stories &amp; Tips</SectionTitle>
           </motion.div>
           <div className="flex gap-5 overflow-x-auto scrollbar-hide pb-3">
-            {BLOGS.slice(0, 4).map((blog, i) => (
+            {getPublishedBlogs().slice(0, 4).map((blog, i) => (
               <Link
                 key={blog.id}
                 to="/blog/$slug"

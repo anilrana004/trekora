@@ -1,0 +1,29 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Destination Guide",
+      "slug": "destination-guide"
+    },
+    {
+      "id": 2,
+      "name": "Safety & Health",
+      "slug": "safety-health"
+    },
+    {
+      "id": 3,
+      "name": "Trek Guide",
+      "slug": "trek-guide"
+    },
+    {
+      "id": 4,
+      "name": "Weekend Trek",
+      "slug": "weekend-trek"
+    },
+    {
+      "id": 5,
+      "name": "Yatra Guide",
+      "slug": "yatra-guide"
+    }
+  ]
+}

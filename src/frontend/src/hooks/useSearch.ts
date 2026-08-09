@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { BLOGS, type Blog } from "../data/blogs";
+import { getPublishedBlogs, type Blog } from "../data/blogs";
 import { TREKS, type Trek } from "../data/treks";
 
 declare global {
@@ -114,8 +114,9 @@ export function useSearch() {
   }, [query, activeFilter]);
 
   const blogResults = useMemo((): Blog[] => {
-    if (!query.trim()) return BLOGS.slice(0, 3);
-    return BLOGS.filter((b) => scoreBlog(b, query) > 0).slice(0, 4);
+    const published = getPublishedBlogs();
+    if (!query.trim()) return published.slice(0, 3);
+    return published.filter((b) => scoreBlog(b, query) > 0).slice(0, 4);
   }, [query]);
 
   // Expose fuzzyMatch for external use

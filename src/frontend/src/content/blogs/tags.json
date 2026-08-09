@@ -1,0 +1,209 @@
+{
+  "tags": [
+    {
+      "id": 1,
+      "name": "2025 Guide",
+      "slug": "2025-guide"
+    },
+    {
+      "id": 2,
+      "name": "AMS",
+      "slug": "ams"
+    },
+    {
+      "id": 3,
+      "name": "Altitude Sickness",
+      "slug": "altitude-sickness"
+    },
+    {
+      "id": 4,
+      "name": "Badrinath",
+      "slug": "badrinath"
+    },
+    {
+      "id": 5,
+      "name": "Beginner",
+      "slug": "beginner"
+    },
+    {
+      "id": 6,
+      "name": "Beginner Trek",
+      "slug": "beginner-trek"
+    },
+    {
+      "id": 7,
+      "name": "Camping",
+      "slug": "camping"
+    },
+    {
+      "id": 8,
+      "name": "Chandratal",
+      "slug": "chandratal"
+    },
+    {
+      "id": 9,
+      "name": "Char Dham",
+      "slug": "char-dham"
+    },
+    {
+      "id": 10,
+      "name": "Cold Desert",
+      "slug": "cold-desert"
+    },
+    {
+      "id": 11,
+      "name": "Easy Trek",
+      "slug": "easy-trek"
+    },
+    {
+      "id": 12,
+      "name": "Easy-Moderate",
+      "slug": "easy-moderate"
+    },
+    {
+      "id": 13,
+      "name": "Family Trek",
+      "slug": "family-trek"
+    },
+    {
+      "id": 14,
+      "name": "Flowers",
+      "slug": "flowers"
+    },
+    {
+      "id": 15,
+      "name": "Health",
+      "slug": "health"
+    },
+    {
+      "id": 16,
+      "name": "Himachal Pradesh",
+      "slug": "himachal-pradesh"
+    },
+    {
+      "id": 17,
+      "name": "Kedarnath",
+      "slug": "kedarnath"
+    },
+    {
+      "id": 18,
+      "name": "McLeod Ganj",
+      "slug": "mcleod-ganj"
+    },
+    {
+      "id": 19,
+      "name": "Medical",
+      "slug": "medical"
+    },
+    {
+      "id": 20,
+      "name": "Moderate Trek",
+      "slug": "moderate-trek"
+    },
+    {
+      "id": 21,
+      "name": "Moderate-Difficult",
+      "slug": "moderate-difficult"
+    },
+    {
+      "id": 22,
+      "name": "Monasteries",
+      "slug": "monasteries"
+    },
+    {
+      "id": 23,
+      "name": "Monsoon Trek",
+      "slug": "monsoon-trek"
+    },
+    {
+      "id": 24,
+      "name": "Pass Trek",
+      "slug": "pass-trek"
+    },
+    {
+      "id": 25,
+      "name": "Pilgrimage",
+      "slug": "pilgrimage"
+    },
+    {
+      "id": 26,
+      "name": "Registration",
+      "slug": "registration"
+    },
+    {
+      "id": 27,
+      "name": "Safety",
+      "slug": "safety"
+    },
+    {
+      "id": 28,
+      "name": "Sankri",
+      "slug": "sankri"
+    },
+    {
+      "id": 29,
+      "name": "Skeleton Lake",
+      "slug": "skeleton-lake"
+    },
+    {
+      "id": 30,
+      "name": "Snow",
+      "slug": "snow"
+    },
+    {
+      "id": 31,
+      "name": "Snow Trek",
+      "slug": "snow-trek"
+    },
+    {
+      "id": 32,
+      "name": "Solo Trek",
+      "slug": "solo-trek"
+    },
+    {
+      "id": 33,
+      "name": "Spiti",
+      "slug": "spiti"
+    },
+    {
+      "id": 34,
+      "name": "Spiti Valley",
+      "slug": "spiti-valley"
+    },
+    {
+      "id": 35,
+      "name": "Tips",
+      "slug": "tips"
+    },
+    {
+      "id": 36,
+      "name": "UNESCO",
+      "slug": "unesco"
+    },
+    {
+      "id": 37,
+      "name": "Uttarakhand",
+      "slug": "uttarakhand"
+    },
+    {
+      "id": 38,
+      "name": "Weekend",
+      "slug": "weekend"
+    },
+    {
+      "id": 39,
+      "name": "Wildlife",
+      "slug": "wildlife"
+    },
+    {
+      "id": 40,
+      "name": "Winter Trek",
+      "slug": "winter-trek"
+    },
+    {
+      "id": 41,
+      "name": "Women Trekking",
+      "slug": "women-trekking"
+    }
+  ]
+}

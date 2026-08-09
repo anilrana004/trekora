@@ -12,6 +12,7 @@ import voucherValidateHandler from "../vouchers/validate.mjs";
 import voucherMarkUsedHandler from "../vouchers/mark-used.mjs";
 import giftCardValidateHandler from "../giftcards/validate.mjs";
 import giftCardRedeemHandler from "../giftcards/redeem.mjs";
+import blogsHandler from "../blogs.mjs";
 
 const EXACT = {
   "/api/agent-markdown": agentMarkdownHandler,
@@ -31,5 +32,8 @@ export function resolveApiHandler(pathname, _method) {
   if (pathname === "/api/gallery") return galleryHandler;
   if (pathname === "/api/product-photos") return productPhotosHandler;
   if (pathname.startsWith("/api/reviews")) return reviewsHandler;
+  if (pathname === "/api/blogs" || pathname.startsWith("/api/blogs/")) {
+    return blogsHandler;
+  }
   return null;
 }

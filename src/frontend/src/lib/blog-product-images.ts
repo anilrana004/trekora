@@ -22,14 +22,11 @@ export const BLOG_LINKED_PRODUCT: Record<string, BlogLinkedProduct> = {
   },
   "kedarkantha-trek-winter-guide": { kind: "trek", slug: "kedarkantha-trek" },
   "spiti-valley-travel-guide-2025": { kind: "trek", slug: "spiti-valley-trek" },
-  /** High-altitude trek featured in the AMS guide */
   "altitude-sickness-himalayan-treks-guide": {
     kind: "trek",
     slug: "roopkund-trek",
   },
-  /** Popular beginner solo-friendly trek */
   "solo-trekking-himalayas-safety-guide": { kind: "trek", slug: "triund-trek" },
-  /** Round-up anchored on India's top beginner winter trek */
   "best-beginner-treks-uttarakhand-himachal-2025": {
     kind: "trek",
     slug: "kedarkantha-trek",
@@ -72,6 +69,49 @@ export function resolveBlogWithProductImages<T extends Blog>(blog: T): T {
 /** Published blogs with card images synced to trek/yatra assets. */
 export function getBlogsForDisplay(blogs: Blog[]): Blog[] {
   return blogs
-    .filter((b) => b.isPublished)
+    .filter((b) => b.isPublished || b.status === "published")
     .map((b) => resolveBlogWithProductImages(b));
+}
+
+export type RelatedProductCard = {
+  kind: "trek" | "yatra";
+  slug: string;
+  name: string;
+  image: string;
+};
+
+/** Resolve related trek/yatra cards from post slugs (+ legacy map fallback). */
+export function resolveRelatedProducts(blog: Blog): RelatedProductCard[] {
+  const linked = getLinkedProductForBlog(blog.slug);
+  const slugs = [
+    ...(blog.relatedProductSlugs ?? []),
+    ...(linked ? [linked.slug] : []),
+  ];
+  const seen = new Set<string>();
+  const out: RelatedProductCard[] = [];
+
+  for (const slug of slugs) {
+    if (!slug || seen.has(slug)) continue;
+    seen.add(slug);
+    const trek = TREKS.find((t) => t.slug === slug);
+    if (trek) {
+      out.push({
+        kind: "trek",
+        slug: trek.slug,
+        name: trek.name,
+        image: trek.image,
+      });
+      continue;
+    }
+    const yatra = YATRAS.find((y) => y.slug === slug);
+    if (yatra) {
+      out.push({
+        kind: "yatra",
+        slug: yatra.slug,
+        name: yatra.name,
+        image: yatra.image,
+      });
+    }
+  }
+  return out;
 }

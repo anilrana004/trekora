@@ -78,7 +78,7 @@ export default defineConfig({
         changeOrigin: true,
       },
       // ICP canister API only — email routes handled by vite-plugin-email-api
-      "^/api/(?!booking|callback|corporate-quote|query|vouchers|giftcards|reviews|gallery|product-photos|weather)": {
+      "^/api/(?!booking|callback|corporate-quote|query|vouchers|giftcards|reviews|gallery|product-photos|weather|blogs)": {
         target: "http://127.0.0.1:4943",
         changeOrigin: true,
       },
