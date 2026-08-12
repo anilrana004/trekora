@@ -2,7 +2,7 @@
  * Guards against Vercel deploy blockers (edge middleware, import attributes).
  * Run automatically before frontend production builds.
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -19,9 +19,9 @@ if (existsSync(join(frontend, "middleware.js"))) {
   failures.push("Remove src/frontend/middleware.js — not supported on this Vite SPA setup.");
 }
 
-const agentMarkdown = join(frontend, "api/agent-markdown.mjs");
+const agentMarkdown = join(frontend, "api/_handlers/agent-markdown.mjs");
 if (!existsSync(agentMarkdown)) {
-  failures.push("Missing src/frontend/api/agent-markdown.mjs");
+  failures.push("Missing src/frontend/api/_handlers/agent-markdown.mjs");
 } else {
   const source = readFileSync(agentMarkdown, "utf8");
   if (/\bwith\s*\{\s*type\s*:/.test(source)) {
@@ -32,6 +32,36 @@ if (!existsSync(agentMarkdown)) {
   if (!source.includes("readFileSync")) {
     failures.push("agent-markdown.mjs should load routes via readFileSync at runtime.");
   }
+}
+
+const apiCatchAll = join(frontend, "api/[[...path]].mjs");
+if (!existsSync(apiCatchAll)) {
+  failures.push(
+    "Missing src/frontend/api/[[...path]].mjs — Hobby plan needs a single catch-all API function.",
+  );
+}
+
+// Hobby plan: only underscore folders + the catch-all may live under api/
+try {
+  const apiDir = join(frontend, "api");
+  const entries = readdirSync(apiDir);
+  const extraFns = entries.filter((name) => {
+    if (name.startsWith("_")) return false;
+    if (name === "[[...path]].mjs") return false;
+    const full = join(apiDir, name);
+    if (statSync(full).isDirectory()) {
+      // Nested route dirs (vouchers/, giftcards/) count as more functions on Vercel
+      return true;
+    }
+    return /\.(mjs|js|ts)$/.test(name);
+  });
+  if (extraFns.length) {
+    failures.push(
+      `Move these out of api/ root into api/_handlers/ (Hobby ≤12 functions): ${extraFns.join(", ")}`,
+    );
+  }
+} catch (err) {
+  failures.push(`Could not audit api/ for Hobby function limit: ${err.message}`);
 }
 
 for (const file of ["vercel.json", "package.json", "tsconfig.json", "tsconfig.app.json"]) {

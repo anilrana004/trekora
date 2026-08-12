@@ -53,7 +53,7 @@ pnpm -C backend ensure-indexes
 4. Health check path: `/health` (returns `{ ok, mongo }`).
 5. Copy public Railway URL → use in Vercel rewrites **or** keep Mongo routes on Vercel serverless (current default: controllers run on Vercel via `src/frontend/api/*.mjs`).
 
-**Dual hosting note**: Gallery/voucher/review routes are imported from `backend/controllers` into Vercel. For heavy traffic, point `vercel.json` rewrites for `/api/gallery` etc. to Railway URL instead of serverless.
+**Dual hosting note**: Gallery/voucher/review routes are imported from `backend/controllers` into Vercel via a **single** catch-all function `api/[[...path]].mjs` (handlers live under `api/_handlers/`). Hobby plan allows ≤12 serverless functions — do not add new top-level `api/*.mjs` route files. For heavy traffic, point `vercel.json` rewrites for `/api/gallery` etc. to Railway URL instead of serverless.
 
 ---
 

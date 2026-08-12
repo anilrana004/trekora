@@ -1,8 +1,8 @@
 import {
-  sendPlanTrekEmails,
-  validateQueryPayload,
-} from "./_lib/query-mail.mjs";
-import { smtpErrorMessage } from "./_lib/smtp-mail.mjs";
+  sendCallbackEmail,
+  validateCallbackPayload,
+} from "../_lib/callback-mail.mjs";
+import { smtpErrorMessage } from "../_lib/smtp-mail.mjs";
 
 async function readJsonBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
@@ -34,16 +34,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: "Invalid JSON body" });
   }
 
-  const validated = validateQueryPayload(body);
+  const validated = validateCallbackPayload(body);
   if (!validated.ok) {
     return res.status(400).json({ ok: false, error: validated.error });
   }
 
   try {
-    await sendPlanTrekEmails(validated.data);
+    await sendCallbackEmail(validated.data);
     return res.status(200).json({ ok: true });
   } catch (err) {
-    console.error("[api/query]", err);
+    console.error("[api/callback]", err);
     return res.status(500).json({ ok: false, error: smtpErrorMessage(err) });
   }
 }

@@ -1,8 +1,8 @@
 import {
-  sendCorporateQuoteEmails,
-  validateCorporateQuotePayload,
-} from "./_lib/corporate-quote-mail.mjs";
-import { smtpErrorMessage } from "./_lib/smtp-mail.mjs";
+  sendPlanTrekEmails,
+  validateQueryPayload,
+} from "../_lib/query-mail.mjs";
+import { smtpErrorMessage } from "../_lib/smtp-mail.mjs";
 
 async function readJsonBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
@@ -34,16 +34,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: "Invalid JSON body" });
   }
 
-  const validated = validateCorporateQuotePayload(body);
+  const validated = validateQueryPayload(body);
   if (!validated.ok) {
     return res.status(400).json({ ok: false, error: validated.error });
   }
 
   try {
-    await sendCorporateQuoteEmails(validated.data);
+    await sendPlanTrekEmails(validated.data);
     return res.status(200).json({ ok: true });
   } catch (err) {
-    console.error("[api/corporate-quote]", err);
+    console.error("[api/query]", err);
     return res.status(500).json({ ok: false, error: smtpErrorMessage(err) });
   }
 }

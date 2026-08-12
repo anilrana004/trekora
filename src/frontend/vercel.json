@@ -216,7 +216,7 @@
     }
   ],
   "functions": {
-    "api/agent-markdown.mjs": {
+    "api/[[...path]].mjs": {
       "includeFiles": "api/_generated/agent-markdown-routes.json"
     }
   },

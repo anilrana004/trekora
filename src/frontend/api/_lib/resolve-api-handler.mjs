@@ -1,18 +1,18 @@
 import agentMarkdownHandler, {
   wantsMarkdown,
-} from "../agent-markdown.mjs";
-import galleryHandler from "../gallery.mjs";
-import productPhotosHandler from "../product-photos.mjs";
-import reviewsHandler from "../reviews.mjs";
-import bookingHandler from "../booking.mjs";
-import callbackHandler from "../callback.mjs";
-import corporateQuoteHandler from "../corporate-quote.mjs";
-import queryHandler from "../query.mjs";
-import voucherValidateHandler from "../vouchers/validate.mjs";
-import voucherMarkUsedHandler from "../vouchers/mark-used.mjs";
-import giftCardValidateHandler from "../giftcards/validate.mjs";
-import giftCardRedeemHandler from "../giftcards/redeem.mjs";
-import blogsHandler from "../blogs.mjs";
+} from "../_handlers/agent-markdown.mjs";
+import galleryHandler from "../_handlers/gallery.mjs";
+import productPhotosHandler from "../_handlers/product-photos.mjs";
+import reviewsHandler from "../_handlers/reviews.mjs";
+import bookingHandler from "../_handlers/booking.mjs";
+import callbackHandler from "../_handlers/callback.mjs";
+import corporateQuoteHandler from "../_handlers/corporate-quote.mjs";
+import queryHandler from "../_handlers/query.mjs";
+import voucherValidateHandler from "../_handlers/vouchers/validate.mjs";
+import voucherMarkUsedHandler from "../_handlers/vouchers/mark-used.mjs";
+import giftCardValidateHandler from "../_handlers/giftcards/validate.mjs";
+import giftCardRedeemHandler from "../_handlers/giftcards/redeem.mjs";
+import blogsHandler from "../_handlers/blogs.mjs";
 
 const EXACT = {
   "/api/agent-markdown": agentMarkdownHandler,
@@ -37,3 +37,5 @@ export function resolveApiHandler(pathname, _method) {
   }
   return null;
 }
+
+export { wantsMarkdown, agentMarkdownHandler };

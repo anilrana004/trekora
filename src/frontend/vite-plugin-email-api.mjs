@@ -1,9 +1,6 @@
 import { logTrekoraEnvStatus, loadTrekoraEnv } from "../../backend/lib/load-env.js";
 
-import { resolveApiHandler } from "./api/_lib/resolve-api-handler.mjs";
-import agentMarkdownHandler, {
-  wantsMarkdown,
-} from "./api/agent-markdown.mjs";
+import { resolveApiHandler, agentMarkdownHandler, wantsMarkdown } from "./api/_lib/resolve-api-handler.mjs";
 
 loadTrekoraEnv();
 

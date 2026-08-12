@@ -1,8 +1,8 @@
 import {
-  sendCallbackEmail,
-  validateCallbackPayload,
-} from "./_lib/callback-mail.mjs";
-import { smtpErrorMessage } from "./_lib/smtp-mail.mjs";
+  sendBookingEmails,
+  validateBookingPayload,
+} from "../_lib/booking-mail.mjs";
+import { smtpErrorMessage } from "../_lib/smtp-mail.mjs";
 
 async function readJsonBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
@@ -34,16 +34,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: "Invalid JSON body" });
   }
 
-  const validated = validateCallbackPayload(body);
+  const validated = validateBookingPayload(body);
   if (!validated.ok) {
     return res.status(400).json({ ok: false, error: validated.error });
   }
 
   try {
-    await sendCallbackEmail(validated.data);
+    await sendBookingEmails(validated.data);
     return res.status(200).json({ ok: true });
   } catch (err) {
-    console.error("[api/callback]", err);
+    console.error("[api/booking]", err);
     return res.status(500).json({ ok: false, error: smtpErrorMessage(err) });
   }
 }
