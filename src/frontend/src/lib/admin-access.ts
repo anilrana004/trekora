@@ -1,3 +1,8 @@
+import {
+  isAdminHost,
+  shouldEnforceAdminSubdomain,
+} from "@/lib/admin-host";
+
 /** Session flag — opaque OK marker. */
 const ADMIN_SESSION_KEY = "trekora_admin_session";
 /** Typed secret for this tab only — never bake into the client bundle. */
@@ -9,8 +14,14 @@ function envTruthy(name: string): boolean {
   return raw === "true" || raw === "1";
 }
 
-/** When false, /admin routes redirect to home (production default). */
+/**
+ * Admin UI availability:
+ * - `admin.trekora.in` → always on (still gated by ADMIN_API_SECRET)
+ * - localhost / preview → only when `VITE_ADMIN_ENABLED=true`
+ * - www storefront never serves /admin (router sends users to the admin host)
+ */
 export function isAdminUiEnabled(): boolean {
+  if (shouldEnforceAdminSubdomain() && isAdminHost()) return true;
   return envTruthy("VITE_ADMIN_ENABLED");
 }
 

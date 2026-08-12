@@ -46,8 +46,13 @@ Configure Cloudflare in front of Vercel (`www.trekora.in`).
 
 ## Page Rules (legacy) or Redirect Rules
 
-- `http://*` → `https://www.trekora.in` (301)
-- `trekora.in/*` → `https://www.trekora.in/$1` (301)
+**Do not** redirect `*trekora.in/*` or `http://*` to www — that breaks `admin.trekora.in` and `api.trekora.in`.
+
+Use host-specific rules only:
+
+- `http://trekora.in/*` → `https://www.trekora.in/$1` (301)
+- `https://trekora.in/*` → `https://www.trekora.in/$1` (301)
+- Leave `admin.trekora.in` and `www.trekora.in` alone (Vercel serves both)
 
 ## Cloudinary + Cloudflare
 

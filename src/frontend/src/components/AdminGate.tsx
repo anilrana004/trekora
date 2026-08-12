@@ -3,11 +3,6 @@ import {
   hasAdminSession,
   isAdminUiEnabled,
 } from "@/lib/admin-access";
-import {
-  isAdminHost,
-  shouldEnforceAdminSubdomain,
-} from "@/lib/admin-host";
-import { SITE_ORIGIN } from "@/lib/site-config";
 import { Navigate } from "@tanstack/react-router";
 import { Lock } from "lucide-react";
 import type { ReactNode } from "react";
@@ -34,13 +29,8 @@ export default function AdminGate() {
     document.head.appendChild(meta);
   }, []);
 
+  // Local/preview without the flag — do not bounce admin.trekora.in to www.
   if (!enabled) {
-    if (shouldEnforceAdminSubdomain() && isAdminHost()) {
-      if (typeof window !== "undefined") {
-        window.location.replace(SITE_ORIGIN);
-      }
-      return null;
-    }
     return <Navigate to="/" replace />;
   }
 

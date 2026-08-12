@@ -76,7 +76,7 @@ pnpm -C backend ensure-indexes
 | `VITE_ADMIN_ORIGIN` | `https://admin.trekora.in` |
 | `VITE_CLOUDINARY_CLOUD_NAME` | your cloud |
 | `VITE_CLOUDINARY_UPLOAD_PRESET` | unsigned preset (restricted folder) |
-| `VITE_ADMIN_ENABLED` | `false` |
+| `VITE_ADMIN_ENABLED` | `false` (admin.trekora.in enables UI itself; flag is for localhost only) |
 | `VITE_ENABLE_LOGIN` | `false` |
 | `VITE_ENABLE_PAYMENT` | `false` |
 | `MONGODB_URI` | for serverless `/api/*` |
