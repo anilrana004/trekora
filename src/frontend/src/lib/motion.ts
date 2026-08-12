@@ -1,5 +1,2 @@
-/**
- * Single import surface for animations — resolves directly to framer-motion so
- * Vercel's TypeScript pass (without tsconfig path aliases) type-checks motion props.
- */
+/** App-wide animation imports (framer-motion). */
 export * from "framer-motion";

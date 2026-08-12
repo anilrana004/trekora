@@ -34,10 +34,31 @@ if (!existsSync(agentMarkdown)) {
   }
 }
 
-for (const file of ["vercel.json", "package.json"]) {
+for (const file of ["vercel.json", "package.json", "tsconfig.json", "tsconfig.app.json"]) {
   if (!existsSync(join(frontend, file))) {
     failures.push(`Missing src/frontend/${file}`);
   }
+}
+
+// Root tsconfig must stay API-scoped. Vercel typechecks with this file (no path
+// aliases) after packaging serverless functions — including React `src/` causes
+// false framer-motion / Radix failures even when `pnpm typecheck` is green.
+try {
+  const tsconfig = JSON.parse(
+    readFileSync(join(frontend, "tsconfig.json"), "utf8"),
+  );
+  const include = tsconfig.include;
+  const includeList = Array.isArray(include) ? include : [include].filter(Boolean);
+  const pullsSrc = includeList.some(
+    (p) => typeof p === "string" && (p === "src" || p.startsWith("src/") || p.includes("src/**")),
+  );
+  if (pullsSrc) {
+    failures.push(
+      "src/frontend/tsconfig.json must not include React src/ (use tsconfig.app.json for the app; keep root tsconfig API-only for Vercel).",
+    );
+  }
+} catch {
+  failures.push("src/frontend/tsconfig.json is not valid JSON");
 }
 
 if (failures.length) {

@@ -2,7 +2,7 @@ import { SITE_ORIGIN } from "@/lib/site-config";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, Search } from "lucide-react";
 import { motion } from "@/lib/motion";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { SEOHead } from "../components/SEOHead";
 import TravelSideActionRail, {
   TRAVEL_HERO_SENTINEL_ID,
@@ -193,12 +193,13 @@ export default function BlogPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-lg border bg-white py-3 pl-10 pr-4 text-sm shadow-sm focus:outline-none focus:ring-2"
-                style={{
-                  borderColor: "var(--ew-gray-mid)",
-                  color: "var(--ew-text)",
-                  // @ts-expect-error CSS custom property for focus ring
-                  "--tw-ring-color": "rgba(192,0,28,0.25)",
-                }}
+                style={
+                  {
+                    borderColor: "var(--ew-gray-mid)",
+                    color: "var(--ew-text)",
+                    "--tw-ring-color": "rgba(192,0,28,0.25)",
+                  } as CSSProperties
+                }
                 data-ocid="blog.search_input"
               />
             </div>
