@@ -53,7 +53,7 @@ export default function Layout() {
     <EnquiryProvider>
       <ListingScrollChromeProvider>
         <div
-          className="flex flex-col min-h-screen"
+          className="flex min-h-screen w-full max-w-full min-w-0 flex-col overflow-x-clip"
           style={{ background: "var(--ew-white)" }}
         >
           <a
@@ -67,7 +67,7 @@ export default function Layout() {
           <LanguageBanner />
           <main
             id="main-content"
-            className="flex-1"
+            className="min-w-0 w-full max-w-full flex-1 overflow-x-clip"
             style={{
               paddingBottom:
                 "calc(var(--mobile-nav-height, 0px) + env(safe-area-inset-bottom, 0px))",

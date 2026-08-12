@@ -145,6 +145,16 @@
     @apply border-border;
   }
 
+  /* Phone-first canvas: layout must match device width (no sideways pan/zoom-to-fit) */
+  html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
@@ -152,6 +162,8 @@
     line-height: 1.7;
     color: var(--ew-text);
     background-color: var(--ew-white);
+    width: 100%;
+    max-width: 100%;
     /* Disable CSS scroll-behavior so programmatic scroll calls don't
        animate and fight user scroll gestures */
     scroll-behavior: auto;
@@ -160,6 +172,15 @@
     overflow-anchor: none;
     /* No horizontal overflow on any device */
     overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   h1,
@@ -2251,12 +2272,28 @@ textarea {
 
 /* Storefront blog article — editorial reading shell */
 .blog-article-shell {
+  width: 100%;
   max-width: 42rem;
+  min-width: 0;
+}
+
+.blog-article-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
 }
 
 .blog-article-page .blog-article-body {
   font-size: 1.0625rem;
   line-height: 1.8;
+}
+
+.blog-index {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
 }
 
 /* Storefront blog article body (CMS HTML + legacy markdown) */
@@ -2265,6 +2302,9 @@ textarea {
   line-height: 1.75;
   color: var(--ew-text-lt);
   overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .blog-article-body > *:first-child {
@@ -2474,6 +2514,12 @@ textarea {
   gap: 0.9rem;
   padding: 0.85rem 0;
   border-top: 1px solid var(--ew-gray-mid);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.blog-article-body .day > * {
+  min-width: 0;
 }
 
 .blog-article-body .day:first-child {
@@ -2523,5 +2569,55 @@ textarea {
 .blog-article-body .eyebrow,
 .blog-article-body .img-slot {
   display: none;
+}
+
+/* Phone viewport lock — content fits device width; wide media scrolls inside, not the page */
+@media (max-width: 1023px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .blog-article-page,
+  .blog-index,
+  .blog-article-shell,
+  .blog-article-body {
+    overflow-x: clip;
+  }
+
+  .blog-article-body img,
+  .blog-article-body video,
+  .blog-article-body iframe,
+  .blog-article-body figure,
+  .blog-article-body pre,
+  .blog-article-body code {
+    max-width: 100% !important;
+  }
+
+  .blog-article-body pre,
+  .blog-article-body .blog-table-wrap {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .blog-article-body table {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .blog-toc--mobile {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .blog-toc--mobile ol {
+    max-width: 100%;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 

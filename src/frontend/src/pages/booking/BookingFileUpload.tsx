@@ -31,7 +31,7 @@ export default function BookingFileUpload({
 
   const isPhoto = kind === "photo";
   const mobileAccept = isPhoto
-    ? "image/jpeg,image/png,image/*,.jpg,.jpeg,.png"
+    ? "image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif"
     : accept;
 
   const previewUrl = useMemo(() => {
@@ -39,21 +39,28 @@ export default function BookingFileUpload({
     return `data:${value.contentType};base64,${value.contentBase64}`;
   }, [value]);
 
+  const openPicker = () => {
+    if (loading) return;
+    inputRef.current?.click();
+  };
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) {
-      onChange(null);
-      return;
-    }
+    // Allow re-selecting the same file after a failed attempt
+    e.target.value = "";
+    if (!file) return;
+
     setLoading(true);
     try {
       const result = await fileToBookingPayload(file, kind);
       if (!result.ok) {
         toast.error(result.error);
-        e.target.value = "";
         return;
       }
       onChange(result.data);
+      if (isPhoto) {
+        toast.success("Photo added");
+      }
     } finally {
       setLoading(false);
     }
@@ -75,6 +82,7 @@ export default function BookingFileUpload({
         onChange={handleChange}
         tabIndex={-1}
       />
+
       {value && previewUrl ? (
         <div className="booking-file-upload__preview-wrap booking-file-upload__preview-wrap--success">
           <img
@@ -88,57 +96,91 @@ export default function BookingFileUpload({
               {value.filename}
             </p>
             <p className="booking-file-upload__hint">
-              {formatFileSize(value.sizeBytes)} · Tap replace to change
+              {formatFileSize(value.sizeBytes)} · ready to submit
             </p>
-            <button
-              type="button"
-              onClick={() => inputRef.current?.click()}
-              disabled={loading}
-              className="text-xs font-semibold mt-2 underline"
-              style={{ color: "var(--ew-red)" }}
-            >
-              Replace photo
-            </button>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={openPicker}
+                disabled={loading}
+                className="text-xs font-semibold underline"
+                style={{ color: "var(--ew-red)" }}
+              >
+                {loading ? "Processing…" : "Replace"}
+              </button>
+              <button
+                type="button"
+                onClick={clearFile}
+                disabled={loading}
+                className="text-xs font-medium"
+                style={{ color: "var(--ew-gray-dark)" }}
+              >
+                Remove
+              </button>
+            </div>
           </div>
         </div>
       ) : null}
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        disabled={loading}
-        className={ctaMerge(
-          CTA_OUTLINE_DASHED,
-          "booking-file-upload__trigger",
-          loading && "opacity-60",
-        )}
-        data-ocid={dataOcid}
-        aria-controls={id}
-      >
-        {loading ? (
-          <>
-            <Loader2 size={18} className="animate-spin shrink-0" aria-hidden />
-            Reading file…
-          </>
-        ) : (
-          <>
-            <Upload size={18} className="shrink-0" aria-hidden />
-            {value ? "Replace file" : buttonLabel}
-          </>
-        )}
-      </button>
+
       {value && !previewUrl ? (
-        <p className="text-xs" style={{ color: "#22C55E" }}>
-          ✓ {value.filename} ({formatFileSize(value.sizeBytes)})
-        </p>
+        <div className="booking-file-upload__preview-wrap booking-file-upload__preview-wrap--success">
+          <div className="booking-file-upload__meta" style={{ padding: "0.25rem 0" }}>
+            <p className="booking-file-upload__filename flex items-center gap-1.5">
+              <Check size={16} style={{ color: "#22C55E" }} aria-hidden />
+              {value.filename}
+            </p>
+            <p className="booking-file-upload__hint">
+              {formatFileSize(value.sizeBytes)} · ready to submit
+            </p>
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={openPicker}
+                disabled={loading}
+                className="text-xs font-semibold underline"
+                style={{ color: "var(--ew-red)" }}
+              >
+                {loading ? "Processing…" : "Replace"}
+              </button>
+              <button
+                type="button"
+                onClick={clearFile}
+                disabled={loading}
+                className="text-xs font-medium"
+                style={{ color: "var(--ew-gray-dark)" }}
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
-      {value ? (
+
+      {/* Primary picker only when empty — avoids duplicate Replace controls */}
+      {!value ? (
         <button
           type="button"
-          onClick={clearFile}
-          className="text-xs font-medium self-start"
-          style={{ color: "var(--ew-gray-dark)" }}
+          onClick={openPicker}
+          disabled={loading}
+          className={ctaMerge(
+            CTA_OUTLINE_DASHED,
+            "booking-file-upload__trigger",
+            loading && "opacity-60",
+          )}
+          data-ocid={dataOcid}
+          aria-controls={id}
         >
-          Remove file
+          {loading ? (
+            <>
+              <Loader2 size={18} className="animate-spin shrink-0" aria-hidden />
+              {isPhoto ? "Preparing photo…" : "Reading file…"}
+            </>
+          ) : (
+            <>
+              <Upload size={18} className="shrink-0" aria-hidden />
+              {buttonLabel}
+            </>
+          )}
         </button>
       ) : null}
     </div>

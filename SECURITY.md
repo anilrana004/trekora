@@ -28,8 +28,8 @@ See **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** and **[docs/PRODUCTION_CHECKL
 ## Admin access
 
 - Keep `VITE_ADMIN_ENABLED=false` in production unless required.
-- Use a long random `ADMIN_API_SECRET` on the API; avoid reusing the same value in client `VITE_ADMIN_SECRET` if possible.
-- Client admin gate is obfuscation only — real protection is API `x-admin-secret` + rate limits.
+- Use a long random `ADMIN_API_SECRET` on the API (Railway / server env only). Never set `VITE_ADMIN_SECRET` — it would ship in the public JS bundle.
+- Admin unlock stores the typed secret in sessionStorage for the tab; real protection is API `x-admin-secret` + rate limits.
 
 ## Client-exposed keys
 

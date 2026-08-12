@@ -130,14 +130,15 @@ function Step4({
           Upload Passport-size Photo *
         </p>
         <p className="text-xs mb-2" style={{ color: "var(--ew-gray-dark)" }}>
-          Face clearly visible, white/light background. JPG or PNG, max 2MB.
+          Clear face photo from camera or gallery — we compress it automatically
+          (JPG/PNG/WebP).
         </p>
         <BookingFileUpload
           id="s4-photo"
-          accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+          accept="image/*,.jpg,.jpeg,.png,.webp,.heic,.heif"
           kind="photo"
           dataOcid="booking.photo.upload_button"
-          buttonLabel="Take or choose passport-size photo"
+          buttonLabel="Take or choose photo"
           value={fd.photoFile}
           onChange={(file) => setFd((p) => ({ ...p, photoFile: file }))}
         />

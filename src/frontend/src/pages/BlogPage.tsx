@@ -136,7 +136,7 @@ export default function BlogPage() {
 
   return (
     <div
-      className="blog-index pt-16 min-h-screen"
+      className="blog-index min-h-screen w-full max-w-full overflow-x-clip pt-16"
       style={{ background: "var(--ew-white)" }}
     >
       <SEOHead

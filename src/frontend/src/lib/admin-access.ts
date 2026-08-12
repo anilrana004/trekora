@@ -1,5 +1,7 @@
-/** Opaque session flag — never store the raw secret in sessionStorage. */
+/** Session flag — opaque OK marker. */
 const ADMIN_SESSION_KEY = "trekora_admin_session";
+/** Typed secret for this tab only — never bake into the client bundle. */
+const ADMIN_SECRET_KEY = "trekora_admin_secret";
 const ADMIN_SESSION_OK = "1";
 
 function envTruthy(name: string): boolean {
@@ -12,26 +14,42 @@ export function isAdminUiEnabled(): boolean {
   return envTruthy("VITE_ADMIN_ENABLED");
 }
 
-/** Shared secret gate — set a long random value in Vercel env. */
+/**
+ * Secret entered at unlock (sessionStorage). Used as `x-admin-secret` for API calls.
+ * Must match server `ADMIN_API_SECRET` — never use `VITE_ADMIN_SECRET` in the client.
+ */
 export function getAdminSecret(): string {
-  return String(import.meta.env.VITE_ADMIN_SECRET ?? "").trim();
+  try {
+    return String(sessionStorage.getItem(ADMIN_SECRET_KEY) ?? "").trim();
+  } catch {
+    return "";
+  }
 }
 
 export function hasAdminSession(): boolean {
   if (!isAdminUiEnabled()) return false;
-  const secret = getAdminSecret();
-  if (!secret) return false;
   try {
-    return sessionStorage.getItem(ADMIN_SESSION_KEY) === ADMIN_SESSION_OK;
+    return (
+      sessionStorage.getItem(ADMIN_SESSION_KEY) === ADMIN_SESSION_OK &&
+      getAdminSecret().length > 0
+    );
   } catch {
     return false;
   }
 }
 
-export function grantAdminSession(secret: string): boolean {
-  const expected = getAdminSecret();
-  if (!expected || secret !== expected) return false;
+/**
+ * Verify secret against the API, then keep it in sessionStorage for this tab.
+ */
+export async function grantAdminSession(secret: string): Promise<boolean> {
+  const trimmed = secret.trim();
+  if (!trimmed) return false;
   try {
+    const res = await fetch("/api/blogs/meta/media", {
+      headers: { "x-admin-secret": trimmed },
+    });
+    if (!res.ok) return false;
+    sessionStorage.setItem(ADMIN_SECRET_KEY, trimmed);
     sessionStorage.setItem(ADMIN_SESSION_KEY, ADMIN_SESSION_OK);
     return true;
   } catch {
@@ -42,6 +60,7 @@ export function grantAdminSession(secret: string): boolean {
 export function revokeAdminSession(): void {
   try {
     sessionStorage.removeItem(ADMIN_SESSION_KEY);
+    sessionStorage.removeItem(ADMIN_SECRET_KEY);
   } catch {
     /* ignore */
   }

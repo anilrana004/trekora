@@ -1,5 +1,4 @@
 import {
-  getAdminSecret,
   grantAdminSession,
   hasAdminSession,
   isAdminUiEnabled,
@@ -12,40 +11,41 @@ import AdminLayout from "./AdminLayout";
 
 export default function AdminGate() {
   const enabled = isAdminUiEnabled();
-  const secretConfigured = getAdminSecret().length > 0;
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
   const [authed, setAuthed] = useState(() => hasAdminSession());
 
   if (!enabled) {
     return <Navigate to="/" replace />;
   }
 
-  if (!secretConfigured) {
-    return (
-      <AdminShell
-        title="Admin panel not configured"
-        body="Admin access is disabled. Configure credentials in your secure deployment environment."
-      />
-    );
-  }
-
   if (!authed) {
     return (
       <AdminShell
         title="Admin sign-in"
-        body="Enter the admin secret configured for this deployment."
+        body="Enter the server ADMIN_API_SECRET for this deployment. It is checked by the API and never baked into the site bundle."
       >
         <form
           className="mt-6 flex w-full max-w-sm flex-col gap-3"
           onSubmit={(e) => {
             e.preventDefault();
-            if (grantAdminSession(password.trim())) {
+            void (async () => {
+              setBusy(true);
               setError("");
-              setAuthed(true);
-              return;
-            }
-            setError("Invalid admin secret.");
+              try {
+                const ok = await grantAdminSession(password.trim());
+                if (ok) {
+                  setAuthed(true);
+                  return;
+                }
+                setError("Invalid admin secret.");
+              } catch {
+                setError("Could not verify admin secret. Check API connectivity.");
+              } finally {
+                setBusy(false);
+              }
+            })();
           }}
         >
           <label className="sr-only" htmlFor="admin-secret">
@@ -58,6 +58,7 @@ export default function AdminGate() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Admin secret"
+            disabled={busy}
             className="w-full rounded-lg border px-4 py-2.5 text-sm"
             style={{
               borderColor: "var(--ew-gray-mid)",
@@ -71,10 +72,11 @@ export default function AdminGate() {
           ) : null}
           <button
             type="submit"
-            className="rounded-lg px-4 py-2.5 text-sm font-semibold text-white"
+            disabled={busy || !password.trim()}
+            className="rounded-lg px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
             style={{ background: "var(--ew-red)" }}
           >
-            Unlock admin
+            {busy ? "Checking…" : "Unlock admin"}
           </button>
         </form>
       </AdminShell>

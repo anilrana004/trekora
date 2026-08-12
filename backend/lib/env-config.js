@@ -79,9 +79,9 @@ export function validateServerEnv(opts = {}) {
     warnings.push("Cloudinary API credentials incomplete");
   }
 
-  if (isProduction() && getEnv("VITE_ADMIN_SECRET")) {
+  if (getEnv("VITE_ADMIN_SECRET")) {
     warnings.push(
-      "VITE_ADMIN_SECRET is client-exposed; prefer ADMIN_API_SECRET server-side only",
+      "VITE_ADMIN_SECRET must not be set — it would leak into the client bundle; use ADMIN_API_SECRET only",
     );
   }
 

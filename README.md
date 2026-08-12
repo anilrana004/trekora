@@ -39,7 +39,7 @@ Vite loads env from `src/.env` (see `src/.env.example` and `src/frontend/.env.ex
 | `VITE_CLOUDINARY_CLOUD_NAME` | Image CDN |
 | `VITE_CLOUDINARY_UPLOAD_PRESET` | Client uploads (admin/gallery) |
 | `VITE_ENABLE_LOGIN` / `PAYMENT` / `EMI` | Feature flags (`false` in production) |
-| `VITE_ADMIN_ENABLED` / `VITE_ADMIN_SECRET` | Admin UI gate |
+| `VITE_ADMIN_ENABLED` | Admin UI routes (unlock uses server `ADMIN_API_SECRET`) |
 | `VITE_OPENWEATHER_API_KEY` | Weather widget (optional) |
 | `VITE_RAZORPAY_KEY_ID` | Payments when enabled (optional) |
 

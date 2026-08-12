@@ -140,7 +140,7 @@ export default function BlogDetailPage() {
 
   return (
     <div
-      className="blog-article-page min-h-screen pt-16"
+      className="blog-article-page min-h-screen w-full max-w-full overflow-x-clip pt-16"
       style={{ background: "var(--ew-white)" }}
     >
       <SEOHead
@@ -198,13 +198,13 @@ export default function BlogDetailPage() {
               {blog.category}
             </span>
             <h1
-              className="mb-4 text-3xl font-bold leading-[1.15] md:text-4xl lg:text-[2.65rem]"
+              className="mb-4 text-3xl font-bold leading-[1.15] break-words md:text-4xl lg:text-[2.65rem]"
               style={{ color: "var(--ew-text)" }}
             >
               {blog.title}
             </h1>
             <p
-              className="mb-6 text-base leading-relaxed md:text-lg"
+              className="mb-6 text-base leading-relaxed break-words md:text-lg"
               style={{ color: "var(--ew-text-lt)" }}
             >
               {blog.excerpt}
@@ -274,11 +274,12 @@ export default function BlogDetailPage() {
       </div>
 
       <div className="container mx-auto max-w-5xl px-4 py-10 md:py-14">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-12">
+        <div className="grid min-w-0 grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-12">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08, duration: 0.4 }}
+            className="min-w-0 max-w-full"
           >
             {embed ? (
               <div className="mb-8 aspect-video overflow-hidden rounded-xl border"

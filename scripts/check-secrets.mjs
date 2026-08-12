@@ -30,7 +30,6 @@ const ALLOWLIST_FILES = new Set([
   "SECURITY.md",
   "src/.env.example",
   "src/frontend/.env.example",
-  "eternawings/src/frontend/.env.example",
 ]);
 
 const BINARY_EXT = /\.(png|jpe?g|gif|webp|ico|woff2?|ttf|eot|pdf|zip|wasm)$/i;
