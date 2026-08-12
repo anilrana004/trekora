@@ -101,7 +101,7 @@ const TIMELINE = [
     desc: "Ten thousand trekkers. Ten thousand different reasons for climbing. One shared truth: nobody who reaches a Himalayan summit comes back quite the same person.",
   },
   {
-    year: "2025",
+    year: "2026",
     title: "Trekora — A New Chapter",
     desc: "Reborn as Trekora: Where Every Peak Tells a Story. New routes, deeper experiences, the same hands that have held yours on every difficult ascent.",
   },

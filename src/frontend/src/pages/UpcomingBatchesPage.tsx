@@ -10,13 +10,13 @@ import TravelSideActionRail, {
 } from "../components/TravelSideActionRail";
 import { TREKS } from "../data/treks";
 
-type TabKey = "this-month" | "next-3-months" | "summer-2025" | "all";
+type TabKey = "this-month" | "next-3-months" | "summer-2026" | "all";
 
 const BATCHES = [
   {
     id: 1,
     trek: "Roopkund Trek",
-    dates: "May 15–22, 2025",
+    dates: "May 15–22, 2026",
     duration: "8D/7N",
     slots: 4,
     price: 12000,
@@ -27,7 +27,7 @@ const BATCHES = [
   {
     id: 2,
     trek: "Valley of Flowers",
-    dates: "Jul 5–10, 2025",
+    dates: "Jul 5–10, 2026",
     duration: "6D/5N",
     slots: 8,
     price: 8500,
@@ -38,7 +38,7 @@ const BATCHES = [
   {
     id: 3,
     trek: "Kedarkantha Trek",
-    dates: "Dec 20–25, 2025",
+    dates: "Dec 20–25, 2026",
     duration: "6D/5N",
     slots: 0,
     price: 8500,
@@ -49,7 +49,7 @@ const BATCHES = [
   {
     id: 4,
     trek: "Hampta Pass",
-    dates: "Jun 12–16, 2025",
+    dates: "Jun 12–16, 2026",
     duration: "5D/4N",
     slots: 6,
     price: 9500,
@@ -60,7 +60,7 @@ const BATCHES = [
   {
     id: 5,
     trek: "Triund Trek",
-    dates: "Apr 20–21, 2025",
+    dates: "Apr 20–21, 2026",
     duration: "2D/1N",
     slots: 12,
     price: 3500,
@@ -71,7 +71,7 @@ const BATCHES = [
   {
     id: 6,
     trek: "Chandratal Lake",
-    dates: "Sep 5–8, 2025",
+    dates: "Sep 5–8, 2026",
     duration: "4D/3N",
     slots: 2,
     price: 8000,
@@ -93,7 +93,7 @@ const BATCHES = [
   {
     id: 8,
     trek: "Rupin Pass",
-    dates: "Jun 1–8, 2025",
+    dates: "Jun 1–8, 2026",
     duration: "8D/7N",
     slots: 5,
     price: 14000,
@@ -104,7 +104,7 @@ const BATCHES = [
   {
     id: 9,
     trek: "Sar Pass",
-    dates: "May 20–24, 2025",
+    dates: "May 20–24, 2026",
     duration: "5D/4N",
     slots: 0,
     price: 8500,
@@ -115,7 +115,7 @@ const BATCHES = [
   {
     id: 10,
     trek: "Har Ki Dun",
-    dates: "Oct 5–11, 2025",
+    dates: "Oct 5–11, 2026",
     duration: "7D/6N",
     slots: 7,
     price: 10500,
@@ -126,7 +126,7 @@ const BATCHES = [
   {
     id: 11,
     trek: "Kedarnath Trek",
-    dates: "May 1–4, 2025",
+    dates: "May 1–4, 2026",
     duration: "4D/3N",
     slots: 15,
     price: 6500,
@@ -137,7 +137,7 @@ const BATCHES = [
   {
     id: 12,
     trek: "Spiti Valley Circuit",
-    dates: "Aug 1–12, 2025",
+    dates: "Aug 1–12, 2026",
     duration: "12D/11N",
     slots: 3,
     price: 20000,
@@ -150,7 +150,7 @@ const BATCHES = [
 const TABS: { key: TabKey; label: string }[] = [
   { key: "this-month", label: "This Month" },
   { key: "next-3-months", label: "Next 3 Months" },
-  { key: "summer-2025", label: "Summer 2025" },
+  { key: "summer-2026", label: "Summer 2026" },
   { key: "all", label: "All" },
 ];
 
@@ -172,7 +172,7 @@ function filterBatches(tab: TabKey) {
     return BATCHES.filter(
       (b) => b.month >= NOW_MONTH && b.month <= NOW_MONTH + 3,
     );
-  if (tab === "summer-2025")
+  if (tab === "summer-2026")
     return BATCHES.filter((b) => b.month >= 4 && b.month <= 6);
   return BATCHES;
 }

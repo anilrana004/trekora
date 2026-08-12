@@ -873,21 +873,21 @@ export default function YatraDetailPage() {
                   </div>
                 )}
 
-                {(yatra.auspiciousDates2025 ?? yatra.auspicious_dates_2025) && (
+                {(yatra.auspiciousDates2026 ?? yatra.auspicious_dates_2026) && (
                   <div>
                     <h3
                       className="font-bold text-lg mb-3"
                       style={{ color: "var(--ew-text)" }}
                     >
-                      Auspicious Dates 2025
+                      Auspicious Dates 2026
                     </h3>
                     <div
                       className="rounded-xl border overflow-hidden"
                       style={{ borderColor: "var(--ew-gray-mid)" }}
                     >
                       {(
-                        yatra.auspiciousDates2025 ??
-                        yatra.auspicious_dates_2025 ??
+                        yatra.auspiciousDates2026 ??
+                        yatra.auspicious_dates_2026 ??
                         []
                       ).map((date, i) => (
                         <div

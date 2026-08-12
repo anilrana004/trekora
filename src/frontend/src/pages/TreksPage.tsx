@@ -260,7 +260,7 @@ export default function TreksPage() {
           style={{ color: "var(--ew-red)" }}
         >
           <AlertCircle size={15} aria-hidden />
-          Register early — spots fill fast for the 2025 trek season
+          Register early — spots fill fast for the 2026 trek season
         </div>
       </div>
 

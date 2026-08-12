@@ -248,7 +248,7 @@ export default function YatrasPage() {
           style={{ color: "var(--ew-red)" }}
         >
           <AlertCircle size={15} />
-          Register early — spots fill fast for the 2025 yatra season
+          Register early — spots fill fast for the 2026 yatra season
         </div>
       </div>
 

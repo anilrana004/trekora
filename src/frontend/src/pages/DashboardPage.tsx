@@ -38,7 +38,7 @@ const MOCK_BOOKINGS = [
   {
     id: "TK250103",
     trek: "Kedarkantha Trek",
-    dates: "Dec 20–25, 2025",
+    dates: "Dec 20–25, 2026",
     status: "Confirmed",
     amount: 8500,
     image:
@@ -48,7 +48,7 @@ const MOCK_BOOKINGS = [
   {
     id: "TK250218",
     trek: "Hampta Pass",
-    dates: "Jun 12–16, 2025",
+    dates: "Jun 12–16, 2026",
     status: "Pending",
     amount: 9500,
     image:

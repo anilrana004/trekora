@@ -12,22 +12,22 @@ export type BlogLinkedProduct = {
  * Card and hero images are resolved from that product's `image` field.
  */
 export const BLOG_LINKED_PRODUCT: Record<string, BlogLinkedProduct> = {
-  "roopkund-trek-guide-2025": { kind: "trek", slug: "roopkund-trek" },
+  "roopkund-trek-guide-2026": { kind: "trek", slug: "roopkund-trek" },
   "valley-of-flowers-trek-guide": { kind: "trek", slug: "valley-of-flowers" },
   "triund-trek-guide-dharamsala": { kind: "trek", slug: "triund-trek" },
   "hampta-pass-trek-guide": { kind: "trek", slug: "hampta-pass" },
-  "char-dham-yatra-2025-complete-guide": {
+  "char-dham-yatra-2026-complete-guide": {
     kind: "yatra",
     slug: "char-dham-yatra",
   },
   "kedarkantha-trek-winter-guide": { kind: "trek", slug: "kedarkantha-trek" },
-  "spiti-valley-travel-guide-2025": { kind: "trek", slug: "spiti-valley-trek" },
+  "spiti-valley-travel-guide-2026": { kind: "trek", slug: "spiti-valley-trek" },
   "altitude-sickness-himalayan-treks-guide": {
     kind: "trek",
     slug: "roopkund-trek",
   },
   "solo-trekking-himalayas-safety-guide": { kind: "trek", slug: "triund-trek" },
-  "best-beginner-treks-uttarakhand-himachal-2025": {
+  "best-beginner-treks-uttarakhand-himachal-2026": {
     kind: "trek",
     slug: "kedarkantha-trek",
   },

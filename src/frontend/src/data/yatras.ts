@@ -40,8 +40,8 @@ export interface Yatra {
   spiritualBenefits?: string[];
   puja_items?: string[];
   pujaItems?: string[]; // alias for puja_items (camelCase)
-  auspicious_dates_2025?: string[];
-  auspiciousDates2025?: string[]; // alias for auspicious_dates_2025 (camelCase)
+  auspicious_dates_2026?: string[];
+  auspiciousDates2026?: string[]; // alias for auspicious_dates_2026 (camelCase)
   faqs?: YatraFaq[];
   coordinates?: YatraCoordinates;
   helicopterAvailable?: boolean;
@@ -149,21 +149,21 @@ export const YATRAS: Yatra[] = [
       "Agarbatti and ghee deepak",
       "Personal puja thali with bell and conch shell",
     ],
-    auspicious_dates_2025: [
-      "Akshaya Tritiya (April 30, 2025) — Opening of Yamunotri and Gangotri",
-      "Shiv Ratri (February 26, 2025) — Special puja at Kedarnath",
-      "Ram Navami (April 6, 2025) — Auspicious start for Badrinath",
-      "Narasimha Chaturdashi (May 12, 2025) — Highly auspicious for Badrinath",
-      "Guru Purnima (July 10, 2025) — Seeking guru's blessings at all dhams",
-      "Shravan Somvar (July-August 2025 Mondays) — Special Shiva worship at Kedarnath",
-      "Janmashtami (August 16, 2025) — Krishna's birthday, special at Badrinath",
-      "Navratri (October 2-12, 2025) — Highly auspicious for Devi shrines",
+    auspicious_dates_2026: [
+      "Akshaya Tritiya (April 30, 2026) — Opening of Yamunotri and Gangotri",
+      "Shiv Ratri (February 26, 2026) — Special puja at Kedarnath",
+      "Ram Navami (April 6, 2026) — Auspicious start for Badrinath",
+      "Narasimha Chaturdashi (May 12, 2026) — Highly auspicious for Badrinath",
+      "Guru Purnima (July 10, 2026) — Seeking guru's blessings at all dhams",
+      "Shravan Somvar (July-August 2026 Mondays) — Special Shiva worship at Kedarnath",
+      "Janmashtami (August 16, 2026) — Krishna's birthday, special at Badrinath",
+      "Navratri (October 2-12, 2026) — Highly auspicious for Devi shrines",
     ],
     faqs: [
       {
-        question: "When do the Char Dham temples open and close in 2025?",
+        question: "When do the Char Dham temples open and close in 2026?",
         answer:
-          "Yamunotri and Gangotri open on Akshaya Tritiya (April 30, 2025) and close on Yama Dwitiya (October 29). Kedarnath opens approx May 2, 2025. Badrinath opens on Akshaya Tritiya, closes on Prabodhini Ekadashi (November 4, 2025).",
+          "Yamunotri and Gangotri open on Akshaya Tritiya (April 30, 2026) and close on Yama Dwitiya (October 29). Kedarnath opens approx May 2, 2026. Badrinath opens on Akshaya Tritiya, closes on Prabodhini Ekadashi (November 4, 2026).",
       },
       {
         question: "Is registration required for Kedarnath?",
@@ -191,7 +191,7 @@ export const YATRAS: Yatra[] = [
           "A minimum of 10-12 days is recommended to do all four dhams comfortably. A 7-day rush tour is possible using helicopters for Kedarnath, but the spiritual experience is diminished. Our 12-day package allows adequate time at each dham.",
       },
       {
-        question: "What is the Char Dham Yatra cost in 2025?",
+        question: "What is the Char Dham Yatra cost in 2026?",
         answer:
           "EternaWings package starts from ₹35,000 per person including accommodation, meals, transport between dhams, and a spiritual guide. Helicopter add-ons cost extra (₹3,500-5,500 for Kedarnath).",
       },
@@ -326,13 +326,13 @@ export const YATRAS: Yatra[] = [
       "Gangajal in copper vessel",
       "Rudrakshamala (108-bead Rudraksha rosary)",
     ],
-    auspicious_dates_2025: [
-      "Shiva Ratri (February 26, 2025) — Auspicious for all Panch Kedar",
-      "Opening ceremony at Kedarnath (May 2-5, 2025 approx)",
+    auspicious_dates_2026: [
+      "Shiva Ratri (February 26, 2026) — Auspicious for all Panch Kedar",
+      "Opening ceremony at Kedarnath (May 2-5, 2026 approx)",
       "Pradosha Vrat days (every fortnight) — best for Shiva worship",
-      "Sawan Mondays (July-August 2025) — Shiva devotees throng all five shrines",
-      "Navaratri (October 2-12, 2025) — Special puja at Tungnath and Rudranath",
-      "Kartik Purnima (November 5, 2025) — Last day before shrines close for winter",
+      "Sawan Mondays (July-August 2026) — Shiva devotees throng all five shrines",
+      "Navaratri (October 2-12, 2026) — Special puja at Tungnath and Rudranath",
+      "Kartik Purnima (November 5, 2026) — Last day before shrines close for winter",
     ],
     faqs: [
       {
@@ -500,13 +500,13 @@ export const YATRAS: Yatra[] = [
       "Chandan (sandalwood paste)",
       "Coconut, dry fruits, mishri for prasad",
     ],
-    auspicious_dates_2025: [
-      "Akshaya Tritiya (April 30, 2025) — Temple opening, most auspicious for beginning yatra",
-      "Vaikuntha Ekadashi (January 10, 2025) — Vishnu's divine day",
-      "Narasimha Chaturdashi (May 12, 2025) — Highly auspicious at Badrinath",
-      "Guru Purnima (July 10, 2025) — Seeking Vishnu's blessings",
-      "Janmashtami (August 16, 2025) — Krishna's birthday (Vishnu avatar), celebrated at Badrinath",
-      "Prabodhini Ekadashi (November 4, 2025) — Temple closing ceremony",
+    auspicious_dates_2026: [
+      "Akshaya Tritiya (April 30, 2026) — Temple opening, most auspicious for beginning yatra",
+      "Vaikuntha Ekadashi (January 10, 2026) — Vishnu's divine day",
+      "Narasimha Chaturdashi (May 12, 2026) — Highly auspicious at Badrinath",
+      "Guru Purnima (July 10, 2026) — Seeking Vishnu's blessings",
+      "Janmashtami (August 16, 2026) — Krishna's birthday (Vishnu avatar), celebrated at Badrinath",
+      "Prabodhini Ekadashi (November 4, 2026) — Temple closing ceremony",
     ],
     faqs: [
       {
@@ -670,12 +670,12 @@ export const YATRAS: Yatra[] = [
       "Simple clean white clothing preferred",
       "Small bottle for taking glacial lake water",
     ],
-    auspicious_dates_2025: [
-      "Gurudwara opening ceremony (June 1-5, 2025 approx, based on snow clearing)",
-      "Guru Nanak Jayanti (November 5, 2025) — special akhand path at lower gurudwaras",
-      "Guru Gobind Singh Jayanti (December 23, 2025) — key day honoring the founder's vision",
-      "Baisakhi (April 14, 2025) — major Sikh festival, though gurudwara opens later in season",
-      "Hemkund Sahib closing ceremony (October 10-15, 2025 approx)",
+    auspicious_dates_2026: [
+      "Gurudwara opening ceremony (June 1-5, 2026 approx, based on snow clearing)",
+      "Guru Nanak Jayanti (November 5, 2026) — special akhand path at lower gurudwaras",
+      "Guru Gobind Singh Jayanti (December 23, 2026) — key day honoring the founder's vision",
+      "Baisakhi (April 14, 2026) — major Sikh festival, though gurudwara opens later in season",
+      "Hemkund Sahib closing ceremony (October 10-15, 2026 approx)",
     ],
     faqs: [
       {
@@ -684,7 +684,7 @@ export const YATRAS: Yatra[] = [
           "Hemkund Sahib Gurudwara is at 4,633m above sea level — making it the world's highest gurudwara. AMS (Altitude Mountain Sickness) is a real risk. Acclimatize at Ghangaria (3,048m, base camp) for one night before ascending to Hemkund.",
       },
       {
-        question: "When does Hemkund Sahib open and close in 2025?",
+        question: "When does Hemkund Sahib open and close in 2026?",
         answer:
           "Hemkund Sahib is open from approximately early June to mid-October, depending on snow-clearing. Typical opening: first week of June. Closing: second week of October. Exact dates are announced by the Hemkund Sahib Management Trust.",
       },
@@ -862,12 +862,12 @@ export const YATRAS: Yatra[] = [
       "Agarbatti (incense sticks)",
       "Dry fruits, misri, coconut for prasad",
     ],
-    auspicious_dates_2025: [
-      "Shiva Ratri (February 26, 2025) — Most auspicious for Adi Kailash",
-      "Akshaya Tritiya (April 30, 2025) — Auspicious start for yatra season",
-      "Sawan Mondays (July-August 2025) — Shiva devotees make the trek",
-      "Navratri (October 2-12, 2025) — Goddess Parvati worship at the lake",
-      "Inner Line Permit window: May 1 to November 15 (2025 season)",
+    auspicious_dates_2026: [
+      "Shiva Ratri (February 26, 2026) — Most auspicious for Adi Kailash",
+      "Akshaya Tritiya (April 30, 2026) — Auspicious start for yatra season",
+      "Sawan Mondays (July-August 2026) — Shiva devotees make the trek",
+      "Navratri (October 2-12, 2026) — Goddess Parvati worship at the lake",
+      "Inner Line Permit window: May 1 to November 15 (2026 season)",
     ],
     faqs: [
       {
@@ -1072,11 +1072,11 @@ export const YATRAS: Yatra[] = [
       "Coconut and dry fruits for prasad",
       "Agarbatti (incense sticks)",
     ],
-    auspicious_dates_2025: [
-      "Kartik Purnima (November 5, 2025) — Most auspicious day at this temple",
-      "Skanda Shashti (October 27, 2025) — Lord Kartikeya's victory day",
-      "Chaitra Navratri (March 30 - April 7, 2025) — Good for beginning yatra",
-      "Akshaya Tritiya (April 30, 2025) — Auspicious for pilgrimage start",
+    auspicious_dates_2026: [
+      "Kartik Purnima (November 5, 2026) — Most auspicious day at this temple",
+      "Skanda Shashti (October 27, 2026) — Lord Kartikeya's victory day",
+      "Chaitra Navratri (March 30 - April 7, 2026) — Good for beginning yatra",
+      "Akshaya Tritiya (April 30, 2026) — Auspicious for pilgrimage start",
     ],
     faqs: [
       {
@@ -1234,12 +1234,12 @@ export const YATRAS: Yatra[] = [
       "Coconut, misri, dry fruits for prasad",
       "Small wooden wedding token to offer at the fire",
     ],
-    auspicious_dates_2025: [
-      "Akshaya Tritiya (April 30, 2025) — Best day for couples' pilgrimage",
-      "Vivah Panchami (December 2025) — Celebrates Shiva-Parvati's divine wedding anniversary",
-      "Navaratri (October 2-12, 2025) — Parvati worship highly auspicious here",
-      "Maha Shivratri (February 26, 2025) — Shiva-Parvati union celebrated",
-      "Hariyali Teej (August 2025) — Women's festival celebrating Parvati's reunion with Shiva",
+    auspicious_dates_2026: [
+      "Akshaya Tritiya (April 30, 2026) — Best day for couples' pilgrimage",
+      "Vivah Panchami (December 2026) — Celebrates Shiva-Parvati's divine wedding anniversary",
+      "Navaratri (October 2-12, 2026) — Parvati worship highly auspicious here",
+      "Maha Shivratri (February 26, 2026) — Shiva-Parvati union celebrated",
+      "Hariyali Teej (August 2026) — Women's festival celebrating Parvati's reunion with Shiva",
     ],
     faqs: [
       {
@@ -1405,11 +1405,11 @@ export const YATRAS: Yatra[] = [
       "Dry fruits, misri, coconut for prasad",
       "Small lamp with ghee and wick",
     ],
-    auspicious_dates_2025: [
-      "Bhadon Chaturdashi (September 6-8, 2025) — Main yatra festival — hundreds of thousands of pilgrims",
-      "Maha Shivratri (February 26, 2025) — Special puja, smaller crowds",
-      "Sawan Mondays (July-August 2025) — Shiva devotees make this trek",
-      "Navaratri (October 2025) — Goddess worship combined with Shiva darshan",
+    auspicious_dates_2026: [
+      "Bhadon Chaturdashi (September 6-8, 2026) — Main yatra festival — hundreds of thousands of pilgrims",
+      "Maha Shivratri (February 26, 2026) — Special puja, smaller crowds",
+      "Sawan Mondays (July-August 2026) — Shiva devotees make this trek",
+      "Navaratri (October 2026) — Goddess worship combined with Shiva darshan",
     ],
     faqs: [
       {
@@ -1420,7 +1420,7 @@ export const YATRAS: Yatra[] = [
       {
         question: "When is the annual Mani Mahesh Yatra held?",
         answer:
-          "The main annual Mani Mahesh Yatra is held during Bhadon Chaturdashi, which typically falls in late August to early September. In 2025, the main congregation days are September 6-8. During this period, 50,000-100,000 pilgrims descend on the lake within a week.",
+          "The main annual Mani Mahesh Yatra is held during Bhadon Chaturdashi, which typically falls in late August to early September. In 2026, the main congregation days are September 6-8. During this period, 50,000-100,000 pilgrims descend on the lake within a week.",
       },
       {
         question: "Is accommodation available at Mani Mahesh Lake?",
@@ -1604,11 +1604,11 @@ export const YATRAS: Yatra[] = [
       "Bilva patra (when available at lower altitude)",
       "Camphor and ghee deepak",
     ],
-    auspicious_dates_2025: [
-      "Shrikhand Chaturdashi (August 14-16, 2025) — Annual Kinnaur Kailash Yatra fair at Kamru",
-      "Janmashtami fortnight (August 2025) — Peak pilgrimage season",
-      "Navratri (October 2-12, 2025) — Goddess festivals at local Kinnauri temples",
-      "Losar (Tibetan New Year, ~February 2025) — Buddhist community ceremonies at gompas",
+    auspicious_dates_2026: [
+      "Shrikhand Chaturdashi (August 14-16, 2026) — Annual Kinnaur Kailash Yatra fair at Kamru",
+      "Janmashtami fortnight (August 2026) — Peak pilgrimage season",
+      "Navratri (October 2-12, 2026) — Goddess festivals at local Kinnauri temples",
+      "Losar (Tibetan New Year, ~February 2026) — Buddhist community ceremonies at gompas",
     ],
     faqs: [
       {
@@ -1807,11 +1807,11 @@ export const YATRAS: Yatra[] = [
       "Gangajal in plastic bottle (not glass — fragile at altitude)",
       "Dry fruits, misri, coconut for prasad (lightweight)",
     ],
-    auspicious_dates_2025: [
-      "Ashadha Ekadashi (July 6-8, 2025) — Main annual Shrikhand Yatra festival",
-      "Sawan Mondays (July 7, 14, 21, 28, 2025) — Shiva devotees' special days",
-      "Maha Shivratri (February 26, 2025) — Special puja at lower base temple",
-      "Shravan Purnima (August 9, 2025) — Auspicious for final day at lingam",
+    auspicious_dates_2026: [
+      "Ashadha Ekadashi (July 6-8, 2026) — Main annual Shrikhand Yatra festival",
+      "Sawan Mondays (July 7, 14, 21, 28, 2026) — Shiva devotees' special days",
+      "Maha Shivratri (February 26, 2026) — Special puja at lower base temple",
+      "Shravan Purnima (August 9, 2026) — Auspicious for final day at lingam",
     ],
     faqs: [
       {
@@ -1822,7 +1822,7 @@ export const YATRAS: Yatra[] = [
       {
         question: "When is the annual Shrikhand Yatra held?",
         answer:
-          "The main annual Shrikhand Yatra is during Ashadha Ekadashi (June-July), typically July 6-8 in 2025. 30,000-50,000 pilgrims complete the trek in 3-4 days during this period. Outside this window, the trail is open July-August.",
+          "The main annual Shrikhand Yatra is during Ashadha Ekadashi (June-July), typically July 6-8 in 2026. 30,000-50,000 pilgrims complete the trek in 3-4 days during this period. Outside this window, the trail is open July-August.",
       },
       {
         question: "What is the Bheem Dwar significance?",
@@ -1962,11 +1962,11 @@ export const YATRAS: Yatra[] = [
       "Dry fruits, misri for prasad",
       "Flowers — marigold and red hibiscus",
     ],
-    auspicious_dates_2025: [
-      "Churdhar Mela (May-June 2025) — Annual festival, 50,000+ devotees",
-      "Navratri (October 2-12, 2025) — Goddess Chamunda worship highly auspicious",
-      "Shravan Mondays (July-August 2025) — Shiva manifestation worship",
-      "Kartik Purnima (November 5, 2025) — Last major auspicious day before snow",
+    auspicious_dates_2026: [
+      "Churdhar Mela (May-June 2026) — Annual festival, 50,000+ devotees",
+      "Navratri (October 2-12, 2026) — Goddess Chamunda worship highly auspicious",
+      "Shravan Mondays (July-August 2026) — Shiva manifestation worship",
+      "Kartik Purnima (November 5, 2026) — Last major auspicious day before snow",
     ],
     faqs: [
       {
@@ -2226,11 +2226,11 @@ export const YATRAS: Yatra[] = [
       "Gangajal in copper vessel",
       "Camphor and ghee deepak",
     ],
-    auspicious_dates_2025: [
-      "Akshaya Tritiya (April 30, 2025) — Both dhams open",
-      "Guru Purnima (July 10, 2025) — Auspicious for Badrinath",
-      "Janmashtami (August 16, 2025) — Special celebration at Badrinath",
-      "Navratri (October 2-12, 2025) — Last major season batch",
+    auspicious_dates_2026: [
+      "Akshaya Tritiya (April 30, 2026) — Both dhams open",
+      "Guru Purnima (July 10, 2026) — Auspicious for Badrinath",
+      "Janmashtami (August 16, 2026) — Special celebration at Badrinath",
+      "Navratri (October 2-12, 2026) — Last major season batch",
     ],
     coordinates: {
       start: [29.9457, 78.1642],
@@ -2390,11 +2390,11 @@ export const YATRAS: Yatra[] = [
       "Gangajal in copper vessel",
       "Camphor and ghee deepak",
     ],
-    auspicious_dates_2025: [
-      "Akshaya Tritiya (April 30, 2025) — Temple opening",
-      "Sawan Mondays (July-August 2025) — Peak Shiva worship",
-      "Navratri (October 2-12, 2025) — Final major season batch",
-      "Deepawali (October 20, 2025) — Temple closes for winter",
+    auspicious_dates_2026: [
+      "Akshaya Tritiya (April 30, 2026) — Temple opening",
+      "Sawan Mondays (July-August 2026) — Peak Shiva worship",
+      "Navratri (October 2-12, 2026) — Final major season batch",
+      "Deepawali (October 20, 2026) — Temple closes for winter",
     ],
     coordinates: {
       start: [30.6301, 79.0781],
@@ -2517,9 +2517,9 @@ export const YATRAS: Yatra[] = [
           "Vasudhara Falls is a 122m cascade waterfall located 3km from Mana village (6km from Badrinath). According to local belief, sinless persons feel the water fall on them, while others feel nothing as the water arcs away. The short 3km trail from Mana is scenic and moderately easy.",
       },
       {
-        question: "When does Badrinath temple open in 2025?",
+        question: "When does Badrinath temple open in 2026?",
         answer:
-          "Badrinath temple opens on Akshaya Tritiya (May 4, 2025 approximately). The exact date is announced by the Jyotirmath Shankaracharya. The temple closes on Bhai Dooj (November 2025). During winter, the idol is moved to Pandukeshwar (Yogdhyan Badri).",
+          "Badrinath temple opens on Akshaya Tritiya (May 4, 2026 approximately). The exact date is announced by the Jyotirmath Shankaracharya. The temple closes on Bhai Dooj (November 2026). During winter, the idol is moved to Pandukeshwar (Yogdhyan Badri).",
       },
       {
         question: "Is registration required for Badrinath?",
@@ -2559,11 +2559,11 @@ export const YATRAS: Yatra[] = [
       "Panchamrit for abhishek",
       "Coconut, dry fruits, mishri for prasad",
     ],
-    auspicious_dates_2025: [
-      "Akshaya Tritiya (April 30, 2025) — Temple opens",
-      "Vaikuntha Ekadashi (January 2025) — Highly auspicious for Badrinath",
-      "Janmashtami (August 16, 2025) — Krishna's birthday (Vishnu avatar)",
-      "Prabodhini Ekadashi (November 4, 2025) — Temple closing ceremony",
+    auspicious_dates_2026: [
+      "Akshaya Tritiya (April 30, 2026) — Temple opens",
+      "Vaikuntha Ekadashi (January 2026) — Highly auspicious for Badrinath",
+      "Janmashtami (August 16, 2026) — Krishna's birthday (Vishnu avatar)",
+      "Prabodhini Ekadashi (November 4, 2026) — Temple closing ceremony",
     ],
     coordinates: {
       start: [30.5581, 79.5648],
@@ -2717,11 +2717,11 @@ export const YATRAS: Yatra[] = [
       "Gangajal in copper vessel",
       "Camphor and ghee deepak",
     ],
-    auspicious_dates_2025: [
-      "Akshaya Tritiya (April 30, 2025) — Temple opening, rhododendron in full bloom",
-      "Sawan Mondays (July-August 2025) — Peak Shiva worship",
-      "Navratri (October 2-12, 2025) — Last major season batch",
-      "November 5, 2025 (Kartik Purnima) — Last day before temple closes for winter",
+    auspicious_dates_2026: [
+      "Akshaya Tritiya (April 30, 2026) — Temple opening, rhododendron in full bloom",
+      "Sawan Mondays (July-August 2026) — Peak Shiva worship",
+      "Navratri (October 2-12, 2026) — Last major season batch",
+      "November 5, 2026 (Kartik Purnima) — Last day before temple closes for winter",
     ],
     coordinates: {
       start: [30.4985, 79.1634],

@@ -291,7 +291,7 @@ export default function StateHubPage() {
 
   useEffect(() => {
     const name = config?.title ?? stateParam;
-    document.title = `${name} Treks 2025 | Trekora`;
+    document.title = `${name} Treks 2026 | Trekora`;
   }, [stateParam, config]);
 
   if (!config) {

@@ -9,7 +9,7 @@ const PROMOS = [
     type: "percentage",
     uses: 45,
     maxUses: 100,
-    expiry: "2025-06-30",
+    expiry: "2026-06-30",
     active: true,
   },
   {
@@ -19,7 +19,7 @@ const PROMOS = [
     type: "flat",
     uses: 23,
     maxUses: 50,
-    expiry: "2025-07-31",
+    expiry: "2026-07-31",
     active: true,
   },
   {
@@ -29,7 +29,7 @@ const PROMOS = [
     type: "percentage",
     uses: 89,
     maxUses: 100,
-    expiry: "2025-05-31",
+    expiry: "2026-05-31",
     active: false,
   },
 ];

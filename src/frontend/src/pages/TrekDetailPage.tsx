@@ -355,7 +355,7 @@ const _REVIEWS = [
   {
     name: "Priya Sharma",
     city: "New Delhi",
-    date: "Jan 2025",
+    date: "Jan 2026",
     rating: 5,
     batch: "Winter Batch",
     text: "An absolutely magical experience! The Trekora guides were knowledgeable and ensured our safety throughout. The views were beyond any photograph. I would recommend this to every adventure-seeker.",

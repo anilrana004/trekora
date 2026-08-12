@@ -56,7 +56,7 @@ export default function SeoTagCloud({
     addSearch(`Best Treks in ${stateLabel}`);
     addSearch(`${stateLabel} Adventure Treks`);
     if (difficulty) addSearch(`${difficulty} Treks India`);
-    addSearch("Summer Treks India 2025");
+    addSearch("Summer Treks India 2026");
     addSearch("5000m Altitude Treks");
     if (duration) addSearch(`${duration} Days Trek`);
     addSearch("Himalayan Treks India");
@@ -70,7 +70,7 @@ export default function SeoTagCloud({
     addSearch("Snow Treks India");
     addSearch("Weekend Treks from Delhi");
     addSearch("Adventure Tourism India");
-    addSearch("Trek Packages 2025");
+    addSearch("Trek Packages 2026");
     // Difficulty-specific
     addSearch("Beginner Treks Himalaya");
     addSearch("Family Treks India");
@@ -98,7 +98,7 @@ export default function SeoTagCloud({
     addSearch(`${name} Package`);
     addSearch(`Best Yatras in ${stateLabel}`);
     addSearch(`${stateLabel} Pilgrimage`);
-    addSearch("Himalayan Yatra 2025");
+    addSearch("Himalayan Yatra 2026");
     addSearch("Spiritual Trek India");
     addSearch("Sacred Pilgrimage India");
     addSearch("Char Dham Yatra");
@@ -106,7 +106,7 @@ export default function SeoTagCloud({
     addSearch("Himachal Pilgrimage");
     addSearch("Hindu Pilgrimage India");
     addSearch("Sikh Pilgrimage India");
-    addSearch("Pilgrimage Packages 2025");
+    addSearch("Pilgrimage Packages 2026");
     addSearch("Trekora Yatra Reviews");
     addSearch("VIP Darshan Yatra");
     addSearch("Group Pilgrimage India");

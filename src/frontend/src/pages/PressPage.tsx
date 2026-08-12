@@ -22,7 +22,7 @@ const PRESS_MENTIONS: PressMention[] = [
     logo: "TOI",
     headline: "Trekora Redefines Himalayan Trekking Experience",
     url: "https://timesofindia.com",
-    date: "March 2025",
+    date: "March 2026",
     featured: true,
   },
   {
@@ -30,7 +30,7 @@ const PRESS_MENTIONS: PressMention[] = [
     logo: "NDTV",
     headline: "Top 5 Trekking Companies Making India's Mountains Accessible",
     url: "https://ndtv.com",
-    date: "February 2025",
+    date: "February 2026",
     featured: true,
   },
   {
@@ -38,7 +38,7 @@ const PRESS_MENTIONS: PressMention[] = [
     logo: "OT",
     headline: "Hidden Gems: Uttarakhand Treks You Haven't Heard Of",
     url: "https://outlooktraveller.com",
-    date: "January 2025",
+    date: "January 2026",
     featured: true,
   },
   {

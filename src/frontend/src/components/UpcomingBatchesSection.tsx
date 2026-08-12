@@ -43,7 +43,7 @@ const BATCH_DATA: Batch[] = [
     slots: 3,
     price: 12000,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Valley of Flowers",
@@ -54,7 +54,7 @@ const BATCH_DATA: Batch[] = [
     slots: 5,
     price: 8500,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Triund Trek",
@@ -65,7 +65,7 @@ const BATCH_DATA: Batch[] = [
     slots: 12,
     price: 3500,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Rupin Pass",
@@ -76,7 +76,7 @@ const BATCH_DATA: Batch[] = [
     slots: 4,
     price: 11500,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Pangarchulla Peak",
@@ -109,7 +109,7 @@ const BATCH_DATA: Batch[] = [
     slots: 6,
     price: 9500,
     full: false,
-    tab: ["Next Month", "Summer 2025"],
+    tab: ["Next Month", "Summer 2026"],
   },
   {
     trek: "Kheerganga",
@@ -120,7 +120,7 @@ const BATCH_DATA: Batch[] = [
     slots: 15,
     price: 3000,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Chandratal Lake",
@@ -131,7 +131,7 @@ const BATCH_DATA: Batch[] = [
     slots: 4,
     price: 10000,
     full: false,
-    tab: ["Next Month", "Summer 2025"],
+    tab: ["Next Month", "Summer 2026"],
   },
   {
     trek: "Bhrigu Lake",
@@ -142,7 +142,7 @@ const BATCH_DATA: Batch[] = [
     slots: 8,
     price: 8500,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Sar Pass",
@@ -153,7 +153,7 @@ const BATCH_DATA: Batch[] = [
     slots: 6,
     price: 9000,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Beas Kund",
@@ -164,7 +164,7 @@ const BATCH_DATA: Batch[] = [
     slots: 10,
     price: 7500,
     full: false,
-    tab: ["This Month", "Summer 2025"],
+    tab: ["This Month", "Summer 2026"],
   },
   {
     trek: "Pin Parvati Pass",
@@ -219,7 +219,7 @@ const BATCH_DATA: Batch[] = [
     slots: 8,
     price: 7200,
     full: false,
-    tab: ["Winter 2025/26"],
+    tab: ["Winter 2026/27"],
   },
   {
     trek: "Deoriatal-Chandrashila",
@@ -230,7 +230,7 @@ const BATCH_DATA: Batch[] = [
     slots: 9,
     price: 7000,
     full: false,
-    tab: ["Winter 2025/26"],
+    tab: ["Winter 2026/27"],
   },
   {
     trek: "Kedarkantha Trek",
@@ -241,7 +241,7 @@ const BATCH_DATA: Batch[] = [
     slots: 8,
     price: 8500,
     full: false,
-    tab: ["Winter 2025/26"],
+    tab: ["Winter 2026/27"],
   },
   {
     trek: "Brahmatal Trek",
@@ -252,7 +252,7 @@ const BATCH_DATA: Batch[] = [
     slots: 10,
     price: 9000,
     full: false,
-    tab: ["Winter 2025/26"],
+    tab: ["Winter 2026/27"],
   },
 ];
 
@@ -260,8 +260,8 @@ const TABS = [
   "All",
   "This Month",
   "Next Month",
-  "Summer 2025",
-  "Winter 2025/26",
+  "Summer 2026",
+  "Winter 2026/27",
 ];
 
 function SlotsCell({ slots }: { slots: number }) {

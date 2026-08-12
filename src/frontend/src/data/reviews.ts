@@ -67,12 +67,12 @@ const SEED: Omit<Review, "id" | "date">[] = [
 ];
 
 const MONTHS = [
-  "Jan 2025",
-  "Feb 2025",
-  "Mar 2025",
-  "Apr 2025",
-  "May 2025",
-  "Jun 2025",
+  "Jan 2026",
+  "Feb 2026",
+  "Mar 2026",
+  "Apr 2026",
+  "May 2026",
+  "Jun 2026",
 ];
 
 export const REVIEWS: Review[] = Array.from({ length: 24 }, (_, i) => {

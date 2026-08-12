@@ -210,16 +210,16 @@ export const SITE_EXPLORE_TAGS: ExploreTag[] = [
 
   // ── Blog guides (10) ──
   blog("valley-of-flowers-trek-guide", "Valley of Flowers Guide"),
-  blog("roopkund-trek-guide-2025", "Roopkund Trek Guide"),
+  blog("roopkund-trek-guide-2026", "Roopkund Trek Guide"),
   blog("triund-trek-guide-dharamsala", "Triund Trek Guide"),
   blog("hampta-pass-trek-guide", "Hampta Pass Guide"),
-  blog("char-dham-yatra-2025-complete-guide", "Char Dham Guide"),
+  blog("char-dham-yatra-2026-complete-guide", "Char Dham Guide"),
   blog("kedarkantha-trek-winter-guide", "Kedarkantha Winter Guide"),
-  blog("spiti-valley-travel-guide-2025", "Spiti Valley Guide"),
+  blog("spiti-valley-travel-guide-2026", "Spiti Valley Guide"),
   blog("altitude-sickness-himalayan-treks-guide", "Altitude Sickness Guide"),
   blog("solo-trekking-himalayas-safety-guide", "Solo Trekking Safety"),
   blog(
-    "best-beginner-treks-uttarakhand-himachal-2025",
+    "best-beginner-treks-uttarakhand-himachal-2026",
     "Best Beginner Treks Guide",
   ),
 

@@ -1,4 +1,4 @@
-import { Link, useParams } from "@tanstack/react-router";
+import { Link, Navigate, useParams } from "@tanstack/react-router";
 import {
   ArrowRight,
   Calendar,
@@ -108,6 +108,16 @@ export default function BlogDetailPage() {
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       /* user cancelled share */
+    }
+  }
+
+  // Keep old season URLs working after year bump (…-2025 → …-2026).
+  if (!blog && slug.includes("2025")) {
+    const aliased = slug.replaceAll("2025", "2026");
+    if (published.some((b) => b.slug === aliased)) {
+      return (
+        <Navigate to="/blog/$slug" params={{ slug: aliased }} replace />
+      );
     }
   }
 

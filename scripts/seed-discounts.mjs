@@ -34,7 +34,7 @@ const SAMPLES = {
     active: true,
   },
   charDhamFeatured: {
-    code: "CHARDHAM2025",
+    code: "CHARDHAM2026",
     discountType: "flat",
     discountValue: 10000,
     minBookingAmount: 25000,
@@ -76,7 +76,7 @@ try {
   );
   const g = await upsert(GiftCard, { code: SAMPLES.giftCard.code }, SAMPLES.giftCard);
   process.stdout.write(`[seed] voucher TREK2026: ${v}\n`);
-  process.stdout.write(`[seed] voucher CHARDHAM2025: ${cd}\n`);
+  process.stdout.write(`[seed] voucher CHARDHAM2026: ${cd}\n`);
   process.stdout.write(`[seed] gift card GIFT-XK92-TREK: ${g}\n`);
   process.stdout.write("[seed] done — collections: vouchers, giftcards (db from MONGODB_URI)\n");
   process.exit(0);
