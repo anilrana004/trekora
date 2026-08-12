@@ -266,14 +266,26 @@ function Step1({
             Select a trek, yatra, or package to continue
           </div>
         ) : (
-          <div className="booking-departure-date-wrap">
+          <div
+            className={`booking-departure-date-wrap${fd.batchDate ? "" : " booking-departure-date-wrap--empty"}`}
+          >
+            {!fd.batchDate ? (
+              <span className="booking-departure-date-placeholder" aria-hidden>
+                <Calendar
+                  size={18}
+                  strokeWidth={2}
+                  className="booking-departure-date-placeholder__icon"
+                />
+                Tap to select departure date
+              </span>
+            ) : null}
             <input
               type="date"
               required
               min={todayYmd}
               value={fd.batchDate ?? ""}
               onChange={(e) => onDepartureDateChange(e.target.value)}
-              className="booking-departure-date-input w-full border rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:border-[#C0001C] border-[var(--ew-gray-mid)] focus:ring-[#C0001C]/30"
+              className="booking-departure-date-input w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C0001C]/30"
               data-ocid="booking.preferred_date"
               aria-label="Departure date"
             />

@@ -474,28 +474,41 @@ export default function BookingDrawer({
                 >
                   Trek Date *
                 </label>
-                <input
-                  id="booking-date"
-                  type="date"
-                  min={today}
-                  value={state.selectedDate}
-                  onChange={(e) =>
-                    dispatch({ type: "SET_DATE", date: e.target.value })
-                  }
-                  onFocus={(e) =>
-                    e.currentTarget.scrollIntoView({
-                      behavior: "smooth",
-                      block: "nearest",
-                    })
-                  }
-                  className="w-full rounded-xl px-4 text-sm focus:outline-none transition-colors"
-                  style={{
-                    height: 48,
-                    border: `1px solid ${errors.date ? "var(--ew-red)" : "var(--ew-gray-mid)"}`,
-                    color: "var(--ew-text)",
-                  }}
-                  data-ocid="booking_drawer.date_input"
-                />
+                <div
+                  className={`booking-departure-date-wrap${state.selectedDate ? "" : " booking-departure-date-wrap--empty"}`}
+                >
+                  {!state.selectedDate ? (
+                    <span
+                      className="booking-departure-date-placeholder"
+                      aria-hidden
+                    >
+                      Tap to select trek date
+                    </span>
+                  ) : null}
+                  <input
+                    id="booking-date"
+                    type="date"
+                    min={today}
+                    value={state.selectedDate}
+                    onChange={(e) =>
+                      dispatch({ type: "SET_DATE", date: e.target.value })
+                    }
+                    onFocus={(e) =>
+                      e.currentTarget.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                      })
+                    }
+                    className="booking-departure-date-input w-full rounded-xl text-sm focus:outline-none transition-colors"
+                    style={{
+                      height: 48,
+                      border: errors.date
+                        ? "1px solid var(--ew-red)"
+                        : undefined,
+                    }}
+                    data-ocid="booking_drawer.date_input"
+                  />
+                </div>
                 {errors.date && (
                   <p
                     className="text-xs mt-1"

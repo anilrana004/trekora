@@ -262,6 +262,43 @@ button.booking-choice-pill--active,
 }
 
 /* Date input + native fields (avoid iOS zoom, consistent tap height) */
+.booking-page .booking-departure-date-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ew-gray-mid);
+  background: #ffffff;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.booking-page .booking-departure-date-wrap:focus-within {
+  border-color: #c0001c;
+  box-shadow: 0 0 0 2px rgba(192, 0, 28, 0.18);
+}
+
+.booking-page .booking-departure-date-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2.75rem 0 0.875rem;
+  pointer-events: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ew-gray-dark);
+}
+
+.booking-page .booking-departure-date-placeholder__icon {
+  flex-shrink: 0;
+  color: var(--ew-red);
+}
+
 .booking-page .booking-departure-date-input,
 .booking-page select,
 .booking-page
@@ -270,6 +307,70 @@ button.booking-choice-pill--active,
   font-size: 16px;
   width: 100%;
   box-sizing: border-box;
+}
+
+.booking-page .booking-departure-date-input {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  margin: 0;
+  padding: 0.75rem 2.75rem 0.75rem 0.875rem;
+  border: 0 !important;
+  border-radius: 0.75rem;
+  background: transparent !important;
+  color: var(--ew-text) !important;
+  -webkit-text-fill-color: var(--ew-text) !important;
+  opacity: 1 !important;
+  line-height: 1.25;
+  color-scheme: light;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Empty native date often renders invisible on iOS/Android — hide glyphs, show placeholder */
+.booking-page .booking-departure-date-wrap--empty .booking-departure-date-input {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  caret-color: transparent;
+}
+
+.booking-page .booking-departure-date-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  opacity: 1;
+  background: transparent;
+  /* Keep the native control tappable; icon drawn via mask for contrast */
+  filter: invert(14%) sepia(84%) saturate(5123%) hue-rotate(345deg)
+    brightness(85%) contrast(105%);
+}
+
+.booking-page .booking-departure-date-wrap--empty
+  .booking-departure-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0.35;
+}
+
+@media (max-width: 1023px) {
+  .booking-page .booking-departure-date-wrap {
+    min-height: 56px;
+  }
+
+  .booking-page .booking-departure-date-input {
+    min-height: 56px;
+    font-size: 16px !important;
+  }
+
+  .booking-page .booking-departure-date-placeholder {
+    font-size: 1rem;
+  }
 }
 
 .booking-page select {
@@ -598,4 +699,65 @@ button.booking-choice-card--active {
   padding: 0.625rem 1.125rem;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Date field works in BookingDrawer too (may lack .booking-page ancestor) */
+.booking-departure-date-wrap {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ew-gray-mid, #d4d4d4);
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.booking-departure-date-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2.75rem 0 0.875rem;
+  pointer-events: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ew-gray-dark, #666);
+}
+
+.booking-departure-date-input {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  min-height: 52px;
+  padding: 0.75rem 2.75rem 0.75rem 0.875rem;
+  border: 0 !important;
+  border-radius: 0.75rem;
+  background: transparent !important;
+  color: var(--ew-text, #1a1a1a) !important;
+  -webkit-text-fill-color: var(--ew-text, #1a1a1a) !important;
+  opacity: 1 !important;
+  font-size: 16px !important;
+  color-scheme: light;
+}
+
+.booking-departure-date-wrap--empty .booking-departure-date-input {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.booking-departure-date-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  opacity: 1;
+  filter: invert(14%) sepia(84%) saturate(5123%) hue-rotate(345deg)
+    brightness(85%) contrast(105%);
 }
