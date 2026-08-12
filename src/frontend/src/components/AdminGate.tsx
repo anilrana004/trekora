@@ -3,10 +3,15 @@ import {
   hasAdminSession,
   isAdminUiEnabled,
 } from "@/lib/admin-access";
+import {
+  isAdminHost,
+  shouldEnforceAdminSubdomain,
+} from "@/lib/admin-host";
+import { SITE_ORIGIN } from "@/lib/site-config";
 import { Navigate } from "@tanstack/react-router";
 import { Lock } from "lucide-react";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AdminLayout from "./AdminLayout";
 
 export default function AdminGate() {
@@ -16,7 +21,26 @@ export default function AdminGate() {
   const [busy, setBusy] = useState(false);
   const [authed, setAuthed] = useState(() => hasAdminSession());
 
+  useEffect(() => {
+    document.title = "Admin · Trekora";
+    const robots = document.querySelector('meta[name="robots"]');
+    if (robots) {
+      robots.setAttribute("content", "noindex, nofollow");
+      return;
+    }
+    const meta = document.createElement("meta");
+    meta.name = "robots";
+    meta.content = "noindex, nofollow";
+    document.head.appendChild(meta);
+  }, []);
+
   if (!enabled) {
+    if (shouldEnforceAdminSubdomain() && isAdminHost()) {
+      if (typeof window !== "undefined") {
+        window.location.replace(SITE_ORIGIN);
+      }
+      return null;
+    }
     return <Navigate to="/" replace />;
   }
 

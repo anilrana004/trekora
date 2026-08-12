@@ -7,6 +7,7 @@ Configure Cloudflare in front of Vercel (`www.trekora.in`).
 | Type | Name | Content | Proxy |
 |------|------|---------|-------|
 | CNAME | `www` | `cname.vercel-dns.com` (or Vercel custom target) | Proxied |
+| CNAME | `admin` | `cname.vercel-dns.com` (same Vercel project as www) | Proxied |
 | CNAME / A | `@` | Redirect to `www` (Page Rule or Redirect Rule) | Proxied |
 
 ## SSL/TLS
@@ -41,7 +42,7 @@ Configure Cloudflare in front of Vercel (`www.trekora.in`).
 - **Browser Integrity Check**: ON
 - **WAF**: Managed ruleset ON
 - Custom rule: challenge or block countries if abuse patterns appear (optional)
-- Rate limit: `/admin*` — 30 req/min per IP
+- Rate limit: `/admin*` — 30 req/min per IP (also apply on `admin.trekora.in`)
 
 ## Page Rules (legacy) or Redirect Rules
 

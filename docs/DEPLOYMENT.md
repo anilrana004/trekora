@@ -73,6 +73,7 @@ pnpm -C backend ensure-indexes
 | Variable | Example |
 |----------|---------|
 | `VITE_SITE_ORIGIN` | `https://www.trekora.in` |
+| `VITE_ADMIN_ORIGIN` | `https://admin.trekora.in` |
 | `VITE_CLOUDINARY_CLOUD_NAME` | your cloud |
 | `VITE_CLOUDINARY_UPLOAD_PRESET` | unsigned preset (restricted folder) |
 | `VITE_ADMIN_ENABLED` | `false` |
@@ -82,8 +83,9 @@ pnpm -C backend ensure-indexes
 | `ADMIN_API_SECRET` | same as Railway |
 | `SMTP_*` | mail routes |
 
-5. Custom domains: `www.trekora.in` (primary), apex redirect to www.
+5. Custom domains: `www.trekora.in` (storefront), `admin.trekora.in` (admin UI, same project), apex redirect to www.
 6. `vercel.json` already sets SPA fallback, security headers, and long-cache hashed assets.
+7. On Railway, include `https://admin.trekora.in` in `CORS_ORIGINS` if the admin UI calls the Railway API.
 
 ---
 

@@ -36,6 +36,7 @@ Vite loads env from `src/.env` (see `src/.env.example` and `src/frontend/.env.ex
 | Variable | Purpose |
 |----------|---------|
 | `VITE_SITE_ORIGIN` | Canonical URL for SEO, sitemap, JSON-LD |
+| `VITE_ADMIN_ORIGIN` | Admin subdomain (`https://admin.trekora.in`) |
 | `VITE_CLOUDINARY_CLOUD_NAME` | Image CDN |
 | `VITE_CLOUDINARY_UPLOAD_PRESET` | Client uploads (admin/gallery) |
 | `VITE_ENABLE_LOGIN` / `PAYMENT` / `EMI` | Feature flags (`false` in production) |

@@ -28,8 +28,11 @@ See **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** and **[docs/PRODUCTION_CHECKL
 ## Admin access
 
 - Keep `VITE_ADMIN_ENABLED=false` in production unless required.
+- Serve admin on **`https://admin.trekora.in`** (same Vercel project). Storefront `www` redirects `/admin` there; admin host sends non-admin paths back to www.
+- Set `VITE_ADMIN_ORIGIN=https://admin.trekora.in` and add the `admin` domain in Vercel + Cloudflare DNS.
 - Use a long random `ADMIN_API_SECRET` on the API (Railway / server env only). Never set `VITE_ADMIN_SECRET` — it would ship in the public JS bundle.
 - Admin unlock stores the typed secret in sessionStorage for the tab; real protection is API `x-admin-secret` + rate limits.
+- Localhost keeps `/admin` on the same origin for `pnpm dev`.
 
 ## Client-exposed keys
 

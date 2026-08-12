@@ -10,7 +10,14 @@ import AdminGate from "./components/AdminGate";
 import DormantFeatureRoute from "./components/DormantFeatureRoute";
 import Layout from "./components/Layout";
 import PageLoader from "./components/PageLoader";
+import {
+  ADMIN_ORIGIN,
+  isAdminHost,
+  isAdminPathname,
+  shouldEnforceAdminSubdomain,
+} from "./lib/admin-host";
 import { validateBookSearch } from "./lib/book-route-search";
+import { SITE_ORIGIN } from "./lib/site-config";
 import ErrorPage from "./pages/ErrorPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -83,6 +90,33 @@ const AdminAnalyticsPage = lazy(
 
 // Root route
 const rootRoute = createRootRoute({
+  beforeLoad: ({ location }) => {
+    if (!shouldEnforceAdminSubdomain()) return;
+
+    const { pathname, searchStr } = location;
+    const onAdmin = isAdminHost();
+    const adminPath = isAdminPathname(pathname);
+
+    // admin.trekora.in → admin UI only
+    if (onAdmin) {
+      if (pathname === "/" || pathname === "") {
+        throw redirect({ to: "/admin" });
+      }
+      if (!adminPath) {
+        throw redirect({
+          href: `${SITE_ORIGIN}${pathname}${searchStr}`,
+        });
+      }
+      return;
+    }
+
+    // www (storefront) → never serve /admin here
+    if (adminPath) {
+      throw redirect({
+        href: `${ADMIN_ORIGIN}${pathname}${searchStr}`,
+      });
+    }
+  },
   component: () => (
     <Suspense fallback={<PageLoader />}>
       <Outlet />
