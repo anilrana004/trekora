@@ -17,6 +17,8 @@ const RULES = [
   { id: "private-key-block", re: /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/ },
   { id: "cloudinary-secret-assign", re: /CLOUDINARY_API_SECRET\s*=\s*[^\s#]+/i },
   { id: "smtp-pass-assign", re: /SMTP_PASS\s*=\s*[^\s#]+/i },
+  { id: "admin-api-secret-assign", re: /ADMIN_API_SECRET\s*=\s*[^\s#'"]+/i },
+  { id: "mongodb-uri-assign", re: /MONGODB_URI\s*=\s*[^\s#'"]+/i },
   { id: "razorpay-secret", re: /rzp_(live|test)_[A-Za-z0-9]{14,}/ },
   { id: "generic-api-secret", re: /(?:api[_-]?secret|client[_-]?secret)\s*[:=]\s*['"][^'"]{8,}['"]/i },
   {
