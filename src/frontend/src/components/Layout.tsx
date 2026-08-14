@@ -54,7 +54,13 @@ export default function Layout() {
       <ListingScrollChromeProvider>
         <div
           className="flex min-h-screen w-full max-w-full min-w-0 flex-col overflow-x-clip"
-          style={{ background: "var(--ew-white)" }}
+          style={{
+            background: "var(--ew-white)",
+            // Clears the fixed mobile bottom nav at the very end of the page, so it
+            // neither covers the footer nor leaves a gap above it.
+            paddingBottom:
+              "calc(var(--mobile-nav-height, 0px) + env(safe-area-inset-bottom, 0px))",
+          }}
         >
           <a
             href="#main-content"
@@ -68,10 +74,6 @@ export default function Layout() {
           <main
             id="main-content"
             className="min-w-0 w-full max-w-full flex-1 overflow-x-clip"
-            style={{
-              paddingBottom:
-                "calc(var(--mobile-nav-height, 0px) + env(safe-area-inset-bottom, 0px))",
-            }}
           >
             <AnimatedOutlet />
           </main>
