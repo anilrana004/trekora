@@ -359,7 +359,7 @@ export default function BookingDrawer({
   const drawerContent = (
     <div
       ref={drawerRef}
-      className="flex flex-col h-full bg-white"
+      className="flex min-h-0 flex-1 flex-col bg-white"
       style={{ maxWidth: mobileLayout ? "100%" : 480 }}
     >
       {/* Mobile handle bar */}
@@ -443,8 +443,8 @@ export default function BookingDrawer({
         </span>
       </div>
 
-      {/* Body */}
-      <div className="flex-1 overflow-y-auto px-5 py-5">
+      {/* Body — `min-h-0` lets this shrink so the footer stays on screen */}
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5">
         <StepDots />
 
         <AnimatePresence mode="wait">
@@ -1061,12 +1061,17 @@ export default function BookingDrawer({
             animate={mobileLayout ? { y: 0 } : { x: 0 }}
             exit={mobileLayout ? { y: "100%" } : { x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="booking-drawer fixed z-[120] overflow-hidden shadow-2xl max-md:inset-x-0 max-md:bottom-0 max-md:w-full max-md:max-w-[100vw] max-md:rounded-t-[20px] md:top-0 md:right-0 md:bottom-0 md:left-auto md:w-[480px] md:rounded-l-[20px]"
+            className="booking-drawer fixed z-[120] flex flex-col overflow-hidden shadow-2xl max-md:inset-x-0 max-md:bottom-0 max-md:w-full max-md:max-w-[100vw] max-md:rounded-t-[20px] md:top-0 md:right-0 md:bottom-0 md:left-auto md:w-[480px] md:rounded-l-[20px]"
             style={{
               ...(mobileLayout
                 ? {
-                    maxHeight: "min(95vh, 100dvh)",
-                    paddingBottom: "env(safe-area-inset-bottom, 0px)",
+                    // `dvh` tracks the visible viewport, so the sheet never grows
+                    // behind mobile browser chrome and clip its own footer.
+                    maxHeight: "95dvh",
+                    // Floor keeps the footer CTA off the Android gesture bar, which
+                    // reports a zero safe-area inset.
+                    paddingBottom:
+                      "max(0.5rem, env(safe-area-inset-bottom, 0px))",
                   }
                 : {}),
             }}
