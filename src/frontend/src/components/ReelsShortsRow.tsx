@@ -1,12 +1,11 @@
-import { Play } from "lucide-react";
 import { AnimatePresence, motion } from "@/lib/motion";
+import { Play } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { TrekReel } from "@/data/trek-reels";
 import { reelInstanceKey } from "@/data/trek-reels";
-import { isVideoMediaUrl } from "@/lib/media-url";
-import { buildVideoPosterUrl } from "@/utils/mediaTransform";
+import { reelPosterSrc, reelVideoSrc } from "@/lib/reel-media";
 import ReelBookButton from "./ReelBookButton";
 import ReelVideoLightbox from "./ReelVideoLightbox";
 import OptimizedImage from "./media/OptimizedImage";
@@ -17,16 +16,10 @@ type ReelsShortsRowProps = {
   currentProductSlug?: string;
 };
 
-export function reelVideoSrc(reel: TrekReel): string | undefined {
-  if (reel.videoSrc) return reel.videoSrc;
-  if (reel.thumb && isVideoMediaUrl(reel.thumb)) return reel.thumb;
-  return undefined;
-}
+export { reelVideoSrc };
 
-/** Card preview: catalog still first — some reel MP4s have a black first frame (e.g. Roopkund). */
 function reelPreviewSrc(reel: TrekReel, videoSrc: string): string {
-  if (reel.thumb) return reel.thumb;
-  return buildVideoPosterUrl(videoSrc, 480) ?? "";
+  return reelPosterSrc(reel, videoSrc) ?? "";
 }
 
 export default function ReelsShortsRow({

@@ -2111,7 +2111,7 @@ img[loading="lazy"] {
 @media (max-width: 1023px) {
   .btn-primary:not(.live-chat-fab):not(.travel-side-chat-btn):not(
       .home-hero__cta
-    ):not(.home-section-cta) {
+    ):not(.home-section-cta):not(.reel-feed__book) {
     min-height: 48px;
     padding: 0.7rem 1.5rem;
     font-size: 1rem;

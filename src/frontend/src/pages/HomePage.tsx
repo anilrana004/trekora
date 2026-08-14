@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import FeaturedInMedia from "../components/FeaturedInMedia";
 import FormSuccessMessage from "../components/FormSuccessMessage";
 import GoogleReviewsSection from "../components/GoogleReviewsSection";
+import HomeMobileReelsSection from "../components/HomeMobileReelsSection";
 import HomeMobileSearchPanel from "../components/HomeMobileSearchPanel";
 import HomepageReviews from "../components/HomepageReviews";
 import InstagramSection from "../components/InstagramSection";
@@ -1567,6 +1568,12 @@ function HeroFeaturedMedia({
   );
 }
 
+/**
+ * Phone landing screen shows the reels feed instead of the banner cards. The card
+ * markup is kept intact below — flip this to `true` to restore the old phone hero.
+ */
+const SHOW_PHONE_BANNER_HERO = false;
+
 function HeroBannerGrid() {
   const [setIdx, setSetIdx] = useState(0);
   const [mediaVisible, setMediaVisible] = useState(true);
@@ -1738,57 +1745,62 @@ function HeroBannerGrid() {
       onFocusCapture={() => setCarouselPaused(true)}
       onBlurCapture={() => setCarouselPaused(false)}
     >
-      {/* ── Phone: full-width featured + horizontal more treks ── */}
-      <div className="home-hero__mobile lg:hidden">
-        <div className="container mx-auto px-4 pb-3 pt-3">
-          {featuredCard}
-          <div
-            className="home-hero__strip mt-2.5 flex gap-2 overflow-x-auto pb-1"
-            style={{ scrollSnapType: "x mandatory" }}
-          >
-            {set.right.map((b, i) => (
-              <div
-                key={b.title}
-                className="home-hero__strip-card relative shrink-0 overflow-hidden rounded-xl"
-                style={{ scrollSnapAlign: "start" }}
-              >
+      {/* ── Phone: full-screen trek reels feed ── */}
+      <HomeMobileReelsSection />
+
+      {/* ── Phone banner hero: retained, rendered only when re-enabled ── */}
+      {SHOW_PHONE_BANNER_HERO ? (
+        <div className="home-hero__mobile lg:hidden">
+          <div className="container mx-auto px-4 pb-3 pt-3">
+            {featuredCard}
+            <div
+              className="home-hero__strip mt-2.5 flex gap-2 overflow-x-auto pb-1"
+              style={{ scrollSnapType: "x mandatory" }}
+            >
+              {set.right.map((b, i) => (
                 <div
-                  className="absolute inset-0 transition-opacity duration-400 ease-out"
-                  style={{ opacity: mediaVisible ? 1 : 0 }}
-                  aria-hidden={!mediaVisible}
+                  key={b.title}
+                  className="home-hero__strip-card relative shrink-0 overflow-hidden rounded-xl"
+                  style={{ scrollSnapAlign: "start" }}
                 >
-                  <OptimizedImage
-                    src={b.image}
-                    alt={b.title}
-                    fill
-                    variant="hero"
-                    sizes="78vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                </div>
-                <div className="home-hero__copy absolute bottom-0 left-0 right-0 z-[2] p-3">
-                  <h3 className="text-shadow text-sm font-bold leading-tight text-white">
-                    {b.title}
-                  </h3>
-                  <p className="text-shadow mb-2 line-clamp-1 text-[11px] text-white">
-                    {b.subtitle}
-                  </p>
-                  <HeroRightPromoCta
-                    ctaLink={b.ctaLink}
-                    ctaBookSearch={b.ctaBookSearch}
-                    className="btn-primary home-hero__cta home-hero__cta--strip"
-                    data-ocid={`hero.right_cta.${i + 1}`}
+                  <div
+                    className="absolute inset-0 transition-opacity duration-400 ease-out"
+                    style={{ opacity: mediaVisible ? 1 : 0 }}
+                    aria-hidden={!mediaVisible}
                   >
-                    {b.cta}
-                  </HeroRightPromoCta>
+                    <OptimizedImage
+                      src={b.image}
+                      alt={b.title}
+                      fill
+                      variant="hero"
+                      sizes="78vw"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                  </div>
+                  <div className="home-hero__copy absolute bottom-0 left-0 right-0 z-[2] p-3">
+                    <h3 className="text-shadow text-sm font-bold leading-tight text-white">
+                      {b.title}
+                    </h3>
+                    <p className="text-shadow mb-2 line-clamp-1 text-[11px] text-white">
+                      {b.subtitle}
+                    </p>
+                    <HeroRightPromoCta
+                      ctaLink={b.ctaLink}
+                      ctaBookSearch={b.ctaBookSearch}
+                      className="btn-primary home-hero__cta home-hero__cta--strip"
+                      data-ocid={`hero.right_cta.${i + 1}`}
+                    >
+                      {b.cta}
+                    </HeroRightPromoCta>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="mt-3">{heroDots}</div>
           </div>
-          <div className="mt-3">{heroDots}</div>
         </div>
-      </div>
+      ) : null}
 
       {/* ── Desktop: premium 2-column hero grid ── */}
       <div className="home-hero__desktop hidden lg:block">
@@ -2277,7 +2289,7 @@ export default function HomePage() {
   const homeSeo = buildHomePageSEO();
 
   return (
-    <div className="home-page pt-16 min-h-screen md:pt-0">
+    <div className="home-page min-h-screen">
       <SEOHead
         title={homeSeo.title}
         description={homeSeo.description}

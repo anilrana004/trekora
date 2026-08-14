@@ -398,4 +398,90 @@
   .home-page [data-ocid="newsletter.section"] input {
     min-height: 2.75rem !important;
   }
+
+  /* ── Phone landing reels: one full-height video per screen, vertical snap ── */
+  .home-reels-section {
+    background: #000;
+  }
+
+  /* Fills everything under the sticky header; the bottom nav floats over the clip. */
+  .home-reels-section .reel-feed {
+    position: relative;
+    height: calc(100vh - var(--site-header-height, 3.5rem));
+    height: calc(100svh - var(--site-header-height, 3.5rem));
+    overflow: hidden;
+    background: #000;
+  }
+
+  /* Sits just above the bottom nav that overlaps the clip — no more clearance. */
+  .home-reels-section .reel-feed__copy {
+    padding-bottom: calc(
+      0.5rem +
+      var(--mobile-nav-height, 0px) +
+      env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  /* Compact pill CTA — the video is the hero here, not the button. */
+  .reel-feed__copy .reel-feed__book.btn-primary {
+    width: auto;
+    min-height: 2rem;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    gap: 0.3rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  /*
+   * Clips page horizontally. With no vertical overflow here the browser routes
+   * vertical swipes to the page, so a full-screen feed never traps the reader.
+   * Leave `touch-action` alone — pinning it to pan-x would block that page scroll.
+   */
+  .reel-feed__scroller {
+    display: flex;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .reel-feed__scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reel-feed__slide {
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .reel-feed__hint {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reel-feed__hint {
+      animation: reel-feed-hint 2.4s ease-in-out infinite;
+    }
+
+    @keyframes reel-feed-hint {
+      0%,
+      100% {
+        transform: translate(-50%, 0);
+        opacity: 0.85;
+      }
+      50% {
+        transform: translate(calc(-50% + 4px), 0);
+        opacity: 1;
+      }
+    }
+  }
 }

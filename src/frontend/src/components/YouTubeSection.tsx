@@ -96,9 +96,9 @@ export default function YouTubeSection() {
           ))}
         </div>
 
-        <div className="mb-5">
+        <div className="mb-5 hidden lg:block">
           <h3
-            className="font-bold text-[17px] mb-4"
+            className="mb-4 font-bold text-[17px]"
             style={{ color: "var(--ew-text)" }}
           >
             Reels &amp; Shorts

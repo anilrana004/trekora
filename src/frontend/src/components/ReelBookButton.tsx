@@ -7,10 +7,17 @@ import { reelBookCta } from "@/lib/reel-book-cta";
 type ReelBookButtonProps = {
   reel: TrekReel;
   currentProductSlug?: string;
-  variant?: "card" | "lightbox";
+  variant?: "card" | "lightbox" | "feed";
   ocidPrefix?: string;
   index?: number;
 };
+
+const VARIANT_CLASS = {
+  card: "btn-primary relative z-20 w-full justify-center gap-1.5 text-[11px] sm:text-xs py-2.5 px-3 min-h-[44px] shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]",
+  lightbox:
+    "btn-primary relative z-20 w-full justify-center gap-2 text-sm py-3 px-4 min-h-[48px] shadow-lg",
+  feed: "reel-feed__book btn-primary relative z-20 justify-center gap-1.5 shadow-lg transition-transform active:scale-[0.97]",
+} as const;
 
 export default function ReelBookButton({
   reel,
@@ -23,17 +30,15 @@ export default function ReelBookButton({
   if (!cta || !reel.productSlug) return null;
 
   const mi = index !== undefined ? `.${index + 1}` : "";
-  const isCard = variant === "card";
-  const className = isCard
-    ? "btn-primary relative z-20 w-full justify-center gap-1.5 text-[11px] sm:text-xs py-2.5 px-3 min-h-[44px] shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
-    : "btn-primary relative z-20 w-full justify-center gap-2 text-sm py-3 px-4 min-h-[48px] shadow-lg";
+  const isCompact = variant !== "lightbox";
+  const className = VARIANT_CLASS[variant];
   const stop = {
     onClick: (e: React.MouseEvent) => e.stopPropagation(),
     onPointerDown: (e: React.PointerEvent) => e.stopPropagation(),
   };
   const icon = (
     <>
-      <Calendar size={isCard ? 14 : 16} aria-hidden className="shrink-0" />
+      <Calendar size={isCompact ? 14 : 16} aria-hidden className="shrink-0" />
       {cta.label}
     </>
   );
