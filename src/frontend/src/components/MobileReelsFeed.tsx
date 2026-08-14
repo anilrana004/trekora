@@ -3,8 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { TrekReel } from "@/data/trek-reels";
 import { reelInstanceKey } from "@/data/trek-reels";
-import { buildOptimizedImageUrl } from "@/lib/images/cloudinary-url";
-import { reelPosterSrc, reelVideoSrc } from "@/lib/reel-media";
+import { reelVideoSrc } from "@/lib/reel-media";
 import { buildOptimizedVideoUrl } from "@/utils/mediaTransform";
 import ReelBookButton from "./ReelBookButton";
 
@@ -19,7 +18,6 @@ type FeedSlide = {
   key: string;
   rawSrc: string;
   optimizedSrc: string;
-  poster?: string;
 };
 
 /** Auto-advance if playback makes no progress for this long (stalled CDN / blocked autoplay). */
@@ -46,7 +44,6 @@ export default function MobileReelsFeed({
       reels.flatMap((reel) => {
         const src = reelVideoSrc(reel);
         if (!src) return [];
-        const poster = reelPosterSrc(reel, src);
         return [
           {
             reel,
@@ -55,9 +52,6 @@ export default function MobileReelsFeed({
             optimizedSrc: buildOptimizedVideoUrl(src, {
               profile: "lightbox-mobile",
             }),
-            poster: poster
-              ? buildOptimizedImageUrl(poster, { width: 720 })
-              : undefined,
           },
         ];
       }),
@@ -266,7 +260,6 @@ export default function MobileReelsFeed({
                   videoRefs.current[index] = el;
                 }}
                 src={shouldLoad ? src : undefined}
-                poster={shouldLoad ? slide.poster : undefined}
                 className="absolute inset-0 h-full w-full bg-black object-cover"
                 playsInline
                 muted={!(isActive && soundOn)}
