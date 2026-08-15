@@ -1754,9 +1754,9 @@
 
   /*
    * Phone home landing only: the reels clip plays behind the header, so the bar
-   * turns to frosted glass. Kept light enough that the wordmark, red CTA and
-   * dark icons stay legible over any frame of the video. Solid white stays the
-   * base, so the bar is never see-through where no video sits behind it.
+   * carries no surface at all — logo, CTA and icons sit straight on the video.
+   * Solid white stays the base, so the bar is never see-through anywhere the
+   * clip is not running behind it.
    */
   .site-header--overlay {
     background-color: #fff;
@@ -1764,20 +1764,22 @@
 
   @media (max-width: 767px) {
     body:not(:has([data-ocid="language.banner"])) .site-header--overlay {
-      background-color: rgba(255, 255, 255, 0.55);
-      -webkit-backdrop-filter: blur(18px) saturate(160%);
-      backdrop-filter: blur(18px) saturate(160%);
+      background-color: transparent;
       box-shadow: none;
     }
 
-    @supports not (
-        (backdrop-filter: blur(4px)) or
-        (-webkit-backdrop-filter: blur(4px))
-      ) {
-      body:not(:has([data-ocid="language.banner"])) .site-header--overlay {
-        background-color: rgba(255, 255, 255, 0.72);
-      }
+    /* The clip's own top scrim is the contrast, so the logo only needs depth. */
+    body:not(:has([data-ocid="language.banner"])) .site-header--overlay img {
+      filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.55));
     }
+  }
+
+  /* CTA on the transparent bar: no pill outline fighting the video, just the label. */
+  .nav-cta-ghost--onmedia {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+    background: transparent;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
   }
 
   .nav-lang-toggle {
