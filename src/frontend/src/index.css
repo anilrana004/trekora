@@ -331,9 +331,7 @@
     background: #fff;
     border: 1px solid var(--ew-gray-mid);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    transition:
-      box-shadow 0.3s ease,
-      transform 0.3s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   .about-team-leader-card:hover {
@@ -1754,6 +1752,34 @@
     }
   }
 
+  /*
+   * Phone home landing only: the reels clip plays behind the header, so the bar
+   * turns to frosted glass. Kept light enough that the wordmark, red CTA and
+   * dark icons stay legible over any frame of the video. Solid white stays the
+   * base, so the bar is never see-through where no video sits behind it.
+   */
+  .site-header--overlay {
+    background-color: #fff;
+  }
+
+  @media (max-width: 767px) {
+    body:not(:has([data-ocid="language.banner"])) .site-header--overlay {
+      background-color: rgba(255, 255, 255, 0.55);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      backdrop-filter: blur(18px) saturate(160%);
+      box-shadow: none;
+    }
+
+    @supports not (
+        (backdrop-filter: blur(4px)) or
+        (-webkit-backdrop-filter: blur(4px))
+      ) {
+      body:not(:has([data-ocid="language.banner"])) .site-header--overlay {
+        background-color: rgba(255, 255, 255, 0.72);
+      }
+    }
+  }
+
   .nav-lang-toggle {
     display: inline-flex;
     align-items: center;
@@ -1768,7 +1794,8 @@
     line-height: 1;
     flex-shrink: 0;
     cursor: pointer;
-    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color
+      0.15s ease;
   }
 
   .nav-right-controls {
@@ -2620,4 +2647,3 @@ textarea {
     -webkit-overflow-scrolling: touch;
   }
 }
-

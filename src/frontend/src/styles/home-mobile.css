@@ -485,3 +485,39 @@
     }
   }
 }
+
+/*
+ * Phone landing: run the clip edge-to-edge under the frosted header, so the
+ * first screen is pure video. Stands down if a banner is ever rendered between
+ * the header and the feed — pulling up would then swallow it. Tablets keep the
+ * announcement bar and a solid header, so they stay out of this.
+ */
+@media (max-width: 767px) {
+  body:not(:has([data-ocid="language.banner"])) .home-reels-section {
+    margin-top: calc(-1 * var(--site-header-height, 3.5rem));
+  }
+
+  body:not(:has([data-ocid="language.banner"])) .home-reels-section .reel-feed {
+    height: 100vh;
+    height: 100svh;
+  }
+
+  /* Drop the story chrome clear of the header it now sits behind. */
+  body:not(:has([data-ocid="language.banner"]))
+    .home-reels-section
+    .reel-feed__progress {
+    top: calc(var(--site-header-height, 3.5rem) + 0.375rem);
+  }
+
+  body:not(:has([data-ocid="language.banner"]))
+    .home-reels-section
+    .reel-feed__sound {
+    top: calc(var(--site-header-height, 3.5rem) + 1.625rem);
+  }
+
+  body:not(:has([data-ocid="language.banner"]))
+    .home-reels-section
+    .reel-feed__hint {
+    top: calc(var(--site-header-height, 3.5rem) + 1.875rem);
+  }
+}

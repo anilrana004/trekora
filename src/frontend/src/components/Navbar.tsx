@@ -5,12 +5,12 @@ import { NAV_HP_YATRAS, NAV_UK_YATRAS } from "@/data/nav-yatra-menu";
 import { bookSearch } from "@/lib/book-search";
 import { isFeatureLive } from "@/lib/dormant-features";
 import { openQueryModalFromLayout } from "@/lib/layout-modals";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { SITE_LOGO_URL } from "@/lib/site-brand";
 import { SITE_PHONE_DISPLAY, SITE_PHONE_TEL } from "@/lib/site-contact";
 import { syncMobileNavHidden } from "@/lib/site-header-offset";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ChevronDown, Menu, Phone, Search, X } from "lucide-react";
-import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
 import LanguageBanner from "./LanguageBanner";
@@ -163,6 +163,11 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [mobileNavHidden, setMobileNavHidden] = useState(false);
+  const [overHomeReels, setOverHomeReels] = useState(
+    () =>
+      typeof window === "undefined" ||
+      window.scrollY < window.innerHeight * 0.5,
+  );
   const [lang, setLang] = useState<"en" | "hi">(() => {
     return (localStorage.getItem("ew_lang") as "en" | "hi") || "en";
   });
@@ -172,6 +177,13 @@ export default function Navbar() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const hideNavBar = isMobile && mobileNavHidden;
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  /**
+   * Phone home screen only: the reels video fills the first screen behind the
+   * header, so the bar goes frosted instead of solid white. Any other route —
+   * or once the reader scrolls past that first screen — keeps the white bar.
+   */
+  const transparentHeader = isMobile && pathname === "/" && overHomeReels;
 
   function toggleLang() {
     const next = lang === "en" ? "hi" : "en";
@@ -203,6 +215,8 @@ export default function Navbar() {
           }
         }
         setScrolled((prev) => (prev === scrolled ? prev : scrolled));
+        const overReels = y < window.innerHeight * 0.5;
+        setOverHomeReels((prev) => (prev === overReels ? prev : overReels));
         lastScrollY.current = y;
       });
     };
@@ -297,7 +311,11 @@ export default function Navbar() {
           duration: hideNavBar ? 0.26 : 0.32,
           ease: NAV_ACCORDION_EASE,
         }}
-        className={`sticky top-0 z-[60] bg-white transition-shadow duration-300 will-change-transform ${scrolled ? "shadow-lg" : "shadow-sm"}`}
+        className={`sticky top-0 z-[60] transition-[background-color,box-shadow] duration-300 will-change-transform ${
+          transparentHeader
+            ? "site-header--overlay"
+            : `bg-white ${scrolled ? "shadow-lg" : "shadow-sm"}`
+        }`}
         style={{ height: isMobile ? 56 : 64 }}
         data-ocid="navbar"
       >
@@ -797,7 +815,9 @@ export default function Navbar() {
               aria-label={`Call ${SITE_PHONE_DISPLAY}`}
             >
               <Phone size={16} strokeWidth={2} aria-hidden />
-              <span className="nav-phone-link__number">{SITE_PHONE_DISPLAY}</span>
+              <span className="nav-phone-link__number">
+                {SITE_PHONE_DISPLAY}
+              </span>
             </a>
             <button
               type="button"

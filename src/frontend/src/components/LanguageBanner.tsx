@@ -1,3 +1,5 @@
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useRouterState } from "@tanstack/react-router";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -5,13 +7,17 @@ const STORAGE_KEY = "ew_hindi_banner_dismissed";
 
 export default function LanguageBanner() {
   const [visible, setVisible] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isPhone = useIsMobile();
 
   useEffect(() => {
     const dismissed = sessionStorage.getItem(STORAGE_KEY);
     if (!dismissed) setVisible(true);
   }, []);
 
-  if (!visible) return null;
+  // The phone home screen is a full-bleed video landing — a strip between the
+  // header and the clip would break it. Every other page still shows the notice.
+  if (!visible || (isPhone && pathname === "/")) return null;
 
   function dismiss() {
     sessionStorage.setItem(STORAGE_KEY, "1");

@@ -336,7 +336,7 @@ export default function MobileReelsFeed({
       <button
         type="button"
         onClick={() => setSoundOn((prev) => !prev)}
-        className="absolute right-3 top-8 z-30 flex h-9 w-9 items-center justify-center rounded-full text-white transition-opacity active:opacity-70"
+        className="reel-feed__sound absolute right-3 top-8 z-30 flex h-9 w-9 items-center justify-center rounded-full text-white transition-opacity active:opacity-70"
         style={{ background: "rgba(0,0,0,0.55)" }}
         aria-label={soundOn ? "Mute reels" : "Turn sound on"}
         data-ocid={`${ocidPrefix}.feed.${soundOn ? "mute" : "unmute"}`}
@@ -350,7 +350,7 @@ export default function MobileReelsFeed({
 
       {/* Story-style segments: position at a glance without 12 stacked dots. */}
       <div
-        className="pointer-events-none absolute inset-x-3 top-3 z-30 flex gap-1"
+        className="reel-feed__progress pointer-events-none absolute inset-x-3 top-3 z-30 flex gap-1"
         aria-hidden
       >
         {slides.map((slide, index) => (
