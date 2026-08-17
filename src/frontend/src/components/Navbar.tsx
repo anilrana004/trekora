@@ -334,9 +334,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={() => openQueryModalFromLayout()}
-            className={`nav-cta-ghost lg:hidden ${
-              transparentHeader ? "nav-cta-ghost--onmedia" : ""
-            }`}
+            className="nav-cta-ghost lg:hidden"
             data-ocid="nav.mobile.plan_trek_ghost_button"
           >
             Plan My Trek
@@ -837,13 +835,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setMobileSearchOpen(true)}
               className="p-2 rounded-full"
-              style={{
-                color: transparentHeader ? "#fff" : "var(--ew-text)",
-                filter: transparentHeader
-                  ? "drop-shadow(0 1px 4px rgba(0,0,0,0.45))"
-                  : undefined,
-                touchAction: "manipulation",
-              }}
+              style={{ color: "var(--ew-text)", touchAction: "manipulation" }}
               aria-label="Search"
               data-ocid="nav.mobile.search_button"
             >
@@ -853,13 +845,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setMobileOpen(true)}
               className="p-2"
-              style={{
-                color: transparentHeader ? "#fff" : "var(--ew-text)",
-                filter: transparentHeader
-                  ? "drop-shadow(0 1px 4px rgba(0,0,0,0.45))"
-                  : undefined,
-                touchAction: "manipulation",
-              }}
+              style={{ color: "var(--ew-text)", touchAction: "manipulation" }}
               aria-label="Toggle navigation menu"
               aria-expanded={mobileOpen}
               data-ocid="nav.mobile_menu_button"

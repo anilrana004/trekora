@@ -1754,7 +1754,7 @@
 
   /*
    * Phone home landing only: the reels clip plays behind the header, so the bar
-   * carries no surface at all — logo, CTA and icons sit straight on the video.
+   * carries no surface at all. Logo, red CTA and icons stay as they are.
    * Solid white stays the base, so the bar is never see-through anywhere the
    * clip is not running behind it.
    */
@@ -1772,14 +1772,6 @@
     body:not(:has([data-ocid="language.banner"])) .site-header--overlay img {
       filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.55));
     }
-  }
-
-  /* CTA on the transparent bar: no pill outline fighting the video, just the label. */
-  .nav-cta-ghost--onmedia {
-    border-color: rgba(255, 255, 255, 0.55);
-    color: #fff;
-    background: transparent;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
   }
 
   .nav-lang-toggle {
