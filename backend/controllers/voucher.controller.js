@@ -2,6 +2,7 @@ import { connectDBSafe } from "../db/connect.js";
 import {
   calcVoucherDiscount,
   normalizeVoucher,
+  packageIsApplicable,
 } from "../lib/voucher-normalize.js";
 import { parseJsonBody } from "../lib/parse-body.js";
 import { Voucher } from "../models/Voucher.model.js";
@@ -79,10 +80,7 @@ export async function validateVoucherLogic({
       message: mapVoucherError("min_amount", voucher.minBookingAmount),
     };
   }
-  if (
-    voucher.applicablePackages.length > 0 &&
-    !voucher.applicablePackages.includes(pkg)
-  ) {
+  if (!packageIsApplicable(voucher.applicablePackages, pkg)) {
     return { success: false, message: mapVoucherError("package") };
   }
   if (uid && voucher.usedBy.some((u) => u.userId === uid)) {

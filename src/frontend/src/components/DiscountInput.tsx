@@ -155,7 +155,7 @@ export default function DiscountInput({
               void handleApply();
             }
           }}
-          placeholder="Enter code e.g. TREK2026"
+          placeholder="Enter code e.g. TREKORA15"
           disabled={isValidating}
           className={`${inpBase} flex-1 ${error ? "border-[#C0001C] ring-2 ring-[#C0001C]/20" : ""}`}
           style={{ minHeight: 48 }}

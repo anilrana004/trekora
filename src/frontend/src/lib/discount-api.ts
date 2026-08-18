@@ -59,6 +59,36 @@ export async function validateGiftCardCode(payload: {
   return data;
 }
 
+const UNKNOWN_CODE_MESSAGE = "Invalid code — please check and try again";
+
+/**
+ * Try voucher first, then gift card — same order as the booking input.
+ * If the voucher exists but is unusable (expired / package / min amount), keep that error.
+ */
+export async function validateDiscountCode(payload: {
+  code: string;
+  bookingAmount: number;
+  packageId: string;
+  userId: string;
+}): Promise<DiscountValidationResult> {
+  const voucherRes = await validateVoucherCode(payload);
+  if (voucherRes.success) return voucherRes;
+
+  const giftRes = await validateGiftCardCode({
+    code: payload.code,
+    bookingAmount: payload.bookingAmount,
+  });
+  if (giftRes.success) return giftRes;
+
+  const voucherUnknown = voucherRes.message === UNKNOWN_CODE_MESSAGE;
+  return {
+    success: false,
+    message:
+      (voucherUnknown ? giftRes.message : voucherRes.message) ||
+      UNKNOWN_CODE_MESSAGE,
+  };
+}
+
 export async function markVoucherUsed(payload: {
   code: string;
   userId: string;

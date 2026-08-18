@@ -21,6 +21,22 @@ export function normalizeVoucher(doc) {
   };
 }
 
+/**
+ * Empty list = every package. Exact ids match, and `trek:*` / `yatra:*` wildcards
+ * cover a whole product kind (packageId is `kind:slug`).
+ */
+export function packageIsApplicable(applicablePackages, packageId) {
+  const list = Array.isArray(applicablePackages) ? applicablePackages : [];
+  if (list.length === 0) return true;
+  const pkg = String(packageId ?? "").trim();
+  if (!pkg) return false;
+  if (list.includes(pkg)) return true;
+  const sep = pkg.indexOf(":");
+  if (sep <= 0) return false;
+  const kind = pkg.slice(0, sep);
+  return list.includes(`${kind}:*`);
+}
+
 export function calcVoucherDiscount(voucher, bookingAmount) {
   const v = normalizeVoucher(voucher);
   let discount =

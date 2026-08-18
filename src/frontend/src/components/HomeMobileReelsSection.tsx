@@ -1,6 +1,8 @@
 import { HOMEPAGE_REELS } from "@/data/trek-reels";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { isLandingFlashVoucherLive } from "@/lib/booking-promos";
 
+import LandingFlashVoucherBanner from "./LandingFlashVoucherBanner";
 import MobileReelsFeed from "./MobileReelsFeed";
 
 /**
@@ -21,6 +23,9 @@ export default function HomeMobileReelsSection() {
     >
       <h2 className="sr-only">Trek reels</h2>
       <MobileReelsFeed reels={HOMEPAGE_REELS} ocidPrefix="home" />
+      {isLandingFlashVoucherLive() ? (
+        <LandingFlashVoucherBanner variant="chip" />
+      ) : null}
     </section>
   );
 }

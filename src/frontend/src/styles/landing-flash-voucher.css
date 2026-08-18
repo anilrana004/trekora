@@ -1,0 +1,233 @@
+/* Landing 15% flash voucher — gift-card ticket (phone + desktop) */
+
+.landing-voucher-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  color: #fff;
+  background: radial-gradient(
+      120% 140% at 100% 0%,
+      rgba(255, 193, 7, 0.28),
+      transparent 55%
+    ), linear-gradient(135deg, #8f0016 0%, var(--ew-red) 42%, #d96a1a 100%);
+  box-shadow: 0 18px 40px rgba(192, 0, 28, 0.22);
+}
+
+.landing-voucher-card::before,
+.landing-voucher-card::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: var(--ew-white);
+  transform: translateY(-50%);
+}
+
+.landing-voucher-card::before {
+  left: -0.7rem;
+}
+
+.landing-voucher-card::after {
+  right: -0.7rem;
+}
+
+.landing-voucher-card__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1rem;
+  padding: 1.15rem 1.15rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .landing-voucher-card__inner {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.4rem 1.75rem 1.5rem;
+  }
+}
+
+.landing-voucher-card__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.landing-voucher-card__title {
+  margin: 0;
+  font-size: clamp(1.35rem, 3.4vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.landing-voucher-card__desc {
+  margin: 0.4rem 0 0;
+  max-width: 36rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.landing-voucher-card__ticket {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .landing-voucher-card__ticket {
+    min-width: 16.5rem;
+  }
+}
+
+.landing-voucher-card__code-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.landing-voucher-card__code {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px dashed rgba(255, 255, 255, 0.65);
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.12);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.landing-voucher-card__copy,
+.landing-voucher-card__book {
+  min-height: 3rem;
+}
+
+.landing-voucher-card__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0 0.95rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: #fff;
+  color: var(--ew-red);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.landing-voucher-card__copy:hover,
+.landing-voucher-card__copy:focus-visible {
+  filter: brightness(0.97);
+}
+
+.landing-voucher-card__book {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0 1rem;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.22);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.landing-voucher-card__book:hover,
+.landing-voucher-card__book:focus-visible {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.landing-voucher-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.landing-voucher-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.4rem 0.45rem 0.4rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(12, 8, 8, 0.62);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(10px);
+}
+
+.landing-voucher-chip__label {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.landing-voucher-chip__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.landing-voucher-chip__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.85rem;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ew-red);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.home-reels-section {
+  position: relative;
+}
+
+.home-reels-section .landing-voucher-chip-wrap {
+  position: absolute;
+  left: 50%;
+  z-index: 36;
+  transform: translateX(-50%);
+  top: calc(var(--site-header-height, 3.5rem) + 3.15rem);
+  pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  body:not(:has([data-ocid="language.banner"]))
+    .home-reels-section
+    .landing-voucher-chip-wrap {
+    top: calc(var(--site-header-height, 3.5rem) + 2.85rem);
+  }
+}

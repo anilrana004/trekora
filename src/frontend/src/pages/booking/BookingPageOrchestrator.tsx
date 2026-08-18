@@ -44,7 +44,7 @@ import {
   type DiscountValidationSuccess,
   markVoucherUsed,
   redeemGiftCard,
-  validateVoucherCode,
+  validateDiscountCode,
 } from "@/lib/discount-api";
 import { scrollToPageTop } from "@/lib/route-scroll";
 import { SITE_ORIGIN } from "@/lib/site-config";
@@ -441,7 +441,7 @@ export default function BookingPageOrchestrator() {
     voucherAutoApplyInFlight.current = true;
     void (async () => {
       try {
-        const res = await validateVoucherCode({
+        const res = await validateDiscountCode({
           code: voucherFromSearch,
           bookingAmount: bookingSubtotalForVoucher,
           packageId: packageIdForDiscount,

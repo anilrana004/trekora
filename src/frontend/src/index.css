@@ -8,6 +8,7 @@
 @import "./styles/live-chat-panel.css";
 @import "./styles/compare.css";
 @import "./styles/offer-banners.css";
+@import "./styles/landing-flash-voucher.css";
 
 @tailwind base;
 @tailwind components;

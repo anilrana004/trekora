@@ -36,6 +36,7 @@ import HomeMobileReelsSection from "../components/HomeMobileReelsSection";
 import HomeMobileSearchPanel from "../components/HomeMobileSearchPanel";
 import HomepageReviews from "../components/HomepageReviews";
 import InstagramSection from "../components/InstagramSection";
+import LandingFlashVoucherBanner from "../components/LandingFlashVoucherBanner";
 import ListingStickyToolbar from "../components/ListingStickyToolbar";
 import { SEOHead } from "../components/SEOHead";
 import SocialProofTicker from "../components/SocialProofTicker";
@@ -2315,6 +2316,8 @@ export default function HomePage() {
 
       <TrustBadgesStrip />
 
+      <LandingFlashVoucherBanner />
+
       {/* ── SOCIAL PROOF TICKER (below hero) ── */}
       <SocialProofTicker />
 
@@ -4288,9 +4291,9 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               {
-                label: "Early Bird 15% Off",
-                desc: "Book summer treks before March 31 and save 15%",
-                icon: "🐦",
+                label: "TREKORA15 · 15% Off",
+                desc: "Copy the landing gift voucher — valid 7 days on every trek and yatra",
+                icon: "🎁",
               },
               {
                 label: "Group Discount 20% Off",

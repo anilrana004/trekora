@@ -1,8 +1,7 @@
 import {
   type DiscountValidationResult,
   type DiscountValidationSuccess,
-  validateGiftCardCode,
-  validateVoucherCode,
+  validateDiscountCode,
 } from "@/lib/discount-api";
 import { useCallback, useState } from "react";
 
@@ -28,35 +27,20 @@ export function useDiscount() {
       setIsValidating(true);
       setError(null);
       try {
-        const voucherRes = await validateVoucherCode({
+        const result = await validateDiscountCode({
           code: normalized,
           bookingAmount,
           packageId,
           userId,
         });
-        if (voucherRes.success) {
+        if (result.success) {
           setAppliedCode(normalized);
-          setDiscountResult(voucherRes);
+          setDiscountResult(result);
           return;
         }
-
-        const giftRes = await validateGiftCardCode({
-          code: normalized,
-          bookingAmount,
-        });
-        if (giftRes.success) {
-          setAppliedCode(normalized);
-          setDiscountResult(giftRes);
-          return;
-        }
-
         setDiscountResult(null);
         setAppliedCode("");
-        setError(
-          giftRes.message ||
-            voucherRes.message ||
-            "Invalid code — please check and try again",
-        );
+        setError(result.message || "Invalid code — please check and try again");
       } catch {
         setDiscountResult(null);
         setAppliedCode("");
