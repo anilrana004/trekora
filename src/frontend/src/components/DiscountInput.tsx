@@ -1,5 +1,5 @@
 import { useDiscount } from "@/hooks/useDiscount";
-import { CTA_COMPACT_GREEN, ctaMerge } from "@/lib/cta-buttons";
+import { CTA_NAV_PRIMARY, ctaMerge } from "@/lib/cta-buttons";
 import type { DiscountValidationSuccess } from "@/lib/discount-api";
 import { Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -60,7 +60,7 @@ export default function DiscountInput({
   }, [prefilledResult]);
 
   const inpBase =
-    "w-full border rounded-lg px-3 py-3 text-[16px] focus:outline-none focus:ring-2 transition-colors border-[var(--ew-gray-mid)] focus:ring-[#C0001C]/30 focus:border-[#C0001C]";
+    "min-w-0 w-full border rounded-lg px-3 py-3 text-[16px] focus:outline-none focus:ring-2 transition-colors border-[var(--ew-gray-mid)] focus:ring-[#C0001C]/30 focus:border-[#C0001C]";
 
   const handleApply = useCallback(async () => {
     await validateCode(bookingAmount, packageId, userId, input);
@@ -134,14 +134,17 @@ export default function DiscountInput({
   }
 
   return (
-    <div className="space-y-2" data-ocid="booking.discount.input_block">
+    <div
+      className="relative z-[1] space-y-2"
+      data-ocid="booking.discount.input_block"
+    >
       <p
         className="text-[13px] font-medium"
         style={{ color: "var(--ew-text)" }}
       >
         🏷️ Have a voucher or gift card?
       </p>
-      <div className="flex flex-col sm:flex-row gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
         <input
           type="text"
           value={input}
@@ -152,12 +155,13 @@ export default function DiscountInput({
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
+              e.stopPropagation();
               void handleApply();
             }
           }}
           placeholder="Enter code e.g. TREKORA15"
           disabled={isValidating}
-          className={`${inpBase} flex-1 ${error ? "border-[#C0001C] ring-2 ring-[#C0001C]/20" : ""}`}
+          className={`${inpBase} sm:flex-1 ${error ? "border-[#C0001C] ring-2 ring-[#C0001C]/20" : ""}`}
           style={{ minHeight: 48 }}
           autoComplete="off"
           spellCheck={false}
@@ -167,11 +171,15 @@ export default function DiscountInput({
         />
         <button
           type="button"
-          onClick={() => void handleApply()}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            void handleApply();
+          }}
           disabled={isValidating || !input.trim()}
           className={ctaMerge(
-            CTA_COMPACT_GREEN,
-            "shrink-0 min-h-12 px-5 inline-flex items-center justify-center gap-2",
+            CTA_NAV_PRIMARY,
+            "shrink-0 w-full sm:w-auto min-h-12 px-6",
           )}
           data-ocid="booking.discount.apply_button"
         >

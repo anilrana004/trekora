@@ -14,6 +14,7 @@ import {
 } from "@/lib/booking-documents";
 import type { BookableProduct } from "@/lib/booking-product";
 import type { DiscountValidationSuccess } from "@/lib/discount-api";
+import { openNativeDatePicker } from "@/lib/open-native-date-picker";
 import { resolveProductWeather } from "@/lib/openweather";
 import { buildWhatsAppUrl } from "@/lib/site-contact";
 import type { Dispatch, SetStateAction } from "react";
@@ -23,6 +24,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { lazy as lazyVideo } from "react";
@@ -99,6 +101,7 @@ function Step1({
 }) {
   const [selectedBatchObj, setSelectedBatchObj] =
     useState<TrekBatchPublic | null>(null);
+  const departureInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!fd.batchDate || batchesLoading) return;
@@ -276,15 +279,20 @@ function Step1({
                   strokeWidth={2}
                   className="booking-departure-date-placeholder__icon"
                 />
-                Tap to select departure date
+                Select departure date
               </span>
             ) : null}
             <input
+              ref={departureInputRef}
               type="date"
               required
               min={todayYmd}
               value={fd.batchDate ?? ""}
               onChange={(e) => onDepartureDateChange(e.target.value)}
+              onClick={(e) => {
+                e.stopPropagation();
+                openNativeDatePicker(e.currentTarget);
+              }}
               className="booking-departure-date-input w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C0001C]/30"
               data-ocid="booking.preferred_date"
               aria-label="Departure date"

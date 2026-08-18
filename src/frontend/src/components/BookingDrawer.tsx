@@ -10,11 +10,12 @@ import {
   ctaMerge,
 } from "@/lib/cta-buttons";
 import { isFeatureLive } from "@/lib/dormant-features";
+import { AnimatePresence, motion } from "@/lib/motion";
+import { openNativeDatePicker } from "@/lib/open-native-date-picker";
 import { submitEmailOptimistic } from "@/lib/optimistic-email";
 import { validateNationalPhone } from "@/lib/phone-countries";
 import { bookingEmailSuccessMessage } from "@/services/booking-email-api";
 import { submitBookingEmail } from "@/services/booking-email-api";
-import { AnimatePresence, motion } from "@/lib/motion";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
@@ -482,7 +483,7 @@ export default function BookingDrawer({
                       className="booking-departure-date-placeholder"
                       aria-hidden
                     >
-                      Tap to select trek date
+                      Select trek date
                     </span>
                   ) : null}
                   <input
@@ -493,6 +494,7 @@ export default function BookingDrawer({
                     onChange={(e) =>
                       dispatch({ type: "SET_DATE", date: e.target.value })
                     }
+                    onClick={(e) => openNativeDatePicker(e.currentTarget)}
                     onFocus={(e) =>
                       e.currentTarget.scrollIntoView({
                         behavior: "smooth",
